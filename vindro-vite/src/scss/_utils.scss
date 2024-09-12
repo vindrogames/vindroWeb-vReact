@@ -1,0 +1,104 @@
+// Inline span classes
+.inline-teal {
+  color: $vindro-teal;
+}
+
+.inline-green {
+  color: $vindro-green;
+}
+
+.inline-gray {
+  color: $vindro-gray;
+}
+
+.inline-bold {
+  font-weight: 700;
+}
+
+.inline-light {
+  font-weight: 300;
+}
+
+.inline-real-yellow {
+  color: $real-yellow;
+}
+
+// Buttons
+.btn {
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.btn-tan, .bg-tan {
+  background-color: $vindro-tan;
+  color: $vindro-gray;
+}
+
+.btn-gray, .bg-gray {
+  background-color: $vindro-gray;
+  color: white;
+}
+
+.btn-black {
+  background-color: $vindro-black;
+  color: $vindro-teal;
+}
+
+.btn-teal, .bg-teal {
+  background-color: $vindro-teal;
+  color: $vindro-black;
+}
+
+.btn-teal:hover {
+  background-color: $vindro-green;
+  color: white;
+}
+
+main#under-construction {
+  height: 50vh;
+  background-color: $vindro-teal;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $vindro-black;
+  font-size: 2.1rem;
+
+  .loading {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 42px;
+
+    .loader {
+      display: flex;
+      align-items: center;
+      margin-left: 1rem;
+
+      &-element {
+        border: 5px solid #fff;
+        border-radius: 100%;
+        margin: 0 10px;
+      }
+    }
+  }
+
+  .loader-element:nth-child(1) {
+    animation: preloader .6s ease-in-out alternate infinite;
+  }
+
+  .loader-element:nth-child(2) {
+    animation: preloader .6s ease-in-out alternate .2s infinite;
+  }
+
+  .loader-element:nth-child(3) {
+    animation: preloader .6s ease-in-out alternate .4s infinite;
+  }
+
+  @keyframes preloader {
+    100% {border:5px  solid $vindro-black;}
+    100% {transform: scale(2)}
+  }
+}
