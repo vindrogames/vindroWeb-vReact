@@ -126,12 +126,88 @@ section.hero-full {
       margin-bottom: 42px;
     }
 
-    a {
+    button {
       font-size: 1.8rem;
 
       &:hover {
         background-color: $vindro-green;
         color: white;
+      }
+    }
+  }
+}
+
+#what-we-do {
+  min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h3 {
+      font-family: $vindro-Montserrat;
+      font-size: 2.1rem;
+      margin-bottom: 1rem;
+    }
+
+    h4 {
+      font-size: 6.3rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.8rem;
+      margin-bottom: 3rem;
+    }
+
+    a {
+      font-size: 1.8rem;
+
+      &:hover {
+        background-color: $vindro-tan;
+        color: $vindro-gray;
+      }
+    }
+}
+
+section#home-about {
+  min-height: 50vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .team-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 84px;
+    gap: 42px;
+
+    .team-member {
+      width: 42%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 21px;
+
+      img {
+        width: 42%;
+        border-radius: 50%;
+        border: 3px solid $vindro-gray;
+        background-color: $vindro-teal;
+        margin-bottom: 2rem;
+      }
+
+      > div h3 {
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      > div p {
+        font-size: 2.1rem;
+
       }
     }
   }
@@ -175,9 +251,15 @@ footer {
     gap: 42px;
     
     a {
+      
       padding: 7px;
       color: white;
       border-radius: 7px;
+
+      svg {
+        width: 4rem;
+        height: 4rem;
+      }
 
       &:hover {
         background-color: $vindro-green;

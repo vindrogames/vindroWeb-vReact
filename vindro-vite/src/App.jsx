@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import { HelmetProvider } from 'react-helmet-async';
 import Home from "./pages/Home";
 import './App.css';
 import './scss/main.scss';
@@ -10,9 +9,9 @@ function App() {
 
   return (
     <>
-      <Header />
-      <Home />
-      <Footer />
+      <HelmetProvider>
+        <Home />
+      </HelmetProvider>
     </>
   )
 }
