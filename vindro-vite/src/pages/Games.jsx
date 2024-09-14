@@ -2,6 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { Link } from 'react-router-dom';
+import GameGalleryCard from '../components/GameGalleryCard';
 
 
 function Games() {
@@ -43,20 +44,20 @@ function Games() {
               </div>
             </div>
 
-            <div className="game game-2">
-              <Link to="/games/escape-the-cloud">
+            <GameGalleryCard
+              classNum="game-2"
+              route="/games/escape-the-cloud"
+              galleryImg={
                 <img src="img/escapeTheCloud.png" alt="Digital Escaperoom to learn about Google Workspace tools" />
-              </Link>
-              <div className="game-text">
-                <h3>Digital BreakOut</h3>
-                <p>Inspired by Escape Rooms, this game teacher players tricks and functionalities of Google tools.</p>
-              </div>
-            </div>
-
+              }
+              gameTitle="Digital BreakOut"
+              gameDescription="Inspired by Escape Rooms, this game teacher players tricks and functionalities of Google tools."
+            />
+            
             <div className="game game-3">
-              <Link to="/games/escape-the-cloud" >
+              <a href="#" >
                 <img src="img/brainGame.png" alt="A zelda style role playing game to learn how the brain processes information" />
-              </Link>
+              </a>
               <div className="game-text">
                 <h3>Brain Game</h3>
                 <p>A role playing type game designed to teach people about the human brain and how we process visual information.</p>

@@ -15,10 +15,9 @@ function Header() {
         <nav>
           <ul>
             <NavBarLink route='/' text='home' />
-            <li><a href="story.html">story</a></li>
-            <li><a href="blog.html">blog</a></li>
+            <NavBarLink route='/story' text='story' />
+            <NavBarLink route='/blog' text='blog' />
             <NavBarLink route='/games' text='games' />
-            <li><a href="highscore/index.html">highscore</a></li>
             <NavBarLink route='/contact' text='contact' />
           </ul>
         </nav>

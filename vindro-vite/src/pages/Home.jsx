@@ -1,6 +1,7 @@
 import React from "react";
 import { useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import HomeHelmet from "./page-helmets/HomeHelmet";
 
 function Home() {
 
@@ -8,15 +9,10 @@ function Home() {
 
   return (
     <>
-      <Helmet>
-        <meta name="description" content="an independant gaming project based in Madrid" />
-        <meta name="keywords" content="learning, programming, game development, education innovation" />
-        <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico" />
-        <title>Vindrogames | Learning and Programming</title>
-      </Helmet>
+      <HomeHelmet />
 
-      <main>
-        <section className="hero-full hero-full-home-content">
+      <main id="home-page">
+        <section className="hero-home">
           <h1 translate="no">
             <span className="inline-bold inline-teal">Vindro</span>Games
           </h1>
@@ -34,7 +30,12 @@ function Home() {
           <h3>This is what we do</h3>
           <h4 className="inline-bold inline-green">Games</h4>
           <p>We learn to programm creating <span className="inline-bold inline-green">(and recreating)</span> games. Many of our games are focused on learning.</p> 
-          <a href="games.html" className="btn btn-black">start</a>
+          <Link 
+            to="/games"
+            className="btn btn-black"
+            onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
+            >start
+          </Link>
         </section>
 
         <section id="home-about" className="bg-tan">

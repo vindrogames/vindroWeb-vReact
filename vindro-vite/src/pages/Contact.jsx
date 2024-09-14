@@ -16,7 +16,7 @@ function Contact() {
       <main>
 
         <section className="hero-half">
-          <h1>get<span class="inline-bold inline-teal">In</span>Touch</h1>
+          <h1>get<span className="inline-bold inline-teal">In</span>Touch</h1>
           <h2>Who knows what could happen</h2>
         </section>
 
