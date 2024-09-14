@@ -1,8 +1,6 @@
 import React from "react";
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 
 function Home() {
 
@@ -13,9 +11,9 @@ function Home() {
       <Helmet>
         <meta name="description" content="an independant gaming project based in Madrid" />
         <meta name="keywords" content="learning, programming, game development, education innovation" />
+        <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico" />
         <title>Vindrogames | Learning and Programming</title>
       </Helmet>
-      <Header />
 
       <main>
         <section className="hero-full hero-full-home-content">
@@ -59,7 +57,6 @@ function Home() {
         </section>
       </main>
 
-      <Footer />
     </>
   )
 }

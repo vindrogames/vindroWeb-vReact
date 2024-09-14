@@ -7,19 +7,19 @@ function Footer() {
     <footer>
       <div className="social">
         <a href="https://github.com/vindrogames" target="_blank">
-          <FaGithub transform="grow-4" />
+          <FaGithub />
         </a>
         <a href="https://x.com/vindrogames" target="_blank">
-          <FaTwitter transform="grow-4" />
+          <FaTwitter />
         </a>
         <a href="https://www.instagram.com/vindrogames/" target="_blank">
-          <FaInstagram transform="grow-4" />
+          <FaInstagram />
         </a>
         <a href="https://www.linkedin.com/in/michael-thomas-bennett-6631822a/" target="_blank">
-          <FaLinkedin transform="grow-4" />
+          <FaLinkedin />
         </a>
         <a href="https://www.youtube.com/@Vindrogames" target="_blank">
-          <FaYoutube transform="grow-4" />
+          <FaYoutube />
         </a>
       </div>
       <div className="contact-info">

@@ -1,5 +1,5 @@
 import React from "react";
-
+import NavBarLink from './NavBarLink';
 function Header() {
 
   return (
@@ -14,12 +14,12 @@ function Header() {
         </div>
         <nav>
           <ul>
-            <li><a className="current" href="index.html">home</a></li>
+            <NavBarLink route='/' text='home' />
             <li><a href="story.html">story</a></li>
             <li><a href="blog.html">blog</a></li>
-            <li><a href="games.html">games</a></li>
+            <NavBarLink route='/games' text='games' />
             <li><a href="highscore/index.html">highscore</a></li>
-            <li><a href="contact.html">contact</a></li>
+            <NavBarLink route='/contact' text='contact' />
           </ul>
         </nav>
       </div>
