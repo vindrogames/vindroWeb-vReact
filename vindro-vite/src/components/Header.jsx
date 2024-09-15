@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from 'react-router-dom';
 import NavBarLink from './NavBarLink';
 function Header() {
 
@@ -6,7 +7,12 @@ function Header() {
     <header>
       <div id="navbar" className="top">
         <div className="vindro-logo">
-          <a href="index.html" ><img src="img/vindro_logo_1.png" alt="vindrogames independant gaming studio in Madrid"></img></a>
+          <NavLink 
+            to="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
+            >
+              <img src="img/vindro_logo_1.png" alt="vindrogames independant gaming studio in Madrid"></img>
+            </NavLink>
           <div className="vindro-logo-text">
             <h4>vindro</h4>
             <h4 className="inline-light inline-teal">games</h4>

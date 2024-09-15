@@ -250,6 +250,122 @@ section#home-about {
   }
 }
 
+section#stories-page-content {
+  overflow: hidden;
+  
+  #timeline ul {
+    background: $vindro-gray;
+    padding: 50px 0;
+
+    li {
+      list-style: none;
+      position: relative;
+      width: 6px;
+      margin: 0 auto;
+      padding-top: 50px;
+      background: $vindro-teal;
+
+      div {
+        position: relative;
+        bottom: 0;
+        width: 400px;
+        padding: 1rem;
+        background: white;
+        transition: all 0.5s ease-in-out;
+        visibility: hidden;
+        opacity: 0;
+        box-shadow: 0 3px 10px $vindro-black;
+
+        h3 {
+          color: $vindro-green;
+          font-weight: bold;
+          font-size: 2.1rem;
+          margin-bottom: 7px;
+
+          svg {
+            height: 1.5rem;
+          }
+        }
+      
+        p {
+          color: $vindro-black;
+          font-size: 1.6rem;
+        }
+
+        a {
+          color: $vindro-green;
+          font-weight: 500;
+
+          &:hover {
+            color: $vindro-teal;
+          }
+        }
+      }
+
+      /* Timeline Right Side */
+      &:nth-child(odd) div {
+        left: 40px;
+      /* transform: translate(200px, 0); */
+      }
+
+      /* Timeline Left Side */
+      &:nth-child(even) div {
+        left: -434px;
+        /* transform: translate(-200px, 0); */
+      }
+
+      /* Timeline Dots */
+      &:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        width: 25px;
+        height: 25px;
+        background: inherit;
+        transform: translateX(-50%);
+        border-radius: 50%;
+        transition: background 0.5s ease-in-out;
+      }
+
+      /* Timeline Arrows Base */
+      div:before {
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+      }
+
+      /* Timeline Right Side Arrows */
+      &:nth-child(odd) div:before {
+        left: -15px;
+        border-width: 8px 16px 8px 0;
+        border-color: transparent white transparent transparent;
+      }
+
+      /* Timeline Left Side Arrows */
+      &:nth-child(even) div:before {
+        right: -15px;
+        border-width: 8px 0 8px 16px;
+        border-color: transparent transparent transparent white;
+      }
+
+      /* Timeline Show Boxes */
+      &.show div {
+        transform: none;
+        visibility: visible;
+        opacity: 1;
+      }
+
+      &.show:after {
+        background: $vindro-teal;
+      }
+    }
+  }
+}
+
 section#games-gallery-container {
   position: relative;
   padding: 7rem 2rem;
