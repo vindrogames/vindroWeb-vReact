@@ -25,12 +25,11 @@ function App() {
   ]);
 
   return (
-    <>
-      <HelmetProvider>
-        <RouterProvider router={ router } />
-        <Footer />
-      </HelmetProvider>
-    </>
+    
+    <HelmetProvider>
+      <RouterProvider router={ router } />
+      <Footer />
+    </HelmetProvider>
   )
 }
 

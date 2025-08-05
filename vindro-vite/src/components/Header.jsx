@@ -4,6 +4,7 @@ import NavBarLink from './NavBarLink';
 function Header() {
 
   return (
+
     <header>
       <div id="navbar" className="top">
         <div className="vindro-logo">
