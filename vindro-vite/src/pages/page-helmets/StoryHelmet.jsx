@@ -12,7 +12,7 @@ function StoryHelmet() {
 
       {/* OG Tags */}
       <meta property="og:type" content="website"/>
-      <meta property="og:url" content="https://www.vindrogames.com/story.html" />
+      <meta property="og:url" content="https://www.vindrogames.com/story" />
       <meta property="og:title" content="Vindrogames Stories"/>
       <meta property="og:description" content="Timeline of our productions and learning with different programming languages"/>
       <meta property="og:image" content="https://www.vindrogames.com/img/vindro-og.png"/>

@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from 'react-router-dom';
-import NavBarLink from './NavBarLink';
+import NavBarLink from '../ui/NavBarLink';
+
 function Header() {
 
   return (

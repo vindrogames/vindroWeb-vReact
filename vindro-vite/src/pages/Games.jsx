@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { Link } from 'react-router-dom';
-import GameGalleryCard from '../components/GameGalleryCard';
+import GameGalleryCard from '../components/ui/GameGalleryCard';
 
 
 function Games() {

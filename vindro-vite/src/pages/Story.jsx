@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import StoryHelmet from './page-helmets/StoryHelmet';
-import TimelineCard from '../components/TimelineCard';
+import TimelineCard from '../components/ui/TimelineCard';
 
 const Story = () => {
 

@@ -6,8 +6,8 @@ function HomeHelmet() {
   return (
     <Helmet>
       {/* Meta Description and Key Words */}
-      <meta name="description" content="an independant gaming project based in Madrid" />
-      <meta name="keywords" content="learning, programming, game development, education innovation" />
+      <meta name="description" content="Independant gaming project based in Madrid" />
+      <meta name="keywords" content="learning, programming, game development, education innovation, games for learning" />
 
       {/* OG Tags */}
       <meta property="og:type" content="website"/>

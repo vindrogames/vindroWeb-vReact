@@ -10,7 +10,7 @@ function NavBarLink(props) {
         className={({ isActive, isPending }) =>
           isPending ? "pending" : isActive ? "active" : ""
         }
-        onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
+        onClick={() => window.scrollTo({ top: 0, behavior: "auto" })}
       >{ props.text }
       </NavLink>
     </li>

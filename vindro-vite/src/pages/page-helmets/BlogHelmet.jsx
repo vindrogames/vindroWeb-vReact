@@ -11,7 +11,7 @@ function BlogHelm() {
 
       {/* OG Tags */}
       <meta property="og:type" content="website"/>
-      <meta property="og:url" content="https://www.vindrogames.com/blog.html" />
+      <meta property="og:url" content="https://www.vindrogames.com/blog" />
       <meta property="og:title" content="Vindrogames Blog"/>
       <meta property="og:description" content="Reflections of Game Design, programming and technology"/>
       <meta property="og:image" content="https://www.vindrogames.com/img/vindro-og.png"/>
