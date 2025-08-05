@@ -1,8 +1,7 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
-
 import { Link } from 'react-router-dom';
 import GameGalleryCard from '../components/ui/GameGalleryCard';
+import GamesHelmet from './page-helmets/GamesHelmet';
 
 
 function Games() {
@@ -10,12 +9,7 @@ function Games() {
   return (
 
     <>
-      <Helmet>
-        <meta name="description" content="A collection of projects centered around games programmed in different lanugages at vindrogames in Madrid" />
-        <meta name="keywords" content="education games, games for learning, vindrogames productions, programming languages" />
-        <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico" />
-        <title>Games for learning | Vindrogames</title>
-      </Helmet>
+      <GamesHelmet />
 
       <main>
 
