@@ -1,5 +1,5 @@
 import React from 'react';
-import EscapeCloudHelmet from './page-helmets/EscapeCloudHelmet';
+import EscapeCloudHelmet from '../../page-helmets/EscapeCloudHelmet';
 
 function EscapeTheCloud() {
 

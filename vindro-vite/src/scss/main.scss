@@ -1,672 +1,931 @@
 @import 'config';
 
 * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: $vindro-openSans;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: $vindro-openSans;
 }
 
 :root {
-  font-size: 10px;
+    font-size: 10px;
 }
 
 body {
-  background-color: $vindro-gray;
-  font-family: $vindro-openSans;
-  color: white;
-  overflow-x: hidden;
+    background-color: $vindro-gray;
+    font-family: $vindro-openSans;
+    color: white;
+    overflow-x: hidden;
 }
 
 li {
-  list-style-type: none;
+    list-style-type: none;
 }
 
 a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
-h1, h2 {
-  font-family: $vindro-Montserrat;
-  font-weight: 500;
+h1,
+h2 {
+    font-family: $vindro-Montserrat;
+    font-weight: 500;
 }
 
 img {
-  width: 100%;
+    width: 100%;
 }
 
 @import 'utils';
 
 #navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: $vindro-black-overlay;
-  color: white;
-  width: 100%;
-  height: 90px;
-  position: fixed;
-  top: 0px;
-  padding: 0 30px;
-  transition: 0.5s;
-  z-index: 3;
-
-  .vindro-logo {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 20px;
-    font-weight: 400;
+    background-color: $vindro-black-overlay;
+    color: white;
+    width: 100%;
+    height: 90px;
+    position: fixed;
+    top: 0px;
+    padding: 0 30px;
+    transition: 0.5s;
+    z-index: 3;
 
-    a {
-      padding: 3px;
-      margin: 0 3px;
+    .vindro-logo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 20px;
+        font-weight: 400;
+
+        a {
+            padding: 3px;
+            margin: 0 3px;
+        }
+
+        img {
+            width: 60px;
+            padding: 0;
+        }
+
+        &-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            h4 {
+                font-family: $vindro-Montserrat;
+                font-size: 2.1rem;
+            }
+        }
     }
-    img {
-      width: 60px;
-      padding: 0;
+
+    ul {
+        display: flex;
+        font-size: 1.6rem;
+
+        a {
+            color: white;
+            padding: 21px;
+            margin: 0 3px;
+        }
+
+        a:hover,
+        a.current {
+            border-bottom: 3px solid $vindro-teal;
+        }
+    }
+}
+
+#navbar-hamburger {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $vindro-black-overlay;
+    color: #fff;
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    top: 0px;
+    padding: 0;
+    transition: 0.5s;
+    z-index: 3;
+
+    .vindro-logo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 21px;
+        font-weight: 400;
+
+        img {
+            width: 42px;
+            padding: 0;
+        }
+
+        &-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            h4 {
+                font-family: $vindro-Montserrat;
+                font-size: 1.6rem;
+            }
+        }
     }
 
-    &-text {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    #hamburger-container {
+        position: relative;
+        width: 60px;
+        height: 60px;
 
-      h4 {
-        font-family: $vindro-Montserrat;
-        font-size: 2.1rem;
-      }
+        #hamburger-toggler {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
+        }
+
+        #hamburger-lines {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 28px;
+            height: 28px;
+            background-color: transparent;
+            z-index: 5;
+
+            &>div {
+                position: absolute;
+                height: 2px;
+                width: 100%;
+                background-color: white;
+            }
+
+            &-top {
+                top: 3px;
+                transition: 0.42s ease;
+            }
+
+            &-mid {
+                top: 13px;
+                opacity: 1;
+                transition: 0.84s ease;
+            }
+
+            &-bottom {
+                bottom: 3px;
+                transition: 0.42s ease;
+            }
+        }
+
+        &.open {
+            background-color: $vindro-tan;
+
+            #hamburger-lines {
+
+                &>div {
+                    background-color: $vindro-black;
+                }
+
+                &-top {
+                    transform: rotate(405deg);
+                    top: 13px;
+                    transition: 0.42s ease;
+                }
+
+                &-mid {
+                    opacity: 0;
+                    transition: 0.1s ease;
+                }
+
+                &-bottom {
+                    transform: rotate(-405deg);
+                    bottom: 13px;
+                    transition: 0.42s ease;
+                }
+            }
+        }
+
+        &.navbar-calculator {
+
+            &.open {
+                background-color: lightgray;
+            }
+        }
     }
-  }
 
-  ul {
-    display: flex;
-    font-size: 1.6rem;
+    nav#hamburger-menu {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        background-color: $vindro-tan;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.3s ease;
+        opacity: 0;
+        z-index: 4;
 
-    a {
-      color: white;
-      padding: 21px;
-      margin: 0 3px;
+        ul {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 21px;
+            font-size: 1.6rem;
+            padding: 21px;
+
+            li {
+                width: 100%;
+                margin: 0 21px;
+
+                a {
+                    display: block;
+                    width: 63%;
+                    color: $vindro-black;
+                    padding: 14px;
+                    
+                }
+            }
+
+
+            a:hover,
+            a.current {
+                border-bottom: 3px solid $vindro-green;
+            }
+        }
+
+        &.open {
+            max-height: 100vh;
+            opacity: 1;
+        }
+
+        &.navbar-calculator {
+            background-color: lightgray;
+
+            ul li a {
+                color: $vindro-black;
+                box-shadow: 0 3px 3px -3px $vindro-gray;
+                z-index: 4;
+
+            }
+        }
     }
-
-    a:hover, a.active {
-      border-bottom: 3px solid $vindro-teal;
-    }
-  }
 }
 
 main {
-  min-height: 100vh;
+    min-height: 100vh;
 }
 
 section.hero-home {
-  background: $vindro-black;
-  width: 100%;
-  height: 100vh;
-  position: relative;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  padding: 0 20px;
+    background: $vindro-black;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 0 20px;
 
-  h1 {
-    font-size: 6.3rem;
-    margin-bottom: 21px;
-  }
-
-  h2 {
-    font-size: 3rem;
-    margin-bottom: 42px;
-  }
-
-  button {
-    font-size: 1.8rem;
-
-    &:hover {
-      background-color: $vindro-green;
-      color: white;
+    h1 {
+        font-size: 6.3rem;
+        margin-bottom: 21px;
     }
-  }
+
+    h2 {
+        font-size: 3rem;
+        margin-bottom: 42px;
+    }
+
+    button {
+        font-size: 1.8rem;
+
+        &:hover {
+            background-color: $vindro-green;
+            color: white;
+        }
+    }
 }
 
-section.hero-half, section.hero-half-games {
-  height: 50vh;
-  background: $vindro-black;
-  position: relative;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+section.hero-half,
+section.hero-half-games {
+    width: 100%;
+    height: 50vh;
+    background: $vindro-black;
+    position: relative;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-  h1 {
-    font-size: 4.2rem;
-    margin-bottom: 14px;
-    margin-top: 42px;
-  }
+    h1 {
+        font-size: 4.2rem;
+        margin-bottom: 14px;
+        margin-top: 42px;
+    }
 
-  h2 {
-    font-size: 2.1rem;
-  }
+    h2 {
+        font-size: 2.1rem;
+    }
 }
 
 section.hero-half-games {
 
-  .title-container {
-    display: flex;
-    flex-direction: row;
-    margin-top: 42px;
-  
-    h2 {
-      font-size: 4.2rem;
-      margin-bottom: 14px;
-    }
-  }
+    .title-container {
+        display: flex;
+        flex-direction: row;
+        margin-top: 42px;
 
-  h1 {
-    font-size: 2.1rem;
-    margin: 0;
-  }
+        h2 {
+            font-size: 4.2rem;
+            margin-bottom: 14px;
+        }
+    }
+
+    h1 {
+        font-size: 2.1rem;
+        margin: 0;
+    }
 }
 
 #what-we-do {
-  min-height: 50vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-  h3 {
-    font-family: $vindro-Montserrat;
-    font-size: 2.1rem;
-    margin-bottom: 1rem;
-  }
-
-  h4 {
-    font-size: 6.3rem;
-    margin-bottom: 1rem;
-  }
-
-  p {
-    font-size: 1.8rem;
-    margin-bottom: 3rem;
-  }
-
-  a {
-    font-size: 1.8rem;
-
-    &:hover {
-      background-color: $vindro-tan;
-      color: $vindro-gray;
+    h3 {
+        font-family: $vindro-Montserrat;
+        font-size: 2.1rem;
+        margin-bottom: 1rem;
     }
-  }
+
+    h4 {
+        font-size: 6.3rem;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 1.8rem;
+        margin-bottom: 3rem;
+    }
+
+    a {
+        font-size: 1.8rem;
+
+        &:hover {
+            background-color: $vindro-tan;
+            color: $vindro-gray;
+        }
+    }
 }
 
 section#home-about {
-  min-height: 50vh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .team-container {
+    min-height: 50vh;
+    width: 100%;
     display: flex;
+    align-items: center;
     justify-content: center;
-    padding-top: 84px;
-    gap: 42px;
 
-    .team-member {
-      width: 42%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 21px;
+    .team-container {
+        display: flex;
+        justify-content: center;
+        padding-top: 84px;
+        gap: 42px;
 
-      img {
-        width: 42%;
-        border-radius: 50%;
-        border: 3px solid $vindro-gray;
-        background-color: $vindro-teal;
-        margin-bottom: 2rem;
-      }
+        .team-member {
+            width: 42%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 21px;
 
-      > div h3 {
-        font-size: 3rem;
-        text-align: center;
-        margin-bottom: 1rem;
-      }
+            img {
+                width: 42%;
+                border-radius: 50%;
+                border: 3px solid $vindro-gray;
+                background-color: $vindro-teal;
+                margin-bottom: 2rem;
+            }
 
-      > div p {
-        font-size: 2.1rem;
+            >div h3 {
+                font-size: 3rem;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
 
-      }
+            >div p {
+                font-size: 2.1rem;
+
+            }
+        }
     }
-  }
 }
 
 section#stories-page-content {
-  overflow: hidden;
-  
-  #timeline ul {
-    background: $vindro-gray;
-    padding: 50px 0;
+    overflow: hidden;
 
-    li {
-      list-style: none;
-      position: relative;
-      width: 6px;
-      margin: 0 auto;
-      padding-top: 50px;
-      background: $vindro-teal;
+    #timeline ul {
+        background: $vindro-gray;
+        padding: 50px 0;
 
-      div {
-        position: relative;
-        bottom: 0;
-        width: 400px;
-        padding: 1rem;
-        background: white;
-        transition: all 0.5s ease-in-out;
-        visibility: hidden;
-        opacity: 0;
-        box-shadow: 0 3px 10px $vindro-black;
+        li {
+            list-style: none;
+            position: relative;
+            width: 6px;
+            margin: 0 auto;
+            padding-top: 50px;
+            background: $vindro-teal;
 
-        h3 {
-          color: $vindro-green;
-          font-weight: bold;
-          font-size: 2.1rem;
-          margin-bottom: 7px;
+            div {
+                position: relative;
+                bottom: 0;
+                width: 400px;
+                padding: 1rem;
+                background: white;
+                transition: all 0.5s ease-in-out;
+                visibility: hidden;
+                opacity: 0;
+                box-shadow: 0 3px 10px $vindro-black;
 
-          svg {
-            height: 1.5rem;
-          }
+                h3 {
+                    color: $vindro-green;
+                    font-weight: bold;
+                    font-size: 2.1rem;
+                    margin-bottom: 7px;
+
+                    svg {
+                        height: 1.5rem;
+                    }
+                }
+
+                p {
+                    color: $vindro-black;
+                    font-size: 1.6rem;
+                }
+
+                a {
+                    color: $vindro-green;
+                    font-weight: 500;
+
+                    &:hover {
+                        color: $vindro-teal;
+                    }
+                }
+            }
+
+            /* Timeline Right Side */
+            &:nth-child(odd) div {
+                left: 40px;
+                /* transform: translate(200px, 0); */
+            }
+
+            /* Timeline Left Side */
+            &:nth-child(even) div {
+                left: -434px;
+                /* transform: translate(-200px, 0); */
+            }
+
+            /* Timeline Dots */
+            &:after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                bottom: 0;
+                width: 25px;
+                height: 25px;
+                background: inherit;
+                transform: translateX(-50%);
+                border-radius: 50%;
+                transition: background 0.5s ease-in-out;
+            }
+
+            /* Timeline Arrows Base */
+            div:before {
+                content: '';
+                position: absolute;
+                bottom: 5px;
+                width: 0;
+                height: 0;
+                border-style: solid;
+            }
+
+            /* Timeline Right Side Arrows */
+            &:nth-child(odd) div:before {
+                left: -15px;
+                border-width: 8px 16px 8px 0;
+                border-color: transparent white transparent transparent;
+            }
+
+            /* Timeline Left Side Arrows */
+            &:nth-child(even) div:before {
+                right: -15px;
+                border-width: 8px 0 8px 16px;
+                border-color: transparent transparent transparent white;
+            }
+
+            /* Timeline Show Boxes */
+            &.show div {
+                transform: none;
+                visibility: visible;
+                opacity: 1;
+            }
+
+            &.show:after {
+                background: $vindro-teal;
+            }
         }
-      
-        p {
-          color: $vindro-black;
-          font-size: 1.6rem;
-        }
-
-        a {
-          color: $vindro-green;
-          font-weight: 500;
-
-          &:hover {
-            color: $vindro-teal;
-          }
-        }
-      }
-
-      /* Timeline Right Side */
-      &:nth-child(odd) div {
-        left: 40px;
-      /* transform: translate(200px, 0); */
-      }
-
-      /* Timeline Left Side */
-      &:nth-child(even) div {
-        left: -434px;
-        /* transform: translate(-200px, 0); */
-      }
-
-      /* Timeline Dots */
-      &:after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        bottom: 0;
-        width: 25px;
-        height: 25px;
-        background: inherit;
-        transform: translateX(-50%);
-        border-radius: 50%;
-        transition: background 0.5s ease-in-out;
-      }
-
-      /* Timeline Arrows Base */
-      div:before {
-        content: '';
-        position: absolute;
-        bottom: 5px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-      }
-
-      /* Timeline Right Side Arrows */
-      &:nth-child(odd) div:before {
-        left: -15px;
-        border-width: 8px 16px 8px 0;
-        border-color: transparent white transparent transparent;
-      }
-
-      /* Timeline Left Side Arrows */
-      &:nth-child(even) div:before {
-        right: -15px;
-        border-width: 8px 0 8px 16px;
-        border-color: transparent transparent transparent white;
-      }
-
-      /* Timeline Show Boxes */
-      &.show div {
-        transform: none;
-        visibility: visible;
-        opacity: 1;
-      }
-
-      &.show:after {
-        background: $vindro-teal;
-      }
     }
-  }
 }
 
 section#games-gallery-container {
-  position: relative;
-  padding: 7rem 2rem;
-
-  #games-gallery-intro {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 42px;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 3rem;
+    padding: 7rem 2rem;
 
-    h2 {
-      font-family: $vindro-Montserrat;
-      font-size: 3rem;
-    }
-
-    p {
-      width: 63%;
-      font-size: 1.8rem;
-    }
-  }
-
-  #games-gallery {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-
-    .game {
-      position: relative;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-
-      a {
+    #games-gallery-intro {
+        position: relative;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        gap: 42px;
         align-items: center;
-        width: 100%;
-        aspect-ratio: 1/1;
+        justify-content: center;
+        margin-bottom: 3rem;
 
-        img {
-          width: 100%;
-          height: auto;
-
-          &:nth-child(1) {
-            width: 84%;
-            border-radius: 7px;
-          }
-  
-          &:hover {
-            opacity: 0.84;
-          }
-        }
-      }
-
-      &-text {
-        background-color: $vindro-black-overlay;
-        border-radius: 14px;
-        padding: 21px;
-        flex-grow: 1;
-
-        h3 {
-          color: $tm-yellow-solid;
-          font-size: 2.1rem;
-          margin-bottom: 1rem;
+        h2 {
+            font-family: $vindro-Montserrat;
+            font-size: 3rem;
         }
 
         p {
-          font-size: 1.6rem;
+            width: 63%;
+            font-size: 1.8rem;
         }
-      }
     }
-  }
+
+    #games-gallery {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+
+        .game {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+
+            a {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                aspect-ratio: 1/1;
+
+                img {
+                    width: 100%;
+                    height: auto;
+
+                    &:nth-child(1) {
+                        width: 84%;
+                        border-radius: 7px;
+                    }
+
+                    &:hover {
+                        opacity: 0.63;
+                    }
+                }
+            }
+
+            &-text {
+                background-color: $vindro-black-overlay;
+                border-radius: 14px;
+                padding: 21px;
+                flex-grow: 1;
+
+                a {
+                    aspect-ratio: 0;
+                    justify-content: flex-start;
+                    text-decoration: underline;
+                    color: $tm-yellow-solid;
+
+                    h3 {
+
+                        font-size: 2.1rem;
+                        margin-bottom: 1rem;
+
+                        &:hover {
+                            opacity: 0.84;
+                        }
+                    }
+                }
+
+
+
+                p {
+                    font-size: 1.6rem;
+                }
+            }
+        }
+    }
 }
 
 section#escape-the-cloud {
-  min-height: 50vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-
-  #escape-the-cloud-trailer {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    min-height: 50vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    justify-content: center;
-    gap: 42px;
-    background-color: $vindro-tan;
-    color: $vindro-black;
-    font-size: 1.4rem;
-    padding: 3rem;
 
-    video {
-      width: 90%;
-    }
-  }
+    #escape-the-cloud-trailer {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 42px;
+        background-color: $vindro-tan;
+        color: $vindro-black;
+        font-size: 1.4rem;
+        padding: 3rem;
 
-  #escape-the-cloud-info {
-    width: 100%;
-    height: 100%;
-    padding: 3rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 42px;
-    background-color: $vindro-gray;
-
-    p {
-      font-size: 1.6rem;
-    }
-
-    .buttons {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 14px;
-
-      a {
-        width: 42%;
-        font-size: 1.8rem;
-        font-weight: 700;
-
-        &:hover {
-          background-color: $vindro-black;
-          color: $vindro-teal;
+        video {
+            width: 90%;
         }
-      }
     }
-  }
+
+    #escape-the-cloud-info {
+        width: 100%;
+        height: 100%;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 42px;
+        background-color: $vindro-gray;
+
+        p {
+            font-size: 1.6rem;
+        }
+
+        .buttons {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 14px;
+
+            a {
+                width: 42%;
+                font-size: 1.8rem;
+                font-weight: 700;
+
+                &:hover {
+                    background-color: $vindro-black;
+                    color: $vindro-teal;
+                }
+            }
+        }
+    }
 }
 
 section#contact-page-content {
-  min-height: 50vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-
-  #contact-left {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    min-height: 50vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    justify-content: center;
-    gap: 42px;
-    background-color: $vindro-tan;
 
-    h3 {
-      color: $vindro-black;
-      font-size: 1.4rem;
-    }
-  }
-
-  #contact-right {
-    width: 100%;
-    height: 100%;
-    padding: 42px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 42px;
-    background-color: $vindro-gray;
-
-    form {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      background-color: $vindro-black;
-      border-radius: 7px;
-      padding: 14px 21px;
-
-      label, input, .privacy-accept {
-        margin-bottom: 7px;
-      }
-
-      > label {
-        font-size: 1.6rem;
-        margin-bottom: 21px;
-      }
-
-      input.email-input {
-        background-color: $vindro-tan;
-        border: none;
-        border-radius: 3px;
-        padding: 7px;
-
-        &:focus {
-          outline: $vindro-green;
-        }
-      }
-
-      ::placeholder {
-        color: $vindro-green;
-        font-weight: 500;
-      }
-
-      .form-bottom {
+    #contact-left {
+        width: 100%;
+        height: 100%;
         display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 42px;
+        background-color: $vindro-tan;
 
-        .privacy-accept {
-          display: flex;
-          gap: 7px;
-          align-items: center;
-  
-          input {
-            accent-color: $vindro-teal;
-          }
+        h3 {
+            color: $vindro-black;
+            font-size: 1.4rem;
+        }
+    }
 
-          a {
-            color: $vindro-teal;
+    #contact-right {
+        width: 100%;
+        height: 100%;
+        padding: 42px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 42px;
+        background-color: $vindro-gray;
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: $vindro-black;
+            border-radius: 7px;
+            padding: 14px 21px;
+
+            label,
+            input,
+            .privacy-accept {
+                margin-bottom: 7px;
+            }
+
+            >label {
+                font-size: 1.6rem;
+                margin-bottom: 21px;
+            }
+
+            input.email-input {
+                background-color: $vindro-tan;
+                border: none;
+                border-radius: 3px;
+                padding: 7px;
+
+                &:focus {
+                    outline: $vindro-green;
+                }
+            }
+
+            ::placeholder {
+                color: $vindro-green;
+                font-weight: 500;
+            }
+
+            .form-bottom {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+
+                .privacy-accept {
+                    display: flex;
+                    gap: 7px;
+                    align-items: center;
+
+                    input {
+                        accent-color: $vindro-teal;
+                    }
+
+                    a {
+                        color: $vindro-teal;
+
+                        &:hover {
+                            color: $vindro-green;
+                        }
+                    }
+                }
+
+                input.form-submit-btn {
+                    width: 42%;
+                    background-color: $vindro-tan;
+                    padding: 7px;
+                    border: none;
+                    border-radius: 3px;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: $vindro-green;
+                        color: white;
+                    }
+                }
+            }
+        }
+    }
+}
+
+main#privacy-page-content {
+    width: 100%;
+    background-color: $vindro-tan;
+    color: $vindro-black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    //padding: 2rem;
+    text-align: justify;
+
+    section#privacy,
+    section#cookies {
+        width: 63%;
+        padding: 1rem;
+
+        h2,
+        h3,
+        h4,
+        h5,
+        p {
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: $vindro-green;
+            font-weight: 700;
+            font-size: 4.2rem;
+        }
+
+        h3 {
+            font-size: 2.1rem;
+            ;
+        }
+
+        h4 {
+            font-size: 1.6rem;
+        }
+
+        h5 {
+            font-weight: 600;
+        }
+
+        h5,
+        p {
+            font-size: 1.8rem;
+        }
+
+        a {
+            color: $vindro-green;
+            font-weight: 600;
+            cursor: pointer;
 
             &:hover {
-              color: $vindro-green;
+                color: $vindro-teal;
             }
-          }
         }
-  
-        input.form-submit-btn {
-          width: 42%;
-          background-color: $vindro-tan;
-          padding: 7px;
-          border: none;
-          border-radius: 3px;
-          cursor: pointer;
-  
-          &:hover {
-            background-color: $vindro-green;
-            color: white;
-          }
-        }
-      }
     }
-  }
 }
 
 footer {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  text-align: center;
-  background-color: $vindro-black;
-
-  a {
-    font-size: 1.2rem;
-    color: $vindro-green;
-
-    &:hover {
-      color: $vindro-teal;
-    }
-  }
-  .contact-info {
-    font-size: 1.4rem;
-
-    a {
-      color: $vindro-teal;
-      font-weight: 600;
-
-      &:hover {
-        color: $vindro-green;
-      }
-    }
-  }
-
-  .social {
-    height: 100%;
+    padding: 2rem;
     display: flex;
-    justify-content: space-evenly;
-    gap: 42px;
-    
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    text-align: center;
+    background-color: $vindro-black;
+
     a {
-      
-      padding: 7px;
-      color: white;
-      border-radius: 7px;
+        font-size: 1.2rem;
+        color: $vindro-green;
 
-      svg {
-        width: 4rem;
-        height: 4rem;
-      }
-
-      &:hover {
-        background-color: $vindro-green;
-        color: $vindro-gray;
-      }
+        &:hover {
+            color: $vindro-teal;
+        }
     }
-  }
+
+    .contact-info {
+        font-size: 1.4rem;
+
+        a {
+            color: $vindro-teal;
+            font-weight: 600;
+
+            &:hover {
+                color: $vindro-green;
+            }
+        }
+    }
+
+    .social {
+        height: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        gap: 42px;
+
+        a {
+
+            padding: 7px;
+            color: white;
+            border-radius: 7px;
+
+            svg {
+                width: 4rem;
+                height: 4rem;
+            }
+
+            &:hover {
+                background-color: $vindro-green;
+                color: $vindro-gray;
+            }
+        }
+    }
 }
 
 @import 'mobile';

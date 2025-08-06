@@ -7,7 +7,8 @@ import Story from './pages/Story';
 import Blog from './pages/Blog';
 import Games from './pages/Games';
 import Contact from './pages/Contact';
-import EscapeTheCloud from './pages/EscapeTheCloud';
+import EscapeTheCloud from './features/escape-the-cloud/EscapeTheCloud';
+import PrivacyCookies from './pages/PrivacyCookies';
 
 export const routes = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const routes = createBrowserRouter([
       { path: 'games', element: <Games /> },
       { path: 'contact', element: <Contact /> },
       { path: 'games/escape-the-cloud', element: <EscapeTheCloud /> },
+      {path: 'privacy-cookies', element: <PrivacyCookies />},
     ],
   },
 ]);

@@ -1,5 +1,5 @@
 import React from 'react';
-import BlogHelmet from './page-helmets/BlogHelmet';
+import BlogHelmet from '../page-helmets/BlogHelmet';
 
 function Blog() {
 
