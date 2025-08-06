@@ -1,6 +1,6 @@
 import React from 'react';
 import ContactHelmet from '../page-helmets/ContactHelmet';
-import HeroHalfSection from '../components/ui/HeroHalfSection';
+import ShowcaseSection from '../components/ui/ShowcaseSection';
 
 function Contact() {
 
@@ -11,15 +11,12 @@ function Contact() {
 
             <main>
 
-                <HeroHalfSection
-                    title={
-                        <>
-                            get<span className="inline-bold inline-teal">In</span>Touch
-                        </>
-                    }
-                    subtitle="Who knows what could happen"
-                />
-
+                <ShowcaseSection
+                    classes="hero-half bg-black"
+                >
+                    <h1>get<span className="inline-bold inline-teal">In</span>Touch</h1>
+                    <h2>Who knows what could happen</h2>
+                </ShowcaseSection>
 
                 <section id="contact-page-content">
                     <div id="contact-left">

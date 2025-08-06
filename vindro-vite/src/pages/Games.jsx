@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import GameGalleryCard from '../components/ui/GameGalleryCard';
+import ShowcaseSection from '../components/ui/ShowcaseSection';
+import GameGalleryCard from '../components/pages/games/GameGalleryCard';
 import GamesHelmet from '../page-helmets/GamesHelmet';
 
 
@@ -13,20 +14,14 @@ function Games() {
 
             <main>
 
-                <section className="hero-half-games">
-                    <div className="title-container">
-                        <h2>games</h2>
-                        <h2 className="inline-bold inline-teal">Learning</h2>
-                        <h2>Programming</h2>
-                    </div>
-                    <h1>play, learn, <span translate="no">vindrogames</span></h1>
-                </section>
+                <ShowcaseSection
+                    classes="hero-half bg-black"
+                >
+                    <h1>play<span className="inline-bold inline-teal">Learn</span><span translate="no">Vindrogames</span></h1>
+                    <h2>Add free games and apps which provide a context for developing language, critical thinking and attention. Or simply just fun.</h2>
+                </ShowcaseSection>
 
                 <section id="games-gallery-container">
-                    <div id="games-gallery-intro">
-                        <h2>Play around with a few of our <span className="inline-bold inline-green">projects</span></h2>
-                        <p>Each of these projects are centered on creating games which provide a context for developing language, critical thinking, attention and can be tied to curricular standards.</p>
-                    </div>
 
                     <div id="games-gallery">
 
@@ -67,7 +62,7 @@ function Games() {
                             gameTitle="Set"
                             gameDescription="A great boardgame we have recreated to play on screen. Simple but mentally exhausting, how many sets can you find?"
                         />
-                        
+
                         <div className="game game-5">
                             <a href="games/troyan-horse/play/" target="blank"><img src="img/greekTale.png" alt="A Greek Tale is a game with a metaphor of hacking computers with trojan horses by avoiding firewalls" /></a>
                             <div className="game-text">
