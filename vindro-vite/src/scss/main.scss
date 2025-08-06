@@ -277,10 +277,6 @@ img {
     }
 }
 
-main {
-    min-height: 100vh;
-}
-
 section.hero-full,
 section.hero-half {
     position: relative;
@@ -350,6 +346,8 @@ section.hero-half {
 #what-we-do {
 
     h3 {
+        width: 84%;
+        text-align: center;
         scroll-margin-top: 210px;
         font-family: $vindro-Montserrat;
         font-size: 2.8rem;
@@ -358,6 +356,8 @@ section.hero-half {
     }
 
     h4 {
+        width: 84%;
+        text-align: center;
         font-size: 2.8rem;
         font-weight: 400;
         margin-bottom: 4.2rem;
@@ -374,16 +374,11 @@ section.hero-half {
 }
 
 section#home-about {
-    min-height: 50vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     .team-container {
+        max-width: 1600px;
         display: flex;
         justify-content: center;
-        padding-top: 84px;
         gap: 42px;
 
         .team-member {
@@ -395,14 +390,16 @@ section#home-about {
             padding: 21px;
 
             img {
-                width: 42%;
+                width: 180px;
+                height: 180px;
                 border-radius: 50%;
                 border: 3px solid $vindro-gray;
                 background-color: $vindro-teal;
                 margin-bottom: 2rem;
             }
 
-            >div h3 {
+            >div h5 {
+                color: $vindro-green;
                 font-size: 3rem;
                 text-align: center;
                 margin-bottom: 1rem;
@@ -533,30 +530,14 @@ section#stories-page-content {
 }
 
 section#games-gallery-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
     position: relative;
     padding: 7rem 2rem;
 
-    #games-gallery-intro {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 42px;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 3rem;
-
-        h2 {
-            font-family: $vindro-Montserrat;
-            font-size: 3rem;
-        }
-
-        p {
-            width: 63%;
-            font-size: 1.8rem;
-        }
-    }
-
     #games-gallery {
+        max-width: 1600px;
         position: relative;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -910,4 +891,5 @@ footer {
     }
 }
 
+@import 'game-42';
 @import 'mobile';

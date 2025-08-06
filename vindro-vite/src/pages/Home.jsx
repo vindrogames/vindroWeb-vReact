@@ -1,8 +1,7 @@
-import React from "react";
 import { useRef } from 'react';
-import { Link } from 'react-router-dom';
 import HomeHelmet from "../page-helmets/HomeHelmet";
 import ShowcaseSection from "../components/ui/ShowcaseSection";
+import HomeAbout from '../components/pages/home/HomeAbout';
 
 function Home() {
 
@@ -42,24 +41,7 @@ function Home() {
                     <h4>They are designed to boost thinking, promote learning and enhance mental growth.</h4>
                 </ShowcaseSection>
 
-                <section id="home-about" className="bg-tan">
-                    <div className="team-container">
-                        <div className="team-member">
-                            <img src="img/fer_vindro_good.png" alt="Fernando Giménez Cacho is a Software engineer specialized in cloud security"></img>
-                            <div>
-                                <h3 className="inline-bold inline-green" translate="no">Zeneke</h3>
-                                <p><span translate="no">Fernando Giménez</span> is a Computer Engineer working primarily in cloud services and security.</p>
-                            </div>
-                        </div>
-                        <div className="team-member">
-                            <img src="img/mike_vindro_good.png" alt="Michael Thomas Bennett is a creative teacher gone programmer"></img>
-                            <div>
-                                <h3 className="inline-bold inline-green" translate="no">Mikelele</h3>
-                                <p><span translate="no">Michael Bennett</span> works in education as a University teacher, Teacher trainer and Education Innovation consultant.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <HomeAbout />
             </main>
 
         </>

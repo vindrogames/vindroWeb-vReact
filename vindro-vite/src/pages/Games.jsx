@@ -18,23 +18,25 @@ function Games() {
                     classes="hero-half bg-black"
                 >
                     <h1>play<span className="inline-bold inline-teal">Learn</span><span translate="no">Vindrogames</span></h1>
-                    <h2>Add free games and apps which provide a context for developing language, critical thinking and attention. Or simply just fun.</h2>
+                    <h2>Ad-free games and apps which provide a context for developing language, critical thinking and attention. Or simply just fun.</h2>
                 </ShowcaseSection>
 
                 <section id="games-gallery-container">
 
                     <div id="games-gallery">
 
-                        <div className="game game-1">
-                            <a href="/games/42-the-game/"><img src="img/42-gallery-gif.gif" alt="Inspired by the boardgame The Mind our 42 game puts your reasoning and luck to the test" /></a>
-                            <div className="game-text">
-                                <h3>42 the game</h3>
-                                <p>Inspired by the boardgame The Mind, our 42 game will test your reasoning, intuition and luck!</p>
-                            </div>
-                        </div>
+                        <GameGalleryCard
+                            key="game-1"
+                            route="/games/game-42"
+                            galleryImg={
+                                <img src="img/42-gallery-gif.gif" alt="Inspired by the boardgame The Mind our 42 game puts your reasoning and luck to the test" />
+                            }
+                            gameTitle="42 the game"
+                            gameDescription="Inspired by the boardgame The Mind, our 42 game will test your reasoning, intuition and luck!"
+                        />
 
                         <GameGalleryCard
-                            classNum="game-2"
+                            key="game-2"
                             route="/games/escape-the-cloud"
                             galleryImg={
                                 <img src="img/escapeTheCloud.png" alt="Digital Escaperoom to learn about Google Workspace tools" />
@@ -54,7 +56,7 @@ function Games() {
                         </div>
 
                         <GameGalleryCard
-                            classNum="game-4"
+                            key="game-3"
                             route="https://set.vindrogames.com"
                             galleryImg={
                                 <img src="img/setGame.png" alt="Set is a classNameic boardgame putting to the test your concentration and speed. This is vindrogame's solitaire version" />

@@ -1,11 +1,12 @@
 main.game-42 {
     position: relative;
+    top: 90px;
     width: 100%;
     height: calc(100vh - 90px);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    padding: 0 2rem;
     background-color: $vindro-black;
 
     #end-game-42 {
