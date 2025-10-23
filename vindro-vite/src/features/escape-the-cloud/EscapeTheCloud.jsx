@@ -7,7 +7,7 @@ function EscapeTheCloud() {
 
         <>
             <EscapeCloudHelmet />
-            <main>
+            <main id="escape-cloud">
 
                 <ShowcaseSection
                     classes="hero-half bg-black"
@@ -20,7 +20,8 @@ function EscapeTheCloud() {
 
                     <div id="escape-the-cloud-trailer">
                         <video controls>
-                            <source src="img/Escape the Cloud Trailor.mp4" type="video/mp4" />
+                            <source src="/video/Escape_the_Cloud_Trailor.mp4" type="video/mp4" />
+                            Your browser does not support the video tag.
                         </video>
                     </div>
 

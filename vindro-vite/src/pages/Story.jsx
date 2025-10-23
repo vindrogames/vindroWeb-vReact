@@ -30,7 +30,7 @@ function Story() {
                                 <TimelineCard
                                     cardNum='1'
                                     title='2016: First Game Jam'
-                                    text='We had been playing around with a lot of of different ideas, but nothing ever came of them. Zeneke found out about a Game Jam and we went for it! And thus was born "A Greek Tale". Not much, but a mile-stone for us! We actually created our first game, from scrath.'
+                                    text='We had been playing around with a lot of of different ideas, but nothing ever came of them. Zeneke found out about a Game Jam and we went for it! And thus was born "A Greek Tale". Not much, but a mile-stone for us! We actually created our first game, from scratch.'
                                 />
                             </li>
                             <li className='card show'>

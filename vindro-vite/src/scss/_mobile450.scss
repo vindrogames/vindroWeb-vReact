@@ -1,0 +1,112 @@
+@media(max-width: 450px) {
+
+    section.hero-full {
+
+        h2 {
+            width: 84%;
+        }
+    }
+
+    section.hero-half {
+        h2 {
+            font-size: 1.8rem;
+        }
+    }
+
+    section#stories-page-content {
+
+        #timeline ul {
+            padding: 21px 0 42px 0;
+
+            li {
+
+                margin-left: 3px;
+
+                div {
+
+                    h3 {
+                        font-size: 1.8rem;
+                    }
+                }
+            }
+        }
+    }
+
+    main#games-showcase {
+        section.hero-half {
+            h1 {
+                font-size: 2.8rem;
+            }
+        }
+
+    }
+
+    section#games-gallery-container {
+
+        padding: 3rem 0;
+
+        #games-gallery {
+
+            grid-template-columns: 1fr;
+
+            .game {
+
+                &-text {
+                    padding: 14px;
+
+                    a {
+                        justify-content: center;
+
+                        h3 {
+
+                            font-size: 1.8rem;
+                            text-align: center;
+                        }
+                    }
+
+                    p {
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+
+    main#escape-cloud {
+        section.hero-half {
+            h1 {
+                font-size: 3.6rem;
+            }
+        }
+    }
+
+    section#escape-the-cloud {
+
+        #escape-the-cloud-trailer {
+
+            video {
+                width: 96%;
+            }
+        }
+
+        #escape-the-cloud-info {
+
+            .buttons {
+                flex-direction: column;
+                gap: 21px;
+
+                a {
+                    width: 100%;
+                    font-size: 1.6rem;
+                    text-align: center;
+                    padding: 14px;
+                }
+            }
+        }
+    }
+
+    section#under-construction {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+}

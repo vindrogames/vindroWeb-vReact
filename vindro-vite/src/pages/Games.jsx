@@ -12,7 +12,7 @@ function Games() {
         <>
             <GamesHelmet />
 
-            <main>
+            <main id="games-showcase">
 
                 <ShowcaseSection
                     classes="hero-half bg-black"
