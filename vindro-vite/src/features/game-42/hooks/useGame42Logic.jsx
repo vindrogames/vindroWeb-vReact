@@ -1,7 +1,7 @@
 // src/game-42/hooks/useGameLogic.js
 import { useState, useRef } from "react";
 
-export default function useGame42Logic() {
+export default function UseGame42Logic() {
 
   const [numsRound, setNumsRound] = useState([]);
   const [numToPlace, setNumToPlace] = useState(null);

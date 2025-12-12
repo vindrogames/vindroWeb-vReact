@@ -2,7 +2,7 @@
 import React from "react";
 import Board from "./components/Board";
 import GameDisplay from "./components/GameDisplay";
-import useGame42Logic from "./hooks/UseGame42Logic";
+import UseGame42Logic from "./hooks/UseGame42Logic";
 
 export default function Game42() {
   const {
@@ -15,7 +15,7 @@ export default function Game42() {
     startGame,
     placeNum,
     playAgain,
-  } = useGame42Logic();
+  } = UseGame42Logic();
 
   return (
     <main className="game-42">
