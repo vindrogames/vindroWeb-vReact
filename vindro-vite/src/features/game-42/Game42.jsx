@@ -4,6 +4,8 @@ import Board from "./components/Board";
 import GameDisplay from "./components/GameDisplay";
 import UseGame42Logic from "./hooks/UseGame42Logic";
 
+// new lines
+
 export default function Game42() {
   const {
     numsPlaced,
