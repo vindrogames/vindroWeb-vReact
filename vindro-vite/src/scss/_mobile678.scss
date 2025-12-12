@@ -1,0 +1,143 @@
+@media(max-width: 678px) {
+    section.hero-full {
+        h1 {
+            font-size: 4.2rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        button {
+            padding: 7px 21px;
+        }
+    }
+
+    section.hero-half {
+        h2 {
+            font-size: 2.1rem;
+        }
+    }
+
+    section#what-we-do {
+
+        h3 {
+            font-family: $vindro-openSans;
+        }
+        h3,
+        h4 {
+            font-size: 2.1rem;
+        }
+
+        a {
+            padding: 7px 21px;
+        }
+    }
+
+    section#home-about {
+        height: 100%;
+        min-height: 50vh;
+
+        .team-container {
+            flex-direction: column;
+            gap: 21px;
+
+            .team-member {
+                width: 100%;
+
+                img {
+                    width: 120px;
+                    height: 120px;
+                }
+
+                >div h5 {
+                    font-size: 2.7rem;
+                }
+
+                >div p {
+                    font-size: 1.8rem;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+    section#stories-page-content {
+
+        #timeline ul {
+
+            li {
+
+                margin-left: 21px;
+            }
+        }
+    }
+
+    main#games-showcase {
+        section.hero-half {
+            h1 {
+                font-size: 2.8rem;
+            }
+        }
+
+    }
+
+    section#games-gallery-container {
+
+        padding: 3rem 0;
+
+        #games-gallery {
+
+            grid-template-columns: repeat(2, 1fr);
+
+            .game {
+
+                &-text {
+                    padding: 14px;
+
+                    a {
+
+                        h3 {
+                            font-size: 1.8rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    main#escape-cloud {
+        section.hero-half {
+            h1 {
+                font-size: 3.6rem;
+            }
+        }
+
+    }
+
+    section#escape-the-cloud {
+
+        #escape-the-cloud-trailer {
+
+            video {
+                width: 84%;
+            }
+        }
+    }
+
+    section#contact-page-content {
+        height: 100%;
+        grid-template-columns: 1fr;
+
+        #contact-left {
+
+            min-height: 50vh;
+        }
+
+        #contact-right {
+
+            min-height: 50vh;
+
+        }
+    }
+}

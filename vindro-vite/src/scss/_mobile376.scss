@@ -1,0 +1,211 @@
+@media(max-width: 376px) {
+    section.hero-full {
+        //padding: 7px;
+
+        h1 {
+            font-size: 3.2rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+        }
+
+        button {
+            font-size: 1.6rem;
+            padding: 7px 14px;
+
+            &:hover {
+                background-color: $vindro-green;
+                color: white;
+            }
+        }
+    }
+
+    section.hero-half {
+        h1 {
+            font-size: 3.2rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+        }
+    }
+
+    section#what-we-do {
+
+        h3,
+        h4 {
+            font-size: 1.8rem;
+        }
+
+        a {
+            padding: 7px 14px;
+            font-size: 1.6rem;
+        }
+    }
+
+    section#home-about {
+
+        .team-container {
+
+            .team-member {
+
+                img {
+                    width: 120px;
+                    height: 120px;
+                }
+
+                >div h5 {
+                    font-size: 2.4rem;
+                }
+
+                >div p {
+                    font-size: 1.6rem;
+                }
+            }
+        }
+    }
+
+    section#stories-page-content {
+        width: 100%;
+        background-color: $vindro-gray;
+
+        #timeline ul {
+            width: 100%;
+
+            li {
+                width: 3px;
+                margin-left: 28px;
+
+                div {
+                    width: 73vw;
+                    bottom: -3px;
+                }
+
+                &:nth-child(even) div {
+                    left: 28px;
+                }
+
+                &:nth-child(odd) div {
+                    left: 28px;
+                }
+
+                &:nth-child(even) div:before {
+                    left: -15px;
+                    border-width: 8px 16px 8px 0;
+                    border-color: transparent #FFFFFF transparent transparent;
+                }
+
+                /* Timeline Dots */
+                &:after {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                /* Timeline Arrows Base */
+                div:before {
+                    bottom: 3px;
+                }
+            }
+        }
+    }
+
+    main#games-showcase {
+        section.hero-half {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+    }
+
+    section#contact-page-content {
+        height: 100%;
+        grid-template-columns: 1fr;
+
+        #contact-left {
+
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        #contact-right {
+            padding: 21px;
+        }
+    }
+
+    section#escape-the-cloud {
+
+        #escape-the-cloud-trailer {
+            min-height: 36vh;
+            padding: 7px;
+        }
+
+        #escape-the-cloud-info {
+            min-height: 50vh;
+            padding: 21px;
+            gap: 28px;
+            .buttons {
+                
+                a {
+                    padding: 7px;
+                }
+            }
+        }
+    }
+
+    footer {
+        padding: 14px 0;
+
+        a {
+            font-size: 1rem;
+            color: $vindro-green;
+
+            &:hover {
+                color: $vindro-teal;
+            }
+        }
+
+        .contact-info {
+            font-size: 1.2rem;
+
+            a {
+                color: $vindro-teal;
+                font-weight: 600;
+
+                &:hover {
+                    color: $vindro-green;
+                }
+            }
+        }
+
+        .social {
+            height: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            gap: 14px;
+
+            a {
+
+                padding: 3px;
+                color: white;
+                border-radius: 3px;
+
+                svg {
+                    width: 3rem;
+                    height: 3rem;
+                }
+
+                &:hover {
+                    background-color: $vindro-green;
+                    color: $vindro-gray;
+                }
+            }
+        }
+    }
+}
