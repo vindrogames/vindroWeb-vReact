@@ -32,9 +32,12 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: 'vindro-vite/package-lock.json'
       - name: Install dependencies
+        working-directory: ./vindro-vite
         run: npm install
       - name: Build
+        working-directory: ./vindro-vite
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -42,7 +45,7 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           # Upload dist repository
-          path: './dist'
+          path: './vindro-vite/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
