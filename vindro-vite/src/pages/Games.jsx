@@ -45,18 +45,18 @@ function Games() {
                             gameDescription="Inspired by Escape Rooms, this game teacher players tricks and functionalities of Google tools."
                         />
 
-                        <div className="game game-3">
-                            <a href="#" >
-                                <img src="img/brainGame.png" alt="A zelda style role playing game to learn how the brain processes information" />
-                            </a>
-                            <div className="game-text">
-                                <h3>Brain Game</h3>
-                                <p>A role playing type game designed to teach people about the human brain and how we process visual information.</p>
-                            </div>
-                        </div>
-
                         <GameGalleryCard
                             key="game-3"
+                            route="https://cerebro.vindrogames.com"
+                            galleryImg={
+                                <img src="img/brainGame.png" alt="A zfantasy style RPG to learn how the brain processes information" />
+                            }
+                            gameTitle="Brain Game"
+                            gameDescription="A role playing type game designed to teach people about the human brain and how we process visual information."
+                        />
+
+                        <GameGalleryCard
+                            key="game-4"
                             route="https://set.vindrogames.com"
                             galleryImg={
                                 <img src="img/setGame.png" alt="Set is a classNameic boardgame putting to the test your concentration and speed. This is vindrogame's solitaire version" />
