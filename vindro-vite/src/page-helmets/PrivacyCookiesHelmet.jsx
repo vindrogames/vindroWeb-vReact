@@ -19,7 +19,7 @@ function PrivacyCookiesHelmet() {
       <meta property="og:image:height" content="450" />
       <meta property="og:image:type" content="image/png" />
 
-      <link rel="icon" type="image/x-icon" href="img/favicon_io/favicon.ico" />
+      <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico" />
       <title>Vindrogames | Privacy & Cookies</title>
     </Helmet>
   )
