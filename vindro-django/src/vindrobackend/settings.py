@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-h-ds-pv*5fmh8^m=pfh2o+rkuffj7%^3p@p+!$ez88#mb-owy(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -133,12 +133,13 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://backend.vindrogames.com",
 ]
 
 # Session settings
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = False  # Set True in production with HTTPS
+SESSION_COOKIE_SECURE = True  # Set True in production with HTTPS
 SESSION_COOKIE_SAMESITE = 'Lax'
 
 # Default primary key field type
