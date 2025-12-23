@@ -1,11 +1,14 @@
 import { NavLink } from 'react-router-dom';
 
-function NavBarLink({ route, text, onClick }) {
+function NavBarLink({ route, text, onClick, className }) {
     return (
         <li>
             <NavLink
                 to={route}
-                className={({ isActive }) => (isActive ? 'current' : '')}
+                className={({ isActive }) => {
+                    const baseClass = className || ""; 
+                    return `${baseClass} ${isActive ? 'current' : ''}`.trim();
+                }}
                 onClick={(e) => {
                     window.scrollTo({ top: 0, behavior: 'auto' });
                     if (onClick) onClick(e);  // Close menu if handler is provided
