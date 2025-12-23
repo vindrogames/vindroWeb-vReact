@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # Django Backend
+  backend:
+    build:
+      context: ./vindro-django
+      dockerfile: Dockerfile
+    container_name: vindro-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./vindro-django/src:/app/src
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - vindro-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/test/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./vindro-vite
+      dockerfile: Dockerfile
+    container_name: vindro-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./vindro-vite:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - vindro-network
+
+networks:
+  vindro-network:
+    driver: bridge
