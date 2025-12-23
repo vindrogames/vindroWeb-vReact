@@ -11,6 +11,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
+    dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv package manager
@@ -27,7 +28,7 @@ COPY src/ ./src/
 
 # Copy and set permissions for entrypoint script
 COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+RUN dos2unix /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 # Expose port 8000
 EXPOSE 8000
