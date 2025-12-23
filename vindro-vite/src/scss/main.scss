@@ -46,15 +46,15 @@ img {
     background-color: $vindro-black-overlay;
     color: white;
 
-    /* ✅ Responsive sizing */
+    /* Responsive sizing */
     width: 100%;
     max-width: 1600px;
     height: 90px;
 
-    /* ✅ Center the navbar horizontally */
+    /* Center the navbar horizontally */
     margin: 0 auto;
 
-    /* ✅ Fixed positioning */
+    /* Fixed positioning */
     position: fixed;
     top: 0;
     left: 0;
@@ -95,19 +95,48 @@ img {
         }
     }
 
-    ul {
+    nav {
+        //width: 100%;
+        height: 100%;
         display: flex;
-        font-size: 1.6rem;
+        align-items: center;
 
-        a {
-            color: white;
-            padding: 21px;
-            margin: 0 3px;
+        ul {
+            display: flex;
+            font-size: 1.6rem;
+
+            a {
+                color: white;
+                padding: 21px;
+                margin: 0 3px;
+            }
+
+            a:hover,
+            a.current {
+                border-bottom: 3px solid $vindro-teal;
+            }
         }
 
-        a:hover,
-        a.current {
-            border-bottom: 3px solid $vindro-teal;
+        .auth-nav {
+
+            a.btn-login {
+                border: 1px solid $vindro-teal;
+                border-radius: 5px;
+                background-color: transparent;
+                color: white;
+                font-size: 1.6rem;
+                padding: 7px 21px;
+                transition: all 0.3s ease;
+
+                &:hover, &.current {
+                    background-color: $vindro-teal;
+                    color: $vindro-black;
+                }
+
+                &.current {
+                    cursor: default;
+                }
+            }
         }
     }
 }
@@ -813,6 +842,7 @@ footer {
     a {
         font-size: 1.2rem;
         color: $vindro-green;
+        transition: all 0.3s ease;
 
         &:hover {
             color: $vindro-teal;

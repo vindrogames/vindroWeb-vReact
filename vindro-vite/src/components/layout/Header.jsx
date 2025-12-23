@@ -62,8 +62,13 @@ function NavBar() {
                             </>
                         ) : (
                             <>
-                                <SmartLink to="/login" className="btn btn-tan">Login</SmartLink>
-                                <SmartLink to="/register" className="btn btn-teal">Register</SmartLink>
+                                <NavBarLink
+                                    route="/login"
+                                    text="Login"
+                                    className="btn-login"
+                                />
+                                {/*<SmartLink to="/login" className="btn btn-login">login</SmartLink>
+                                {/*<SmartLink to="/register" className="btn btn-teal">Register</SmartLink>*/}
                             </>
                         )}
                     </div>

@@ -33,6 +33,7 @@ button {
     display: inline-block;
     padding: 10px 30px;
     border-radius: 5px;
+    transition: all 0.3s ease;
 }
 
 .btn-tan,
@@ -50,6 +51,7 @@ button {
 .btn-black {
     background-color: $vindro-black;
     color: $vindro-teal;
+
 }
 
 .bg-black {
@@ -67,6 +69,7 @@ button {
     background-color: $vindro-green;
     color: white;
 }
+
 
 section#under-construction {
     height: 50vh;
