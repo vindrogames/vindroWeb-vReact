@@ -65,13 +65,15 @@ function Games() {
                             gameDescription="A great boardgame we have recreated to play on screen. Simple but mentally exhausting, how many sets can you find?"
                         />
 
-                        <div className="game game-5">
-                            <a href="games/troyan-horse/play/" target="blank"><img src="img/greekTale.png" alt="A Greek Tale is a game with a metaphor of hacking computers with trojan horses by avoiding firewalls" /></a>
-                            <div className="game-text">
-                                <h3>Trojan Horse</h3>
-                                <p>A short game inspired by Troy with a digital spin. Can you send your Trojan Horses through all the firewalls?</p>
-                            </div>
-                        </div>
+                        <GameGalleryCard
+                            key="game-5"
+                            route="https://greek-tale.vindrogames.com"
+                            galleryImg={
+                                <img src="img/greekTale.png" alt="A Greek Tale is a game with a metaphor of hacking computers with trojan horses by avoiding firewalls" />
+                            }
+                            gameTitle="A Greek Tale"
+                            gameDescription="A short game inspired by Troy with a digital spin. Can you send your Trojan Horses through all the firewalls?"
+                        />
 
                         <div className="game game-6">
                             <a href="madrid-calculator/"><img src="img/madrid-calculator.png" alt="La calculadora madridista, calcula como siempre o por el número de champions del Real Madrid" /></a>

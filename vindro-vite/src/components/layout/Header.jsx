@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavBarLink from '../ui/NavBarLink';
 import SmartLink from '../ui/SmartLink';
+import { useAuth } from '../../contexts/AuthContext';
 //import './NavBar.scss'; // Assuming styles are scoped here
 
 const routes = [
@@ -13,8 +15,19 @@ const routes = [
 
 function NavBar() {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
 
     const toggleMenu = () => setMenuOpen((prev) => !prev);
+
+    async function handleLogout() {
+        try {
+            await logout();
+            navigate('/');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    }
 
     return (
         <>
@@ -39,6 +52,26 @@ function NavBar() {
                             <NavBarLink key={r.route} text={r.text} route={r.route} />
                         ))}
                     </ul>
+                    <div className="auth-nav">
+                        {user ? (
+                            <>
+                                <span className="username">Welcome, {user.username}</span>
+                                <button onClick={handleLogout} className="btn btn-tan">
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <NavBarLink
+                                    route="/login"
+                                    text="Login"
+                                    className="btn-login"
+                                />
+                                {/*<SmartLink to="/login" className="btn btn-login">login</SmartLink>
+                                {/*<SmartLink to="/register" className="btn btn-teal">Register</SmartLink>*/}
+                            </>
+                        )}
+                    </div>
                 </nav>
             </div>
 
@@ -81,6 +114,31 @@ function NavBar() {
                             />
                         ))}
                     </ul>
+                    <div className="auth-nav-mobile">
+                        {user ? (
+                            <>
+                                <span className="username-mobile">Welcome, {user.username}</span>
+                                <button
+                                    onClick={() => {
+                                        handleLogout();
+                                        setMenuOpen(false);
+                                    }}
+                                    className="btn btn-tan"
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <SmartLink to="/login" className="btn btn-tan" onClick={() => setMenuOpen(false)}>
+                                    Login
+                                </SmartLink>
+                                <SmartLink to="/register" className="btn btn-teal" onClick={() => setMenuOpen(false)}>
+                                    Register
+                                </SmartLink>
+                            </>
+                        )}
+                    </div>
                 </nav>
             </div>
         </>
