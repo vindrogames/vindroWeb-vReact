@@ -9,7 +9,7 @@
     max-width: 450px;
     width: 100%;
 
-    .no-account {
+    .no-account, .yes-account {
 
         display: flex;
         justify-content: center;
@@ -191,9 +191,5 @@
         h1 {
             font-size: 1.75rem;
         }
-    }
-
-    .auth-nav {
-        display: none; // Hide desktop auth nav on mobile
     }
 }

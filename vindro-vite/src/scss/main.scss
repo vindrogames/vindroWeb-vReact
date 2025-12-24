@@ -107,7 +107,7 @@ img {
 
             a {
                 color: white;
-                padding: 21px;
+                padding: 21px 14px;
                 margin: 0 3px;
             }
 
@@ -364,8 +364,9 @@ section.hero-full {
 
 section.hero-half {
 
-    height: 50vh;
+    min-height: 50vh;
     gap: 21px;
+    padding: 42px;
 
     h1 {
         //width: 63%;
@@ -897,7 +898,6 @@ main {
 }
 
 @import 'game-42';
-@import 'mobile';
 @import 'mobile960';
 @import 'mobile678';
 @import 'mobile450';

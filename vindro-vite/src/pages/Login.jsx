@@ -38,7 +38,7 @@ export default function Login() {
         <>
             <LoginHelmet />
 
-            <main id="auth-page">
+            <main id="login-page">
 
                 <ShowcaseSection
                     classes="hero-half bg-black"
