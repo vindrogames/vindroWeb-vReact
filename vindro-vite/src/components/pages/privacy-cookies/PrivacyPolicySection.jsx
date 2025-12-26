@@ -5,7 +5,7 @@ function PrivacyPolicySection() {
     return (
         <section id="privacy">
             <h2>Privacy Policy</h2>
-            <h4>Las updated May 2, 2024</h4>
+            <h4>Last updated May 2, 2024</h4>
             <p>Your privacy is important to us. It is <span translate="no">Vindrogames'</span> policy to respect your privacy regarding any information we may collect from you across our website, <span translate="no" className="inline-green inline-bold">www.vindrogames.com</span>, and other sites we own and operate.</p>
             <h3>1. Information we collect</h3>
             <h5>1.1 Personal Information</h5>
