@@ -3,7 +3,28 @@
  * Centralized API communication with authentication support
  */
 
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+const LOCAL_FALLBACK = 'http://127.0.0.1:8000/api';
+const DEFAULT_BACKEND = 'https://backend.vindrogames.com/api';
+const VITE_API = typeof import.meta !== 'undefined' ? import.meta.env?.VITE_API_BASE_URL : undefined;
+
+function getApiBase() {
+  if (VITE_API) return VITE_API.replace(/\/$/, '');
+  if (typeof window !== 'undefined' && window.location && window.location.hostname) {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') return LOCAL_FALLBACK;
+    if (host.endsWith('vindrogames.com') || host.endsWith('netlify.app')) return DEFAULT_BACKEND;
+    return `${window.location.origin.replace(/\/$/, '')}/api`;
+  }
+  return LOCAL_FALLBACK;
+}
+
+const API_BASE_URL = getApiBase();
+
+function buildUrl(endpoint) {
+  const trimmedBase = API_BASE_URL.replace(/\/$/, '');
+  const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  return `${trimmedBase}${path}`;
+}
 
 /**
  * Fetch wrapper with credentials support for session-based auth
@@ -19,7 +40,7 @@ async function apiRequest(endpoint, options = {}) {
   };
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    const response = await fetch(buildUrl(endpoint), config);
     const data = await response.json();
 
     if (!response.ok) {
