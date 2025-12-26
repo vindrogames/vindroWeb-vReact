@@ -2,25 +2,30 @@ import React from 'react';
 import ContactHelmet from '../page-helmets/ContactHelmet';
 import ShowcaseSection from '../components/ui/ShowcaseSection';
 
-function Contact() {
+function Brackets() {
 
     return (
 
         <>
             <ContactHelmet />
 
-            <main>
+            <main id="brackets-page">
 
                 <ShowcaseSection
                     classes="hero-half bg-black"
                 >
-                    <h1>get<span className="inline-bold inline-teal">In</span>Touch</h1>
-                    <h2>Who knows what could happen</h2>
+                    <h1>vindro<span className="inline-bold inline-teal">Brackets</span></h1>
+                    <h2>Easy, fun and stylish brackets for you and your friends.</h2>
                 </ShowcaseSection>
                 
                 <ShowcaseSection
-                    id="contact-page-content"
+                    id=""
                 >
+                    <div id="contact-left">
+                        <h3 translate="no">zeneke@gmail.com</h3>
+                        <h3 translate="no">d.michaelthomasbennett@gmail.com</h3>
+                    </div>
+
                     <div id="contact-right">
                         <h2>We love talking with people about programming, games and learning.</h2>
                         <h2>We work with people and institutions offering:</h2>
@@ -32,11 +37,6 @@ function Contact() {
                             <li>Data Analysis</li>
                         </ul>
                     </div>
-
-                    <div id="contact-left">
-                        <h3 translate="no">zeneke@gmail.com</h3>
-                        <h3 translate="no">d.michaelthomasbennett@gmail.com</h3>
-                    </div>
                 </ShowcaseSection>
             </main>
         </>
@@ -44,4 +44,4 @@ function Contact() {
     )
 }
 
-export default Contact;
+export default Brackets;

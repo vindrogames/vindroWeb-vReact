@@ -1,5 +1,29 @@
 @media(max-width: 450px) {
 
+    #navbar-hamburger {
+
+        .vindro-logo {
+            margin: 0 14px;
+        }
+
+        .nav-auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+
+            .auth-nav-mobile {
+                padding: 0 7px;
+
+                .btn-login {
+                    padding: 7px 14px;
+                    font-size: 1.4rem;
+                }
+            }
+
+        }
+    }
+
     section.hero-full {
 
         h2 {
@@ -8,6 +32,8 @@
     }
 
     section.hero-half {
+        padding: 14px;
+
         h2 {
             font-size: 1.8rem;
         }
@@ -110,8 +136,28 @@
         text-align: center;
     }
 
+    .auth-container {
+        width: 84%;
+        padding: 14px;
+
+        .no-account,
+        .yes-account {
+            flex-direction: column;
+            gap: 14px;
+
+            h3 {
+                font-size: 1.8rem;
+            }
+
+            .btn-register {
+                font-size: 1.4rem;
+                padding: 7px 14px;
+            }
+        }
+    }
+
     footer {
-        
+
 
         a {
             font-size: 1rem;
