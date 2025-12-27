@@ -9,6 +9,8 @@ export default function GameDisplay({
   playAgain,
   gameOver,
   endCause,
+  prevPoints,
+  todayBest,
 }) {
   const renderEndText = () => {
     if (!endCause) return null;
@@ -28,10 +30,10 @@ export default function GameDisplay({
         <h1 className="title-42">
           <span className="inline-teal inline-bold">42</span> the game
         </h1>
-        <p>
-          Place 14 random numbers between 1–42 in ascending order. Lose if you
-          break the order.
-        </p>
+        <h2>Place 14 random numbers between 1–42 in ascending order.</h2>
+        <p>Each round the numbers are shuffled and will be revealed in different order.</p>
+        <p>You will have to think a bit about probability of possible numbers.</p>
+        <p>You lose if ascending order is broken.</p>
       </div>
 
       <div className="showcase-42">
@@ -55,6 +57,8 @@ export default function GameDisplay({
 
         <div className="game-42-results">
           <h3>Points: {points}</h3>
+          <h3>Prev Points: {prevPoints ?? "-"}</h3>
+          <h3>Today's Best: {todayBest?? "-"}</h3>
           {gameOver && <div className="end-game-message">{renderEndText()}</div>}
         </div>
       </div>

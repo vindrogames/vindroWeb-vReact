@@ -2,11 +2,11 @@ main.game-42 {
     position: relative;
     width: 100%;
     height: 100vh;
-    margin: 90px auto 0;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 2rem;
+    padding: 90px 2rem 0;
     background-color: $vindro-black;
 
     #end-game-42 {
@@ -75,23 +75,24 @@ main.game-42 {
                 color: white;
             }
 
-            &.filled,
+            &.closed,
             &:hover {
-                width: 84%;
                 background-color: $real-yellow;
                 color: $vindro-black;
                 font-weight: 600;
             }
 
-            &.filled {
+            &.closed {
                 text-align: center;
                 cursor: default;
+
+                &.game-over {
+                    background-color: $real-red;
+                    color: white;
+                }
             }
 
-            &.game-over {
-                background-color: $real-red;
-                color: white;
-            }
+
 
             &.end-game-1 {
                 background-color: $vindro-teal;
@@ -106,11 +107,13 @@ main.game-42 {
     }
 
     #display-42 {
-        width: 58%;
+        flex-grow: 1;
+        padding: 42px;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        gap: 42px;
 
         .instructions-42 {
 
@@ -143,13 +146,15 @@ main.game-42 {
         }
 
         .showcase-42 {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
+            display: flex;
+            flex-direction: column;
+            gap: 21px;
 
             .game-42-play-container {
                 align-self: center;
+                width: 63%;
 
-                button#game-42-play-button {
+                button#game-42-play-button, .game-42-number-display {
                     width: 84%;
                     padding: 14px;
                     font-size: 2.8rem;
@@ -158,6 +163,7 @@ main.game-42 {
                     background-color: $real-yellow;
                     border: none;
                     border-radius: 42px;
+                    text-align: center;
                     cursor: pointer;
 
                     &:hover {
@@ -169,11 +175,15 @@ main.game-42 {
                         color: white;
                     }
                 }
+
+                .game-42-number-display {
+                    cursor: default;
+                }
             }
 
             .game-42-results {
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
                 align-items: flex-start;
                 justify-content: space-evenly;
 
