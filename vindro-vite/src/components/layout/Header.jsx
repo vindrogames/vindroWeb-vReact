@@ -34,8 +34,9 @@ function NavBar() {
   useEffect(() => { userOpenRef.current = userDropdownOpen; }, [userDropdownOpen]);
 
   const toggleMenu = () => setMenuOpen((p) => !p);
-  const openUserDropdown = () => setUserDropdownOpen(true);
-  const closeUserDropdown = () => setUserDropdownOpen(false);
+  
+  // const openUserDropdown = () => setUserDropdownOpen(true);
+  // const closeUserDropdown = () => setUserDropdownOpen(false);
 
   useEffect(() => {
     function handleGlobalClick(e) {

@@ -65,4 +65,22 @@
             }
         }
     }
+
+    main#game-42 {
+
+        #game-42-buttons {
+            width: 42%;
+        }
+
+        #display-42 {
+            padding: 21px;
+            flex-grow: 1;
+
+            .instructions-42 {
+                h1 {
+                    font-size: 4.2rem;
+                }
+            }
+        }
+    }
 }

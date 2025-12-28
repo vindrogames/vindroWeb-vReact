@@ -1,12 +1,11 @@
-main.game-42 {
+main#game-42 {
     position: relative;
     width: 100%;
     height: 100vh;
-    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 90px 2rem 0;
+    padding: 90px 0 0 90px;
     background-color: $vindro-black;
 
     #end-game-42 {
@@ -54,7 +53,7 @@ main.game-42 {
     }
 
     #game-42-buttons {
-        width: 42%;
+        width: 28%;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -113,33 +112,104 @@ main.game-42 {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 42px;
+        gap: 21px;
 
         .instructions-42 {
-
-            h1,
-            h2,
-            p {
-                margin-bottom: 1rem;
-            }
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 60px;
 
             h1 {
+
                 font-size: 6.3rem;
+                margin-bottom: 21px;
             }
 
-            h2 {
-                font-size: 2.8rem;
-            }
+            .how-to-play-container {
+                position: relative;
+                z-index: 8;
+                $speed: 0.3s; // Control the speed of each stage here
 
-            p {
-                font-size: 1.8rem;
-                text-align: justify;
-
-                a {
-                    color: $vindro-teal;
+                button {
+                    position: relative;
+                    z-index: 10;
+                    font-size: 1.8rem;
+                    padding: 7px 14px;
+                    width: 210px;
+                    height: 36px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    background-color: white;
+                    box-shadow: -3px -3px 14px $vindro-black;
 
                     &:hover {
-                        color: $real-yellow;
+                        background-color: darken(white, 14%);
+                    }
+                }
+
+                .how-to-play-content {
+                    position: absolute;
+                    top: 18px;
+                    left: 0;
+                    background: white;
+                    border: 1px solid #eee;
+                    border-radius: 8px;
+                    z-index: 8;
+                    overflow: hidden;
+
+                    // INITIAL STATE (Closed)
+                    opacity: 0;
+                    visibility: hidden;
+                    width: 210px; // Start at button width
+                    max-height: 0; // Start at no height
+                    padding: 0 1.5rem;
+
+                    // CLOSING SEQUENCE: Height shrinks immediately, Width waits for height
+                    transition:
+                        max-height $speed ease-in-out,
+                        width $speed ease-in-out $speed,
+                        padding $speed ease-in-out,
+                        opacity 0.2s ease ($speed * 1.5),
+                        visibility 0s linear ($speed * 2);
+
+                    p {
+                        font-size: 1.8rem;
+                        color: $vindro-black;
+                        margin-bottom: 7px;
+                    }
+
+                    a {
+                        font-size: 1.8rem;
+                        color: $vindro-green;
+                        font-weight: 500;
+                        text-decoration: underline;
+
+                        &:hover {
+                            color: lighten($vindro-green, 10%);
+                        }
+                    }
+
+                    &.open {
+                        visibility: visible;
+                        opacity: 1;
+                        width: 100%;
+                        max-height: 600px; // Large enough to fit content
+                        padding: 2.5rem 1.5rem 1.5rem;
+
+                        // OPENING SEQUENCE: Width grows immediately, Height waits for width
+                        transition:
+                            width $speed ease-in-out,
+                            max-height $speed ease-in-out $speed,
+                            padding $speed ease-in-out $speed,
+                            opacity 0.3s ease;
+                    }
+
+                    &.closed {
+                        // Keep as block to allow animation to play out
+                        display: block;
                     }
                 }
             }
@@ -151,11 +221,14 @@ main.game-42 {
             gap: 21px;
 
             .game-42-play-container {
-                align-self: center;
-                width: 63%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
 
-                button#game-42-play-button, .game-42-number-display {
-                    width: 84%;
+                button#game-42-play-button,
+                .game-42-number-display {
+                    width: 63%;
                     padding: 14px;
                     font-size: 2.8rem;
                     font-weight: 600;
@@ -166,39 +239,116 @@ main.game-42 {
                     text-align: center;
                     cursor: pointer;
 
-                    &:hover {
-                        background-color: $vindro-teal;
-                    }
-
                     &.game-over {
                         background-color: $real-red;
                         color: white;
+
+                        &:hover {
+                            background-color: $vindro-teal;
+                            color: $vindro-black;
+                        }
                     }
+                }
+
+                button#game-42-play-button:hover {
+                    background-color: $vindro-teal;
                 }
 
                 .game-42-number-display {
                     cursor: default;
                 }
+
+                .end-game-message {
+                    font-size: 2.1rem;
+                    font-weight: 500;
+                    transition: opacity 0.3s ease;
+                    min-height: 1.5em;
+
+                    &.hidden {
+                        visibility: hidden;
+                        /* Keeps the space reserved */
+                    }
+
+                    &.visible {
+                        visibility: visible;
+                    }
+                }
             }
 
             .game-42-results {
+                width: 84%;
                 display: flex;
-                flex-direction: row;
-                align-items: flex-start;
-                justify-content: space-evenly;
+                align-items: center;
+                justify-content: center;
 
-                &-container {
-                    display: flex;
-                    align-items: flex-start;
-                    justify-content: center;
+                .game-42-results-grid {
+                    display: grid;
+                    width: 100%;
 
-                    h3 {
-                        font-size: 2.1rem;
-                        font-weight: 500;
+                    // Desktop: 3 equal columns
+                    grid-template-columns: repeat(3, 1fr);
+
+                    .grid-header {
+                        display: contents; // Makes children participate in the parent grid
+
+                        div {
+                            font-size: 1.8rem;
+                            font-weight: 500;
+                            padding: 7px;
+
+                            text-align: center;
+
+                            &:nth-child(2) {
+                                border-left: 2px solid $vindro-teal;
+                                border-right: 2px solid $vindro-teal;
+                            }
+                        }
                     }
 
-                    :nth-child(2) {
-                        margin-left: 1rem;
+                    .grid-body {
+                        display: contents;
+
+                        div {
+                            font-size: 2.4rem;
+                            font-weight: 500;
+                            padding: 7px;
+                            text-align: center;
+
+                            &:nth-child(2) {
+                                border-left: 2px solid $vindro-teal;
+                                border-right: 2px solid $vindro-teal;
+                            }
+                        }
+                    }
+
+                    // Mobile Transpose
+                    @media (max-width: 678px) {
+                        grid-template-columns: 1fr 1fr; // 2 columns: Label | Value
+                        border: 1px solid #eee;
+
+                        .grid-header,
+                        .grid-body {
+                            display: contents;
+                        }
+
+                        // Force headers to column 1, values to column 2
+                        .grid-header div,
+                        .grid-body div {
+                            border: none;
+                            border-bottom: 1px solid #eee;
+                            text-align: left;
+                            padding: 10px;
+                        }
+
+                        .grid-header div {
+                            grid-column: 1;
+                            color: #008080;
+                        }
+
+                        .grid-body div {
+                            grid-column: 2;
+                            text-align: right;
+                        }
                     }
                 }
             }

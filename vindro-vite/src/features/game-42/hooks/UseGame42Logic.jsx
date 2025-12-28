@@ -1,8 +1,7 @@
 // src/game-42/hooks/useGameLogic.js
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function UseGame42Logic() {
-
     const [numsRound, setNumsRound] = useState([]);
     const [numToPlace, setNumToPlace] = useState(null);
     const [numsPlaced, setNumsPlaced] = useState(Array(14).fill(0));
@@ -11,7 +10,6 @@ export default function UseGame42Logic() {
     const [endCause, setEndCause] = useState(null);
     const [gameStarted, setGameStarted] = useState(false);
 
-    // New: previous run and today's best (persisted in session)
     const [prevPoints, setPrevPoints] = useState(null);
     const [todayBest, setTodayBest] = useState(0);
 
@@ -21,12 +19,11 @@ export default function UseGame42Logic() {
             const b = sessionStorage.getItem("game42_todayBest");
             if (p !== null) setPrevPoints(Number(p));
             if (b !== null) setTodayBest(Number(b));
-        } catch (e) {
-            // ignore storage errors
-        }
+        } catch (e) {}
     }, []);
 
-    /** -------- Utilities -------- */
+    /** -------- Game Logic Helpers -------- */
+
     const generateGameNums = () => {
         const nums = Array.from({ length: 42 }, (_, i) => i + 1);
         for (let i = nums.length - 1; i > 0; i--) {
@@ -36,7 +33,51 @@ export default function UseGame42Logic() {
         return nums.slice(0, 14);
     };
 
-    /** -------- Game Logic -------- */
+    // This logic simulates every possible move. 
+    // If NO empty slot can hold the candidate without breaking the order, return false.
+    const checkNewNum = (candidate, placements) => {
+        const emptyIndices = placements
+            .map((val, idx) => (val === 0 ? idx : null))
+            .filter((val) => val !== null);
+
+        // If no empty spots left, game over logic handles it elsewhere, but return false safely.
+        if (emptyIndices.length === 0) return false;
+
+        // .some() returns true as soon as it finds ONE valid spot.
+        return emptyIndices.some((targetIdx) => {
+            // Find the closest filled numbers to the left and right
+            let leftNeighbor = -Infinity;
+            let rightNeighbor = Infinity;
+
+            // Look left
+            for (let l = targetIdx - 1; l >= 0; l--) {
+                if (placements[l] !== 0) {
+                    leftNeighbor = placements[l];
+                    break;
+                }
+            }
+            // Look right
+            for (let r = targetIdx + 1; r < placements.length; r++) {
+                if (placements[r] !== 0) {
+                    rightNeighbor = placements[r];
+                    break;
+                }
+            }
+
+            // The move is valid if: Left < Candidate < Right
+            return candidate > leftNeighbor && candidate < rightNeighbor;
+        });
+    };
+
+    const checkPlacedNum = (placements) => {
+        const active = placements.filter(n => n !== 0);
+        for (let i = 0; i < active.length - 1; i++) {
+            if (active[i] > active[i+1]) return true; // Bad order
+        }
+        return false;
+    };
+
+    /** -------- Actions -------- */
 
     const startGame = () => {
         const newNums = generateGameNums();
@@ -49,28 +90,18 @@ export default function UseGame42Logic() {
         setGameStarted(true);
     };
 
-    const checkPlacedNum = (placements) => {
-        const numsToCheck = placements.filter((num) => num !== 0);
-        for (let i = 0; i < numsToCheck.length; i++) {
-            if (numsToCheck[i] > numsToCheck[i + 1]) return true;
-        }
-        return false;
-    };
+    const nextNum = (currentPlacements) => {
+        if (numsRound.length === 0) return;
 
-    const checkNewNum = (candidate, placements) => {
-        const numsToCheck = placements.filter((n) => n !== 0);
-        if (numsToCheck.length > 1) {
-            for (let i = 0; i < placements.length; i++) {
-                if (placements[i] === 0) continue;
-                if (placements[i] > candidate) return false;
-            }
-        }
-        return false;
-    };
-
-    const nextNum = () => {
-        if (!numsRound.length) return;
         const next = numsRound[0];
+        const isPossible = checkNewNum(next, currentPlacements);
+
+        if (!isPossible) {
+            setNumToPlace(next); // Keep the 'killing' number visible
+            endGame("no-possible-moves", points);
+            return;
+        }
+
         setNumToPlace(next);
         setNumsRound((prev) => prev.slice(1));
     };
@@ -80,9 +111,8 @@ export default function UseGame42Logic() {
 
         const updated = [...numsPlaced];
         updated[index] = numToPlace;
-        const bad = checkPlacedNum(updated);
 
-        if (bad) {
+        if (checkPlacedNum(updated)) {
             setNumsPlaced(updated);
             endGame("bad-placement", points);
             return;
@@ -97,44 +127,23 @@ export default function UseGame42Logic() {
             return;
         }
 
-        nextNum();
+        nextNum(updated);
     };
 
-    const endGame = (cause, currentPoints = points) => {
+    const endGame = (cause, currentPoints) => {
         setGameOver(true);
         setEndCause(cause);
-
-        // record previous points and today's best (use sessionStorage)
-        try {
-            const finished = currentPoints;
-            setPrevPoints(finished);
-            sessionStorage.setItem("game42_prevPoints", String(finished));
-
-            const newBest = Math.max(todayBest || 0, finished);
-            setTodayBest(newBest);
-            sessionStorage.setItem("game42_todayBest", String(newBest));
-        } catch (e) {
-            // ignore storage errors
+        setPrevPoints(currentPoints);
+        sessionStorage.setItem("game42_prevPoints", String(currentPoints));
+        if (currentPoints > todayBest) {
+            setTodayBest(currentPoints);
+            sessionStorage.setItem("game42_todayBest", String(currentPoints));
         }
     };
 
-    const playAgain = () => {
-        startGame();
-    };
-
     return {
-        // State
-        numsPlaced,
-        numToPlace,
-        points,
-        gameOver,
-        endCause,
-        gameStarted,
-        prevPoints,
-        todayBest,
-        // Actions
-        startGame,
-        placeNum,
-        playAgain,
+        numsPlaced, numToPlace, points, gameOver, endCause,
+        gameStarted, prevPoints, todayBest,
+        startGame, placeNum, playAgain: startGame
     };
 }

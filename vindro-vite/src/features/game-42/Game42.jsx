@@ -22,7 +22,7 @@ export default function Game42() {
     } = UseGame42Logic();
 
     return (
-        <main className="game-42">
+        <main id="game-42">
             <Board numsPlaced={numsPlaced} placeNum={placeNum} gameOver={gameOver} />
 
             <GameDisplay
