@@ -1,7 +1,11 @@
 // src/game-42/hooks/useGameLogic.js
 import { useState, useEffect } from "react";
+import { useAuth } from '../../../contexts/AuthContext';
+import { api } from '../../../services/api';
 
 export default function UseGame42Logic() {
+    const { isAuthenticated, user } = useAuth();
+
     const [numsRound, setNumsRound] = useState([]);
     const [numToPlace, setNumToPlace] = useState(null);
     const [numsPlaced, setNumsPlaced] = useState(Array(14).fill(0));
@@ -17,6 +21,8 @@ export default function UseGame42Logic() {
         try {
             const p = sessionStorage.getItem("game42_prevPoints");
             const b = sessionStorage.getItem("game42_todayBest");
+            // CHANGE: We load into prevPoints on mount, 
+            // but subsequent updates happen ONLY via startGame
             if (p !== null) setPrevPoints(Number(p));
             if (b !== null) setTodayBest(Number(b));
         } catch (e) {}
@@ -33,38 +39,29 @@ export default function UseGame42Logic() {
         return nums.slice(0, 14);
     };
 
-    // This logic simulates every possible move. 
-    // If NO empty slot can hold the candidate without breaking the order, return false.
     const checkNewNum = (candidate, placements) => {
         const emptyIndices = placements
             .map((val, idx) => (val === 0 ? idx : null))
             .filter((val) => val !== null);
 
-        // If no empty spots left, game over logic handles it elsewhere, but return false safely.
         if (emptyIndices.length === 0) return false;
 
-        // .some() returns true as soon as it finds ONE valid spot.
         return emptyIndices.some((targetIdx) => {
-            // Find the closest filled numbers to the left and right
             let leftNeighbor = -Infinity;
             let rightNeighbor = Infinity;
 
-            // Look left
             for (let l = targetIdx - 1; l >= 0; l--) {
                 if (placements[l] !== 0) {
                     leftNeighbor = placements[l];
                     break;
                 }
             }
-            // Look right
             for (let r = targetIdx + 1; r < placements.length; r++) {
                 if (placements[r] !== 0) {
                     rightNeighbor = placements[r];
                     break;
                 }
             }
-
-            // The move is valid if: Left < Candidate < Right
             return candidate > leftNeighbor && candidate < rightNeighbor;
         });
     };
@@ -72,7 +69,7 @@ export default function UseGame42Logic() {
     const checkPlacedNum = (placements) => {
         const active = placements.filter(n => n !== 0);
         for (let i = 0; i < active.length - 1; i++) {
-            if (active[i] > active[i+1]) return true; // Bad order
+            if (active[i] > active[i+1]) return true; 
         }
         return false;
     };
@@ -80,6 +77,12 @@ export default function UseGame42Logic() {
     /** -------- Actions -------- */
 
     const startGame = () => {
+        // CHANGE: Update the UI with the previous game's final score ONLY when a new game starts
+        const lastScore = sessionStorage.getItem("game42_prevPoints");
+        if (lastScore !== null) {
+            setPrevPoints(Number(lastScore));
+        }
+
         const newNums = generateGameNums();
         setNumsRound(newNums.slice(1));
         setNumToPlace(newNums[0]);
@@ -90,15 +93,17 @@ export default function UseGame42Logic() {
         setGameStarted(true);
     };
 
-    const nextNum = (currentPlacements) => {
+    const nextNum = (currentPlacements, currentPoints) => {
         if (numsRound.length === 0) return;
 
         const next = numsRound[0];
         const isPossible = checkNewNum(next, currentPlacements);
 
         if (!isPossible) {
-            setNumToPlace(next); // Keep the 'killing' number visible
-            endGame("no-possible-moves", points);
+            setNumToPlace(next); 
+            // CHANGE: Pass currentPoints here to ensure the points 
+            // from the move just made are counted.
+            endGame("no-possible-moves", currentPoints);
             return;
         }
 
@@ -127,14 +132,19 @@ export default function UseGame42Logic() {
             return;
         }
 
-        nextNum(updated);
+        // CHANGE: Pass the newly calculated points to nextNum 
+        // to avoid waiting for the state re-render
+        nextNum(updated, newPoints);
     };
 
     const endGame = (cause, currentPoints) => {
         setGameOver(true);
         setEndCause(cause);
-        setPrevPoints(currentPoints);
+        
+        // CHANGE: We save to sessionStorage immediately so the data is ready,
+        // but we DO NOT call setPrevPoints here. This keeps the DOM frozen.
         sessionStorage.setItem("game42_prevPoints", String(currentPoints));
+
         if (currentPoints > todayBest) {
             setTodayBest(currentPoints);
             sessionStorage.setItem("game42_todayBest", String(currentPoints));

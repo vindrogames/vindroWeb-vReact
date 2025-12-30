@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HowToPlayDropdown from "../../../components/ui/HowToPlayDropdown";
+import { useAuth } from '../../../contexts/AuthContext';
 
 export default function GameDisplay({
     gameStarted,
@@ -12,7 +13,18 @@ export default function GameDisplay({
     prevPoints,
     todayBest,
 }) {
+    const { isAuthenticated } = useAuth();
+
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    // --- Responsive Logic ---
+    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 678);
+
+    useEffect(() => {
+        const handleResize = () => setIsSmallScreen(window.innerWidth < 678);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     const handleAction = (actionFn) => {
         setDropdownOpen(false); // Snap shut on game interaction
@@ -22,10 +34,10 @@ export default function GameDisplay({
     const renderEndText = () => {
         if (endCause === "42") return "Congratulations! You reached 42 points!";
         if (endCause === "bad-placement") {
-            return <>🫤 Number <span className="inline-real-red inline-bold">{numToPlace}</span> placed in wrong order.</>;
+            return <>🫤 Wrong order</>;
         }
         if (endCause === "no-possible-moves") {
-            return <>😖 Can't place number <span className="inline-real-red inline-bold">{numToPlace}</span>.</>;
+            return <>😖 Can't place number <span className="inline-real-red inline-bold">{numToPlace}</span></>;
         }
         return "";
     };
@@ -78,18 +90,20 @@ export default function GameDisplay({
                     </p>
                 </div>
 
-                <div className="game-42-results">
-                    <div className="game-42-results-grid" role="table">
-                        <div className="grid-header" role="row">
-                            <div>Game Points</div>
-                            <div>Prev Points</div>
-                            <div>Today's Best</div>
-                        </div>
-                        <div className="grid-body" role="row">
-                            <div>{points}</div>
-                            <div>{prevPoints ?? "-"}</div>
-                            <div>{todayBest ?? "-"}</div>
-                        </div>
+                <div className="game-42-results-grid">
+                    <div id="game-points">
+                        <p>{isSmallScreen ? "This Game:" : "This Game"}</p>
+                        <p>{points}</p>
+                    </div>
+                    <div id="prev-points">
+                        <p>{isSmallScreen ? "Prev Game:" : "Prev Game"}</p>
+                        <p>{prevPoints ?? "-"}</p>
+                    </div>
+                    <div id="best">
+                        <p>
+                            {isSmallScreen ? "Best Game:" : "Best Game"}
+                        </p>
+                        <p>{todayBest ?? "-"}</p>
                     </div>
                 </div>
             </div>

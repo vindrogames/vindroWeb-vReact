@@ -158,4 +158,60 @@
             }
         }
     }
+
+    main#game-42 {
+        padding: 60px 0 0 0;
+
+        #game-42-buttons {
+
+            button.pos-42 {
+                padding: 3px 7px;
+            }
+        }
+
+        #display-42 {
+            padding: 21px 7px;
+
+            .instructions-42 {
+
+                h1 {
+                    font-size: 2.4rem;
+                    margin-bottom: 14px;
+                }
+
+                .how-to-play-container {
+                    
+                    button {
+                        width: 140px;
+                        height: 28px;
+                        padding: 3px 7px;
+                        font-size: 1.4rem;
+                    }
+                }
+            }
+
+            .showcase-42 {
+
+                .game-42-play-container {
+
+                    .end-game-message {
+                        font-size: 1.2rem;
+                    }
+                }
+
+                .game-42-results-grid {
+                    width: 100%;
+                    div {
+
+                        p {
+                            &:nth-child(1) {
+                                font-size: 1.4rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 }

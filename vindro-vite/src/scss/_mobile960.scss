@@ -67,9 +67,10 @@
     }
 
     main#game-42 {
-
+        padding: 90px 21px 0 21px;
+        
         #game-42-buttons {
-            width: 42%;
+            width: 36%;
         }
 
         #display-42 {
@@ -77,8 +78,31 @@
             flex-grow: 1;
 
             .instructions-42 {
+
                 h1 {
                     font-size: 4.2rem;
+                }
+
+                .how-to-play-container {
+                    .how-to-play-content {
+                        p, a {
+                            font-size: 1.6rem;
+                        }
+                    }
+                }
+
+            }
+
+            .showcase-42 {
+                
+                .game-42-results-grid {
+                    width: 100%;
+
+                    div p {
+                        &:nth-child(1) {
+                            font-size: 1.8rem;
+                        }
+                    }
                 }
             }
         }
