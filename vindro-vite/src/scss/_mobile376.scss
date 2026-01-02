@@ -150,10 +150,87 @@
             min-height: 50vh;
             padding: 21px;
             gap: 28px;
+
             .buttons {
-                
+
                 a {
                     padding: 7px;
+                }
+            }
+        }
+    }
+
+    main#game-42 {
+        padding: 60px 0 0 0;
+
+        #game-42-buttons {
+
+            button.pos-42 {
+                padding: 3px 7px;
+            }
+        }
+
+        #display-42 {
+            padding: 21px 7px;
+
+            .instructions-42 {
+
+                h1 {
+                    font-size: 2.4rem;
+                    margin-bottom: 14px;
+                }
+            }
+
+            .showcase-42 {
+
+                .game-42-play-container {
+
+                    button#game-42-play-button,
+                    .game-42-number-display {
+                        font-size: 1.8rem;
+                    }
+
+                    .end-game-message {
+                        width: 91%;
+
+                        .status-dot {
+                            margin-left: 3px;
+                        }
+
+                        code {
+                            font-size: 1.4rem;
+                            margin-left: 0;
+                        }
+                    }
+                }
+
+                .game-42-results-grid {
+                    width: 91%;
+
+                    div {
+
+                        p {
+                            &:nth-child(1) {
+                                font-size: 1.4rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .how-to-play-content {
+            .instructions-inner {
+                .main-instructions {
+                    button.close-overlay-btn {
+                        width: 63%;
+                    }
+                }
+
+                .refs {
+                    p, a {
+                        font-size: 1rem;
+                    }
                 }
             }
         }

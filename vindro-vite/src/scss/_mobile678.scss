@@ -244,6 +244,97 @@
         }
     }
 
+    main#game-42 {
+        padding: 60px 0 0 0;
+
+        #game-42-buttons {
+
+            button.pos-42 {
+                font-size: 2.4vh;
+                padding: 3px 14px;
+            }
+        }
+
+        #display-42 {
+
+            .instructions-42 {
+
+                h1 {
+                    font-size: 3.6rem;
+                }
+
+                button {
+                    font-size: 1.6rem;
+
+                }
+            }
+
+            .showcase-42 {
+
+                .game-42-play-container {
+
+                    button#game-42-play-button,
+                    .game-42-number-display {
+                        width: 63%;
+                        padding: 7px;
+                        font-size: 2.1rem;
+                    }
+
+                    .end-game-message {
+
+                        width: 84%;
+                        
+                        .status-dot {
+                            margin-left: 7px;
+                            width: 14px;
+                            height: 14px;
+
+                        }
+
+                        code {
+                            margin-left: 7px;
+                            font-size: 1.6rem;
+                        }
+                    }
+                }
+
+                .game-42-results-grid {
+                    grid-template-columns: 1fr;
+                    width: 84%;
+
+                    div {
+                        flex-direction: row;
+                        justify-content: flex-start;
+                        padding: 7px 14px;
+                        gap: 21px;
+
+                        &:nth-child(1) {
+                            border-left: none;
+                            border-top: 2px solid $real-yellow;
+                        }
+
+                        &:nth-child(2) {
+                            border-left: none;
+                            border-right: none;
+                            border-top: 2px solid $real-yellow;
+                            border-bottom: 2px solid $real-yellow;
+                        }
+
+                        &:nth-child(3) {
+                            border-right: none;
+                            border-bottom: 2px solid $real-yellow;
+                        }
+
+                        p {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
     footer {
         padding: 14px 0;
 
