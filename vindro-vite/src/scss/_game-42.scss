@@ -8,50 +8,6 @@ main#game-42 {
     padding: 90px 90px 0 90px;
     background-color: $vindro-black;
 
-    #end-game-42 {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 100vw;
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background-color: white;
-        z-index: 4;
-
-        h4 {
-            color: $vindro-black;
-            margin-bottom: 1rem;
-
-            &:nth-child(1) {
-                font-size: 6rem;
-            }
-
-            &:nth-child(2) {
-                font-size: 2.4rem;
-                margin-bottom: 3rem;
-            }
-        }
-
-        &-buttons {
-            display: flex;
-            flex-direction: row;
-            gap: 2rem;
-
-            a {
-                font-size: 1.8rem;
-
-                &:hover {
-                    background-color: $vindro-teal;
-                    color: $vindro-black;
-                }
-            }
-        }
-    }
-
     #game-42-buttons {
         width: 28%;
         height: 100%;
@@ -64,43 +20,39 @@ main#game-42 {
             cursor: pointer;
             border: none;
             border-radius: 42px;
-            height: calc((100vh - 90px) / 14vh);
+            height: calc((100vh - 90px) / 14.5); // Adjusted for spacing
             font-size: 3vh;
             padding: 3px 21px;
             margin: 0.42rem 0.84rem;
+            transition: all 0.2s ease;
 
             &.open {
                 background-color: transparent;
                 color: white;
-            }
-
-            &.closed,
-            &:hover {
-                background-color: $real-yellow;
-                color: $vindro-black;
-                font-weight: 600;
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
             &.closed {
                 text-align: center;
                 cursor: default;
+                background-color: $vindro-teal;
+                color: $vindro-black;
+                font-weight: 600;
 
-                &.game-over {
+                // Only turn red if it's NOT a victory
+                &.game-over:not(.victory) {
                     background-color: $real-red;
                     color: white;
                 }
+
+                &.victory {
+                    background-color: $vindro-teal;
+                    box-shadow: 0 0 15px $vindro-teal;
+                }
             }
 
-
-
-            &.end-game-1 {
-                background-color: $vindro-teal;
-                color: $vindro-black;
-            }
-
-            &.end-game-2 {
-                background-color: $vindro-black;
-                color: white;
+            &:hover:not(.closed):not(.game-over) {
+                background-color: rgba($vindro-teal, 0.2);
             }
         }
     }
@@ -119,103 +71,25 @@ main#game-42 {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            align-items: flex-start;
             min-height: 60px;
 
             h1 {
                 font-size: 6.3rem;
-                margin-bottom: 21px;
+                margin-bottom: 14px;
             }
 
-            .how-to-play-container {
-                position: relative;
-                z-index: 3;
-                $speed: 0.3s; // Control the speed of each stage here
+            button {
+                width: auto;
+                z-index: 4;
+                font-size: 1.8rem;
+                padding: 7px 14px;
+                background-color: white;
+                border-radius: 7px;
 
-                button {
-                    position: relative;
-                    z-index: 4;
-                    font-size: 1.8rem;
-                    padding: 7px 14px;
-                    width: 210px;
-                    height: 36px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    background-color: white;
-                    box-shadow: -3px -3px 14px $vindro-black;
-
-                    &:hover {
-                        background-color: darken(white, 14%);
-                    }
-                }
-
-                .how-to-play-content {
-                    position: absolute;
-                    top: 18px;
-                    left: 0;
-                    right: 0; // ADD THIS: Pins the right side to the parent boundary
-                    width: auto; // CHANGE THIS: auto works with left/right 0 to fill the space
-
-                    background: white;
-                    border: 1px solid #eee;
-                    border-radius: 8px;
-                    z-index: 3;
-                    overflow: hidden;
-
-                    // INITIAL STATE (Closed)
-                    opacity: 0;
-                    visibility: hidden;
-                    // width: 210px; // REMOVE THIS: It fights with the right: 0 constraint
-                    max-height: 0;
-                    padding: 0 1.5rem;
-
-                    // CLOSING SEQUENCE: Height shrinks immediately, Width waits for height
-                    transition:
-                        max-height $speed ease-in-out,
-                        width $speed ease-in-out $speed,
-                        padding $speed ease-in-out,
-                        opacity 0.2s ease ($speed * 1.5),
-                        visibility 0s linear ($speed * 2);
-
-                    p {
-                        font-size: 1.8rem;
-                        color: $vindro-black;
-                        margin-bottom: 7px;
-                    }
-
-                    a {
-                        font-size: 1.8rem;
-                        color: $vindro-green;
-                        font-weight: 500;
-                        text-decoration: underline;
-
-                        &:hover {
-                            color: lighten($vindro-green, 10%);
-                        }
-                    }
-
-                    &.open {
-                        visibility: visible;
-                        opacity: 1;
-                        width: auto; // CHANGE THIS: Keep it auto so left/right 0 dictates width
-                        right: 0; // Ensure it stays pinned
-                        left: 0; // Ensure it stays pinned
-                        max-height: 420px;
-                        padding: 2.5rem 1.5rem 1.5rem;
-                        overflow-y: scroll;
-                        box-sizing: border-box; // Ensure padding doesn't add to the width
-                        // OPENING SEQUENCE: Width grows immediately, Height waits for width
-                        transition:
-                            width $speed ease-in-out,
-                            max-height $speed ease-in-out $speed,
-                            padding $speed ease-in-out $speed,
-                            opacity 0.3s ease;
-                    }
-
-                    &.closed {
-                        // Keep as block to allow animation to play out
-                        display: block;
-                    }
+                &:hover {
+                    cursor: pointer;
+                    background-color: darken(white, 14%);
                 }
             }
         }
@@ -264,18 +138,41 @@ main#game-42 {
                 }
 
                 .end-game-message {
-                    font-size: 2.1rem;
-                    font-weight: 500;
-                    transition: opacity 0.3s ease;
-                    min-height: 1.5em;
+                    width: 63%;
+                    padding-top: 1rem;
+                    padding-bottom: 1rem;
+                    border-top: 1px solid rgba($real-red, 0.2);
+                    border-bottom: 1px solid rgba($real-red, 0.2);
+                    transition: opacity 0.4s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 10px;
+                    line-height: 2rem;
+
+                    .status-dot {
+                        margin-left: 21px;
+                        width: 14px;
+                        height: 14px;
+                        background: $real-red;
+                        border-radius: 50%;
+                        box-shadow: 0 0 3px $vindro-tan;
+                        animation: pulse 1.5s infinite;
+                    }
+
+                    code {
+                        margin-left: 14px;
+                        font-size: 1.8rem;
+                        color: white;
+                    }
 
                     &.hidden {
-                        visibility: hidden;
-                        /* Keeps the space reserved */
+                        opacity: 0;
+                        pointer-events: none;
                     }
 
                     &.visible {
-                        visibility: visible;
+                        opacity: 1;
                     }
                 }
             }
@@ -320,17 +217,364 @@ main#game-42 {
         }
     }
 
-    &.end-game-1 {
-        background-color: white;
-        color: $tm-yellow-solid;
+    .how-to-play-content {
+        position: fixed;
+        top: 0;
+        left: 0; // Changed from right:0 to center the holographic feel
+        width: 100vw;
+        height: 100dvh;
+        z-index: 1000;
+
+        // Space Aesthetics
+        background-color: rgba($vindro-gray, 0.85);
+        backdrop-filter: blur(12px) saturate(150%);
+        -webkit-backdrop-filter: blur(12px) saturate(150%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+
+        &.open {
+            visibility: visible;
+            pointer-events: auto;
+            // Steps(4) creates that jagged, digital "Dev Mode" appearance
+            animation: hologramIn 0.4s steps(4, end) forwards;
+        }
+
+        &.closed {
+            animation: hologramOut 0.3s ease-in forwards;
+        }
+
+        .instructions-inner {
+            width: 100%;
+            height: 100%;
+            max-width: 600px;
+            padding: 63px 21px 21px;
+            opacity: 0;
+            transform: scale(0.95) translateY(10px);
+            transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 2px solid $vindro-teal;
+            border-left: 2px solid $vindro-teal;
+
+            &.visible {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+
+            .main-instructions {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 21px;
+
+                h2 {
+                    font-size: 4.2rem;
+                    font-weight: 500;
+                    margin-bottom: 14px;
+                    color: $real-yellow;
+                    text-transform: uppercase;
+                }
+
+                h3,
+                p,
+                li {
+                    color: white;
+                    font-size: 1.6rem; // Scaled down from 1.8rem for better readability
+                    line-height: 1.6;
+                }
+
+                h3 {
+                    margin-bottom: 14px;
+                    color: $vindro-tan;
+
+                    strong {
+                        color: white;
+                    }
+
+                    span {
+                        color: $real-yellow;
+                    }
+                }
+
+                .instruction-list {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0 0 21px 0;
+
+                    li {
+                        position: relative;
+                        padding-left: 14px;
+                        margin-bottom: 3px;
+
+                        &::before {
+                            content: "·";
+                            position: absolute;
+                            left: 0;
+                            color: $vindro-teal;
+                            font-weight: 900;
+                        }
+
+                        .operator {
+                            color: $real-yellow;
+                            font-family: monospace;
+                            background: rgba(0, 0, 0, 0.3);
+                            padding: 0 4px;
+                            border-radius: 3px;
+                        }
+                    }
+                }
+
+                .logic-warning {
+                    background: rgba(0, 0, 0, 0.2);
+                    padding: 14px;
+                    border-left: 3px solid $real-yellow;
+                    margin-bottom: 14px;
+
+                    .you-lose {
+                        color: #ff4444;
+                        font-weight: bold;
+                    }
+                }
+
+                .hitchhiker-note {
+                    font-style: italic;
+                    font-size: 1.6rem;
+                    color: white;
+                    margin-top: 7px;
+                }
+
+                button.close-overlay-btn {
+                    width: 42%;
+                    padding: 7px 14px;
+                    border-radius: 42px;
+                    border: none;
+                    font-size: 1.8rem;
+                    font-weight: 600;
+                    background-color: $vindro-teal;
+                    color: $vindro-black;
+                    font-family: $vindro-Montserrat;
+                    align-self: center;
+                    border: 2px solid transparent;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: $vindro-black;
+                        color: $vindro-teal;
+                        border: 2px solid $vindro-teal;
+                    }
+                }
+            }
+
+            .refs {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px;
+
+                p,
+                a {
+                    font-size: 1.6rem;
+                    font-weight: 300;
+                    color: white;
+                    font-family: $vindro-openSans;
+                }
+
+                a {
+                    text-decoration: underline;
+                    color: $vindro-teal;
+
+                    &:hover {
+                        color: $vindro-green;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.win-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.inactive {
+        opacity: 0;
+        pointer-events: none;
+        clip-path: circle(0% at 50% 50%);
     }
 
-    &.end-game-2 {
-        background-color: $vindro-teal;
-        color: $vindro-black;
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+        clip-path: circle(150% at 50% 50%);
+    }
+}
 
-        #display-42 .instructions-42 p a {
-            color: white;
+.win-modal-content {
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 21px;
+    border-left: 2px solid $vindro-teal;
+    border-right: 2px solid $vindro-teal;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.6s ease-out;
+
+    &.reveal {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .victory-branding {
+        .alt-text {
+            color: #00f2ff;
+            letter-spacing: 0.8rem;
+            font-size: 1rem;
+            font-weight: 800;
         }
+
+        .big-42 {
+            font-size: 10rem;
+            margin: 1rem 0;
+            color: white;
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.6);
+            font-family: monospace;
+        }
+    }
+
+    .victory-details {
+        color: #a0a0a0;
+        margin-bottom: 2rem;
+
+        .win-dev-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+
+            .win-status-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: #00f2ff;
+                box-shadow: 0 0 10px #00f2ff;
+                animation: pulse 1s infinite alternate;
+            }
+
+            code {
+                color: #00f2ff;
+            }
+        }
+    }
+
+    .reinitialize-btn {
+        background: transparent;
+        border: 1px solid #00f2ff;
+        color: #00f2ff;
+        padding: 14px 21px;
+        font-size: 1.6rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        border-radius: 7px;
+
+        &:hover {
+            background: #00f2ff;
+            color: black;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+    }
+}
+
+// Dev Mode Footer
+.dev-footer {
+    margin-top: 14px;
+    padding-top: 1rem;
+    border-top: 1px solid rgba($vindro-teal, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: $vindro-teal;
+        border-radius: 50%;
+        box-shadow: 0 0 8px $vindro-teal;
+        animation: pulse 1.5s infinite;
+    }
+
+    code {
+        font-size: 0.75rem;
+        color: rgba($vindro-teal, 0.7);
+    }
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #00f2ff;
+    }
+
+    to {
+        text-shadow: 0 0 20px #fff, 0 0 40px #00f2ff;
+    }
+}
+
+@keyframes hologramIn {
+    0% {
+        opacity: 0;
+        transform: scaleY(0.005) scaleX(0);
+        background-color: rgba($vindro-teal, 0.5);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scaleY(0.005) scaleX(1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleY(1) scaleX(1);
+    }
+}
+
+@keyframes hologramOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba($vindro-teal, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba($vindro-teal, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba($vindro-teal, 0);
     }
 }

@@ -84,6 +84,12 @@ export default function UseGame42Logic() {
         }
 
         const newNums = generateGameNums();
+
+        // CHEAT LOG: Show exactly how to win
+        console.log("WINNING SEQUENCE:", [...newNums].sort((a, b) => a - b));
+        // RAW SEQUENCE (The order they will appear):
+        console.log("NUMBERS COMING UP:", newNums);
+        
         setNumsRound(newNums.slice(1));
         setNumToPlace(newNums[0]);
         setNumsPlaced(Array(14).fill(0));

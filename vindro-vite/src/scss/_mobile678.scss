@@ -254,6 +254,7 @@
                 padding: 3px 14px;
             }
         }
+
         #display-42 {
 
             .instructions-42 {
@@ -262,19 +263,9 @@
                     font-size: 3.6rem;
                 }
 
-                .how-to-play-container {
-                    button {
-                        width: 180px;
-                        font-size: 1.6rem;
-                    }
+                button {
+                    font-size: 1.6rem;
 
-                    .how-to-play-content {
-
-                        p,
-                        a {
-                            font-size: 1.4rem;
-                        }
-                    }
                 }
             }
 
@@ -286,12 +277,24 @@
                     .game-42-number-display {
                         width: 63%;
                         padding: 7px;
-                        font-size: 2.4rem;
+                        font-size: 2.1rem;
                     }
 
                     .end-game-message {
-                        font-size: 1.8rem;
-                        min-height: 1.3em;
+
+                        width: 84%;
+                        
+                        .status-dot {
+                            margin-left: 7px;
+                            width: 14px;
+                            height: 14px;
+
+                        }
+
+                        code {
+                            margin-left: 7px;
+                            font-size: 1.6rem;
+                        }
                     }
                 }
 
