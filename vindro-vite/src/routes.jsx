@@ -13,6 +13,7 @@ import Register from './pages/Register';
 import EscapeTheCloud from './features/escape-the-cloud/EscapeTheCloud';
 import PrivacyCookies from './pages/PrivacyCookies';
 import Game42 from './features/game-42/Game42';
+import MadridCalculator from './features/madrid-calculator/MadridCalculator';
 import TestApi from './pages/TestApi';
 
 export const routes = createBrowserRouter([
@@ -30,6 +31,7 @@ export const routes = createBrowserRouter([
       { path: 'games/escape-the-cloud', element: <EscapeTheCloud /> },
       { path: 'privacy-cookies', element: <PrivacyCookies />},
       { path: 'games/game-42', element: <Game42 />},
+      { path: 'games/madrid-calculator', element: <MadridCalculator />},
       { path: 'test-api', element: <TestApi />}
     ],
   },

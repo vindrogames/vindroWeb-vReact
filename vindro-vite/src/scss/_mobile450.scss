@@ -244,18 +244,13 @@
 
         a {
             font-size: 1rem;
-            color: $vindro-green;
-
-            &:hover {
-                color: $vindro-teal;
-            }
         }
 
         .contact-info {
             font-size: 1.2rem;
 
             a {
-                color: $vindro-teal;
+                color: var(--teal-yellow-swap);
                 font-weight: 600;
 
                 &:hover {
@@ -279,11 +274,6 @@
                 svg {
                     width: 3rem;
                     height: 3rem;
-                }
-
-                &:hover {
-                    background-color: $vindro-green;
-                    color: $vindro-gray;
                 }
             }
         }

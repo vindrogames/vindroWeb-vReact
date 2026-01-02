@@ -75,13 +75,15 @@ function Games() {
                             gameDescription="A short game inspired by Troy with a digital spin. Can you send your Trojan Horses through all the firewalls?"
                         />
 
-                        <div className="game game-6">
-                            <a href="madrid-calculator/"><img src="img/madrid-calculator.png" alt="La calculadora madridista, calcula como siempre o por el número de champions del Real Madrid" /></a>
-                            <div className="game-text">
-                                <h3>Calculadora Madridista</h3>
-                                <p>Calcula como siempre o por el número de champions que tiene el Real Madrid.</p>
-                            </div>
-                        </div>
+                        <GameGalleryCard
+                            key="game-6"
+                            route="/games/madrid-calculator"
+                            galleryImg={
+                                <img src="img/madrid-calculator.png" alt="La calculadora madridista, calcula como siempre o por el número de champions del Real Madrid" />
+                            }
+                            gameTitle="Calculadora Madridista"
+                            gameDescription="Calcula como siempre o por el número de champions que tiene el Real Madrid"
+                        />
 
                     </div>
                 </section>

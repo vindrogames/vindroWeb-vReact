@@ -38,11 +38,35 @@ img {
 
 @import 'utils';
 
+// 1. Define the variable defaults at the top level
+.app-shell {
+    --nav-bg: #{$vindro-black-overlay};
+    --teal-yellow-swap: #{$vindro-teal};
+    --green-yellow-swap: #{$vindro-green};
+    --green-blue-swap: #{$real-blue};
+    --hamburger-bg: #{$vindro-tan};
+    --hamburger-text: #{$vindro-black};
+
+    // 2. Override them ONLY for the madrid theme
+    &.madrid-theme {
+
+        #navbar, #navbar-hamburger, .auth-nav, main, footer {
+            --nav-bg: #{$vindro-black-overlay}; // Or any color from your config
+            --teal-yellow-swap: #{$real-yellow};
+            --green-yellow-swap: #{$real-yellow};
+            --green-blue-swap: #{$real-blue};
+            --hamburger-bg: #{$real-blue};
+            --hamburger-text: white;
+        }
+
+    }
+}
+
 #navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: $vindro-black-overlay;
+    background-color: var(--nav-bg); // Use variable
     color: white;
 
     /* Responsive sizing */
@@ -61,8 +85,8 @@ img {
     /* Ensures it's full width, but the internal container stays centered */
     padding: 0 30px;
     z-index: 21;
-    border-left: 3px solid $vindro-teal;
-    border-right: 3px solid $vindro-teal;
+    border-left: 3px solid var(--teal-yellow-swap);
+    border-right: 3px solid var(--teal-yellow-swap);
 
     .vindro-logo {
         display: flex;
@@ -112,7 +136,7 @@ img {
 
             a:hover,
             a.current {
-                border-bottom: 3px solid $vindro-teal;
+                border-bottom: 3px solid var(--teal-yellow-swap);
             }
         }
     }
@@ -234,13 +258,6 @@ img {
                     }
                 }
             }
-
-            &.navbar-calculator {
-
-                &.open {
-                    background-color: lightgray;
-                }
-            }
         }
 
         #hamburger-menu {
@@ -280,24 +297,13 @@ img {
 
                 a:hover,
                 a.current {
-                    border-bottom: 3px solid $vindro-green;
+                    border-bottom: 3px solid var(--green-blue-swap);
                 }
             }
 
             &.open {
                 max-height: 100vh;
                 opacity: 1;
-            }
-
-            &.navbar-calculator {
-                background-color: lightgray;
-
-                ul li a {
-                    color: $vindro-black;
-                    box-shadow: 0 3px 3px -3px $vindro-gray;
-                    z-index: 4;
-
-                }
             }
         }
     }
@@ -322,7 +328,7 @@ img {
             width: 42px;
             height: 42px;
             border-radius: 7px;
-            border: 1px solid $vindro-teal;
+            border: 1px solid var(--teal-yellow-swap);
             background-color: $vindro-black;
             color: white;
             cursor: pointer;
@@ -336,14 +342,14 @@ img {
             /* Desktop: apply hover */
             @media (hover: hover) {
                 &:hover {
-                    background-color: $vindro-teal;
+                    background-color: var(--teal-yellow-swap);
                     color: $vindro-black;
                 }
             }
 
             /* Always apply open state */
             &.open {
-                background-color: $vindro-teal;
+                background-color: var(--teal-yellow-swap);
                 color: $vindro-black;
             }
         }
@@ -353,7 +359,7 @@ img {
             top: 55px;
             right: 0;
             background-color: $vindro-black-overlay;
-            border: 1px solid $vindro-teal;
+            border: 1px solid var(--teal-yellow-swap);
             border-radius: 5px;
             min-width: 180px;
             display: flex;
@@ -374,7 +380,7 @@ img {
                 transition: all 0.2s ease;
 
                 &:hover {
-                    background-color: $vindro-teal;
+                    background-color: var(--teal-yellow-swap);
                     color: $vindro-black;
                 }
 
@@ -385,16 +391,12 @@ img {
                 &:last-child {
                     border-radius: 0 0 4px 4px;
                 }
-
-                &.logout-btn {
-                    border-top: 1px solid $vindro-gray;
-                }
             }
         }
     }
 
     a.btn-login {
-        border: 1px solid $vindro-teal;
+        border: 1px solid var(--teal-yellow-swap);
         border-radius: 5px;
         background-color: transparent;
         color: white;
@@ -405,7 +407,7 @@ img {
 
         &:hover,
         &.current {
-            background-color: $vindro-teal;
+            background-color: var(--teal-yellow-swap);
             color: $vindro-black !important;
         }
 
@@ -936,16 +938,17 @@ footer {
     gap: 14px;
     text-align: center;
     background-color: $vindro-black;
-    border-left: 3px solid $vindro-teal;
-    border-right: 3px solid $vindro-teal;
+    border-left: 3px solid var(--teal-yellow-swap);
+    border-right: 3px solid var(--teal-yellow-swap);
 
     a {
         font-size: 1.2rem;
-        color: $vindro-green;
+        color: var(--green-yellow-swap);
         transition: all 0.3s ease;
+        text-decoration: underline;
 
         &:hover {
-            color: $vindro-teal;
+            color: var(--teal-yellow-swap);
         }
     }
 
@@ -953,11 +956,12 @@ footer {
         font-size: 1.4rem;
 
         a {
-            color: $vindro-teal;
+            color: var(--teal-yellow-swap);
             font-weight: 600;
+            text-decoration: underline;
 
             &:hover {
-                color: $vindro-green;
+                color: var(--teal-yellow-swap);
             }
         }
     }
@@ -980,7 +984,7 @@ footer {
             }
 
             &:hover {
-                background-color: $vindro-green;
+                background-color: var(--green-yellow-swap);
                 color: $vindro-gray;
             }
         }
@@ -992,12 +996,13 @@ main {
     max-width: 1600px;
     margin: auto;
     position: relative;
-    border-left: 3px solid $vindro-teal;
-    border-right: 3px solid $vindro-teal;
+    border-left: 3px solid var(--teal-yellow-swap);
+    border-right: 3px solid var(--teal-yellow-swap);
 }
 
 @import 'auth';
 @import 'game-42';
+@import 'madrid-calculator';
 @import 'mobile960';
 @import 'mobile678';
 @import 'mobile450';
