@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
      * Check if user is authenticated
      */
     async function checkAuth() {
-        const DEV_MODE_MOCK_USER = false; // Toggle this to enable/disable
+        const DEV_MODE_MOCK_USER = true; // Toggle this to enable/disable
 
         if (DEV_MODE_MOCK_USER) {
             setUser({
