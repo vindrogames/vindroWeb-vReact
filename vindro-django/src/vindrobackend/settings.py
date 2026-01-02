@@ -182,3 +182,6 @@ ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:5173/'
 
 # Store OAuth tokens (optional, for API calls to provider)
 SOCIALACCOUNT_STORE_TOKENS = True
+
+# Custom adapter for OAuth to generate random usernames
+SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
