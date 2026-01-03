@@ -37,7 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # Required by allauth
+
+    # Third-party
     'corsheaders',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.facebook',
+
+    # Your apps
     'accounts',
     'highscores',
     'test',
@@ -52,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # Required by allauth
 ]
 
 ROOT_URLCONF = 'vindrobackend.urls'
@@ -142,8 +154,34 @@ CSRF_TRUSTED_ORIGINS = [
 # Session settings
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True  # Set True in production with HTTPS
+SESSION_COOKIE_SECURE = False  # Set True in production with HTTPS
 SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_DOMAIN = None  # Allow cookies across localhost ports
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Allauth configuration
+SITE_ID = 1  # Required by allauth
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default Django auth
+    'allauth.account.auth_backends.AuthenticationBackend',  # Allauth
+]
+
+# Allauth settings
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # 'mandatory' in production
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}  # Allow both email and username login
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']  # Required signup fields
+SOCIALACCOUNT_AUTO_SIGNUP = True  # Auto-create user from OAuth
+SOCIALACCOUNT_LOGIN_ON_GET = True  # Redirect directly to Google without intermediate page
+
+# After successful OAuth login, redirect to our custom view
+LOGIN_REDIRECT_URL = '/api/auth/oauth/redirect/'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:5173/'
+
+# Store OAuth tokens (optional, for API calls to provider)
+SOCIALACCOUNT_STORE_TOKENS = True
+
+# Custom adapter for OAuth to generate random usernames
+SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'

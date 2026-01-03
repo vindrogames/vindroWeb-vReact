@@ -141,31 +141,69 @@ This creates tables for:
 
 ### Phase 2: OAuth Provider Setup
 
-#### 2.1 Google OAuth Setup
+#### 2.1 Google OAuth Setup (Updated 2024)
+
+> **Important:** Google+ API is deprecated (shut down in 2019). You do **NOT** need to enable any Google APIs for OAuth authentication. OAuth works out-of-the-box.
 
 **Step 1:** Go to [Google Cloud Console](https://console.cloud.google.com/)
 
 **Step 2:** Create a new project or select existing
+- Click "Select a project" → "New Project"
+- **Project name:** Vindrogames (or your choice)
+- Click "Create"
 
-**Step 3:** Enable Google+ API
-- Go to "APIs & Services" → "Library"
-- Search "Google+ API" → Enable
+**Step 3:** Configure OAuth Consent Screen
 
-**Step 4:** Create OAuth 2.0 Credentials
-- Go to "APIs & Services" → "Credentials"
-- Click "Create Credentials" → "OAuth client ID"
+This is the screen users see when authorizing your app.
+
+- Go to **"APIs & Services"** → **"OAuth consent screen"**
+- User Type: Choose **"External"** (for public users) → Click "Create"
+- Fill in **required fields**:
+  - **App name:** Vindrogames
+  - **User support email:** your-email@example.com
+  - **Developer contact email:** your-email@example.com
+- Click **"Save and Continue"**
+
+- **Scopes page:** Click "Add or Remove Scopes"
+  - Select: `userinfo.email` (View your email address)
+  - Select: `userinfo.profile` (View your basic profile info)
+  - Click "Update" → "Save and Continue"
+
+- **Test users** (optional, for development):
+  - Add your email address to test while app is in "Testing" mode
+  - Click "Save and Continue"
+
+- Click **"Back to Dashboard"**
+
+**Step 4:** Create OAuth 2.0 Client ID
+- Go to **"APIs & Services"** → **"Credentials"**
+- Click **"Create Credentials"** → **"OAuth client ID"**
 - Application type: **Web application**
-- Name: "Vindrogames"
-- Authorized redirect URIs:
+- **Name:** Vindrogames Web Client
+- **Authorized JavaScript origins:**
+  ```
+  http://localhost:5173
+  http://localhost:8000
+  ```
+- **Authorized redirect URIs:**
   ```
   http://localhost:8000/accounts/google/login/callback/
   http://127.0.0.1:8000/accounts/google/login/callback/
   ```
-- Click "Create"
+- Click **"Create"**
 
-**Step 5:** Copy credentials:
-- **Client ID:** `123456789.apps.googleusercontent.com`
-- **Client Secret:** `ABC123xyz...`
+**Step 5:** Copy credentials (shown in popup):
+- **Client ID:** `123456789-abc123xyz.apps.googleusercontent.com`
+- **Client Secret:** `GOCSPX-xyz123abc...`
+- Save these securely - you'll add them to Django admin
+
+**What you get:**
+- User's email address
+- User's full name
+- User's profile picture URL
+- User's Google ID
+
+**No API enablement needed!** Google OAuth is always available for authentication.
 
 #### 2.2 GitHub OAuth Setup
 
