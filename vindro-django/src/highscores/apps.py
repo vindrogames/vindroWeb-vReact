@@ -1,0 +1,10 @@
+"""
+Highscores app configuration
+"""
+from django.apps import AppConfig
+
+
+class HighscoresConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'highscores'
+    verbose_name = 'Highscores'
