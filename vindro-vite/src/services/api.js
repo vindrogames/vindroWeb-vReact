@@ -27,6 +27,14 @@ function buildUrl(endpoint) {
 }
 
 /**
+ * Get the backend base URL (without /api)
+ * Used for OAuth endpoints which are at /accounts/
+ */
+export function getBackendUrl() {
+  return API_BASE_URL.replace(/\/api\/?$/, '');
+}
+
+/**
  * Fetch wrapper with credentials support for session-based auth
  */
 async function apiRequest(endpoint, options = {}) {
