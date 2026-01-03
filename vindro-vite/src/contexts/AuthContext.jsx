@@ -23,18 +23,6 @@ export function AuthProvider({ children }) {
      * Check if user is authenticated
      */
     async function checkAuth() {
-        const DEV_MODE_MOCK_USER = true; // Toggle this to enable/disable
-
-        if (DEV_MODE_MOCK_USER) {
-            setUser({
-                id: 1,
-                username: 'testuser',
-                email: 'test@example.com',
-            });
-            setLoading(false);
-            return;
-        }
-
         try {
             const data = await authAPI.getCurrentUser();
             setUser(data.user);

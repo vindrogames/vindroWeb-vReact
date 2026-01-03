@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { getBackendUrl } from '../services/api';
 import ShowcaseSection from "../components/ui/ShowcaseSection";
 import RegisterHelmet from '../page-helmets/RegisterHelmet';
 import SmartLink from '../components/ui/SmartLink';
@@ -142,7 +143,7 @@ export default function Register() {
 
                         <div className="social-login">
                             <a
-                                href="http://localhost:8000/accounts/google/login/"
+                                href={`${getBackendUrl()}/accounts/google/login/`}
                                 className="btn btn-social btn-google"
                             >
                                 <svg className="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

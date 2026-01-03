@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h-ds-pv*5fmh8^m=pfh2o+rkuffj7%^3p@p+!$ez88#mb-owy('
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-h-ds-pv*5fmh8^m=pfh2o+rkuffj7%^3p@p+!$ez88#mb-owy(')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
+
+# Security settings for HTTPS (when behind a reverse proxy)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 
 # Application definition
@@ -132,31 +137,29 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://vindrogames.com",
-]
+CORS_ALLOWED_ORIGINS = os.environ.get(
+    'CORS_ALLOWED_ORIGINS',
+    'http://localhost:5173,http://127.0.0.1:5173,https://vindrogames.com'
+).split(',')
 
 # Allow credentials (cookies) for authentication
 CORS_ALLOW_CREDENTIALS = True
 
 # CSRF trusted origins
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://backend.vindrogames.com",
-    "https://vindrogames.com"
-]
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS',
+    'http://localhost:5173,http://127.0.0.1:5173,https://backend.vindrogames.com,https://vindrogames.com'
+).split(',')
 
 # Session settings
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = False  # Set True in production with HTTPS
-SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_DOMAIN = None  # Allow cookies across localhost ports
+SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False') == 'True'  # True in production with HTTPS
+SESSION_COOKIE_SAMESITE = os.environ.get('SESSION_COOKIE_SAMESITE', 'Lax')
+SESSION_COOKIE_DOMAIN = os.environ.get('SESSION_COOKIE_DOMAIN', None)  # Set to .vindrogames.com in production
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -170,7 +173,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Allauth settings
-ACCOUNT_EMAIL_VERIFICATION = 'optional'  # 'mandatory' in production
+ACCOUNT_EMAIL_VERIFICATION = os.environ.get('ACCOUNT_EMAIL_VERIFICATION', 'optional')  # Set to 'mandatory' in production
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}  # Allow both email and username login
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']  # Required signup fields
 SOCIALACCOUNT_AUTO_SIGNUP = True  # Auto-create user from OAuth
@@ -178,7 +181,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True  # Redirect directly to Google without interme
 
 # After successful OAuth login, redirect to our custom view
 LOGIN_REDIRECT_URL = '/api/auth/oauth/redirect/'
-ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:5173/'
+ACCOUNT_LOGOUT_REDIRECT_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173/')
 
 # Store OAuth tokens (optional, for API calls to provider)
 SOCIALACCOUNT_STORE_TOKENS = True
