@@ -2,6 +2,7 @@
 Authentication API views (no DRF)
 """
 import json
+import os
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -243,4 +244,5 @@ def oauth_redirect(request):
         UserProfile.objects.get_or_create(user=request.user)
 
     # Redirect to React app - session cookie is already set by allauth
-    return redirect('http://localhost:5173/')
+    frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:5173/')
+    return redirect(frontend_url)
