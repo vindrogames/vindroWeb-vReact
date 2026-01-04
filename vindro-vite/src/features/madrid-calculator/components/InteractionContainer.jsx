@@ -2,16 +2,10 @@ import React from 'react';
 
 const InteractionContainer = ({ isAudioOn, onToggleAudio, onOpenInfo }) => {
     return (
-        <div className="calc-interaction-bar">
-
-            <button className="info-text-btn" onClick={onOpenInfo}>
-                What is this?
-            </button>
-            
-            <button className="icon-btn" onClick={onToggleAudio}>
-                <i className={`fa-solid ${isAudioOn ? 'fa-volume-high' : 'fa-volume-xmark'}`}></i>
-            </button>
-            
+        <div className="intro">
+            <h1>Calculadora Madridista</h1>
+            <h2>Calcula como siempre...</h2>
+            <h2>O por las champions del Madrid</h2>
         </div>
     );
 };

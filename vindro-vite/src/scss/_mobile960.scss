@@ -98,4 +98,20 @@
             }
         }
     }
+
+    main#madrid-calculator {
+
+        .intro {
+            padding: 14px 0;
+
+            h1 {
+                font-size: 3.6rem;
+            }
+        }
+
+        .calculator-body {
+            width: 84%;
+            padding: 21px 7px;
+        }
+    }
 }

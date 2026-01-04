@@ -335,6 +335,51 @@
 
     }
 
+    main#madrid-calculator {
+        padding-top: 60px;
+
+        .intro {
+            width: 84%;
+            padding: 14px 21px;
+            h1 {
+                font-size: 2.8rem;
+            }
+            h2 {
+                font-size: 2.1rem;
+            }
+        }
+
+        .calculator-body {
+            width: 84%;
+            justify-content: flex-start;
+
+            .calc-screen {
+                width: 84%;
+                height: auto;
+                gap: 14px;
+            }
+
+            .calc-grid {
+                width: 84%;
+                gap: 7px;
+                flex-grow: 0;
+
+                button {
+
+                    &.btn-champions {
+                        p {
+                            font-size: 1.6rem;
+                        }
+                    }
+                }
+            }
+
+            .audio-btn-container {
+                width: 84%;
+            }
+        }
+    }
+
     footer {
         padding: 14px 0;
 
