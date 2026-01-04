@@ -5,3 +5,7 @@ uv python pin 3.12
 uv add "django>6.0.0" --upgrade-package django
 uv sync
 uv run django-admin startproject vindrobackend .
+
+# Django commands
+
+docker exec -it vindro-backend uv run python src/manage.py createsuperuser
