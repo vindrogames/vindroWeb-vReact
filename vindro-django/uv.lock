@@ -328,6 +328,7 @@ dependencies = [
     { name = "django" },
     { name = "django-allauth", extra = ["socialaccount"] },
     { name = "django-cors-headers" },
+    { name = "requests" },
 ]
 
 [package.metadata]
@@ -335,4 +336,5 @@ requires-dist = [
     { name = "django", specifier = ">=6.0.0" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=0.63.0" },
     { name = "django-cors-headers", specifier = ">=4.9.0" },
+    { name = "requests", specifier = ">=2.31.0" },
 ]

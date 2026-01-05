@@ -188,3 +188,6 @@ SOCIALACCOUNT_STORE_TOKENS = True
 
 # Custom adapter for OAuth to generate random usernames
 SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
+
+# Cloudflare Turnstile CAPTCHA
+CLOUDFLARE_TURNSTILE_SECRET_KEY = os.environ.get('CLOUDFLARE_TURNSTILE_SECRET_KEY', '')

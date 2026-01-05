@@ -8,4 +8,5 @@ dependencies = [
     "django>=6.0.0",
     "django-cors-headers>=4.9.0",
     "django-allauth[socialaccount]>=0.63.0",
+    "requests>=2.31.0",
 ]
