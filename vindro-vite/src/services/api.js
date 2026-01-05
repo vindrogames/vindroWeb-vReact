@@ -3,7 +3,7 @@
  * Centralized API communication with authentication support
  */
 
-const LOCAL_FALLBACK = 'http://127.0.0.1:8000/api';
+const LOCAL_FALLBACK = 'http://localhost:8000/api';
 const DEFAULT_BACKEND = 'https://backend.vindrogames.com/api';
 const VITE_API = typeof import.meta !== 'undefined' ? import.meta.env?.VITE_API_BASE_URL : undefined;
 
