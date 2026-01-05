@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getBackendUrl } from '../services/api';
@@ -15,6 +15,9 @@ export default function Register() {
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [turnstileToken, setTurnstileToken] = useState(null);
+    const [turnstileReady, setTurnstileReady] = useState(false);
+    const turnstileRef = useRef(null);
     const { register } = useAuth();
     const navigate = useNavigate();
 
@@ -24,6 +27,32 @@ export default function Register() {
             [e.target.name]: e.target.value
         });
     }
+
+    useEffect(() => {
+        // Wait for Turnstile script to load
+        const checkTurnstile = setInterval(() => {
+            if (window.turnstile) {
+                setTurnstileReady(true);
+                clearInterval(checkTurnstile);
+            }
+        }, 100);
+
+        // Setup global callbacks
+        window.onTurnstileSuccess = (token) => {
+            setTurnstileToken(token);
+        };
+
+        window.onTurnstileError = () => {
+            setTurnstileToken(null);
+            setError('CAPTCHA verification failed. Please try again.');
+        };
+
+        return () => {
+            clearInterval(checkTurnstile);
+            delete window.onTurnstileSuccess;
+            delete window.onTurnstileError;
+        };
+    }, []);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -44,10 +73,19 @@ export default function Register() {
         }
 
         try {
-            await register(formData);
+            // Include Turnstile token in registration data
+            await register({
+                ...formData,
+                'cf-turnstile-response': turnstileToken
+            });
             navigate('/');
         } catch (err) {
             setError(err.message || 'Registration failed. Please try again.');
+            // Reset Turnstile widget on error
+            if (window.turnstile && turnstileRef.current) {
+                window.turnstile.reset(turnstileRef.current);
+                setTurnstileToken(null);
+            }
         } finally {
             setLoading(false);
         }
@@ -130,9 +168,22 @@ export default function Register() {
                                 />
                             </div>
 
+                            {turnstileReady && (
+                                <div className="form-group">
+                                    <div
+                                        ref={turnstileRef}
+                                        className="cf-turnstile"
+                                        data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                                        data-callback="onTurnstileSuccess"
+                                        data-error-callback="onTurnstileError"
+                                        data-theme="light"
+                                    ></div>
+                                </div>
+                            )}
+
                             {error && <div className="error-message">{error}</div>}
 
-                            <button type="submit" className="btn btn-primary" disabled={loading}>
+                            <button type="submit" className="btn btn-primary" disabled={loading || !turnstileToken}>
                                 {loading ? 'Creating account...' : 'Create Account'}
                             </button>
                         </form>
