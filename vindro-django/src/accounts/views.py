@@ -3,6 +3,7 @@ Authentication API views (no DRF)
 """
 import json
 import os
+import requests
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -10,9 +11,44 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from django.shortcuts import redirect
+from django.conf import settings
 from .serializers import serialize_user
 from .decorators import login_required_api
 from .models import UserProfile
+
+
+def get_client_ip(request):
+    """Extract real client IP, handling proxies/load balancers"""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        return x_forwarded_for.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR')
+
+
+def verify_turnstile(token, secret_key, remote_ip):
+    """Verify Cloudflare Turnstile token with timeout and error handling"""
+    url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
+    data = {
+        'secret': secret_key,
+        'response': token,
+        'remoteip': remote_ip
+    }
+    try:
+        response = requests.post(url, data=data, timeout=5)
+        result = response.json()
+
+        if not result.get('success', False):
+            # Log error codes for debugging
+            error_codes = result.get('error-codes', [])
+            print(f"Turnstile verification failed: {error_codes}")
+
+        return result.get('success', False)
+    except requests.exceptions.Timeout:
+        print("Turnstile verification timeout")
+        return False  # Fail closed on timeout
+    except Exception as e:
+        print(f"Turnstile verification error: {str(e)}")
+        return False  # Fail closed on any error
 
 
 @require_http_methods(["POST"])
@@ -67,6 +103,23 @@ def register(request):
     if User.objects.filter(email=email).exists():
         return JsonResponse(
             {'success': False, 'error': 'Email already registered'},
+            status=400
+        )
+
+    # Verify Cloudflare Turnstile CAPTCHA
+    turnstile_token = data.get('cf-turnstile-response')
+    if not turnstile_token:
+        return JsonResponse(
+            {'success': False, 'error': 'CAPTCHA verification required. Please complete the challenge.'},
+            status=400
+        )
+
+    client_ip = get_client_ip(request)
+    secret_key = settings.CLOUDFLARE_TURNSTILE_SECRET_KEY
+
+    if not verify_turnstile(turnstile_token, secret_key, client_ip):
+        return JsonResponse(
+            {'success': False, 'error': 'CAPTCHA verification failed. Please try again.'},
             status=400
         )
 
