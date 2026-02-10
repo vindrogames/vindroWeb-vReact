@@ -1,25 +1,25 @@
-// MadridCalculator.jsx Component
-import React, { useState, useRef } from 'react';
-import useCalculator from './hooks/useCalculator'; // The .js hook
+import React, { useState, useRef, useEffect } from 'react';
+import useCalculator from './hooks/useCalculator';
 import InteractionContainer from './components/InteractionContainer';
 import Calculator from './components/Calculator';
 
 const MadridCalculator = () => {
-  // Logic Hook
   const calcHooks = useCalculator();
-
-  // UI State
   const [isChampionsAudioOn, setIsChampionsAudioOn] = useState(true);
   const [isSiuAudioOn, setIsSiuAudioOn] = useState(true);
 
-  // Audio Refs (Persist across renders)
-  const siuAudio = useRef(new Audio("/audio/siuuu.mp3"));
-  const championsAudio = useRef(new Audio("/audio/intro-uefa-champions-league.mp3"));
+  const siuAudio = useRef(null);
+  const championsAudio = useRef(null);
+
+  useEffect(() => {
+    // Initialize once on mount
+    siuAudio.current = new Audio("/audio/siuuu.mp3");
+    championsAudio.current = new Audio("/audio/intro-uefa-champions-league.mp3");
+  }, []);
 
   return (
     <main id="madrid-calculator">
       <InteractionContainer />
-
       <Calculator 
         calcHooks={calcHooks}
         isChampionsAudioOn={isChampionsAudioOn}

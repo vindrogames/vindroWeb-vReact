@@ -44,21 +44,42 @@ main#madrid-calculator {
             height: 21%;
             border: 3px solid $vindro-black;
             border-radius: 7px;
-            padding: 1rem;
+            padding: 0.5rem 1rem;
             display: flex;
             flex-direction: column;
+            justify-content: flex-end;
             align-items: flex-end;
-            justify-content: space-between;
+            overflow: hidden;
+            box-sizing: border-box;
 
-            .screen-main {
-                line-height: 3rem;
-                font-size: 4.2rem;
-                color: $real-blue;
+            .screen-prev-wrapper {
+                width: 100%;
+                height: 1.5rem;
+                display: flex;
+                justify-content: flex-end;
+                overflow: hidden;
+                margin-bottom: auto;
             }
 
             .screen-prev {
-                font-size: 1.8rem;
                 color: gray;
+                font-size: 1.2rem;
+                white-space: nowrap;
+
+                &.animate {
+                    animation: emergeUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                }
+            }
+
+            .screen-main {
+                width: 100%;
+                text-align: right;
+                color: $real-blue;
+                font-size: 4.2rem; // Static size
+                line-height: 1;
+                white-space: nowrap;
+                display: block;
+                overflow: hidden; // Final safety cut-off
             }
         }
 
@@ -349,5 +370,18 @@ main#madrid-calculator {
                 width: 100%;
             }
         }
+    }
+}
+
+@keyframes emergeUp {
+    0% {
+        opacity: 0;
+        // Start from where the main display is (roughly)
+        transform: translate(50px, 40px) scale(1.5);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
     }
 }

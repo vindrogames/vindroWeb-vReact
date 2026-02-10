@@ -13,12 +13,13 @@
     section#stories-page-content {
         width: 100%;
         background-color: $vindro-gray;
+
         #timeline ul {
             width: 84%;
             margin: 0 auto;
 
             li {
-                
+
                 margin-left: 42px;
 
                 div {
@@ -34,6 +35,33 @@
                     border-width: 8px 16px 8px 0;
                     border-color: transparent #FFFFFF transparent transparent;
                 }
+            }
+        }
+    }
+
+    main#games-showcase {
+
+        section.hero-half {
+            h2 {
+                font-size: 2.4rem;
+            }
+        }
+
+        section#games-gallery-container {
+
+            #games-gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 21px;
+            }
+        }
+    }
+
+    main#brackets-page {
+
+        section#brackets-events-container {
+
+            #brackets-events-gallery {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     }
@@ -68,7 +96,7 @@
 
     main#game-42 {
         padding: 90px 21px 0 21px;
-        
+
         #game-42-buttons {
             width: 36%;
         }
@@ -85,7 +113,7 @@
             }
 
             .showcase-42 {
-                
+
                 .game-42-results-grid {
                     width: 100%;
 

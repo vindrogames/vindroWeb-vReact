@@ -29,10 +29,10 @@ function Games() {
                             key="game-1"
                             route="/games/game-42"
                             galleryImg={
-                                <img src="img/42-gallery-gif.gif" alt="Inspired by the boardgame The Mind our 42 game puts your reasoning and luck to the test" />
+                                <img src="img/42-gallery-gif.gif" alt="42 The Game, test your reasoning, intuition, probability and luck to reach 42!" />
                             }
                             gameTitle="42 the game"
-                            gameDescription="Inspired by the boardgame The Mind, our 42 game will test your reasoning, intuition and luck!"
+                            gameDescription="Inspired by The Mind boardgame, our 42 game will test your reasoning, intuition and luck!"
                         />
 
                         <GameGalleryCard

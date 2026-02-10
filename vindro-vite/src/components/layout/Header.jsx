@@ -132,38 +132,41 @@ function NavBar({ isMadrid }) {
                             <div id="hamburger-lines-bottom" />
                         </div>
                     </div>
-                    
+
                     <div id="hamburger-menu" ref={hamburgerMenuRef} className={menuOpen ? 'open' : ''}>
                         <ul>
                             {routes.map((r) => (
                                 <NavBarLink key={r.route} text={r.text} route={r.route} onClick={() => setMenuOpen(false)} />
                             ))}
                         </ul>
-                        
-                        {/* Mobile Auth Icons */}
-                        <div className="auth-nav">
-                            {user ? (
-                                <div className="user-avatar-container" ref={userDropdownRefMobile}>
-                                    <button
-                                        className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
-                                        onClick={() => setUserDropdownOpen(prev => !prev)}
-                                    >
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                        </svg>
-                                    </button>
-                                    {userDropdownOpen && (
-                                        <div className="user-dropdown-menu">
-                                            <SmartLink to="/profile" className="dropdown-item" onClick={() => {setUserDropdownOpen(false); setMenuOpen(false);}}>My Profile</SmartLink>
-                                            <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
-                                        </div>
-                                    )}
-                                </div>
-                            ) : (
-                                <NavBarLink route="/login" text="login" className="btn-login" onClick={() => setMenuOpen(false)} />
-                            )}
-                        </div>
                     </div>
+                    
+                    {/* Mobile Auth Icons */}
+                    <div className="auth-nav">
+                        {user ? (
+                            <div className="user-avatar-container" ref={userDropdownRefMobile}>
+                                <button
+                                    className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
+                                    onClick={() => setUserDropdownOpen(prev => !prev)}
+                                >
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                    </svg>
+                                </button>
+                                {userDropdownOpen && (
+                                    <div className="user-dropdown-menu">
+                                        <SmartLink to="/profile" className="dropdown-item" onClick={() => { setUserDropdownOpen(false); setMenuOpen(false); }}>My Profile</SmartLink>
+                                        <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <ul>
+                                <NavBarLink route="/login" text="login" className="btn-login" onClick={() => setMenuOpen(false)} />
+                            </ul>
+                        )}
+                    </div>
+
                 </nav>
             </div>
         </header>
