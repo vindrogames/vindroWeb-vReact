@@ -1,0 +1,387 @@
+main#madrid-calculator {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    padding-top: 90px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .intro {
+        width: 63%;
+        padding: 14px 42px;
+
+        h1 {
+            color: $real-blue;
+            font-size: 4.2rem;
+            margin-bottom: 14px;
+        }
+
+        h2 {
+            font-family: $vindro-openSans;
+            color: $vindro-black;
+            font-size: 2.4rem;
+        }
+    }
+
+    .calculator-body {
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 63%;
+        height: 100%;
+        gap: 14px;
+        padding: 21px;
+
+        .calc-screen {
+            position: relative;
+            width: 63%;
+            height: 21%;
+            border: 3px solid $vindro-black;
+            border-radius: 7px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+            overflow: hidden;
+            box-sizing: border-box;
+
+            .screen-prev-wrapper {
+                width: 100%;
+                height: 1.5rem;
+                display: flex;
+                justify-content: flex-end;
+                overflow: hidden;
+                margin-bottom: auto;
+            }
+
+            .screen-prev {
+                color: gray;
+                font-size: 1.2rem;
+                white-space: nowrap;
+
+                &.animate {
+                    animation: emergeUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                }
+            }
+
+            .screen-main {
+                width: 100%;
+                text-align: right;
+                color: $real-blue;
+                font-size: 4.2rem; // Static size
+                line-height: 1;
+                white-space: nowrap;
+                display: block;
+                overflow: hidden; // Final safety cut-off
+            }
+        }
+
+        .calc-grid {
+            width: 63%;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+
+            button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                border-radius: 7px;
+                font-size: 4.2em;
+                cursor: pointer;
+                transition: all 0.3s ease;
+
+                &.btn-util {
+                    background-color: $vindro-black;
+                    color: white;
+                    font-size: 2.8rem;
+
+                    &:hover {
+                        background-color: $vindro-black-transparent;
+                    }
+                }
+
+                &.num,
+                &.comma {
+                    background-color: lightgray;
+                    color: $vindro-black;
+
+                    &:hover {
+                        background-color: #e7e7e7;
+                    }
+
+                    &#eight img {
+                        height: 24px;
+                        width: auto;
+                    }
+                }
+
+                &.btn-op {
+                    background-color: $real-blue;
+                    color: white;
+
+                    &:hover {
+                        background-color: $real-blue-transparent;
+                    }
+                }
+
+                &.equals {
+                    background-color: $real-yellow;
+                    color: $vindro-black;
+
+                    &:hover {
+                        background-color: $real-yellow-transparent;
+                    }
+                }
+
+                &.btn-champions {
+                    position: relative;
+                    border: 2px solid $real-yellow;
+                    background-color: white;
+
+                    svg {
+                        position: relative;
+                        color: $real-yellow;
+                        height: 84%;
+                        width: auto;
+                    }
+
+                    p {
+                        position: absolute;
+                        font-size: 1.8rem;
+                        top: 14%;
+                    }
+
+                    // ONLY apply hover effects on devices that support hovering (Desktops/Laptops)
+                    @media (hover: hover) {
+                        &:hover {
+                            background-color: $real-yellow;
+
+                            svg {
+                                color: white;
+                            }
+                        }
+                    }
+
+                    // OPTIONAL: Add an "active" state for mobile feedback
+                    // This triggers ONLY while the finger is pressing down
+                    &:active {
+                        background-color: rgba($real-yellow, 0.2);
+                    }
+                }
+
+                &-barsa {
+                    grid-column: 3;
+                    background-color: white;
+                    color: $vindro-black;
+                    border: 3px solid $vindro-black;
+                    //border-radius: 7px;
+                    padding-bottom: 3px;
+                    font-size: 2.8rem;
+                    font-weight: 400;
+                }
+
+                &-barsa.on,
+                &-audio.off {
+                    background-color: $vindro-black;
+                    color: white;
+
+                    i {
+                        background-color: $vindro-black;
+                        color: white;
+                    }
+                }
+            }
+
+            .audio-btn-container {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start; // Hugs the top of the grid cell
+                padding-top: 2px; // Fine-tune this to match your grid's vertical gap
+
+                button.audio-btn {
+                    width: 42px;
+                    height: 42px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    border-radius: 7px;
+                    transition: all 0.2s ease;
+                    position: relative;
+                    border: none;
+
+                    svg {
+                        font-size: 2.1rem;
+                        position: absolute;
+                        transition: color 0.2s ease, opacity 0.2s ease;
+                    }
+
+                    // --- ICON TOGGLE LOGIC ---
+                    .icon-off {
+                        opacity: 0;
+                        pointer-events: none;
+                    }
+
+                    .icon-on {
+                        opacity: 1;
+                    }
+
+                    &.off {
+                        .icon-off {
+                            opacity: 1;
+                        }
+
+                        .icon-on {
+                            opacity: 0;
+                        }
+                    }
+
+                    // --- SPECIFIC BUTTON THEMES & HOVER OVERRIDES ---
+
+                    &#champions-audio {
+                        border: 2px solid $real-yellow;
+                        background-color: white;
+
+                        .icon-on {
+                            color: $real-yellow;
+                        }
+
+                        &.off {
+                            background-color: $real-red;
+                            border-color: $real-red;
+
+                            .icon-off {
+                                color: white;
+                            }
+                        }
+
+                        @media (hover: hover) {
+                            &:hover {
+
+                                // If ON: Show Mute state (Red)
+                                &:not(.off) {
+                                    background-color: $real-red !important;
+                                    border-color: $real-red !important;
+
+                                    .icon-on {
+                                        opacity: 0;
+                                    }
+
+                                    .icon-off {
+                                        opacity: 1;
+                                        color: white;
+                                    }
+                                }
+
+                                // If OFF: Return to Initial Styling (White/Yellow)
+                                &.off {
+                                    background-color: white !important;
+                                    border-color: $real-yellow !important;
+
+                                    .icon-on {
+                                        opacity: 1;
+                                        color: $real-yellow;
+                                    }
+
+                                    .icon-off {
+                                        opacity: 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    &#siuuu-audio {
+                        background-color: $real-yellow;
+                        border: 2px solid $real-yellow;
+
+                        .icon-on {
+                            color: $vindro-black;
+                        }
+
+                        &.off {
+                            background-color: $real-red;
+                            border-color: $real-red;
+
+                            .icon-off {
+                                color: white;
+                            }
+                        }
+
+                        @media (hover: hover) {
+                            &:hover {
+
+                                // If ON: Show Mute state (Red)
+                                &:not(.off) {
+                                    background-color: $real-red !important;
+                                    border-color: $real-red !important;
+
+                                    .icon-on {
+                                        opacity: 0;
+                                    }
+
+                                    .icon-off {
+                                        opacity: 1;
+                                        color: white;
+                                    }
+                                }
+
+                                // If OFF: Return to Initial Styling (Yellow/Black)
+                                &.off {
+                                    background-color: $real-yellow !important;
+                                    border-color: $real-yellow !important;
+
+                                    .icon-on {
+                                        opacity: 1;
+                                        color: $vindro-black;
+                                    }
+
+                                    .icon-off {
+                                        opacity: 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    &:active {
+                        transform: scale(0.92);
+                        filter: brightness(1.1);
+                    }
+                }
+            }
+
+            // Ensure grid "empty" slots don't collapse
+            .empty {
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}
+
+@keyframes emergeUp {
+    0% {
+        opacity: 0;
+        // Start from where the main display is (roughly)
+        transform: translate(50px, 40px) scale(1.5);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+}

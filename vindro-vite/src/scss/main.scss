@@ -38,11 +38,39 @@ img {
 
 @import 'utils';
 
+// 1. Define the variable defaults at the top level
+.app-shell {
+    --nav-bg: #{$vindro-black-overlay};
+    --teal-yellow-swap: #{$vindro-teal};
+    --green-yellow-swap: #{$vindro-green};
+    --green-blue-swap: #{$vindro-green};
+    --hamburger-bg: #{$vindro-tan};
+    --hamburger-text: #{$vindro-black};
+
+    // 2. Override them ONLY for the madrid theme
+    &.madrid-theme {
+
+        #navbar,
+        #navbar-hamburger,
+        .auth-nav,
+        main,
+        footer {
+            --nav-bg: #{$vindro-black-overlay}; // Or any color from your config
+            --teal-yellow-swap: #{$real-yellow};
+            --green-yellow-swap: #{$real-yellow};
+            --green-blue-swap: #{$real-blue};
+            --hamburger-bg: #{$real-blue};
+            --hamburger-text: white;
+        }
+
+    }
+}
+
 #navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: $vindro-black-overlay;
+    background-color: var(--nav-bg); // Use variable
     color: white;
 
     /* Responsive sizing */
@@ -61,14 +89,14 @@ img {
     /* Ensures it's full width, but the internal container stays centered */
     padding: 0 30px;
     z-index: 21;
-    border-left: 3px solid $vindro-teal;
-    border-right: 3px solid $vindro-teal;
+    border-left: 3px solid var(--teal-yellow-swap);
+    border-right: 3px solid var(--teal-yellow-swap);
 
     .vindro-logo {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 20px;
+        margin: 0 20px;
         font-weight: 400;
 
         a {
@@ -112,7 +140,7 @@ img {
 
             a:hover,
             a.current {
-                border-bottom: 3px solid $vindro-teal;
+                border-bottom: 3px solid var(--teal-yellow-swap);
             }
         }
     }
@@ -234,13 +262,6 @@ img {
                     }
                 }
             }
-
-            &.navbar-calculator {
-
-                &.open {
-                    background-color: lightgray;
-                }
-            }
         }
 
         #hamburger-menu {
@@ -280,24 +301,13 @@ img {
 
                 a:hover,
                 a.current {
-                    border-bottom: 3px solid $vindro-green;
+                    border-bottom: 3px solid var(--green-blue-swap);
                 }
             }
 
             &.open {
                 max-height: 100vh;
                 opacity: 1;
-            }
-
-            &.navbar-calculator {
-                background-color: lightgray;
-
-                ul li a {
-                    color: $vindro-black;
-                    box-shadow: 0 3px 3px -3px $vindro-gray;
-                    z-index: 4;
-
-                }
             }
         }
     }
@@ -321,8 +331,8 @@ img {
             justify-content: center;
             width: 42px;
             height: 42px;
-            border-radius: 7px;
-            border: 1px solid $vindro-teal;
+            border-radius: 3px;
+            border: 1px solid var(--teal-yellow-swap);
             background-color: $vindro-black;
             color: white;
             cursor: pointer;
@@ -336,14 +346,14 @@ img {
             /* Desktop: apply hover */
             @media (hover: hover) {
                 &:hover {
-                    background-color: $vindro-teal;
+                    background-color: var(--teal-yellow-swap);
                     color: $vindro-black;
                 }
             }
 
             /* Always apply open state */
             &.open {
-                background-color: $vindro-teal;
+                background-color: var(--teal-yellow-swap);
                 color: $vindro-black;
             }
         }
@@ -353,8 +363,8 @@ img {
             top: 55px;
             right: 0;
             background-color: $vindro-black-overlay;
-            border: 1px solid $vindro-teal;
-            border-radius: 5px;
+            border: 1px solid var(--teal-yellow-swap);
+            border-radius: 3px;
             min-width: 180px;
             display: flex;
             flex-direction: column;
@@ -374,28 +384,24 @@ img {
                 transition: all 0.2s ease;
 
                 &:hover {
-                    background-color: $vindro-teal;
+                    background-color: var(--teal-yellow-swap);
                     color: $vindro-black;
                 }
 
                 &:first-child {
-                    border-radius: 4px 4px 0 0;
+                    border-radius: 3px 3px 0 0;
                 }
 
                 &:last-child {
-                    border-radius: 0 0 4px 4px;
-                }
-
-                &.logout-btn {
-                    border-top: 1px solid $vindro-gray;
+                    border-radius: 0 0 3px 3px;
                 }
             }
         }
     }
 
     a.btn-login {
-        border: 1px solid $vindro-teal;
-        border-radius: 5px;
+        border: 1px solid var(--teal-yellow-swap);
+        border-radius: 3px;
         background-color: transparent;
         color: white;
         font-size: 1.6rem;
@@ -405,7 +411,7 @@ img {
 
         &:hover,
         &.current {
-            background-color: $vindro-teal;
+            background-color: var(--teal-yellow-swap);
             color: $vindro-black !important;
         }
 
@@ -671,79 +677,92 @@ section#stories-page-content {
     }
 }
 
-section#games-gallery-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    padding: 7rem 2rem;
+main#games-showcase {
 
-    #games-gallery {
-        max-width: 1600px;
+    section#games-gallery-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
         position: relative;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
+        padding: 14px 42px;
 
-        .game {
+        #games-gallery {
+            max-width: 1600px;
             position: relative;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 21px;
 
-
-            a {
-                display: flex;
-                justify-content: center;
-                align-items: center;
+            .game {
+                position: relative;
                 width: 100%;
-                aspect-ratio: 1/1;
-
-                img {
-                    width: 100%;
-                    height: auto;
-
-                    &:nth-child(1) {
-                        width: 100%;
-                        border-radius: 7px;
-                    }
-
-                    &:hover {
-                        opacity: 0.63;
-                    }
-                }
-            }
-
-            &-text {
-                background-color: $vindro-black-overlay;
-                border-radius: 14px;
-                padding: 21px;
-                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+                border-radius: 3px;
+                gap: 14px;
 
                 a {
-                    aspect-ratio: 0;
+                    display: flex;
                     justify-content: center;
-                    text-decoration: underline;
-                    color: $tm-yellow-solid;
+                    align-items: center;
+                    width: 100%;
+                    aspect-ratio: 1/1;
 
-                    h3 {
+                    img {
+                        width: 100%;
+                        height: auto;
 
-                        font-size: 2.1rem;
-                        margin-bottom: 1rem;
+                        &:nth-child(1) {
+                            width: 100%;
+                            border-radius: 3px;
+                        }
+
+                        /*
+                        / 2. The White Aura 
+                        / Syntax: box-shadow: x-offset y-offset blur-radius spread-radius color;
+                        box-shadow: 0 0 25px 2px rgba(255, 255, 255, 0.2);
+
+                        / Optional: Transition for a smooth hover effect 
+                        transition: box-shadow 0.3s ease,
+                        transform 0.3s ease;
 
                         &:hover {
-                            opacity: 0.84;
-                        }
+                             On hover, increase blur and spread for a "lighting up" effect 
+                            box-shadow: 0 0 35px 5px rgba(255, 255, 255, 0.35);
+                            transform: scale(1.02);
+                        }*/
                     }
                 }
 
+                &-text {
+                    background-color: $vindro-black-overlay;
+                    border-radius: 3px;
+                    padding: 21px;
+                    flex-grow: 1;
 
+                    a {
+                        aspect-ratio: 0;
+                        justify-content: center;
+                        text-decoration: underline;
+                        color: $tm-yellow-solid;
 
-                p {
-                    font-size: 1.6rem;
+                        h3 {
+
+                            font-size: 2.1rem;
+                            margin-bottom: 1rem;
+
+                            &:hover {
+                                opacity: 0.84;
+                            }
+                        }
+                    }
+
+                    p {
+                        font-size: 1.6rem;
+                    }
                 }
             }
         }
@@ -812,6 +831,127 @@ section#escape-the-cloud {
         }
     }
 }
+
+main#brackets-page {
+
+    section#brackets-events-container {
+        width: 100%;
+        min-height: 50vh;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        padding: 14px 42px;
+        background: $vindro-tan;
+
+
+        #brackets-events-gallery {
+            max-width: 1600px;
+            width: 100%;
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 21px;
+
+
+            .bracket-event-card-container {
+                position: relative;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+
+                .bracket-event-card {
+                    width: 100%;
+                    height: 100%;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding: 21px;
+                    border-radius: 3px;
+                    background-color: $vindro-gray;
+                    border: 3px solid $vindro-black;
+
+                    h4 {
+                        font-size: 2.4rem;
+                        color: white;
+                        margin-bottom: 14px;
+                        font-family: $vindro-Montserrat;
+                    }
+
+                    .phase-section {
+
+                        h5 {
+                            font-size: 1.8rem;
+                            font-weight: 400;
+                            margin-bottom: 3px;
+                        }
+
+                        ul.event-stages {
+                            list-style: none;
+                            margin-left: 14px;
+                            margin-bottom: 14px;
+
+                            li {
+                                font-size: 1.6rem;
+                                color: white;
+                                position: relative;
+                                padding-left: 21px;
+
+                                &::before {
+                                    content: "";
+                                    position: absolute;
+                                    left: 0;
+                                    top: 50%;
+                                    transform: translateY(-50%);
+
+                                    // The Dot Styling
+                                    height: 7px;
+                                    width: 7px;
+                                    background-color: $vindro-teal;
+                                    border-radius: 50%;
+                                    display: inline-block;
+                                }
+                            }
+                        }
+                    }
+
+
+
+                    .start-join {
+
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        h5 {
+                            font-size: 1.6rem;
+                            color: white;
+                            font-weight: 400;
+                        }
+
+                        .bracket-event-join-btn {
+                            font-size: 1.8rem;
+                            color: white;
+                            border: 1px solid $vindro-teal;
+                            background-color: $vindro-black;
+                            padding: 7px 21px;
+                            border-radius: 3px;
+                            transition: all 0.3s ease;
+
+                            &:hover {
+                                color: $vindro-black;
+                                background-color: $vindro-teal;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 
 section#contact-page-content {
     min-height: 50vh;
@@ -936,16 +1076,17 @@ footer {
     gap: 14px;
     text-align: center;
     background-color: $vindro-black;
-    border-left: 3px solid $vindro-teal;
-    border-right: 3px solid $vindro-teal;
+    border-left: 3px solid var(--teal-yellow-swap);
+    border-right: 3px solid var(--teal-yellow-swap);
 
     a {
         font-size: 1.2rem;
-        color: $vindro-green;
+        color: var(--green-yellow-swap);
         transition: all 0.3s ease;
+        text-decoration: underline;
 
         &:hover {
-            color: $vindro-teal;
+            color: var(--teal-yellow-swap);
         }
     }
 
@@ -953,11 +1094,12 @@ footer {
         font-size: 1.4rem;
 
         a {
-            color: $vindro-teal;
+            color: var(--teal-yellow-swap);
             font-weight: 600;
+            text-decoration: underline;
 
             &:hover {
-                color: $vindro-green;
+                color: var(--teal-yellow-swap);
             }
         }
     }
@@ -969,10 +1111,9 @@ footer {
         gap: 42px;
 
         a {
-
             padding: 7px;
             color: white;
-            border-radius: 7px;
+            border-radius: 3px;
 
             svg {
                 width: 4rem;
@@ -980,7 +1121,7 @@ footer {
             }
 
             &:hover {
-                background-color: $vindro-green;
+                background-color: var(--green-yellow-swap);
                 color: $vindro-gray;
             }
         }
@@ -992,12 +1133,14 @@ main {
     max-width: 1600px;
     margin: auto;
     position: relative;
-    border-left: 3px solid $vindro-teal;
-    border-right: 3px solid $vindro-teal;
+    border-left: 3px solid var(--teal-yellow-swap);
+    border-right: 3px solid var(--teal-yellow-swap);
 }
 
 @import 'auth';
+@import 'users';
 @import 'game-42';
+@import 'madrid-calculator';
 @import 'mobile960';
 @import 'mobile678';
 @import 'mobile450';

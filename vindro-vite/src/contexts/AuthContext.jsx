@@ -23,6 +23,18 @@ export function AuthProvider({ children }) {
      * Check if user is authenticated
      */
     async function checkAuth() {
+
+        const isCheatEnabled = import.meta.env.VITE_AUTH_CHEAT === 'true';
+
+        // Only cheat if the variable is true AND we are in dev mode
+        if (isCheatEnabled && import.meta.env.DEV) {
+            console.log("🛠️ Auth: Using Frontend Cheat Mode");
+            setUser({ id: '999', username: 'dev_user', role: 'admin' });
+            setLoading(false);
+            return;
+        }
+        console.log("🌐 Auth: Attempting Backend Sync...");
+
         try {
             const data = await authAPI.getCurrentUser();
             setUser(data.user);

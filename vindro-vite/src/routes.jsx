@@ -13,7 +13,11 @@ import Register from './pages/Register';
 import EscapeTheCloud from './features/escape-the-cloud/EscapeTheCloud';
 import PrivacyCookies from './pages/PrivacyCookies';
 import Game42 from './features/game-42/Game42';
+import MadridCalculator from './features/madrid-calculator/MadridCalculator';
 import TestApi from './pages/TestApi';
+import UserProfile from './pages/UserProfile'; 
+import UserBrackets from './pages/UserBrackets';
+import UserTopScores from './pages/UserTopScores';
 
 export const routes = createBrowserRouter([
   {
@@ -30,7 +34,33 @@ export const routes = createBrowserRouter([
       { path: 'games/escape-the-cloud', element: <EscapeTheCloud /> },
       { path: 'privacy-cookies', element: <PrivacyCookies />},
       { path: 'games/game-42', element: <Game42 />},
-      { path: 'test-api', element: <TestApi />}
+      { path: 'games/madrid-calculator', element: <MadridCalculator />},
+      { path: 'test-api', element: <TestApi />},
+      // Protected User Routes
+      {
+        path: 'user/:userName',
+        element: (
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'user/:userName/brackets',
+        element: (
+          <ProtectedRoute>
+            <UserBrackets />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'user/:userName/topScores',
+        element: (
+          <ProtectedRoute>
+            <UserTopScores />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);
