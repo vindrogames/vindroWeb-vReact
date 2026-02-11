@@ -106,7 +106,31 @@ function NavBar({ isMadrid }) {
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
-                                        <SmartLink to="/profile" className="dropdown-item" onClick={() => setUserDropdownOpen(false)}>My Profile</SmartLink>
+                                        <SmartLink
+                                            to={`/user/${encodeURIComponent(user?.username || user.id)}`}
+                                            className="dropdown-item"
+                                            onClick={() => setUserDropdownOpen(false)}
+                                        >
+                                            Profile
+                                        </SmartLink>
+
+                                        {/* Possible Profile options
+                                        <SmartLink
+                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/brackets`}
+                                            className="dropdown-item"
+                                            onClick={() => { setUserDropdownOpen(false) }}
+                                        >
+                                            Top Scores
+                                        </SmartLink>
+                                        <SmartLink
+                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/topScores`}
+                                            className="dropdown-item"
+                                            onClick={() => { setUserDropdownOpen(false) }}
+                                        >
+                                            Brackets
+                                        </SmartLink>
+                                        */}
+                                        
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}
@@ -140,7 +164,7 @@ function NavBar({ isMadrid }) {
                             ))}
                         </ul>
                     </div>
-                    
+
                     {/* Mobile Auth Icons */}
                     <div className="auth-nav">
                         {user ? (
@@ -155,7 +179,30 @@ function NavBar({ isMadrid }) {
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
-                                        <SmartLink to="/profile" className="dropdown-item" onClick={() => { setUserDropdownOpen(false); setMenuOpen(false); }}>My Profile</SmartLink>
+                                        <SmartLink
+                                            to={`/user/${encodeURIComponent(user?.username || user.id)}`}
+                                            className="dropdown-item"
+                                            onClick={() => setUserDropdownOpen(false)}
+                                        >
+                                            Profile
+                                        </SmartLink>
+
+                                        {/* Possible Profile options
+                                        <SmartLink
+                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/brackets`}
+                                            className="dropdown-item"
+                                            onClick={() => { setUserDropdownOpen(false) }}
+                                        >
+                                            Top Scores
+                                        </SmartLink>
+                                        <SmartLink
+                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/topScores`}
+                                            className="dropdown-item"
+                                            onClick={() => { setUserDropdownOpen(false) }}
+                                        >
+                                            Brackets
+                                        </SmartLink>
+                                        */}
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}

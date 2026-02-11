@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
             return;
         }
         console.log("🌐 Auth: Attempting Backend Sync...");
-        
+
         try {
             const data = await authAPI.getCurrentUser();
             setUser(data.user);
