@@ -1,40 +1,8 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { getBackendUrl } from '../services/api';
 import ShowcaseSection from "../components/ui/ShowcaseSection";
 import LoginHelmet from '../page-helmets/LoginHelmet';
-import SmartLink from '../components/ui/SmartLink';
 
 export default function Login() {
-    const [formData, setFormData] = useState({ username: '', password: '' });
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const { login } = useAuth();
-    const navigate = useNavigate();
-
-    function handleChange(e) {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    }
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
-
-        try {
-            await login(formData);
-            navigate('/');
-        } catch (err) {
-            setError(err.message || 'Login failed. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    }
-
     return (
         <>
             <LoginHelmet />
@@ -54,47 +22,6 @@ export default function Login() {
                     classes="hero-half bg-gray"
                 >
                     <div className="auth-container">
-
-                        <form onSubmit={handleSubmit} className="auth-form">
-                            <div className="form-group">
-                                <label htmlFor="username">Username</label>
-                                <input
-                                    type="text"
-                                    id="username"
-                                    name="username"
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                    placeholder="Enter your username"
-                                    required
-                                    autoComplete="username"
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="password">Password</label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    placeholder="Enter your password"
-                                    required
-                                    autoComplete="current-password"
-                                />
-                            </div>
-
-                            {error && <div className="error-message">{error}</div>}
-
-                            <button type="submit" className="btn btn-primary" disabled={loading}>
-                                {loading ? 'Logging in...' : 'Login'}
-                            </button>
-                        </form>
-
-                        <div className="auth-divider">
-                            <span>OR</span>
-                        </div>
-
                         <div className="social-login">
                             <a
                                 href={`${getBackendUrl()}/accounts/google/login/`}
@@ -109,16 +36,8 @@ export default function Login() {
                                 Continue with Google
                             </a>
                         </div>
-
-                        <div className="no-account">
-                            <h3>Don't have an account?</h3>
-                            <SmartLink to="/register" className="btn-register" isNav={true}>
-                                Register
-                            </SmartLink>
-                        </div>
                     </div>
                 </ShowcaseSection>
-
 
             </main>
         </>
