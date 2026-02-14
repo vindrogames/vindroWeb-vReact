@@ -42,6 +42,7 @@
     main#games-showcase {
 
         section.hero-half {
+
             h2 {
                 font-size: 2.4rem;
             }
@@ -140,6 +141,72 @@
         .calculator-body {
             width: 84%;
             padding: 21px 7px;
+        }
+    }
+
+    main#auto-miner {
+
+        padding: 90px 42px 0;
+
+        #resource-bar {
+            left: 42px;
+        }
+
+        .auto-miner-container {
+            padding: 21px 0;
+
+            section.resource-section {
+                padding: 21px 14px 14px;
+                
+                .resource-section-grid {
+                    .grid-cell-container {
+                        .grid-cell-content {
+
+                            .header-text,
+                            .total-resource-grid-display {
+
+                                h3,
+                                h4 {
+                                    font-size: 1.8rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    main#contact-page {
+
+        section#contact-page-emails {
+
+            padding: 42px 0;
+
+            ul {
+
+                width: 84%;
+                margin: 0 auto;
+
+                li {
+
+                    margin-left: 42px;
+
+                    div {
+                        width: 63vw;
+                    }
+
+                    &:nth-child(even) div {
+                        left: 28px;
+                    }
+
+                    &:nth-child(even) div:before {
+                        left: -15px;
+                        border-width: 8px 16px 8px 0;
+                        border-color: transparent #FFFFFF transparent transparent;
+                    }
+                }
+            }
         }
     }
 }

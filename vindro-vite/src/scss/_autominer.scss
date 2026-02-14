@@ -1,0 +1,352 @@
+main#auto-miner {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 90px 90px 0 90px;
+    background-color: $vindro-black;
+
+    #resource-bar {
+        position: fixed;
+        top: 120px;
+        left: 84px;
+        z-index: 10;
+
+        .resource-bar-container {
+            width: auto;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            align-items: center;
+            padding: 7px;
+            background-color: $vindro-gray;
+            border: 2px solid $vindro-teal;
+            border-radius: 3px;
+
+            .column {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+
+                img {
+                    width: 32px;
+                    height: 32px;
+                }
+
+                p {
+                    padding-left: 3px;
+                    font-size: 1.8rem;
+                    font-weight: 600;
+                    text-align: left;
+                    
+
+                    &#drill-count {
+                        margin-left: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .auto-miner-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 42px;
+        display: flex;
+        flex-direction: column;
+        gap: 21px;
+
+        section#game-intro {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+
+            h1 {
+                font-size: 4.2rem;
+
+                span {
+                    font-family: $vindro-Montserrat;
+                }
+            }
+
+            h2 {
+                font-size: 2.8rem;
+            }
+
+            button#how-to-play {
+                width: 140px;
+                border-radius: 3px;
+                background-color: $vindro-tan;
+                color: $vindro-black;
+                font-size: 1.6rem;
+                padding: 7px 14px !important;
+                transition: all 0.3s ease;
+                margin: 0 !important;
+
+                &:hover,
+                &.current {
+                    background-color: $vindro-green;
+                    color: white;
+                    margin: 0 !important;
+                }
+
+                &.current {
+                    cursor: default;
+                }
+            }
+        }
+
+        section.resource-section {
+
+            border-top: 1px solid $vindro-teal;
+            width: 100%;
+            padding: 42px;
+            padding-bottom: 21px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            &:last-child {
+                border-bottom: 1px solid $vindro-teal;
+                padding-bottom: 42px;
+                margin-bottom: 21px;
+            }
+
+            .resource-section-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                width: 100%;
+
+                .grid-cell-container {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    .grid-cell-content {
+                        display: flex;
+                        flex-direction: column;
+
+                        .header-text,
+                        .total-resource-grid-display {
+                            display: flex;
+                            align-items: center;
+                            gap: 14px;
+                            margin-bottom: 14px;
+
+                            img {
+                                width: 42px;
+                                height: 42px;
+                            }
+
+                            h3,
+                            h4 {
+                                font-size: 2.1rem;
+                                font-weight: 600;
+                            }
+                        }
+
+                        .cost-purchase-display,
+                        .purchase-summary-section {
+                            display: flex;
+                            gap: 7px;
+                            align-items: center;
+                            margin-bottom: 7px;
+
+                            p {
+                                font-size: 1.8rem;
+                                font-weight: 400;
+                            }
+
+                            &#sulfur-purchase-display,
+                            &#drills-purchase-display {
+                                margin-bottom: 14px;
+                            }
+                        }
+
+                        .purchase-summary-section {
+                            margin-bottom: 14px;
+                        }
+
+                        .purchase-section {
+                            display: flex;
+                            gap: 7px;
+                            align-items: center;
+                            margin-bottom: 7px;
+
+                            p {
+                                font-size: 1.8rem;
+                            }
+
+                            .plus-minus-purchase-display {
+                                display: flex;
+                                align-items: center;
+                                gap: 7px;
+
+                                .plus-minus-purchase-buttons {
+                                    display: flex;
+                                    flex-direction: column;
+
+                                    .minus-1-purchase-btn,
+                                    .plus-1-purchase-btn {
+                                        width: 28px;
+                                        height: 28px;
+                                        border-radius: 3px;
+                                        cursor: pointer;
+                                        transition: all 0.3s ease;
+                                        background-color: transparent;
+                                        border: none;
+                                        padding: 0;
+                                        overflow: hidden; // Ensures the SVG doesn't "leak" out of the 28px box
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+
+                                        svg {
+                                            color: $vindro-green;
+                                            width: 100%;
+                                            height: 100%;
+                                            display: block;
+                                        }
+                                    }
+
+                                    .plus-1-purchase-btn {
+                                        svg {
+                                            // Pushes the "Up" arrow render to the very top edge
+                                            transform: translateY(4px);
+                                        }
+
+                                        &:hover {
+                                            transform: translateY(-3px);
+                                        }
+                                    }
+
+                                    .minus-1-purchase-btn {
+                                        svg {
+                                            // Pushes the "Down" arrow render to the very bottom edge
+                                            transform: translateY(-4px);
+                                        }
+
+                                        &:hover {
+                                            transform: translateY(3px);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .inline-cost-display,
+                        .total-resource-display,
+                        .production-display {
+                            padding: 3px 7px;
+                            background-color: $vindro-gray;
+                            color: white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 1.8rem;
+                            font-weight: 500;
+                            border-radius: 3px;
+                        }
+
+                        .total-resource-display,
+                        .production-display {
+                            padding: 3px 7px;
+                            font-size: 2.1rem;
+                            font-weight: 500;
+                            border-radius: 3px;
+                        }
+
+                        label {
+                            display: flex;
+                            align-items: center;
+                            font-size: 2.1rem;
+                            cursor: pointer;
+
+                            input {
+                                margin-right: 7px;
+                                width: 21px;
+                                height: 21px;
+                                cursor: pointer;
+
+                                // Target the checkbox specifically when it's disabled
+                                &:disabled {
+                                    opacity: 0.4;
+                                    cursor: not-allowed;
+                                    filter: grayscale(1); // Desaturates the box in some browsers
+                                    accent-color: #666; // Colors the "check" if it were checked
+                                }
+                            }
+                        }
+
+                        .silver-progress-container {
+                            width: 100%;
+                            margin-top: 14px;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+
+                            progress {
+                                width: 96%;
+                            }
+
+                            .progress-end-nums {
+                                width: 100%;
+                                display: flex;
+                                justify-content: space-between;
+                                font-size: 1.6rem;
+                                color: white;
+                            }
+                        }
+                    }
+                }
+
+
+
+                &#iron-mining-section,
+                &#sulfur-buying-section,
+                &#drills-buying-section,
+                &#silver-mining-section {
+                    border-bottom: 1px solid $vindro-green;
+                    padding-bottom: 21px;
+                    margin-bottom: 21px;
+                }
+            }
+        }
+
+        .auto-miner-btn {
+            min-width: 240px;
+            padding: 7px 21px;
+            background-color: $vindro-tan;
+            color: $vindro-black;
+            font-size: 1.6rem;
+            border-radius: 3px;
+            font-weight: 500;
+            cursor: pointer;
+            align-self: center;
+
+            &:hover {
+                background-color: $vindro-green;
+                color: white;
+                transform: scale(1.04);
+                // box-shadow: 0 1px 7px rgba(255, 255, 255, 1); // Deeper shadow for depth
+            }
+
+            &:active {
+                transform: scale(1.04);
+                // box-shadow: 0 6px 20px rgba(255, 255, 255, 1);
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+                opacity: 0.6;
+                filter: grayscale(1);
+                transform: none;
+            }
+        }
+    }
+}

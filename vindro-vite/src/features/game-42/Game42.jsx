@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Board from "./components/Board";
 import GameDisplay from "./components/GameDisplay";
 import Instructions42 from "./components/Instructions42";
-import UseGame42Logic from "./hooks/UseGame42Logic";
+import useGame42Logic from "./hooks/useGame42Logic";
 import WinModal from "./components/End42";
 
 export default function Game42() {
@@ -22,7 +22,7 @@ export default function Game42() {
         startGame,
         placeNum,
         playAgain,
-    } = UseGame42Logic();
+    } = useGame42Logic();
 
     return (
         <main id="game-42">

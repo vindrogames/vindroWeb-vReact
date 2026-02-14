@@ -9,7 +9,7 @@ function Contact() {
         <>
             <ContactHelmet />
 
-            <main>
+            <main id="contact-page">
 
                 <ShowcaseSection
                     classes="hero-half bg-black"
@@ -20,23 +20,29 @@ function Contact() {
                 
                 <ShowcaseSection
                     id="contact-page-content"
+                    classes="hero-half bg-gray"
                 >
-                    <div id="contact-right">
-                        <h2>We love talking with people about programming, games and learning.</h2>
-                        <h2>We work with people and institutions offering:</h2>
-                        <ul className='offerings-list'>
-                            <li>Web design</li>
-                            <li>Game Development</li>
-                            <li>DevOps</li>
-                            <li>Security services</li>
-                            <li>Data Analysis</li>
-                        </ul>
-                    </div>
+                    <h3>We are passionate about programming, games, learning and data</h3>
+                    <h3>We offer web design, game development, DevOps, security and data analysis services to individuals and institutions.</h3>
+                    
+                </ShowcaseSection>
 
-                    <div id="contact-left">
-                        <h3 translate="no">zeneke@gmail.com</h3>
-                        <h3 translate="no">d.michaelthomasbennett@gmail.com</h3>
-                    </div>
+                <ShowcaseSection
+                    id="contact-page-emails"
+                    classes="hero-half bg-tan"
+                >
+                    <ul>
+                        <li>
+                            <div>
+                                <h4 translate="no">zeneke@gmail.com</h4>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <h4 translate="no">d.michaelthomasbennett@gmail.com</h4>
+                            </div>
+                        </li>
+                    </ul>                    
                 </ShowcaseSection>
             </main>
         </>

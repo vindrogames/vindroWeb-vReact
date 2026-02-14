@@ -1,7 +1,8 @@
 // src/game-42/components/Instructions42.jsx
-import React, { useState, useEffect } from "react"; // Added missing hooks here
+import React, { useState, useEffect } from "react";
 
 export default function Instructions42({ isOpen, onClose }) {
+    
     const [showText, setShowText] = useState(false);
 
     useEffect(() => {

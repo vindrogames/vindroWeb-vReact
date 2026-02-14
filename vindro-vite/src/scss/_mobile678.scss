@@ -163,12 +163,13 @@
 
         section.hero-half {
             padding: 42px 21px 21px;
+
             h1 {
                 font-size: 2.8rem;
             }
 
             h2 {
-                text-align: left;
+                text-align: center;
                 font-size: 2.1rem;
             }
         }
@@ -179,14 +180,17 @@
 
             #games-gallery {
 
+                padding: 0 14px;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 7px;
+
                 .game {
                     width: 84%;
                     margin: auto;
 
                     &-text {
                         padding: 3px;
+
                         a {
 
                             h3 {
@@ -217,7 +221,7 @@
                 .bracket-event-card {
                     width: 63%;
                     margin: auto;
-                    
+
                 }
             }
         }
@@ -242,19 +246,37 @@
         }
     }
 
-    section#contact-page-content {
-        height: 100%;
-        grid-template-columns: 1fr;
+    main#contact-page {
 
-        #contact-left {
-
-            min-height: 50vh;
+        section.hero-half {
+            h2 {
+                font-size: 2.1rem;
+            }
         }
 
-        #contact-right {
+        section#contact-page-content {
 
-            min-height: 50vh;
+            h3 {
+                font-size: 2.1rem;
+            }
+        }
 
+        section#contact-page-emails {
+
+            ul {
+                width: 100%;
+                li {
+
+                    margin-left: 36px;
+
+                    div {
+                        width: calc(100vw - 100px);
+                        h4 {
+                            font-size: 1.8rem;
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -35,7 +35,7 @@ function BracketEventCard({ eventTitle, phases = {}, startDate, route }) {
                 <div className="start-join">
                     <h5>{startDate}</h5>
                     <SmartLink to={route} className='bracket-event-join-btn'>
-                        <h6>Join</h6>
+                        Join
                     </SmartLink>
                 </div>
             </div>

@@ -14,6 +14,7 @@ import EscapeTheCloud from './features/escape-the-cloud/EscapeTheCloud';
 import PrivacyCookies from './pages/PrivacyCookies';
 import Game42 from './features/game-42/Game42';
 import MadridCalculator from './features/madrid-calculator/MadridCalculator';
+import Autominer from './features/autominer/AutoMiner';
 import TestApi from './pages/TestApi';
 import UserProfile from './pages/UserProfile'; 
 import UserBrackets from './pages/UserBrackets';
@@ -36,6 +37,7 @@ export const routes = createBrowserRouter([
       { path: 'games/game-42', element: <Game42 />},
       { path: 'games/madrid-calculator', element: <MadridCalculator />},
       { path: 'test-api', element: <TestApi />},
+      { path: 'games/auto-miner', element: <Autominer /> },
       // Protected User Routes
       {
         path: 'user/:userName',

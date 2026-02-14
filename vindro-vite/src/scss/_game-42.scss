@@ -84,12 +84,14 @@ main#game-42 {
                 z-index: 4;
                 font-size: 1.8rem;
                 padding: 7px 14px;
-                background-color: white;
-                border-radius: 7px;
+                background-color: $vindro-tan;
+                border-radius: 3px;
+                transition: all 0.3s ease;
 
                 &:hover {
                     cursor: pointer;
-                    background-color: darken(white, 14%);
+                    background-color: $real-yellow;
+
                 }
             }
         }
@@ -111,26 +113,30 @@ main#game-42 {
                     padding: 14px;
                     font-size: 2.8rem;
                     font-weight: 600;
-                    color: $vindro-black;
-                    background-color: $real-yellow;
-                    border: none;
+                    color: $vindro-teal;
+                    background-color: $vindro-black;
+                    border: 2px solid $vindro-teal;
                     border-radius: 42px;
                     text-align: center;
                     cursor: pointer;
+                    transition: all 0.3s ease;
 
                     &.game-over {
                         background-color: $real-red;
+                        border: 2px solid $real-red;
                         color: white;
 
                         &:hover {
                             background-color: $vindro-teal;
                             color: $vindro-black;
+                            border: 2px solid $vindro-teal;
                         }
                     }
                 }
 
                 button#game-42-play-button:hover {
                     background-color: $vindro-teal;
+                    color: $vindro-black;
                 }
 
                 .game-42-number-display {
@@ -353,20 +359,18 @@ main#game-42 {
                     width: 42%;
                     padding: 7px 14px;
                     border-radius: 42px;
-                    border: none;
                     font-size: 1.8rem;
                     font-weight: 600;
-                    background-color: $vindro-teal;
-                    color: $vindro-black;
+                    background-color: $vindro-black;
+                    color: $vindro-teal;
+                    border: 2px solid $vindro-teal;
                     font-family: $vindro-Montserrat;
                     align-self: center;
-                    border: 2px solid transparent;
 
                     &:hover {
                         cursor: pointer;
-                        background-color: $vindro-black;
-                        color: $vindro-teal;
-                        border: 2px solid $vindro-teal;
+                        background-color: $vindro-teal;
+                        color: $vindro-black;
                     }
                 }
             }

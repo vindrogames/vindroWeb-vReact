@@ -49,7 +49,7 @@ function Games() {
                             key="game-3"
                             route="https://cerebro.vindrogames.com"
                             galleryImg={
-                                <img src="img/brainGame.png" alt="A zfantasy style RPG to learn how the brain processes information" />
+                                <img src="/img/brainGame.png" alt="A zfantasy style RPG to learn how the brain processes information" />
                             }
                             gameTitle="Brain Game"
                             gameDescription="A role playing type game designed to teach people about the human brain and how we process visual information."

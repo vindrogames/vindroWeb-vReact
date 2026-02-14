@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
 
-export default function UseGame42Logic() {
+export default function useGame42Logic() {
     const { isAuthenticated, user } = useAuth();
 
     const [numsRound, setNumsRound] = useState([]);
