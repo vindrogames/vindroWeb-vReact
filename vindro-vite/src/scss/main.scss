@@ -298,7 +298,6 @@ img {
                     }
                 }
 
-
                 a:hover,
                 a.current {
                     border-bottom: 3px solid var(--green-blue-swap);
@@ -423,7 +422,6 @@ img {
     }
 }
 
-
 section.hero-full,
 section.hero-half {
     position: relative;
@@ -467,7 +465,6 @@ section.hero-full {
 }
 
 section.hero-half {
-
     min-height: 50vh;
     gap: 21px;
     padding: 42px;
@@ -493,7 +490,6 @@ section.hero-half {
 }
 
 section#what-we-do {
-
     h3 {
         width: 84%;
         text-align: center;
@@ -522,7 +518,6 @@ section#what-we-do {
 }
 
 section#home-about {
-
     .team-container {
         width: 100%;
         display: flex;
@@ -675,7 +670,6 @@ section#stories-page-content {
 }
 
 main#games-showcase {
-
     section#games-gallery-container {
         width: 100%;
         display: flex;
@@ -836,7 +830,6 @@ section#escape-the-cloud {
 }
 
 main#brackets-page {
-
     section#brackets-events-container {
         width: 100%;
         min-height: 50vh;
@@ -846,7 +839,6 @@ main#brackets-page {
         padding: 14px 42px;
         background: $vindro-tan;
 
-
         #brackets-events-gallery {
             max-width: 1600px;
             width: 100%;
@@ -854,7 +846,6 @@ main#brackets-page {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 21px;
-
 
             .bracket-event-card-container {
                 position: relative;
@@ -952,7 +943,6 @@ main#brackets-page {
 }
 
 main#contact-page {
-
     section#contact-page-content,
     section#contact-page-emails {
         display: flex;
@@ -962,12 +952,11 @@ main#contact-page {
         gap: 21px;
 
         h3 {
+            width: 84%;
             text-align: center;
             font-size: 2.8rem;
             font-weight: 400;
         }
-
-
     }
 
     section#contact-page-emails {

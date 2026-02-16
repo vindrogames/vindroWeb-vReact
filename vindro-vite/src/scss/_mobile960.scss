@@ -155,12 +155,14 @@
                     right: 7%;
                 }
             }
+
             section.resource-section {
                 padding: 21px 14px 14px;
-                
+
                 .resource-section-grid {
                     .grid-cell-container {
                         .grid-cell-content {
+
                             .header-text,
                             .total-resource-grid-display {
 
@@ -211,6 +213,26 @@
                         left: -15px;
                         border-width: 8px 16px 8px 0;
                         border-color: transparent #FFFFFF transparent transparent;
+                    }
+                }
+            }
+        }
+    }
+
+    main#login-page {
+        section#login-content {
+            h5 {
+                width: 84%;
+                font-size: 2.1rem;
+            }
+
+            .auth-container {
+                width: 84%;
+
+                .auth-info {
+                    h3,
+                    h4 {
+                        font-size: 2.1rem;
                     }
                 }
             }
