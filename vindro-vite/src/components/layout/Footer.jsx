@@ -2,7 +2,9 @@ import React from 'react';
 import { FaGithub, FaTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 import SmartLink from '../ui/SmartLink';
 
-function Footer() {
+function Footer({ isMadrid }) {
+
+    const inlineClass = isMadrid ? "inline-real-yellow" : "inline-teal";
 
     return (
         <footer>
@@ -24,9 +26,9 @@ function Footer() {
                 </SmartLink>
             </div>
             <div className="contact-info">
-                <p>&copy;<span className="inline-bold inline-teal" translate="no">VindroGames</span> <span className="inline-bold inline-teal">|</span> <span>All Rights Reserved</span></p>
+                <p>&copy;<span className={`inline-bold ${inlineClass}`} translate="no">VindroGames</span> <span className={`inline-bold ${inlineClass}`}>|</span> <span>All Rights Reserved</span></p>
                 <p>
-                    <span className="inline-bold inline-teal">&</span> in collaboration with{" "}
+                    <span className={`inline-bold ${inlineClass}`}>&</span> in collaboration with{" "}
                     <SmartLink to="https://ludotecaenlanube.com/" translate="no">
                         Ludoteca en la Nube
                     </SmartLink>

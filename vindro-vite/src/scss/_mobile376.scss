@@ -121,21 +121,63 @@
             }
         }
 
-    }
-
-    section#contact-page-content {
-        height: 100%;
-        grid-template-columns: 1fr;
-
-        #contact-left {
-
-            h3 {
-                font-size: 1.2rem;
+        section#games-gallery-container {
+        
+            #games-gallery {
+                padding: 0 7px;
             }
         }
 
-        #contact-right {
-            padding: 21px;
+    }
+
+    main#contact-page {
+
+        section.hero-half {
+
+            h1 {
+                font-size: 3.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+        section#contact-page-content {
+            h3 {
+            font-size: 1.8rem;
+        }
+
+        }
+        section#contact-page-emails {
+
+            ul {
+                width: 100%;
+
+                li {
+                    width: 4px;
+                    margin-left: 21px;
+
+                    div {
+                        width: calc(100vw - 42px);
+
+                        h4 {
+                            font-size: 1.2rem;
+                            border-bottom: 1px solid $vindro-green;
+                        }
+                    }
+
+                    &:nth-child(odd) div {
+                        left: 14px;
+                    }
+                    &:nth-child(even) div {
+                        left: 14px;
+                    }
+
+                    &:after {
+                        width: 14px;
+                        height: 14px;
+                    }
+                }
+            }
         }
     }
 
@@ -228,10 +270,53 @@
                 }
 
                 .refs {
-                    p, a {
+
+                    p,
+                    a {
                         font-size: 1rem;
                     }
                 }
+            }
+        }
+    }
+
+    main#madrid-calculator {
+
+        .intro {
+            padding: 14px;
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .calculator-body {
+            width: 100%;
+            padding: 14px;
+
+            .calc-screen {
+
+            }
+
+            .calc-grid {
+                
+
+            }
+        }
+    }
+
+    main#auto-miner {
+        padding: 60px 0 0 0;
+
+        .auto-miner-container {
+            padding: 14px;
+
+            section#game-intro {
+                h1 {
+                    font-size: 2.8rem;
+                }
+            }
+            section.resource-section {
+                padding: 21px 0 0 0;
             }
         }
     }

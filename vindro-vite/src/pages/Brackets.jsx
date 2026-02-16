@@ -1,13 +1,14 @@
 import React from 'react';
-import ContactHelmet from '../page-helmets/ContactHelmet';
+import BracketHelmet from '../page-helmets/BracketHelmet';
 import ShowcaseSection from '../components/ui/ShowcaseSection';
+import BracketEventCard from '../components/pages/brackets/BracketEventCard';
 
 function Brackets() {
 
     return (
 
         <>
-            <ContactHelmet />
+            <BracketHelmet />
 
             <main id="brackets-page">
 
@@ -15,29 +16,26 @@ function Brackets() {
                     classes="hero-half bg-black"
                 >
                     <h1>vindro<span className="inline-bold inline-teal">Brackets</span></h1>
-                    <h2>Easy, fun and stylish brackets for you and your friends.</h2>
+                    <h2>Join an event, complete a bracket and enter a pool. Easy</h2>
                 </ShowcaseSection>
-                
-                <ShowcaseSection
-                    id=""
-                >
-                    <div id="contact-left">
-                        <h3 translate="no">zeneke@gmail.com</h3>
-                        <h3 translate="no">d.michaelthomasbennett@gmail.com</h3>
-                    </div>
 
-                    <div id="contact-right">
-                        <h2>We love talking with people about programming, games and learning.</h2>
-                        <h2>We work with people and institutions offering:</h2>
-                        <ul className='offerings-list'>
-                            <li>Web design</li>
-                            <li>Game Development</li>
-                            <li>DevOps</li>
-                            <li>Security services</li>
-                            <li>Data Analysis</li>
-                        </ul>
+                <section id="brackets-events-container">
+
+                    <div id="brackets-events-gallery">
+
+                        <BracketEventCard
+                            key="bracket-event-1"
+                            eventTitle="World Cup 2026"
+                            phases={{
+                                groupPhases: ["48 Teams", "Points for Correct Picks", "Reset Bracket"],
+                                bracketPhases: ["Round of 32", "Round of 16", "Quarter-finals", "Semi-finals", "Finals"]
+                            }}
+                            startDate="Start: Jun 11, 2026"
+                            route='/wc-2026'
+                        />
+
                     </div>
-                </ShowcaseSection>
+                </section>
             </main>
         </>
 

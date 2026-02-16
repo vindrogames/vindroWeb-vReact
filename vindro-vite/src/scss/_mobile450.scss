@@ -6,6 +6,18 @@
             margin: 0 14px;
         }
 
+        nav {
+            #hamburger-menu {
+                ul {
+                    padding: 21px 7px;
+
+                    li {
+                        margin: 0 14px;
+                    }
+                }
+            }
+        }
+
         .nav-auth-container {
             display: flex;
             align-items: center;
@@ -59,43 +71,50 @@
     }
 
     main#games-showcase {
+
         section.hero-half {
             h1 {
                 font-size: 2.8rem;
             }
+
+            h2 {
+                width: 100%;
+                font-size: 1.8rem;
+            }
         }
 
-    }
+        section#games-gallery-container {
 
-    section#games-gallery-container {
+            padding: 0 0 42px;
 
-        padding: 3rem 0;
+            #games-gallery {
 
-        #games-gallery {
+                grid-template-columns: 1fr;
+                padding: 0 21px;
 
-            grid-template-columns: 1fr;
+                .game {
 
-            .game {
+                    &-text {
 
-                &-text {
-                    padding: 14px;
+                        a {
+                            justify-content: center;
 
-                    a {
-                        justify-content: center;
+                            h3 {
 
-                        h3 {
-
-                            font-size: 1.8rem;
-                            text-align: center;
+                                font-size: 1.8rem;
+                                text-align: center;
+                            }
                         }
-                    }
 
-                    p {
-                        text-align: center;
+                        p {
+
+                            font-size: 1.6rem;
+                        }
                     }
                 }
             }
         }
+
     }
 
     main#escape-cloud {
@@ -181,37 +200,209 @@
                 }
             }
         }
+    }
 
-        .how-to-play-content {
-            .instructions-inner {
-                padding: 0 14px;
+    main#madrid-calculator {
 
-                .main-instructions {
+        .intro {
+            width: 100%;
+        }
 
-                    h2 {
-                        font-size: 2.8rem;
+        .calculator-body {
+            padding: 14px 21px;
+
+            .calc-screen {
+                width: 100%;
+            }
+
+            .calc-grid {
+                width: 100%;
+
+                button {
+                    font-size: 3.6rem;
+
+                    &.btn-util {
+                        font-size: 2.4rem;
                     }
 
-                    h3,
-                    p,
-                    li {
-                        font-size: 1.4rem;
-                    }
-
-                    .hitchhiker-note {
-                        font-size: 1.4rem;
-                    }
-                }
-
-                .refs {
-                    padding: 14px 3px;
-                    p, a {
-                        font-size: 1.2rem;
+                    &.btn-champions {
+                        p {
+                            font-size: 1.2rem;
+                        }
                     }
                 }
             }
-        }
 
+            .audio-btn-container {
+                width: 100%;
+            }
+        }
+    }
+
+    main#auto-miner {
+        padding: 60px 21px 0;
+
+        .auto-miner-container {
+            padding: 21px;
+
+            section#game-intro {
+                padding-left: 7px;
+                h1 {
+                    font-size: 3.6rem;
+                }
+
+                .sub-header-text-instruct {
+                    h2 {
+                        font-size: 1.8rem;
+                    }
+
+                    button#how-to-play {
+                        width: 100%;
+                        font-size: 1.4rem;
+                        padding: 3px 7px;
+                    }
+                }
+
+                #resource-bar {
+                    .resource-bar-container {
+                        .column {
+                            flex-direction: column;
+                            align-items: center;
+
+                            p {
+                                padding: 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            section.resource-section {
+                padding: 21px 14px 14px;
+
+                .resource-section-grid {
+                    grid-template-columns: 1fr;
+
+                    .grid-cell-container {
+
+                        .grid-cell-content {
+
+                            justify-content: center;
+
+                            .header-text,
+                            .total-resource-grid-display {
+
+                                img {
+                                    width: 24px;
+                                    height: 24px;
+                                }
+
+                                h3,
+                                h4 {
+                                    font-size: 1.6rem;
+                                }
+                            }
+
+                            .total-resource-grid-display {
+                                flex-direction: column;
+                                gap: 7px;
+
+                                .total-resource-display,
+                                .production-display {
+                                    width: 100%;
+                                }
+
+                                .production-cost-heading {
+                                    display: flex;
+                                    flex-direction: row;
+                                    align-items: center;
+
+                                    img {
+                                        width: 24px;
+                                        height: 24px;
+                                    }
+                                }
+                            }
+
+                            .cost-purchase-display,
+                            .purchase-summary-section {
+
+                                gap: 3px;
+
+                                p {
+                                    font-size: 1.6rem;
+                                }
+                            }
+
+                            .purchase-section {
+
+                                p {
+                                    font-size: 1.6rem;
+                                }
+                            }
+
+                            .inline-cost-display,
+                            .total-resource-display,
+                            .production-display {
+                                padding: 3px 7px;
+                                font-size: 1.6rem;
+                            }
+
+                            .total-resource-display,
+                            .production-display {
+                                padding: 3px 7px;
+                                font-size: 1.6rem;
+                            }
+
+                            label {
+                                font-size: 1.6rem;
+
+                                input {
+                                    margin-right: 7px;
+                                    width: 21px;
+                                    height: 21px;
+                                    cursor: pointer;
+
+                                    // Target the checkbox specifically when it's disabled
+                                    &:disabled {
+                                        opacity: 0.4;
+                                        cursor: not-allowed;
+                                        filter: grayscale(1); // Desaturates the box in some browsers
+                                        accent-color: #666; // Colors the "check" if it were checked
+                                    }
+                                }
+                            }
+                        }
+
+                        &:first-child {
+                            justify-content: flex-start;
+                            padding-left: 14px;
+                        }
+
+                        &:last-child {
+                            justify-content: flex-start;
+                            padding-left: 14px;
+                            margin-top: 14px;
+
+                            .total-resource-grid-display {
+                                padding: 0 14px;
+                            }
+                        }
+
+                        &#total-iron-grid-display {
+                            display: none;
+                        }
+                    }
+                }
+            }
+
+            .auto-miner-btn {
+                min-width: 0;
+                width: 100%;
+                padding: 7px 14px;
+                font-size: 1.4rem;
+            }
+        }
     }
 
     section#under-construction {
@@ -239,23 +430,94 @@
         }
     }
 
+    main#contact-page {
+
+        section#contact-page-emails {
+
+            ul {
+                width: 100%;
+
+                li {
+                    width: 6px;
+                    margin-left: 21px;
+
+                    div {
+                        width: calc(100vw - 63px);
+
+                        h4 {
+                            font-size: 1.6rem;
+                        }
+                    }
+
+                    &:nth-child(odd) div {
+                        left: 21px;
+                    }
+
+                    &:nth-child(even) div {
+                        left: 21px;
+                    }
+
+                    &:after {
+                        width: 21px;
+                        height: 21px;
+                    }
+                }
+            }
+        }
+    }
+
+    .how-to-play-content {
+        .instructions-inner {
+            padding: 63px 14px 21px;
+
+            .main-instructions {
+
+                h2 {
+                    font-size: 2.8rem;
+                }
+
+                h3,
+                p,
+                li {
+                    font-size: 1.4rem;
+                }
+
+                .instruct-resources-container {
+                    .instruct-resource-inline {
+                        p {
+                            font-size: 1.4rem;
+                        }
+                    }
+                }
+
+                .italics-note {
+                    font-size: 1.4rem;
+                }
+            }
+
+            .refs {
+                padding: 14px 3px;
+
+                p,
+                a {
+                    font-size: 1.2rem;
+                }
+            }
+        }
+    }
+
     footer {
 
 
         a {
             font-size: 1rem;
-            color: $vindro-green;
-
-            &:hover {
-                color: $vindro-teal;
-            }
         }
 
         .contact-info {
             font-size: 1.2rem;
 
             a {
-                color: $vindro-teal;
+                color: var(--teal-yellow-swap);
                 font-weight: 600;
 
                 &:hover {
@@ -279,11 +541,6 @@
                 svg {
                     width: 3rem;
                     height: 3rem;
-                }
-
-                &:hover {
-                    background-color: $vindro-green;
-                    color: $vindro-gray;
                 }
             }
         }

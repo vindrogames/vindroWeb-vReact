@@ -1,0 +1,145 @@
+main#user-profile {
+    width: 100%;
+    min-height: 100vh;
+    padding: 90px 42px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .profile-container {
+        width: 84%;
+        height: 84%;
+        padding: 42px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 42px;
+
+        .user-stat-container {
+            width: 100%;
+
+            h1 {
+                width: 100%;
+                font-size: 4.2rem;
+                padding-bottom: 14px;
+                border-bottom: 1px solid $vindro-teal;
+            }
+
+            h2,
+            h3 {
+                font-family: $vindro-Montserrat;
+                font-size: 2.4rem;
+                font-weight: 400;
+
+                span {
+                    font-family: $vindro-Montserrat;
+                    font-size: 2.4rem;
+                }
+            }
+
+            h2 {
+                margin-top: 21px;
+            }
+
+            .editable-input-wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                // 2. Bring the active input above the overlay
+                &.focused-mode {
+                    z-index: 101;
+                }
+
+                input {
+                    width: 240px;
+                    background-color: $vindro-gray;
+                    border-radius: 3px;
+                    color: white;
+                    font-size: 1.6rem;
+                    font-weight: 500;
+                    padding: 7px;
+                    outline: none;
+
+                    &.input-frozen {
+                        border: 1px solid transparent;
+                        // THIS is what stops users from clicking it manually
+                        pointer-events: none;
+                        border-radius: 3px;
+                    }
+
+                    &.input-active {
+                        border: 1px solid $real-yellow;
+                        background-color: $vindro-tan;
+                        color: $vindro-black;
+                        pointer-events: auto; // Re-enable clicking so they can move the cursor
+                    }
+                }
+
+                button.btn-edit {
+                    width: 63px;
+                    padding: 3px 14px;
+                    border-radius: 3px;
+                    font-size: 1.4rem;
+                    font-weight: 500;
+                    font-family: $vindro-Montserrat;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+
+                    &:hover, &.input-active {
+                        background-color: $real-yellow;
+                    }
+                }
+            }
+
+
+
+
+            .table-container {
+                margin-top: 7px;
+                width: 240px;
+                border: 1px solid $vindro-black;
+                border-radius: 7px;
+                background-color: $vindro-gray;
+
+                table {
+
+                    width: 100%;
+                    border-collapse: collapse;
+                    overflow: hidden;
+
+                    tr {
+                        td:first-child {
+                            text-align: left;
+                            padding-left: 7px;
+                        }
+                    }
+
+                    th {
+                        font-size: 1.4rem;
+                        font-weight: 300;
+                        border: none;
+                        border-bottom: 2px solid $vindro-black;
+                        padding: 7px 14px;
+                    }
+
+                    td {
+                        font-size: 1.2rem;
+                        font-weight: 300;
+                        text-align: center;
+                        padding: 7px 0;
+
+                        a {
+                            color: var(--teal-yellow-swap);
+                            font-size: 1.2rem;
+                            font-weight: 600;
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
