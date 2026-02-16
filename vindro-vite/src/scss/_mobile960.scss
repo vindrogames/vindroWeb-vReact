@@ -145,23 +145,22 @@
     }
 
     main#auto-miner {
-
         padding: 90px 42px 0;
-
-        #resource-bar {
-            left: 42px;
-        }
 
         .auto-miner-container {
             padding: 21px 0;
 
+            section#game-intro {
+                #resource-bar {
+                    right: 7%;
+                }
+            }
             section.resource-section {
                 padding: 21px 14px 14px;
                 
                 .resource-section-grid {
                     .grid-cell-container {
                         .grid-cell-content {
-
                             .header-text,
                             .total-resource-grid-display {
 
@@ -170,6 +169,14 @@
                                     font-size: 1.8rem;
                                 }
                             }
+                        }
+
+                        &:first-child {
+                            padding-right: 7%;
+                        }
+
+                        &:last-child {
+                            padding-left: 7%;
                         }
                     }
                 }

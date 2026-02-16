@@ -303,4 +303,21 @@
             }
         }
     }
+
+    main#auto-miner {
+        padding: 60px 0 0 0;
+
+        .auto-miner-container {
+            padding: 14px;
+
+            section#game-intro {
+                h1 {
+                    font-size: 2.8rem;
+                }
+            }
+            section.resource-section {
+                padding: 21px 0 0 0;
+            }
+        }
+    }
 }

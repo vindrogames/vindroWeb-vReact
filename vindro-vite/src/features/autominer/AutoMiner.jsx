@@ -1,11 +1,10 @@
 // /features/autominer/Autominer.jsx
 import React, { useState, useEffect } from 'react';
+import AutominerHelmet from '../../page-helmets/AutominerHelmet'
 import useAutominer from './hooks/useAutominer'
 import ResourceBar from './components/ResourceBar';
-import MiningActions from './components/MiningActions';
 import AutominerInstructions from './components/AutominerInstructions'
-import AutominerButton from './components/AutominerButton'
-import { FaChevronUp, FaCaretUp, FaChevronDown, FaCaretDown } from "react-icons/fa";
+import { FaCaretUp, FaCaretDown } from "react-icons/fa";
 
 
 const Autominer = () => {
@@ -61,34 +60,53 @@ const Autominer = () => {
         // If game hits 5 (complete), wait 600ms then reset visual bar to 0
         if (game.silverClickProgress === 5) {
             const timer = setTimeout(() => {
-                setVisualProgress(0);                
+                setVisualProgress(0);
             }, 600);
             return () => clearTimeout(timer);
         }
     }, [game.silverClickProgress]);
 
+    const formatResource = (num) => {
+        if (num >= 1000000) {
+            return Math.floor(num / 100000) / 10 + 'M'; // 1,250,000 -> 1.2M
+        }
+        if (num >= 1000) {
+            return Math.floor(num / 100) / 10 + 'K'; // 24,786 -> 24.7K
+        }
+        return num; // Under 1000 stays as is
+    };
+
     return (
+
+        <>
+        <AutominerHelmet />
 
         <main id="auto-miner">
 
-            <ResourceBar resources={game.resources} />
             <div className="auto-miner-container">
 
                 <section id="game-intro">
 
-                    <h1>auto<span className="inline-teal inline-bold">Miner</span></h1>
-                    <h2>An idle game</h2>
-                    {/* <h2>Automate the mining, leave tab open and reach the maximum</h2> */}
+                    <ResourceBar resources={game.resources} />
 
-                    <button
-                        type="button"
-                        id="how-to-play"
-                        className="btn btn-green"
-                        onClick={() => setIsInstructionsOpen(true)}
-                        aria-label="Autominer Instructions Toggle Button"
-                    >
-                        How To Play
-                    </button>
+                    <h1>auto<span className="inline-teal inline-bold">Miner</span></h1>
+
+                    <div className="sub-header-text-instruct">
+
+                        <h2>An idle game</h2>
+                        {/* <h2>Automate the mining, leave tab open and reach the maximum</h2> */}
+
+                        <button
+                            type="button"
+                            id="how-to-play"
+                            className="btn btn-green"
+                            onClick={() => setIsInstructionsOpen(true)}
+                            aria-label="Autominer Instructions Toggle Button"
+                        >
+                            How To Play
+                        </button>
+                    </div>
+
 
                 </section>
 
@@ -115,11 +133,11 @@ const Autominer = () => {
                             </div>
                         </div>
 
-                        <div className="grid-cell-container">
-                            <div className="grid-cell-content">
+                        <div id="total-iron-grid-display" className="grid-cell-container">
+                            <div className="grid-cell-content total-grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Iron: </h4>
-                                    <div id="total-iron-grid-display" className="total-resource-display">{game.resources.iron}</div>
+                                    <h4>Total Iron </h4>
+                                    <div className="total-resource-display">{formatResource(game.resources.iron)}</div>
                                 </div>
                             </div>
                         </div>
@@ -134,14 +152,13 @@ const Autominer = () => {
                                 </div>
 
                                 <div className="cost-purchase-display">
-                                    <p>1 Iron Miner costs</p>
+                                    <p>1 Miner costs</p>
                                     <div id="iron-miner-inline-cost" className="inline-cost-display">{game.getIronWorkerCost(1)}</div>
-                                    <p>Iron</p>
                                 </div>
 
                                 <div className="purchase-section">
 
-                                    <p>Nº of miners to buy: </p>
+                                    <p>Nº to AutoBuy: </p>
                                     <div className="plus-minus-purchase-display">
 
                                         <div id="num-iron-miners-purchase-display" className='inline-cost-display'>{buyQtys.ironMiners}</div>
@@ -186,15 +203,18 @@ const Autominer = () => {
                         </div>
 
                         <div className="grid-cell-container">
-                            <div className="grid-cell-content">
+                            <div className="grid-cell-content total-grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Miners: </h4>
+                                    <h4>Iron Miners</h4>
                                     <div id="total-iron-grid-display" className="total-resource-display">{game.workers.iron}</div>
                                 </div>
-                                <div className="total-resource-grid-display">
-                                    <h4>Production: </h4>
+                                <div className="total-resource-grid-display production-cost-display">
+                                    <div className="production-cost-heading">
+                                        <h4>Production</h4>
+                                        <img src="/img/beam.webp" alt="Iron Beam icon Vindrogames Autominer" />
+                                        <h4>/s</h4>
+                                    </div>
                                     <div id="iron-production-grid-display" className="production-display">{game.workers.iron}</div>
-                                    <h4>Iron/Sec </h4>
                                 </div>
                             </div>
                         </div>
@@ -236,8 +256,8 @@ const Autominer = () => {
                         <div className="grid-cell-container">
                             <div className="grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Sulfur: </h4>
-                                    <div id="total-sulfur-grid-display" className="total-resource-display">{game.resources.sulfur}</div>
+                                    <h4>Total Sulfur</h4>
+                                    <div id="total-sulfur-grid-display" className="total-resource-display">{formatResource(game.resources.sulfur)}</div>
                                 </div>
                             </div>
                         </div>
@@ -260,7 +280,7 @@ const Autominer = () => {
 
                                 <div className="purchase-section">
 
-                                    <p>Nº of Sulfur to buy: </p>
+                                    <p>Nº to AutoBuy: </p>
                                     <div className="plus-minus-purchase-display">
 
                                         <div id="num-sulfur-purchase-display" className='inline-cost-display'>{buyQtys.sulfur}</div>
@@ -290,9 +310,13 @@ const Autominer = () => {
 
                         <div className="grid-cell-container">
                             <div className="grid-cell-content">
-                                <div className="total-resource-grid-display">
-                                    <h4>AutoBuy Sulfur Cost: </h4>
-                                    <div id="sulfur-cost-grid-display" className="total-resource-display">{buyQtys.sulfur * 50}</div>
+                                <div id="sulfur-production-cost" className="total-resource-grid-display production-cost-display">
+                                    <div className="production-cost-heading">
+                                        <h4>AutoBuy</h4>
+                                        <img src="/img/sulfur.webp" alt="Iron Beam icon Vindrogames Autominer" />
+                                        <h4>Cost</h4>
+                                    </div>
+                                    <div id="sulfur-production-grid-display" className="production-display">{buyQtys.sulfur * 50}</div>
                                 </div>
                             </div>
                         </div>
@@ -333,7 +357,7 @@ const Autominer = () => {
                         <div className="grid-cell-container">
                             <div className="grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Drills: </h4>
+                                    <h4>Total Drills</h4>
                                     <div id="total-drills-grid-display" className="total-resource-display">{game.resources.drills}</div>
                                 </div>
                             </div>
@@ -357,7 +381,7 @@ const Autominer = () => {
 
                                 <div className="purchase-section">
 
-                                    <p>Nº of Drills to buy: </p>
+                                    <p>Nº to AutoBuy: </p>
                                     <div className="plus-minus-purchase-display">
 
                                         <div id="num-drills-purchase-display" className='inline-cost-display'>{buyQtys.drills}</div>
@@ -387,9 +411,13 @@ const Autominer = () => {
 
                         <div className="grid-cell-container">
                             <div className="grid-cell-content">
-                                <div className="total-resource-grid-display">
-                                    <h4>AutoBuy Drills Cost: </h4>
-                                    <div id="drills-cost-grid-display" className="total-resource-display">{buyQtys.drills * 500}</div>
+                                <div id="drills-production-cost" className="total-resource-grid-display production-cost-display">
+                                    <div className="production-cost-heading">
+                                        <h4>AutoBuy</h4>
+                                        <img src="/img/drill.webp" alt="Iron Beam icon Vindrogames Autominer" />
+                                        <h4>Cost</h4>
+                                    </div>
+                                    <div id="drills-production-grid-display" className="production-display">{buyQtys.drills * 500}</div>
                                 </div>
                             </div>
                         </div>
@@ -407,12 +435,13 @@ const Autominer = () => {
                                     <h3>Silver Mining</h3>
                                 </div>
 
-                                <div id="sulfur-purchase-display" className="cost-purchase-display">
-                                    <p>1 Silver requires</p>
+                                <div id="silver-purchase-display" className="cost-purchase-display">
+                                    <p>Requires</p>
                                     <div id="silver-sulfur-buy-inline-cost" className="inline-cost-display">10</div>
-                                    <p>Sulfur and</p>
+                                    <img src="/img/sulfur.webp" alt="" />
+                                    <p>and</p>
                                     <div id="silver-drill-buy-inline-cost" className="inline-cost-display">1</div>
-                                    <p>Drill</p>
+                                    <img src="/img/drill.webp" alt="" />
                                 </div>
 
                                 <button
@@ -452,7 +481,7 @@ const Autominer = () => {
                         <div className="grid-cell-container">
                             <div className="grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Silver: </h4>
+                                    <h4>Total Silver</h4>
                                     <div id="total-silver-grid-display" className="total-resource-display">{game.resources.silver}</div>
                                 </div>
                             </div>
@@ -468,14 +497,14 @@ const Autominer = () => {
                                 </div>
 
                                 <div className="cost-purchase-display">
-                                    <p>1 Silver Miner costs</p>
+                                    <p>1 Miner costs</p>
                                     <div id="silver-miner-inline-cost" className="inline-cost-display">{game.getSilverWorkerCost(1)}</div>
                                     <p>Silver</p>
                                 </div>
 
                                 <div className="purchase-section">
 
-                                    <p>Nº of miners to buy: </p>
+                                    <p>Nº to AutoBuy: </p>
                                     <div className="plus-minus-purchase-display">
 
                                         <div id="num-silver-miners-purchase-display" className='inline-cost-display'>{buyQtys.silverMiners}</div>
@@ -520,15 +549,18 @@ const Autominer = () => {
                         </div>
 
                         <div className="grid-cell-container">
-                            <div className="grid-cell-content">
+                            <div className="grid-cell-content total-grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Miners: </h4>
+                                    <h4>Silver Miners</h4>
                                     <div id="total-silver-grid-display" className="total-resource-display">{game.workers.silver}</div>
                                 </div>
-                                <div className="total-resource-grid-display">
-                                    <h4>Production: </h4>
-                                    <div id="silver-production-grid-display" className="production-display">{game.workers.silver}</div>
-                                    <h4>Silver/Sec </h4>
+                                <div className="total-resource-grid-display production-cost-display">
+                                    <div className="production-cost-heading">
+                                        <h4>Production</h4>
+                                        <img src="/img/silver.webp" alt="Iron Beam icon Vindrogames Autominer" />
+                                        <h4>/s</h4>
+                                    </div>
+                                    <div id="iron-production-grid-display" className="production-display">{game.workers.silver}</div>
                                 </div>
                             </div>
                         </div>
@@ -538,12 +570,13 @@ const Autominer = () => {
 
                 {/* The Full-Screen Instructions Modal */}
                 <AutominerInstructions
+                    gameStarted={game.resources.iron > 0 ? true : false}
                     isOpen={isInstructionsOpen}
                     onClose={() => setIsInstructionsOpen(false)}
                 />
             </div >
         </main >
-
+        </>
     );
 };
 

@@ -1,52 +1,11 @@
 main#auto-miner {
     position: relative;
-    width: 100%;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 90px 90px 0 90px;
     background-color: $vindro-black;
-
-    #resource-bar {
-        position: fixed;
-        top: 120px;
-        left: 84px;
-        z-index: 10;
-
-        .resource-bar-container {
-            width: auto;
-            display: grid;
-            grid-template-columns: repeat(1, 1fr);
-            align-items: center;
-            padding: 7px;
-            background-color: $vindro-gray;
-            border: 2px solid $vindro-teal;
-            border-radius: 3px;
-
-            .column {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-
-                img {
-                    width: 32px;
-                    height: 32px;
-                }
-
-                p {
-                    padding-left: 3px;
-                    font-size: 1.8rem;
-                    font-weight: 600;
-                    text-align: left;
-                    
-
-                    &#drill-count {
-                        margin-left: 0;
-                    }
-                }
-            }
-        }
-    }
 
     .auto-miner-container {
         position: relative;
@@ -58,6 +17,8 @@ main#auto-miner {
         gap: 21px;
 
         section#game-intro {
+            position: relative;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -71,38 +32,92 @@ main#auto-miner {
                 }
             }
 
-            h2 {
-                font-size: 2.8rem;
-            }
+            .sub-header-text-instruct {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 21px;
 
-            button#how-to-play {
-                width: 140px;
-                border-radius: 3px;
-                background-color: $vindro-tan;
-                color: $vindro-black;
-                font-size: 1.6rem;
-                padding: 7px 14px !important;
-                transition: all 0.3s ease;
-                margin: 0 !important;
-
-                &:hover,
-                &.current {
-                    background-color: $vindro-green;
-                    color: white;
-                    margin: 0 !important;
+                h2 {
+                    font-size: 2.8rem;
                 }
 
-                &.current {
-                    cursor: default;
+                button#how-to-play {
+                    width: 140px;
+                    border-radius: 3px;
+                    background-color: $vindro-tan;
+                    color: $vindro-black;
+                    font-size: 1.6rem;
+                    padding: 7px 14px;
+                    transition: all 0.3s ease;
+                    margin: 0 !important;
+
+                    &:hover,
+                    &.current {
+                        background-color: $vindro-green;
+                        color: white;
+                        margin: 0 !important;
+                    }
+
+                    &.current {
+                        cursor: default;
+                    }
+                }
+            }
+
+            #resource-bar {
+                position: fixed;
+                align-self: flex-end;
+                top: 120px;
+                right: 15%;
+                z-index: 10;
+
+                .resource-bar-container {
+                    width: auto;
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr);
+                    align-items: center;
+                    background-color: $vindro-gray;
+                    border: 2px solid $vindro-teal;
+                    border-radius: 3px;
+                    gap: 3px;
+
+                    .column {
+                        display: flex;
+                        padding: 7px;
+                        border-bottom: 1px solid $vindro-teal;
+                        // display: grid;
+                        // grid-template-columns: 1fr 1fr;
+
+                        img {
+                            width: 32px;
+                            height: 32px;
+                        }
+
+                        p {
+                            padding-left: 7px;
+                            font-size: 1.8rem;
+                            font-weight: 600;
+                            text-align: left;
+
+
+                            &#drill-count {
+                                margin-left: 0;
+                            }
+                        }
+
+                        &:last-child {
+                            border-bottom: none;
+                        }
+                    }
                 }
             }
         }
 
         section.resource-section {
-
             border-top: 1px solid $vindro-teal;
             width: 100%;
-            padding: 42px;
+            padding: 42px 21px;
             padding-bottom: 21px;
             display: flex;
             flex-direction: column;
@@ -146,6 +161,23 @@ main#auto-miner {
                             h4 {
                                 font-size: 2.1rem;
                                 font-weight: 600;
+                            }
+                        }
+
+                        .total-resource-grid-display {
+                            flex-direction: column;
+                            gap: 7px;
+
+                            .production-cost-heading {
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+
+                                img {
+                                    margin-left: 3px;
+                                    width: 28px;
+                                    height: 28px;
+                                }
                             }
                         }
 
@@ -282,6 +314,13 @@ main#auto-miner {
                             }
                         }
 
+                        #silver-purchase-display {
+                            img {
+                                width: 24px;
+                                height: 24px;
+                            }
+                        }
+
                         .silver-progress-container {
                             width: 100%;
                             margin-top: 14px;
@@ -303,9 +342,42 @@ main#auto-miner {
                             }
                         }
                     }
+
+                    &:first-child {
+                        justify-content: flex-end;
+                        padding-right: 14%;
+                    }
+
+                    &:last-child {
+                        justify-content: flex-start;
+                        padding-left: 14%;
+
+                        .total-resource-grid-display {
+
+                            padding: 0 21px;
+
+                            .production-cost-heading {
+                                margin-bottom: 0;
+                                padding-top: 14px;
+
+                            }
+
+                            &.production-cost-display {
+                                border-top: 1px solid $vindro-green;
+
+                                &#sulfur-production-cost,
+                                &#drills-production-cost {
+                                    border-top: none;
+
+                                    .production-cost-heading {
+                                        padding-top: 0;
+                                        gap: 3px;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-
-
 
                 &#iron-mining-section,
                 &#sulfur-buying-section,
@@ -350,3 +422,4 @@ main#auto-miner {
         }
     }
 }
+

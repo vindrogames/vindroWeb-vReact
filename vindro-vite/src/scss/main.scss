@@ -712,10 +712,15 @@ main#games-showcase {
                     img {
                         width: 100%;
                         height: auto;
+                        transition: all 0.42s ease;
 
                         &:nth-child(1) {
                             width: 100%;
                             border-radius: 3px;
+                        }
+
+                        &:hover {
+                            transform: scale(1.042);
                         }
 
                         /*
@@ -1023,7 +1028,6 @@ main#contact-page {
         }
     }
 }
-
 
 main#privacy-page-content {
     width: 100%;

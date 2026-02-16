@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
-function HomeHelmet() {
+export default function HomeHelmet() {
 
     return (
         <Helmet>
@@ -24,5 +24,3 @@ function HomeHelmet() {
         </Helmet>
     )
 };
-
-export default HomeHelmet;
