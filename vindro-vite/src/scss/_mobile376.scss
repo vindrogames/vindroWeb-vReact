@@ -122,7 +122,7 @@
         }
 
         section#games-gallery-container {
-        
+
             #games-gallery {
                 padding: 0 7px;
             }
@@ -137,16 +137,19 @@
             h1 {
                 font-size: 3.2rem;
             }
+
             h2 {
                 font-size: 1.8rem;
             }
         }
+
         section#contact-page-content {
             h3 {
-            font-size: 1.8rem;
-        }
+                font-size: 1.8rem;
+            }
 
         }
+
         section#contact-page-emails {
 
             ul {
@@ -168,6 +171,7 @@
                     &:nth-child(odd) div {
                         left: 14px;
                     }
+
                     &:nth-child(even) div {
                         left: 14px;
                     }
@@ -175,6 +179,44 @@
                     &:after {
                         width: 14px;
                         height: 14px;
+                    }
+                }
+            }
+        }
+    }
+
+    main#login-page {
+        section#login-content {
+            gap: 18px;
+
+            h5 {
+                font-size: 1.6rem;
+                width: 100%;
+            }
+
+            .auth-container {
+                width: 100%;
+                padding: 14px;
+
+                .auth-info {
+                    padding: 14px;
+                    border-bottom: 2px solid $vindro-green;
+
+                    h3,
+                    h4 {
+                        font-size: 1.6rem;
+                    }
+
+                    h4 {
+                        margin-top: 7px;
+                    }
+                }
+
+                .social-login {
+                    .btn-social {
+                        padding: 7px 14px;;
+                        font-size: 1.4rem;
+                        gap: 7px;
                     }
                 }
             }
@@ -284,6 +326,7 @@
 
         .intro {
             padding: 14px;
+
             h2 {
                 font-size: 1.8rem;
             }
@@ -293,14 +336,9 @@
             width: 100%;
             padding: 14px;
 
-            .calc-screen {
+            .calc-screen {}
 
-            }
-
-            .calc-grid {
-                
-
-            }
+            .calc-grid {}
         }
     }
 
@@ -315,6 +353,7 @@
                     font-size: 2.8rem;
                 }
             }
+
             section.resource-section {
                 padding: 21px 0 0 0;
             }

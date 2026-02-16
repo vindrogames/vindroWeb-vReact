@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+    >
+
+    <url>
+        <loc>https://vindrogames.com/</loc>
+        <lastmod>2025-02-05T14:15:56+00:00</lastmod>
+        <priority>1.00</priority>
+    </url>
+    <url>
+        <loc>https://vindrogames.com/games/</loc>
+        <lastmod>2025-02-05T14:16:11+00:00</lastmod>
+        <priority>0.90</priority>
+    </url>
+    <url>
+        <loc>https://vindrogames.com/games/game-42</loc>
+        <lastmod>2026-01-31T14:16:21+00:00</lastmod>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://vindrogames.com/games/madrid-calculator</loc>
+        <lastmod>2026-01-31T14:16:17+00:00</lastmod>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://vindrogames.com/games/auto-miner</loc>
+        <lastmod>2026-02-16T14:16:25+00:00</lastmod>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://vindrogames.com/games/escape-the-cloud</loc>
+        <lastmod>2025-04-23T14:16:15+00:00</lastmod>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://vindrogames.com/brackets</loc>
+        <lastmod>2025-04-23T14:16:15+00:00</lastmod>
+        <priority>0.70</priority>
+    </url>
+    <url>
+        <loc>https://vindrogames.com/story/</loc>
+        <lastmod>2025-02-05T14:16:26+00:00</lastmod>
+        <priority>0.560</priority>
+    </url>
+    <url>
+        <loc>https://vindrogames.com/contact/</loc>
+        <lastmod>2025-02-05T14:16:15+00:00</lastmod>
+        <priority>0.50</priority>
+    </url>
+</urlset>
