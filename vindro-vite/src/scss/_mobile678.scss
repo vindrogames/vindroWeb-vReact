@@ -282,19 +282,21 @@
         }
     }
 
-    .auth-container {
-        padding: 14px;
-
-        .no-account,
-        .yes-account {
-
-            h3 {
+    main#login-page {
+        section#login-content {
+            padding: 21px;
+            padding-bottom: 42px;
+            h5 {
                 font-size: 1.8rem;
             }
 
-            .btn-register {
-                font-size: 1.4rem;
-                padding: 7px 14px;
+            .auth-container {
+                .auth-info {
+                    h3,
+                    h4 {
+                        font-size: 1.8rem;
+                    }
+                }
             }
         }
     }

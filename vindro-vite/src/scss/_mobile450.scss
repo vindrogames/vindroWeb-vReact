@@ -410,22 +410,16 @@
         text-align: center;
     }
 
-    .auth-container {
-        width: 84%;
-        padding: 14px;
-
-        .no-account,
-        .yes-account {
-            flex-direction: column;
-            gap: 14px;
-
-            h3 {
-                font-size: 1.8rem;
+    main#login-page {
+        section#login-content {
+            
+            h5 {
+                width: 100%;
             }
 
-            .btn-register {
-                font-size: 1.4rem;
-                padding: 7px 14px;
+            .auth-container {
+                width: 100%;
+                padding: 14px;
             }
         }
     }
