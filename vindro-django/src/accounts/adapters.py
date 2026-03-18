@@ -29,7 +29,7 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
 
         # Generate random username for OAuth users (3 digits)
         user.username = generate_random_username(prefixes=prefixes, length=3)
-
+        user.avatar = '/img/profile_icons/teal-simple.webp'
         return user
 
     def save_user(self, request, sociallogin, form=None):

@@ -16,15 +16,15 @@ main#user-profile {
         align-items: flex-start;
         gap: 42px;
 
+        h1 {
+            width: 100%;
+            font-size: 4.2rem;
+            padding-bottom: 14px;
+            border-bottom: 1px solid $vindro-teal;
+        }
+
         .user-stat-container {
             width: 100%;
-
-            h1 {
-                width: 100%;
-                font-size: 4.2rem;
-                padding-bottom: 14px;
-                border-bottom: 1px solid $vindro-teal;
-            }
 
             h2,
             h3 {
@@ -40,6 +40,95 @@ main#user-profile {
 
             h2 {
                 margin-top: 21px;
+            }
+
+            &#user-name-icon {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 42px;
+
+                .user-name-data {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 14px;
+
+                    h3 {
+                        font-size: 1.8rem;
+                        font-weight: 400;
+                    }
+                }
+                .user-icon {
+                    position: relative;
+                    flex-grow: 1;
+                    display: flex;
+
+                    img {
+                        width: 256px;
+                        height: 256px;
+                    }
+
+                    button.btn-edit {
+                        width: 63px;
+                        height: 28px;
+                        padding: 3px 14px;
+                        border-radius: 3px;
+                        font-size: 1.4rem;
+                        font-weight: 500;
+                        font-family: $vindro-Montserrat;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        align-self: flex-end;
+                        &:hover,
+                        &.input-active {
+                            background-color: $real-yellow;
+                        }
+                    }
+
+                    .icon-gallery {
+                        position: absolute;
+                        top: 264px;
+                        left: 0;
+                        width: auto;
+                        display: grid;
+                        grid-template-columns: repeat(7, 1fr);
+                        gap: 7px;
+                        padding: 7px;
+                        background-color: $vindro-gray;
+                        border: 1px solid $real-yellow;
+                        border-radius: 3px;
+
+                        .gallery-item {
+                            width: 50px;
+                            height: 50px;
+                            padding: 0;
+                            border: 2px solid transparent;
+                            border-radius: 3px;
+                            background-color: transparent;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                            padding: 3px;
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                border-radius: 2px;
+                            }
+
+                            &:hover {
+                                border-color: $real-yellow;
+                                transform: scale(1.05);
+                            }
+
+                            &.selected {
+                                border-color: $real-yellow;
+                                //box-shadow: 0 0 8px $real-yellow;
+                                transform: scale(1.08);
+                            }
+                        }
+                    }
+                }
             }
 
             .editable-input-wrapper {
@@ -80,6 +169,7 @@ main#user-profile {
 
                 button.btn-edit {
                     width: 63px;
+                    height: 28px;
                     padding: 3px 14px;
                     border-radius: 3px;
                     font-size: 1.4rem;
@@ -87,15 +177,13 @@ main#user-profile {
                     font-family: $vindro-Montserrat;
                     cursor: pointer;
                     transition: all 0.3s ease;
-
-                    &:hover, &.input-active {
+                    align-self: flex-end;
+                    &:hover,
+                    &.input-active {
                         background-color: $real-yellow;
                     }
                 }
             }
-
-
-
 
             .table-container {
                 margin-top: 7px;

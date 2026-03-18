@@ -5,13 +5,22 @@ import SmartLink from '../components/ui/SmartLink';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function UserProfile() {
-    
+
     const { userName: urlParamName } = useParams();
     const { user } = useAuth(); // Cheat Mode Data
 
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditingUserName, setIsEditingUserName] = useState(false);
+    const [isEditingUserIcon, setIsEditingUserIcon] = useState(false);
     const [editValue, setEditValue] = useState(urlParamName || "");
+    const [selectedIcon, setSelectedIcon] = useState("teal-music");
     const inputRef = useRef(null);
+
+    // Array of all available icon names (6 colors × 7 styles = 42 icons)
+    const colors = ['green', 'orange', 'pink', 'purple', 'teal', 'white'];
+    const styles = ['simple', 'black-shades', 'color-shades', 'pirate', 'music', 'office', 'snow'];
+    const allIcons = colors.flatMap(color =>
+        styles.map(style => `${color}-${style}`)
+    );
 
     // 1. Sync input with Cheat Mode User
     useEffect(() => {
@@ -22,17 +31,26 @@ export default function UserProfile() {
 
     // 2. Force Focus ONLY via Edit Button
     useEffect(() => {
-        if (isEditing && inputRef.current) {
+        if (isEditingUserName && inputRef.current) {
             inputRef.current.focus();
         }
-    }, [isEditing]);
+    }, [isEditingUserName]);
 
-    const handleEditToggle = () => {
-        if (isEditing) {
+    const handleEditUserNameToggle = () => {
+        if (isEditingUserName) {
             console.log("Cheat Mode Save: New Username is", editValue);
         }
-        setIsEditing(!isEditing);
+        setIsEditingUserName(!isEditingUserName);
     };
+
+    const handleEditUserIconToggle = () => {
+        if (isEditingUserIcon) {
+            console.log("Cheat Mode Save: New User Icon is", selectedIcon);
+            // TODO: API call to save selectedIcon to DB
+        }
+        setIsEditingUserIcon(!isEditingUserIcon);
+    };
+
 
     // --- Table Data Definitions ---
 
@@ -55,8 +73,8 @@ export default function UserProfile() {
     ];
 
     const bracketCols = [
-        { 
-            header: 'Event', 
+        {
+            header: 'Event',
             render: (row) => (
                 <SmartLink to={`/user/${editValue}/brackets/${row.id}`} className="table-link">
                     {row.name}
@@ -73,34 +91,74 @@ export default function UserProfile() {
 
     return (
         <>
-            
-
             <main id="user-profile">
                 <div className="profile-container">
 
                     {/* Header Section */}
-                    <div id="user-name-intro" className={`user-stat-container ${isEditing ? 'focused-mode' : ''}`}>
-                        <h1>Hello Friend!</h1>
-                        <h2>user<span className='inline-teal inline-bold'>Name</span></h2>
-                        
-                        <div className="editable-input-wrapper">
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                value={editValue}
-                                onChange={(e) => setEditValue(e.target.value)}
-                                readOnly={!isEditing}
-                                className={isEditing ? 'input-active' : 'input-frozen'}
-                                spellCheck="false"
-                            />
-                            <button className={`${isEditing ? 'input-active' : 'input-frozen'} btn-edit`} onClick={handleEditToggle}>
-                                {isEditing ? (
+                    <h1 className="profile-intro">Hello Friend!</h1>
+
+                    {/* User Name + Profile Icon */}
+                    <div id="user-name-icon" className={`user-stat-container ${isEditingUserName ? 'focused-mode' : ''}`}>
+
+                        <div className="user-name-data">
+                            <h2>user<span className='inline-teal inline-bold'>Name</span></h2>
+
+                            <div className="editable-input-wrapper">
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                    readOnly={!isEditingUserName}
+                                    className={isEditingUserName ? 'input-active' : 'input-frozen'}
+                                    spellCheck="false"
+                                />
+                                <button className={`${isEditingUserName ? 'input-active' : 'input-frozen'} btn-edit`} onClick={handleEditUserNameToggle}>
+                                    {isEditingUserName ? (
+                                        'Save'
+                                    ) : (
+                                        'Edit'
+                                    )}
+                                </button>
+                            </div>
+
+                            <div className="user-email">
+                                <h3>{user.email ? user.email : 'email@email.com'}</h3>
+                            </div>
+
+                            <div className="user-joined">
+                                <h3>joined {user.created_at ? user.created_at : '14 jul 2042'}</h3>
+                            </div>
+
+                        </div>
+
+                        <div className="user-icon">
+                            <img src={`/img/profile_icons/${selectedIcon}.webp`} alt="User Avatar" />
+
+                            <button className={`${isEditingUserIcon ? 'input-active' : 'input-frozen'} btn-edit`} onClick={handleEditUserIconToggle}>
+                                {isEditingUserIcon ? (
                                     'Save'
                                 ) : (
                                     'Edit'
                                 )}
                             </button>
+
+                            {isEditingUserIcon && (
+                                <div className="icon-gallery">
+                                    {allIcons.map((iconName) => (
+                                        <button
+                                            key={iconName}
+                                            className={`gallery-item ${selectedIcon === iconName ? 'selected' : ''}`}
+                                            onClick={() => setSelectedIcon(iconName)}
+                                            title={iconName}
+                                        >
+                                            <img src={`/img/profile_icons/${iconName}.webp`} alt={iconName} />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
+
                     </div>
 
                     {/* Tables Section - These are blocked by the overlay when editing */}

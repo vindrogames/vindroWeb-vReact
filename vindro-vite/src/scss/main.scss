@@ -330,38 +330,25 @@ img {
             justify-content: center;
             width: 42px;
             height: 42px;
-            border-radius: 3px;
-            border: 1px solid var(--teal-yellow-swap);
+            // border-radius: 3px;
+            // border: 1px solid var(--teal-yellow-swap);
             background-color: $vindro-black;
-            color: white;
+            //color: white;
             cursor: pointer;
             padding: 0;
 
-            svg {
-                width: 24px;
-                height: 24px;
-            }
-
-            /* Desktop: apply hover */
-            @media (hover: hover) {
-                &:hover {
-                    background-color: var(--teal-yellow-swap);
-                    color: $vindro-black;
-                }
-            }
-
-            /* Always apply open state */
+            /* Always apply open state
             &.open {
                 background-color: var(--teal-yellow-swap);
                 color: $vindro-black;
-            }
+            } */
         }
 
         .user-dropdown-menu {
             position: absolute;
             top: 55px;
             right: 0;
-            background-color: $vindro-black-overlay;
+            background-color: $vindro-gray;
             border: 1px solid var(--teal-yellow-swap);
             border-radius: 3px;
             min-width: 180px;
