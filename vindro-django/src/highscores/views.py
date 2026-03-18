@@ -8,7 +8,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from accounts.decorators import login_required_api
-from .models import Highscore
+from .models import Gamescore
 from .serializers import serialize_highscore, serialize_highscore_list
 from .config import GAME_CONFIGS, RATE_LIMIT_WINDOW_SECONDS, RATE_LIMIT_MAX_SUBMISSIONS
 
@@ -88,7 +88,7 @@ def create_highscore(request):
 
     # Rate limiting check
     rate_limit_window = timezone.now() - timedelta(seconds=RATE_LIMIT_WINDOW_SECONDS)
-    recent_submissions = Highscore.objects.filter(
+    recent_submissions = Gamescore.objects.filter(
         user=request.user,
         created_at__gte=rate_limit_window
     ).count()
@@ -104,7 +104,7 @@ def create_highscore(request):
 
     # Create highscore
     try:
-        highscore = Highscore.objects.create(
+        highscore = Gamescore.objects.create(
             user=request.user,
             game_name=game_name,
             score=score,
@@ -155,7 +155,7 @@ def list_highscores(request):
         offset = 0
 
     # Build queryset
-    queryset = Highscore.objects.select_related('user').all()
+    queryset = Gamescore.objects.select_related('user').all()
 
     # Filter by game if specified
     if game_name:
@@ -216,7 +216,7 @@ def my_highscores(request):
         offset = 0
 
     # Build queryset for current user
-    queryset = Highscore.objects.filter(user=request.user)
+    queryset = Gamescore.objects.filter(user=request.user)
 
     # Filter by game if specified
     if game_name:
@@ -266,8 +266,8 @@ def delete_highscore(request, highscore_id):
 
     # Get highscore
     try:
-        highscore = Highscore.objects.get(id=highscore_id)
-    except Highscore.DoesNotExist:
+        highscore = Gamescore.objects.get(id=highscore_id)
+    except Gamescore.DoesNotExist:
         return JsonResponse(
             {'success': False, 'error': 'Highscore not found'},
             status=404

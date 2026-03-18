@@ -2,14 +2,14 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Highscore(models.Model):
+class Gamescore(models.Model):
     """
     Flexible highscore model supporting multiple games
     """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='highscores'
+        related_name='gamescores'
     )
     game_name = models.CharField(
         max_length=100,
@@ -34,8 +34,8 @@ class Highscore(models.Model):
         return f"{self.user.username} - {self.game_name}: {self.score}"
 
     class Meta:
-        verbose_name = 'Highscore'
-        verbose_name_plural = 'Highscores'
+        verbose_name = 'Gamescore'
+        verbose_name_plural = 'Gamescores'
         ordering = ['-score', '-created_at']
         indexes = [
             models.Index(fields=['game_name', '-score']),

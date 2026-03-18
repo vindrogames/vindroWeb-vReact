@@ -2,10 +2,10 @@
 Django admin configuration for highscores
 """
 from django.contrib import admin
-from .models import Highscore
+from .models import Gamescore
 
 
-@admin.register(Highscore)
+@admin.register(Gamescore)
 class HighscoreAdmin(admin.ModelAdmin):
     list_display = ('user', 'game_name', 'score', 'created_at')
     list_filter = ('game_name', 'created_at')

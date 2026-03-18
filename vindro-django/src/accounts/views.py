@@ -288,14 +288,7 @@ def change_password(request):
 
 def oauth_redirect(request):
     """
-    Custom view to handle OAuth callback redirect
-    This ensures the session cookie is set before redirecting to React
+    OAuth redirect fallback — redirects to the React frontend.
     """
-    # User is already authenticated by allauth at this point
-    if request.user.is_authenticated:
-        # Create or get user profile if using OAuth for the first time
-        UserProfile.objects.get_or_create(user=request.user)
-
-    # Redirect to React app - session cookie is already set by allauth
     frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:5173/')
     return redirect(frontend_url)
