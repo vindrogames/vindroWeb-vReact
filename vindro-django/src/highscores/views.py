@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
-from accounts.decorators import login_required_api
+from accounts.views import login_required_api
 from .models import Gamescore
 from .serializers import serialize_highscore, serialize_highscore_list
 from .config import GAME_CONFIGS, RATE_LIMIT_WINDOW_SECONDS, RATE_LIMIT_MAX_SUBMISSIONS

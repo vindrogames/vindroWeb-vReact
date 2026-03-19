@@ -172,10 +172,8 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',  # Allauth
 ]
 
-# Allauth settings
-ACCOUNT_EMAIL_VERIFICATION = os.environ.get('ACCOUNT_EMAIL_VERIFICATION', 'optional')  # Set to 'mandatory' in production
-ACCOUNT_LOGIN_METHODS = {'email', 'username'}  # Allow both email and username login
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']  # Required signup fields
+# Allauth settings (social auth only)
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_AUTO_SIGNUP = True  # Auto-create user from OAuth
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Redirect directly to Google without intermediate page
 
@@ -218,9 +216,6 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['email', 'public_profile'],
     },
 }
-
-# Cloudflare Turnstile CAPTCHA
-CLOUDFLARE_TURNSTILE_SECRET_KEY = os.environ.get('CLOUDFLARE_TURNSTILE_SECRET_KEY', '')
 
 LOGGING = {
     'version': 1,
