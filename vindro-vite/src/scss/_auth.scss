@@ -43,6 +43,9 @@ main#login-page {
             .social-login {
                 margin-bottom: 21px;
                 align-self: center;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
 
                 .btn-social {
                     display: flex;
@@ -76,6 +79,18 @@ main#login-page {
                         width: 21px;
                         height: 21px;
                         flex-shrink: 0;
+                    }
+
+                    .github-icon {
+                        width: 21px;
+                        height: 21px;
+                        flex-shrink: 0;
+                        fill: $vindro-black;
+                        transition: fill 0.3s ease;
+                    }
+
+                    &:hover .github-icon {
+                        fill: white;
                     }
                 }
             }

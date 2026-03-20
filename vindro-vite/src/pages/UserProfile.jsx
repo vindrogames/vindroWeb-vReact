@@ -6,12 +6,12 @@ import { useAuth } from '../contexts/AuthContext';
 
 export default function UserProfile() {
 
-    const { userName: urlParamName } = useParams();
+    const { userId } = useParams();
     const { user } = useAuth(); // Cheat Mode Data
 
     const [isEditingUserName, setIsEditingUserName] = useState(false);
     const [isEditingUserIcon, setIsEditingUserIcon] = useState(false);
-    const [editValue, setEditValue] = useState(urlParamName || "");
+    const [editValue, setEditValue] = useState(user?.username || "");
     const [selectedIcon, setSelectedIcon] = useState("teal-music");
     const inputRef = useRef(null);
 
@@ -76,7 +76,7 @@ export default function UserProfile() {
         {
             header: 'Event',
             render: (row) => (
-                <SmartLink to={`/user/${editValue}/brackets/${row.id}`} className="table-link">
+                <SmartLink to={`/user/${userId}/brackets/${row.id}`} className="table-link">
                     {row.name}
                 </SmartLink>
             )

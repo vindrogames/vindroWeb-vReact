@@ -40,7 +40,7 @@ export const routes = createBrowserRouter([
       { path: 'games/auto-miner', element: <Autominer /> },
       // Protected User Routes
       {
-        path: 'user/:userName',
+        path: 'user/:userId',
         element: (
           <ProtectedRoute>
             <UserProfile />
@@ -48,7 +48,7 @@ export const routes = createBrowserRouter([
         ),
       },
       {
-        path: 'user/:userName/brackets',
+        path: 'user/:userId/brackets',
         element: (
           <ProtectedRoute>
             <UserBrackets />
@@ -56,7 +56,7 @@ export const routes = createBrowserRouter([
         ),
       },
       {
-        path: 'user/:userName/topScores',
+        path: 'user/:userId/topScores',
         element: (
           <ProtectedRoute>
             <UserTopScores />

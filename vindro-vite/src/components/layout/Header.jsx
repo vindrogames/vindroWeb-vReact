@@ -105,7 +105,7 @@ function NavBar({ isMadrid }) {
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
                                         <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}`}
+                                            to={`/user/${user.id}`}
                                             className="dropdown-item"
                                             onClick={() => setUserDropdownOpen(false)}
                                         >
@@ -176,7 +176,7 @@ function NavBar({ isMadrid }) {
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
                                         <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}`}
+                                            to={`/user/${user.id}`}
                                             className="dropdown-item"
                                             onClick={() => setUserDropdownOpen(false)}
                                         >
