@@ -3,16 +3,23 @@ import { useParams } from 'react-router-dom';
 import DataTable from '../components/pages/users/DataTable';
 import SmartLink from '../components/ui/SmartLink';
 import { useAuth } from '../contexts/AuthContext';
+import { authAPI } from '../services/api';
+
+function getIconName(avatarUrl) {
+    const match = avatarUrl?.match(/profile_icons\/(.+)\.webp/);
+    return match ? match[1] : 'teal-simple';
+}
 
 export default function UserProfile() {
 
     const { userId } = useParams();
-    const { user } = useAuth(); // Cheat Mode Data
+    const { user, updateUser } = useAuth();
 
     const [isEditingUserName, setIsEditingUserName] = useState(false);
     const [isEditingUserIcon, setIsEditingUserIcon] = useState(false);
     const [editValue, setEditValue] = useState(user?.username || "");
-    const [selectedIcon, setSelectedIcon] = useState("teal-music");
+    const [selectedIcon, setSelectedIcon] = useState(() => getIconName(user?.avatar));
+    const [profileError, setProfileError] = useState(null);
     const inputRef = useRef(null);
 
     // Array of all available icon names (6 colors × 7 styles = 42 icons)
@@ -22,12 +29,11 @@ export default function UserProfile() {
         styles.map(style => `${color}-${style}`)
     );
 
-    // 1. Sync input with Cheat Mode User
+    // Sync state when user data loads
     useEffect(() => {
-        if (user?.username) {
-            setEditValue(user.username);
-        }
-    }, [user?.username]);
+        if (user?.username) setEditValue(user.username);
+        if (user?.avatar) setSelectedIcon(getIconName(user.avatar));
+    }, [user?.username, user?.avatar]);
 
     // 2. Force Focus ONLY via Edit Button
     useEffect(() => {
@@ -36,17 +42,30 @@ export default function UserProfile() {
         }
     }, [isEditingUserName]);
 
-    const handleEditUserNameToggle = () => {
+    const handleEditUserNameToggle = async () => {
         if (isEditingUserName) {
-            console.log("Cheat Mode Save: New Username is", editValue);
+            try {
+                setProfileError(null);
+                const data = await authAPI.updateProfile({ username: editValue });
+                updateUser({ username: data.user.username });
+            } catch (err) {
+                setProfileError(err.message);
+                return; // Keep editing mode open on error
+            }
         }
         setIsEditingUserName(!isEditingUserName);
     };
 
-    const handleEditUserIconToggle = () => {
+    const handleEditUserIconToggle = async () => {
         if (isEditingUserIcon) {
-            console.log("Cheat Mode Save: New User Icon is", selectedIcon);
-            // TODO: API call to save selectedIcon to DB
+            try {
+                setProfileError(null);
+                const data = await authAPI.updateProfile({ avatar: selectedIcon });
+                updateUser({ avatar: data.user.avatar });
+            } catch (err) {
+                setProfileError(err.message);
+                return; // Keep editing mode open on error
+            }
         }
         setIsEditingUserIcon(!isEditingUserIcon);
     };
@@ -97,6 +116,11 @@ export default function UserProfile() {
                     {/* Header Section */}
                     <h1 className="profile-intro">Hello Friend!</h1>
 
+                    {/* Error feedback */}
+                    {profileError && (
+                        <p className="profile-error">{profileError}</p>
+                    )}
+
                     {/* User Name + Profile Icon */}
                     <div id="user-name-icon" className={`user-stat-container ${isEditingUserName ? 'focused-mode' : ''}`}>
 
@@ -127,7 +151,7 @@ export default function UserProfile() {
                             </div>
 
                             <div className="user-joined">
-                                <h3>joined {user.created_at ? user.created_at : '14 jul 2042'}</h3>
+                                <h3>joined {user.joined ? new Date(user.joined).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}</h3>
                             </div>
 
                         </div>

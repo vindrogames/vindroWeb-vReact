@@ -22,7 +22,8 @@ def create_highscore(request):
     POST /api/highscores/create/
     Body: {
         "game_name": "snake",
-        "score": 1500,
+        "game_score": 1500,
+        "game_time": "02:00",
         "game_metadata": {"level": 5, "time_played": 120}  # optional
     }
     """
@@ -36,7 +37,7 @@ def create_highscore(request):
 
     # Extract and validate fields
     game_name = data.get('game_name', '').strip().lower()
-    score = data.get('score')
+    score = data.get('game_score')
     game_metadata = data.get('game_metadata', {})
 
     # Validation: Required fields
@@ -54,7 +55,7 @@ def create_highscore(request):
 
     # Validation: Score must be integer
     try:
-        score = int(score)
+        game_score = int(game_score)
     except (ValueError, TypeError):
         return JsonResponse(
             {'success': False, 'error': 'score must be an integer'},
@@ -70,7 +71,7 @@ def create_highscore(request):
 
     # Validation: Score range
     game_config = GAME_CONFIGS[game_name]
-    if score < game_config['min_score'] or score > game_config['max_score']:
+    if game_score < game_config['min_score'] or score > game_config['max_score']:
         return JsonResponse(
             {
                 'success': False,
@@ -107,7 +108,8 @@ def create_highscore(request):
         highscore = Gamescore.objects.create(
             user=request.user,
             game_name=game_name,
-            score=score,
+            game_score=game_score,
+            game_time=data.get('game_time', ''),
             game_metadata=game_metadata
         )
 

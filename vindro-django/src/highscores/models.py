@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 
 
@@ -7,7 +7,7 @@ class Gamescore(models.Model):
     Flexible highscore model supporting multiple games
     """
     user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='gamescores'
     )
@@ -16,9 +16,15 @@ class Gamescore(models.Model):
         db_index=True,
         help_text="Name of the game (e.g., 'snake', 'tetris', 'pong')"
     )
-    score = models.IntegerField(
+    game_score = models.IntegerField(
         help_text="Player's score for this game session"
     )
+
+    game_time = models.CharField(
+        max_length=50,
+        help_text="Time spent in this game session (in seconds)"
+    )
+
     game_metadata = models.JSONField(
         default=dict,
         blank=True,
@@ -28,7 +34,7 @@ class Gamescore(models.Model):
         auto_now_add=True,
         db_index=True
     )
-    updated_at = models.DateTimeField(auto_now=True)
+    
 
     def __str__(self):
         return f"{self.user.username} - {self.game_name}: {self.score}"
@@ -36,9 +42,9 @@ class Gamescore(models.Model):
     class Meta:
         verbose_name = 'Gamescore'
         verbose_name_plural = 'Gamescores'
-        ordering = ['-score', '-created_at']
+        ordering = ['-game_score', '-created_at']
         indexes = [
-            models.Index(fields=['game_name', '-score']),
+            models.Index(fields=['game_name', '-game_score']),
             models.Index(fields=['user', 'game_name', '-created_at']),
             models.Index(fields=['user', '-created_at']),
         ]

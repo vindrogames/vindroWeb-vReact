@@ -3,7 +3,6 @@ Custom allauth adapters for OAuth flow
 """
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from .utils import generate_random_username
-from .models import UserProfile
 
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
@@ -29,17 +28,5 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
 
         # Generate random username for OAuth users (3 digits)
         user.username = generate_random_username(prefixes=prefixes, length=3)
-        user.avatar = '/img/profile_icons/teal-simple.webp'
-        return user
-
-    def save_user(self, request, sociallogin, form=None):
-        """
-        Save the user after OAuth signup.
-        Create UserProfile after user is created.
-        """
-        user = super().save_user(request, sociallogin, form)
-
-        # Create UserProfile for OAuth user
-        UserProfile.objects.get_or_create(user=user)
-
+        # Avatar is set by default in the User model
         return user

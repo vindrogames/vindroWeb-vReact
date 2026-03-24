@@ -35,14 +35,24 @@ export function getBackendUrl() {
 }
 
 /**
+ * Read the Django CSRF token from cookies
+ */
+function getCsrfToken() {
+    const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
+}
+
+/**
  * Fetch wrapper with credentials support for session-based auth
  */
 async function apiRequest(endpoint, options = {}) {
+    const isWriteMethod = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method);
     const config = {
         ...options,
         credentials: 'include', // CRITICAL: Include cookies for session auth
         headers: {
             'Content-Type': 'application/json',
+            ...(isWriteMethod && { 'X-CSRFToken': getCsrfToken() }),
             ...options.headers,
         },
     };
@@ -103,6 +113,16 @@ export const authAPI = {
      */
     getCurrentUser: () => apiRequest('/auth/me/', {
         method: 'GET',
+    }),
+
+    /**
+     * Update user profile (username and/or avatar)
+     * @param {Object} data - { username?: string, avatar?: string }
+     * @returns {Promise<Object>} Updated user data
+     */
+    updateProfile: (data) => apiRequest('/auth/me/', {
+        method: 'PATCH',
+        body: JSON.stringify(data),
     }),
 
     /**

@@ -1,19 +1,25 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class UserProfile(models.Model):
-    """Extended user profile for storing additional user data"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    bio = models.TextField(blank=True)
-    avatar = models.URLField(blank=True)
-    game_scores = models.JSONField(default=dict, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+class User(AbstractUser):
+    """
+    Custom user model with simplified fields:
+    - id (auto)
+    - username
+    - email
+    - avatar
+    - date_joined (from AbstractUser)
+    """
+    avatar = models.URLField(
+        blank=True,
+        default='/img/profile_icons/teal-simple.webp',
+        help_text='URL to user avatar image'
+    )
 
     def __str__(self):
-        return f"{self.user.username}'s profile"
+        return self.username
 
     class Meta:
-        verbose_name = 'User Profile'
-        verbose_name_plural = 'User Profiles'
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'

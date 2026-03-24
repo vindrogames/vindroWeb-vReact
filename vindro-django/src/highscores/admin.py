@@ -7,15 +7,15 @@ from .models import Gamescore
 
 @admin.register(Gamescore)
 class HighscoreAdmin(admin.ModelAdmin):
-    list_display = ('user', 'game_name', 'score', 'created_at')
+    list_display = ('user', 'game_name', 'game_score', 'created_at')
     list_filter = ('game_name', 'created_at')
     search_fields = ('user__username', 'game_name')
-    readonly_fields = ('created_at', 'updated_at')
-    ordering = ('-score', '-created_at')
+    readonly_fields = ('created_at',)
+    ordering = ('-game_score', '-created_at')
 
     fieldsets = (
         ('Game Information', {
-            'fields': ('game_name', 'score')
+            'fields': ('game_name', 'game_score')
         }),
         ('Player Information', {
             'fields': ('user',)
@@ -25,7 +25,7 @@ class HighscoreAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
         ('Timestamps', {
-            'fields': ('created_at', 'updated_at'),
+            'fields': ('created_at',),
             'classes': ('collapse',)
         }),
     )
