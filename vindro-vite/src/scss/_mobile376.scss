@@ -185,38 +185,57 @@
         }
     }
 
-    main#login-page {
-        section#login-content {
-            gap: 18px;
+    main#user-profile {
+        padding: 90px 14px 0;
 
-            h5 {
-                font-size: 1.6rem;
-                width: 100%;
+        .profile-container {
+            width: 100%;
+
+            h1 {
+                font-size: 3.6rem;
             }
 
-            .auth-container {
-                width: 100%;
-                padding: 14px;
+            .user-stat-container#user-name-icon {
+                display: flex;
+                flex-direction: column;
 
-                .auth-info {
-                    padding: 14px;
-                    border-bottom: 2px solid $vindro-green;
+                .editable-input-wrapper {
+                    flex-direction: column;
 
-                    h3,
-                    h4 {
-                        font-size: 1.6rem;
+                    input {
+                        width: 100%;
                     }
 
-                    h4 {
-                        margin-top: 7px;
+                    button.btn-edit {
+                        align-self: flex-start;
                     }
                 }
 
-                .social-login {
-                    .btn-social {
-                        padding: 7px 14px;;
-                        font-size: 1.4rem;
-                        gap: 7px;
+                .user-icon {
+                    flex-direction: column;
+                    gap: 3px;
+
+                    img {
+                        width: 192px;
+                        height: 192px;
+                    }
+
+                    button.btn-edit {
+                        align-self: flex-start;
+                    }
+
+                    .icon-gallery {
+                        top: 230px;
+                        left: -7px;
+                        right: 0;
+                        width: fit-content;
+                        margin-left: auto;
+                        margin-right: auto;
+                        padding: 3px;
+                        gap: 3px;
+                        grid-template-columns: repeat(6, 1fr);
+                        grid-template-rows: repeat(7, auto);
+                        grid-auto-flow: column;
                     }
                 }
             }

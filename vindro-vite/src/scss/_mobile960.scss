@@ -10,6 +10,14 @@
         }
     }
 
+    section.hero-half {
+
+        h2 {
+            font-size: 2.4rem;
+            width: 100%;
+        }
+    }
+
     section#stories-page-content {
         width: 100%;
         background-color: $vindro-gray;
@@ -63,6 +71,63 @@
 
             #brackets-events-gallery {
                 grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    }
+
+    main.brackets-page {
+
+        .user-picks {
+
+            .user-picks-container {
+                width: 100%;
+
+                .user-stats-container {
+                    grid-template-columns: 1fr;
+                    gap: 14px;
+
+                    button {
+                        width: 210px;
+                    }
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .about-tournament {
+
+            .about-tournament-container {
+                width: 100%;
+
+                .feature {
+                    grid-template-columns: 1fr;
+                    gap: 21px;
+
+                    .feature-table {
+                        width: 63%;
+                        align-self: center;
+                        justify-self: center;
+
+                        .table-container {
+
+                            table {
+
+                                th {
+                                    font-size: 1.6rem;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -219,23 +284,23 @@
         }
     }
 
-    main#login-page {
-        section#login-content {
-            h5 {
-                width: 84%;
-                font-size: 2.1rem;
-            }
+    main#user-profile {
 
-            .auth-container {
-                width: 84%;
+        .profile-container {
 
-                .auth-info {
-                    h3,
-                    h4 {
-                        font-size: 2.1rem;
-                    }
-                }
+            .user-stat-container#user-name-icon {
+                display: flex;
+                flex-direction: column;
             }
+        }
+    }
+
+    main#privacy-page-content {
+
+        section#privacy,
+        section#cookies,
+        section#terms {
+            width: 84%;
         }
     }
 }

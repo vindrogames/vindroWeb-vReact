@@ -1,5 +1,9 @@
 @import 'config';
 
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -313,6 +317,7 @@ img {
 }
 
 .auth-nav {
+    margin-left: 14px;
     z-index: 4;
     display: flex;
     align-items: center;
@@ -385,7 +390,7 @@ img {
         }
     }
 
-    a.btn-login {
+    button.btn-login {
         border: 1px solid var(--teal-yellow-swap);
         border-radius: 3px;
         background-color: transparent;
@@ -394,6 +399,7 @@ img {
         padding: 7px 14px !important;
         transition: all 0.3s ease;
         margin: 0 !important;
+        cursor: pointer;
 
         &:hover,
         &.current {
@@ -817,6 +823,7 @@ section#escape-the-cloud {
 }
 
 main#brackets-page {
+
     section#brackets-events-container {
         width: 100%;
         min-height: 50vh;
@@ -837,12 +844,15 @@ main#brackets-page {
             .bracket-event-card-container {
                 position: relative;
                 width: 100%;
+                padding: 14px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: flex-start;
 
                 .bracket-event-card {
+                    position: relative;
+                    overflow: hidden;
                     width: 100%;
                     height: 100%;
                     flex-direction: column;
@@ -852,6 +862,31 @@ main#brackets-page {
                     border-radius: 3px;
                     background-color: $vindro-gray;
                     border: 3px solid $vindro-black;
+                    box-shadow: 1px 1px 14px $vindro-black;
+
+                    .rolling-football {
+                        display: block; // Force rendering
+                        position: absolute;
+                        bottom: 5px; // Slight offset from the very edge
+                        width: 42px;
+                        height: 42px;
+                        background-image: url('img/vindro-football.webp');
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        z-index: 10;
+                        pointer-events: none;
+                        opacity: 0; // Hidden by default
+
+                        &.roll-right {
+                            opacity: 1;
+                            animation: footy-move-right 3s linear forwards;
+                        }
+
+                        &.roll-left {
+                            opacity: 1;
+                            animation: footy-move-left 3s linear forwards;
+                        }
+                    }
 
                     h4 {
                         font-size: 2.4rem;
@@ -930,6 +965,7 @@ main#brackets-page {
 }
 
 main#contact-page {
+
     section#contact-page-content,
     section#contact-page-emails {
         display: flex;
@@ -1016,9 +1052,37 @@ main#privacy-page-content {
     text-align: justify;
 
     section#privacy,
-    section#cookies {
+    section#cookies,
+    section#terms {
         width: 63%;
-        padding: 1rem;
+        padding: 14px;
+
+        ul,
+        ol {
+            list-style: none; // Essential to hide default bullets
+
+            li {
+                position: relative; // Anchor for the pseudo-element
+                font-size: 1.8rem;
+                margin-left: 42px;
+                margin-bottom: 14px;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+
+                    // Your custom styling
+                    width: 7px;
+                    height: 7px;
+                    background-color: $vindro-green;
+                    border-radius: 50%; // Makes it a circle
+
+                    // Positioning
+                    left: -14px; // Moves it into the margin-left space
+                    top: 0.6em; // Aligns it vertically with your 1.8rem text
+                }
+            }
+        }
 
         h2,
         h3,
@@ -1029,6 +1093,7 @@ main#privacy-page-content {
         }
 
         h2 {
+            text-align: left;
             color: $vindro-green;
             font-weight: 700;
             font-size: 4.2rem;
@@ -1036,11 +1101,11 @@ main#privacy-page-content {
 
         h3 {
             font-size: 2.1rem;
-            ;
         }
 
-        h4 {
+        p.update {
             font-size: 1.6rem;
+            font-weight: 500;
         }
 
         h5 {
@@ -1143,6 +1208,7 @@ main {
 @import 'game-42';
 @import 'madrid-calculator';
 @import 'autominer';
+@import 'brackets';
 @import 'mobile960';
 @import 'mobile678';
 @import 'mobile450';

@@ -19,6 +19,7 @@ import TestApi from './pages/TestApi';
 import UserProfile from './pages/UserProfile'; 
 import UserBrackets from './pages/UserBrackets';
 import UserTopScores from './pages/UserTopScores';
+import WorldCupTournament_2026 from './features/brackets/world-cup-2026/WorldCupTournament_2026';
 
 export const routes = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ export const routes = createBrowserRouter([
       { path: 'games/madrid-calculator', element: <MadridCalculator />},
       { path: 'test-api', element: <TestApi />},
       { path: 'games/auto-miner', element: <Autominer /> },
+      { path: 'brackets/world-cup-2026', element: <WorldCupTournament_2026 /> },
       // Protected User Routes
       {
         path: 'user/:userId',

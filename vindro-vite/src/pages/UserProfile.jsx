@@ -151,7 +151,7 @@ export default function UserProfile() {
                             </div>
 
                             <div className="user-joined">
-                                <h3>joined {user.joined ? new Date(user.joined).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}</h3>
+                                <h3>joined {user.joined ? new Date(user.joined).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'today'}</h3>
                             </div>
 
                         </div>

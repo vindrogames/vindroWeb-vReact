@@ -3,7 +3,7 @@ import HomeHelmet from "../page-helmets/HomeHelmet";
 import ShowcaseSection from "../components/ui/ShowcaseSection";
 import HomeAbout from '../components/pages/home/HomeAbout';
 
-function Home() {
+const Home = () => {
 
     const scrollRef = useRef();
 

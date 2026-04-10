@@ -247,6 +247,7 @@
 
             section#game-intro {
                 padding-left: 7px;
+
                 h1 {
                     font-size: 3.6rem;
                 }
@@ -410,20 +411,6 @@
         text-align: center;
     }
 
-    main#login-page {
-        section#login-content {
-            
-            h5 {
-                width: 100%;
-            }
-
-            .auth-container {
-                width: 100%;
-                padding: 14px;
-            }
-        }
-    }
-
     main#contact-page {
 
         section#contact-page-emails {
@@ -456,6 +443,65 @@
                         height: 21px;
                     }
                 }
+            }
+        }
+    }
+
+    main#user-profile {
+        padding: 90px 14px 0;
+        
+        .profile-container {
+            width: 100%;
+            padding: 21px 0;
+            gap: 21px;
+
+            h1 {
+                font-size: 3.6rem;
+            }
+
+            .user-stat-container#user-name-icon {
+
+                .user-name-data {
+                    gap: 7px;
+                }
+                .user-icon {
+
+                    .icon-gallery {
+                        left: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    main#privacy-page-content {
+
+        section#privacy,
+        section#cookies,
+        section#terms {
+
+            padding: 14px;
+
+            h2 {
+                font-size: 2.8rem;
+            }
+
+            h3 {
+                font-size: 1.8rem;
+            }
+
+            h5 {
+                font-weight: 600;
+            }
+
+            h5,
+            p {
+                font-size: 1.6rem;
+            }
+
+            p.update {
+                font-size: 1.4rem;
+                font-weight: 500;
             }
         }
     }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import NavBarLink from '../ui/NavBarLink';
 import SmartLink from '../ui/SmartLink';
 import { useAuth } from '../../contexts/AuthContext';
+import AuthModal from '../ui/AuthModal';
 
 const routes = [
     { text: 'home', route: '/' },
@@ -23,6 +24,7 @@ function NavBar({ isMadrid }) {
 
     const menuOpenRef = useRef(menuOpen);
     const userOpenRef = useRef(userDropdownOpen);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { user, logout } = useAuth();
     const navigate = useNavigate();
@@ -128,14 +130,14 @@ function NavBar({ isMadrid }) {
                                             Brackets
                                         </SmartLink>
                                         */}
-                                        
+
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}
                             </div>
                         ) : (
                             <ul>
-                                <NavBarLink route="/login" text="login" className="btn-login" />
+                                <button className='btn-login' onClick={() => setIsModalOpen(true)}>Login</button>
                             </ul>
                         )}
                     </div>
@@ -171,7 +173,7 @@ function NavBar({ isMadrid }) {
                                     className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
                                     onClick={() => setUserDropdownOpen(prev => !prev)}
                                 >
-                                    <img src="/img/profile_icons/teal-pirate.webp" alt="User Avatar" />
+                                    <img src={user.avatar} alt="User Avatar" />
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
@@ -205,13 +207,18 @@ function NavBar({ isMadrid }) {
                             </div>
                         ) : (
                             <ul>
-                                <NavBarLink route="/login" text="login" className="btn-login" onClick={() => setMenuOpen(false)} />
+                                <button className='btn-login' onClick={() => setIsModalOpen(true)}>Login</button>
                             </ul>
                         )}
                     </div>
 
                 </nav>
             </div>
+
+            <AuthModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </header>
     );
 }
