@@ -14,6 +14,8 @@
  */
 
 import React from 'react';
+import GroupStagePredictions from '../../components/GroupStagePredictions';
+import BracketStagePredictions from '../../components/BracketStagePredictions';
 import { useParams } from 'react-router-dom';
 // TODO: Import tournament-specific components and generic play components
 // import GenericTournamentPlayPage from './components/TournamentPlayPage';

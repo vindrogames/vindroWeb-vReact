@@ -1,25 +1,7 @@
-// /features/brackets/world-cup-2026/WorldCupTournament_2026.jsx
-/**
- * WorldCupTournament_2026
- * 
- * Tournament overview page for World Cup 2026.
- * Shows user's plays and pools, allows creating new plays and joining pools.
- * 
- * The actual tournament play experience has moved to:
- * - Route: /brackets/:tournamentId/:userId/:playId
- * - Component: TournamentPlayPage
- * 
- * This component now focuses on discovery and pool management.
- * 
- * TODO: Add authentication guard if not already in route protection:
- *   if (!user || !isAuthenticated) return <Navigate to="/login" />;
- * 
- * TODO: Wire up actual plays list from API
- * TODO: Wire up actual pools list from API
- */
-
 import React, { useState } from 'react';
-import { FaEdit } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import CreateNewPlayModal from '../../components/CreateNewPlayModal';
+import JoinPoolModal from '../../components/JoinPoolModal';
 import EventDescription from './components/EventDescription';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import AuthModal from '../../../../components/ui/AuthModal';
@@ -27,24 +9,44 @@ import { useAuth } from '../../../../contexts/AuthContext';
 
 const WorldCupTournament_2026 = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
+    
+    const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
     const [showPoolModal, setShowPoolModal] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authModalMode, setAuthModalMode] = useState('login');
 
-    // CORE HANDLERS - New Play & Join Pool
+    const tournamentId = "world-cup-2026";
+
+    // CORE HANDLERS
     const handleNewPlay = () => {
-        if (!user) return;
-        // TODO: POST /api/plays/
-        // Create new play, then navigate to TournamentPlayPage with new playId
-        console.log('Create new play');
+        if (!user) {
+            handleLoginClick();
+            return;
+        }
+        setShowCreatePlayModal(true);
+    };
+
+    const handleCreatePlayConfirm = (playName) => {
+        // Mocking the API response for now
+        console.log('API POST -> /api/plays/ with name:', playName);
+        
+        const mockPlayId = "new-play-123"; // This will come from your future endpoint
+        setShowCreatePlayModal(false);
+
+        // Redirecting to the play-specific page
+        navigate(`/brackets/${tournamentId}/${user.id}/${mockPlayId}`);
     };
 
     const handleJoinPool = () => {
-        if (!user) return;
+        if (!user) {
+            handleLoginClick();
+            return;
+        }
         setShowPoolModal(true);
     };
 
-    // Auth Modal Handlers
+    // Auth Handlers
     const handleLoginClick = () => {
         setAuthModalMode('login');
         setIsAuthModalOpen(true);
@@ -55,30 +57,15 @@ const WorldCupTournament_2026 = () => {
         setIsAuthModalOpen(true);
     };
 
-    const handleAuthModalClose = () => {
-        setIsAuthModalOpen(false);
-    };
-
-    const handlePoolModalClose = () => {
-        setShowPoolModal(false);
-    };
-
-    // Smooth scroll to tournament info
     const handleScrollToAbout = () => {
         const element = document.getElementById('about-tournament');
         if (element) {
-            const offsetTop = element.getBoundingClientRect().top + window.scrollY;
-            window.scrollTo({
-                top: offsetTop - 50,
-                behavior: 'smooth'
-            });
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     };
 
-    // Render tournament overview page
     return (
         <main id="world-cup-2026" className="bracket-tournament-page">
-            {/* HERO SECTION */}
             <ShowcaseSection
                 classes="hero-half bg-black"
                 showButton={true}
@@ -90,9 +77,8 @@ const WorldCupTournament_2026 = () => {
                 <h2>Make your picks. Submit to a pool. See how you do!</h2>
             </ShowcaseSection>
 
-            <section className="user-picks">
+            <section className="user-picks" style={{ position: 'relative' }}>
                 <div className="user-picks-container">
-                    {/* PLAYS SECTION */}
                     <div className="title-container predictions">
                         <h3>Your Plays</h3>
                     </div>
@@ -108,7 +94,6 @@ const WorldCupTournament_2026 = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* TODO: Map over user's plays array from API */}
                                     <tr>
                                         <td>-</td>
                                         <td>-</td>
@@ -123,14 +108,11 @@ const WorldCupTournament_2026 = () => {
                             id="new-play-btn"
                             className="btn btn-tan"
                             onClick={handleNewPlay}
-                            disabled={!user}
-                            title={!user ? "Log in to create a play" : ""}
                         >
                             New Play
                         </button>
                     </div>
 
-                    {/* POOLS SECTION */}
                     <div className="title-container pools">
                         <h3>Your Pools</h3>
                     </div>
@@ -146,7 +128,6 @@ const WorldCupTournament_2026 = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* TODO: Map over user's pools array from API */}
                                     <tr>
                                         <td>-</td>
                                         <td>-</td>
@@ -161,50 +142,45 @@ const WorldCupTournament_2026 = () => {
                             id="join-pool-btn"
                             className="btn btn-tan"
                             onClick={handleJoinPool}
-                            disabled={!user}
-                            title={!user ? "Log in to join a pool" : ""}
                         >
                             Join a Pool
                         </button>
                     </div>
                 </div>
 
-                {/* AUTH PROMPT - Show when not logged in */}
                 {!user && (
                     <div className="auth-prompt-overlay">
                         <div className="auth-prompt-message">
                             <h5>To participate you must be logged in.</h5>
                             <div className="prompt-links">
-                                <button className="btn btn-tan" onClick={handleLoginClick}>
-                                    Log In
-                                </button>
+                                <button className="btn btn-tan" onClick={handleLoginClick}>Log In</button>
                                 <p>or</p>
-                                <button className="btn btn-tan" onClick={handleSignUpClick}>
-                                    Sign Up
-                                </button>
+                                <button className="btn btn-tan" onClick={handleSignUpClick}>Sign Up</button>
                             </div>
                         </div>
                     </div>
                 )}
             </section>
 
-            {/* TOURNAMENT INFO */}
             <EventDescription />
 
-            {/* MODALS */}
+            <CreateNewPlayModal
+                isOpen={showCreatePlayModal}
+                onConfirm={handleCreatePlayConfirm}
+                onCancel={() => setShowCreatePlayModal(false)}
+            />
 
-            {/* Pool Join Modal */}
-            {showPoolModal && (
-                <JoinPoolModal
-                    userId={user?.id}
-                    onClose={handlePoolModalClose}
-                />
-            )}
+            <JoinPoolModal
+                isOpen={showPoolModal}
+                tournamentId={tournamentId}
+                userId={user?.id}
+                onSuccess={() => setShowPoolModal(false)}
+                onCancel={() => setShowPoolModal(false)}
+            />
 
-            {/* Auth Modal with redirect support */}
             <AuthModal
                 isOpen={isAuthModalOpen}
-                onClose={handleAuthModalClose}
+                onClose={() => setIsAuthModalOpen(false)}
                 redirectTo={window.location.pathname}
                 defaultMode={authModalMode}
             />
