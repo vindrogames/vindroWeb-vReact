@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-function DataTable({ data = [], columns = [], tableType = "" }) {
+const DataTable = ({ data = [], columns = [], tableType = "" }) => {
     if (!data || data.length === 0) {
         return <div className="no-data-msg">No records found.</div>;
     }

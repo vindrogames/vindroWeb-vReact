@@ -3,7 +3,7 @@ import BracketHelmet from '../page-helmets/BracketHelmet';
 import ShowcaseSection from '../components/ui/ShowcaseSection';
 import BracketEventCard from '../components/pages/brackets/BracketEventCard';
 
-function Brackets() {
+const Brackets = () => {
 
     return (
 

@@ -1,13 +1,12 @@
 import EscapeCloudHelmet from '../../page-helmets/EscapeCloudHelmet';
 import ShowcaseSection from '../../components/ui/ShowcaseSection';
 
-function EscapeTheCloud() {
+const EscapeTheCloud = () => {
 
     return (
-
         <>
             <EscapeCloudHelmet />
-            <main id="escape-cloud">
+            <main id="escape-the-cloud">
 
                 <ShowcaseSection
                     classes="hero-half bg-black"
@@ -16,7 +15,7 @@ function EscapeTheCloud() {
                     <h2>A learning experience inspired by Escape Rooms</h2>
                 </ShowcaseSection>
 
-                <section id="escape-the-cloud">
+                <section id="escape-the-cloud-container">
 
                     <div id="escape-the-cloud-trailer">
                         <video controls>

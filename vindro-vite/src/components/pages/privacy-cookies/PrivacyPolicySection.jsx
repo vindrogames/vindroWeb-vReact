@@ -1,6 +1,6 @@
 import SmartLink from "../../ui/SmartLink"
 
-function PrivacyPolicySection() {
+const PrivacyPolicySection = () => {
 
     return (
         <section id="privacy">

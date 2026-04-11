@@ -45,25 +45,27 @@
 
     section.hero-half {
         padding: 14px;
-
+        
         h2 {
             font-size: 1.8rem;
         }
     }
 
-    section#stories-page-content {
+    main#stories {
+        section#stories-page-content {
 
-        #timeline ul {
-            padding: 21px 0 42px 0;
+            #timeline ul {
+                padding: 21px 0 42px 0;
 
-            li {
+                li {
 
-                margin-left: 3px;
+                    margin-left: 3px;
 
-                div {
+                    div {
 
-                    h3 {
-                        font-size: 1.8rem;
+                        h3 {
+                            font-size: 1.8rem;
+                        }
                     }
                 }
             }
@@ -117,15 +119,9 @@
 
     }
 
-    main#escape-cloud {
-        section.hero-half {
-            h1 {
-                font-size: 3.6rem;
-            }
-        }
-    }
+    main#escape-the-cloud {
 
-    section#escape-the-cloud {
+        section#escape-the-cloud-container {
 
         #escape-the-cloud-trailer {
 
@@ -148,6 +144,7 @@
                 }
             }
         }
+    }
     }
 
     main#game-42 {
@@ -449,7 +446,7 @@
 
     main#user-profile {
         padding: 90px 14px 0;
-        
+
         .profile-container {
             width: 100%;
             padding: 21px 0;
@@ -459,15 +456,21 @@
                 font-size: 3.6rem;
             }
 
-            .user-stat-container#user-name-icon {
+            .user-stat-container {
 
-                .user-name-data {
-                    gap: 7px;
-                }
-                .user-icon {
+                padding: 0 7px;
+                &#user-name-icon {
 
-                    .icon-gallery {
-                        left: 0;
+                    
+                    .user-name-data {
+                        gap: 7px;
+                    }
+
+                    .user-icon {
+
+                        .icon-gallery {
+                            left: 0;
+                        }
                     }
                 }
             }

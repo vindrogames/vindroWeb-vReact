@@ -5,7 +5,7 @@ import GameGalleryCard from '../components/pages/games/GameGalleryCard';
 import GamesHelmet from '../page-helmets/GamesHelmet';
 
 
-function Games() {
+const Games = () => {
 
     return (
 

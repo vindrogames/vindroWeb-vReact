@@ -4,7 +4,7 @@ import StoryHelmet from '../page-helmets/StoryHelmet';
 import ShowcaseSection from '../components/ui/ShowcaseSection';
 import TimelineCard from '../components/pages/stories//TimelineCard';
 
-function Story() {
+const Story = () => {
 
     const cards = document.querySelectorAll('li.card')
 
@@ -14,7 +14,7 @@ function Story() {
         <>
             <StoryHelmet />
 
-            <main>
+            <main id="stories">
 
                 <ShowcaseSection
                     classes="hero-half bg-black"

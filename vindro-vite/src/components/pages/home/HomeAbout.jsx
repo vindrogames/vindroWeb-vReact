@@ -1,6 +1,6 @@
 import TeamMember from "./TeamMember";
 
-function HomeAbout() {
+const HomeAbout = () => {
 
     return (
 

@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 
-function NavBarLink({ route, text, onClick, className }) {
+const NavBarLink = ({ route, text, onClick, className }) => {
     return (
         <li>
             <NavLink

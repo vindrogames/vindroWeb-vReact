@@ -102,7 +102,7 @@ const WorldCupTournament_2026 = () => {
 
     // Render different phases
     return (
-        <main id="world-cup-2026" className="brackets-page">
+        <main id="world-cup-2026" className="bracket-tournament-page">
             {/* Phase: Intro */}
             {/*currentPhase === 'intro' && <WorldCupIntro onStartClick={handleStartClick} />*/}
             <ShowcaseSection
@@ -159,7 +159,7 @@ const WorldCupTournament_2026 = () => {
                             disabled={!user}
                             title={!user ? "Log in to create a play" : ""}
                         >
-                            Make your Picks
+                            New Play
                         </button>
 
                     </div>

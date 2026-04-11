@@ -1,6 +1,6 @@
 import SmartLink from '../../ui/SmartLink';
 
-function GameGalleryCard({ route, galleryImg, gameTitle, gameDescription }) {
+const GameGalleryCard = ({ route, galleryImg, gameTitle, gameDescription }) => {
 
     return (
         <div className="game">

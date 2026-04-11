@@ -8,12 +8,13 @@ import AuthModal from '../ui/AuthModal';
 const routes = [
     { text: 'home', route: '/' },
     { text: 'story', route: '/story' },
-    { text: 'brackets', route: '/brackets' },
     { text: 'games', route: '/games' },
+    { text: 'brackets', route: '/brackets' },
     { text: 'contact', route: '/contact' },
 ];
 
-function NavBar({ isMadrid }) {
+const NavBar = ({ isMadrid }) => {
+    
     const [menuOpen, setMenuOpen] = useState(false);
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 

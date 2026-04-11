@@ -1,4 +1,4 @@
-function CookieSection() {
+const CookieSection = () => {
 
     return (
         <section id="terms">

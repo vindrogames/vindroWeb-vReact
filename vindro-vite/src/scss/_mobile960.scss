@@ -18,30 +18,32 @@
         }
     }
 
-    section#stories-page-content {
-        width: 100%;
-        background-color: $vindro-gray;
+    main#stories {
+        section#stories-page-content {
+            width: 100%;
+            background-color: $vindro-gray;
 
-        #timeline ul {
-            width: 84%;
-            margin: 0 auto;
+            #timeline ul {
+                width: 84%;
+                margin: 0 auto;
 
-            li {
+                li {
 
-                margin-left: 42px;
+                    margin-left: 42px;
 
-                div {
-                    width: 70vw;
-                }
+                    div {
+                        width: 70vw;
+                    }
 
-                &:nth-child(even) div {
-                    left: 40px;
-                }
+                    &:nth-child(even) div {
+                        left: 40px;
+                    }
 
-                &:nth-child(even) div:before {
-                    left: -15px;
-                    border-width: 8px 16px 8px 0;
-                    border-color: transparent #FFFFFF transparent transparent;
+                    &:nth-child(even) div:before {
+                        left: -15px;
+                        border-width: 8px 16px 8px 0;
+                        border-color: transparent #FFFFFF transparent transparent;
+                    }
                 }
             }
         }
@@ -65,96 +67,32 @@
         }
     }
 
-    main#brackets-page {
+    main#escape-the-cloud {
 
-        section#brackets-events-container {
+        section#escape-the-cloud-container {
+            height: 100%;
+            grid-template-columns: 1fr;
 
-            #brackets-events-gallery {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    }
+            #escape-the-cloud-trailer {
+                min-height: 50vh;
+                padding: 7px;
 
-    main.brackets-page {
-
-        .user-picks {
-
-            .user-picks-container {
-                width: 100%;
-
-                .user-stats-container {
-                    grid-template-columns: 1fr;
-                    gap: 14px;
-
-                    button {
-                        width: 210px;
-                    }
-
-                    .table-container {
-
-                        table {
-
-                            th {
-                                font-size: 1.6rem;
-                            }
-                        }
-                    }
+                video {
+                    width: 63%;
                 }
             }
-        }
 
-        .about-tournament {
+            #escape-the-cloud-info {
+                min-height: 50vh;
 
-            .about-tournament-container {
-                width: 100%;
+                .buttons {
 
-                .feature {
-                    grid-template-columns: 1fr;
-                    gap: 21px;
-
-                    .feature-table {
-                        width: 63%;
-                        align-self: center;
-                        justify-self: center;
-
-                        .table-container {
-
-                            table {
-
-                                th {
-                                    font-size: 1.6rem;
-                                }
-                            }
-                        }
+                    a {
+                        width: 100%;
+                        font-size: 1.6rem;
+                        text-align: center;
+                        padding: 14px;
                     }
-                }
-            }
-        }
-    }
-
-    section#escape-the-cloud {
-        height: 100%;
-        grid-template-columns: 1fr;
-
-        #escape-the-cloud-trailer {
-            min-height: 50vh;
-            padding: 7px;
-
-            video {
-                width: 63%;
-            }
-        }
-
-        #escape-the-cloud-info {
-            min-height: 50vh;
-
-            .buttons {
-
-                a {
-                    width: 100%;
-                    font-size: 1.6rem;
-                    text-align: center;
-                    padding: 14px;
                 }
             }
         }
@@ -244,6 +182,73 @@
 
                         &:last-child {
                             padding-left: 7%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    main#brackets-page {
+
+        section#brackets-events-container {
+
+            #brackets-events-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    }
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+
+            .user-picks-container {
+                width: 100%;
+
+                .user-stats-container {
+                    grid-template-columns: 1fr;
+                    gap: 14px;
+
+                    button {
+                        width: 210px;
+                    }
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .about-tournament {
+
+            .about-tournament-container {
+                width: 100%;
+
+                .feature {
+                    grid-template-columns: 1fr;
+                    gap: 21px;
+
+                    .feature-table {
+                        width: 63%;
+                        align-self: center;
+                        justify-self: center;
+
+                        .table-container {
+
+                            table {
+
+                                th {
+                                    font-size: 1.6rem;
+                                }
+                            }
                         }
                     }
                 }

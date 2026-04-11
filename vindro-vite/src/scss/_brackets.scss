@@ -12,7 +12,7 @@ $brackets-tan: $vindro-tan;
 $brackets-gray: $vindro-gray;
 $brackets-accent: $tm-yellow-solid;
 
-main.brackets-page {
+main.bracket-tournament-page {
 
     .user-picks {
         position: relative;
@@ -64,15 +64,19 @@ main.brackets-page {
                         overflow: hidden;
 
                         tr {
+                            
                             td:first-child {
-                                text-align: left;
-                                padding-left: 7px;
+                                //text-align: left;
+                                color: $vindro-teal;
+                                text-decoration: underline;
+                                cursor: pointer;
                             }
+                            
                         }
 
                         th {
-                            font-size: 1.8rem;
-                            font-weight: 600;
+                            font-size: 1.6rem;
+                            font-weight: 500;
                             font-family: $vindro-Montserrat;
                             border: none;
                             border-bottom: 3px solid $vindro-gray;
@@ -83,7 +87,7 @@ main.brackets-page {
                             font-size: 1.2rem;
                             font-weight: 300;
                             text-align: center;
-                            padding: 7px 0;
+                            padding: 7px 14px;
 
                             a {
                                 color: var(--teal-yellow-swap);
@@ -98,7 +102,7 @@ main.brackets-page {
                 button {
                     align-self: flex-start;
                     font-family: $vindro-Montserrat;
-                    font-size: 1.8rem;
+                    font-size: 1.6rem;
                     font-weight: 500;
                 }
 

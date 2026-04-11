@@ -10,7 +10,7 @@ function getIconName(avatarUrl) {
     return match ? match[1] : 'teal-simple';
 }
 
-export default function UserProfile() {
+const UserProfile = () => {
 
     const { userId } = useParams();
     const { user, updateUser } = useAuth();
@@ -205,3 +205,5 @@ export default function UserProfile() {
         </>
     );
 }
+
+export default UserProfile;

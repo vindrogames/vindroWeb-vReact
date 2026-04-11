@@ -550,113 +550,116 @@ section#home-about {
     }
 }
 
-section#stories-page-content {
-    overflow: hidden;
-    width: 100%;
+main#stories {
 
-    #timeline ul {
-        background: $vindro-gray;
-        padding: 42px 0;
+    section#stories-page-content {
+        overflow: hidden;
+        width: 100%;
 
-        li {
-            list-style: none;
-            position: relative;
-            width: 6px;
-            margin: 0 auto;
-            padding-top: 50px;
-            background: $vindro-green;
+        #timeline ul {
+            background: $vindro-gray;
+            padding: 42px 0;
 
-            div {
+            li {
+                list-style: none;
                 position: relative;
-                bottom: 0;
-                width: 400px;
-                padding: 21px;
-                background: $vindro-tan;
-                transition: all 0.5s ease-in-out;
-                visibility: hidden;
-                opacity: 0;
-                box-shadow: 0 3px 10px $vindro-black;
+                width: 6px;
+                margin: 0 auto;
+                padding-top: 50px;
+                background: $vindro-green;
 
-                h3 {
-                    width: 100%;
-                    color: $vindro-black;
-                    font-family: $vindro-Montserrat;
-                    font-weight: bold;
-                    font-size: 2.1rem;
-                    padding-bottom: 3px;
-                    border-bottom: 2px solid $vindro-green;
+                div {
+                    position: relative;
+                    bottom: 0;
+                    width: 400px;
+                    padding: 21px;
+                    background: $vindro-tan;
+                    transition: all 0.5s ease-in-out;
+                    visibility: hidden;
+                    opacity: 0;
+                    box-shadow: 0 3px 10px $vindro-black;
 
-                    svg {
-                        height: 1.5rem;
+                    h3 {
+                        width: 100%;
+                        color: $vindro-black;
+                        font-family: $vindro-Montserrat;
+                        font-weight: bold;
+                        font-size: 2.1rem;
+                        padding-bottom: 3px;
+                        border-bottom: 2px solid $vindro-green;
+
+                        svg {
+                            height: 1.5rem;
+                        }
+                    }
+
+                    p {
+                        margin-top: 7px;
+                        color: $vindro-black;
+                        font-size: 1.8rem;
                     }
                 }
 
-                p {
-                    margin-top: 7px;
-                    color: $vindro-black;
-                    font-size: 1.8rem;
+                /* Timeline Right Side */
+                &:nth-child(odd) div {
+                    left: 40px;
+                    /* transform: translate(200px, 0); */
                 }
-            }
 
-            /* Timeline Right Side */
-            &:nth-child(odd) div {
-                left: 40px;
-                /* transform: translate(200px, 0); */
-            }
+                /* Timeline Left Side */
+                &:nth-child(even) div {
+                    left: -434px;
+                    /* transform: translate(-200px, 0); */
+                }
 
-            /* Timeline Left Side */
-            &:nth-child(even) div {
-                left: -434px;
-                /* transform: translate(-200px, 0); */
-            }
+                /* Timeline Dots */
+                &:after {
+                    content: '';
+                    position: absolute;
+                    left: 50%;
+                    bottom: 0;
+                    width: 25px;
+                    height: 25px;
+                    background: inherit;
+                    transform: translateX(-50%);
+                    border-radius: 50%;
+                    transition: background 0.5s ease-in-out;
+                }
 
-            /* Timeline Dots */
-            &:after {
-                content: '';
-                position: absolute;
-                left: 50%;
-                bottom: 0;
-                width: 25px;
-                height: 25px;
-                background: inherit;
-                transform: translateX(-50%);
-                border-radius: 50%;
-                transition: background 0.5s ease-in-out;
-            }
+                /* Timeline Arrows Base */
+                div:before {
+                    content: '';
+                    position: absolute;
+                    bottom: 5px;
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                }
 
-            /* Timeline Arrows Base */
-            div:before {
-                content: '';
-                position: absolute;
-                bottom: 5px;
-                width: 0;
-                height: 0;
-                border-style: solid;
-            }
+                /* Timeline Right Side Arrows */
+                &:nth-child(odd) div:before {
+                    left: -15px;
+                    border-width: 8px 16px 8px 0;
+                    border-color: transparent $vindro-tan transparent transparent;
+                }
 
-            /* Timeline Right Side Arrows */
-            &:nth-child(odd) div:before {
-                left: -15px;
-                border-width: 8px 16px 8px 0;
-                border-color: transparent $vindro-tan transparent transparent;
-            }
+                /* Timeline Left Side Arrows */
+                &:nth-child(even) div:before {
+                    right: -15px;
+                    border-width: 8px 0 8px 16px;
+                    border-color: transparent transparent transparent $vindro-tan;
+                }
 
-            /* Timeline Left Side Arrows */
-            &:nth-child(even) div:before {
-                right: -15px;
-                border-width: 8px 0 8px 16px;
-                border-color: transparent transparent transparent $vindro-tan;
-            }
+                /* Timeline Show Boxes */
+                &.show div {
+                    transform: none;
+                    visibility: visible;
+                    opacity: 1;
+                }
 
-            /* Timeline Show Boxes */
-            &.show div {
-                transform: none;
-                visibility: visible;
-                opacity: 1;
-            }
-
-            &.show:after {
-                background: $vindro-green;
+                &.show:after {
+                    background: $vindro-green;
+                }
             }
         }
     }
@@ -759,63 +762,66 @@ main#games-showcase {
     }
 }
 
-section#escape-the-cloud {
-    min-height: 50vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
+main#escape-the-cloud {
 
-    #escape-the-cloud-trailer {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
+    section#escape-the-cloud-container {
+        min-height: 50vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         align-items: center;
-        justify-content: center;
-        gap: 42px;
-        background-color: $vindro-tan;
-        color: $vindro-black;
-        font-size: 1.4rem;
-        padding: 3rem;
 
-        video {
-            width: 90%;
-            height: auto;
-        }
-    }
-
-    #escape-the-cloud-info {
-        width: 100%;
-        height: 100%;
-        padding: 3rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 42px;
-        background-color: $vindro-gray;
-
-        p {
-            font-size: 1.6rem;
-        }
-
-        .buttons {
+        #escape-the-cloud-trailer {
             width: 100%;
+            height: 100%;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             gap: 42px;
+            background-color: $vindro-tan;
+            color: $vindro-black;
+            font-size: 1.4rem;
+            padding: 3rem;
 
-            a {
-                padding: 14px;
-                width: 42%;
-                font-size: 1.8rem;
-                font-weight: 700;
-                text-align: center;
+            video {
+                width: 90%;
+                height: auto;
+            }
+        }
 
-                &:hover {
-                    background-color: $vindro-black;
-                    color: $vindro-teal;
+        #escape-the-cloud-info {
+            width: 100%;
+            height: 100%;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 42px;
+            background-color: $vindro-gray;
+
+            p {
+                font-size: 1.6rem;
+            }
+
+            .buttons {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 42px;
+
+                a {
+                    padding: 14px;
+                    width: 42%;
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                    text-align: center;
+
+                    &:hover {
+                        background-color: $vindro-black;
+                        color: $vindro-teal;
+                    }
                 }
             }
         }

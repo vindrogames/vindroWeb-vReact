@@ -15,6 +15,7 @@ import LoginHelmet from '../../page-helmets/LoginHelmet';
  *   defaultMode: String - 'login' or 'signup' - Initial tab to show (default: 'login')
  */
 const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }) => {
+    
     const [isSignUp, setIsSignUp] = useState(defaultMode === 'signup');
     const [isFading, setIsFading] = useState(false);
 

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import SmartLink from '../../ui/SmartLink';
 
-function BracketEventCard({ eventTitle, phases = {}, startDate, route }) {
+const BracketEventCard = ({ eventTitle, phases = {}, startDate, route }) => {
+    
     const { groupPhases = [], bracketPhases = [] } = phases;
     const [animationClass, setAnimationClass] = useState('');
 

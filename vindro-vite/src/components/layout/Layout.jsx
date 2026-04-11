@@ -3,7 +3,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import NavBar from './Header'; // Your NavBar component
 import Footer from './Footer';
 
-export default function Layout() {
+const Layout = () => {
+    
     const location = useLocation();
     
     // Returns true if the URL contains 'madrid-calculator'
@@ -21,3 +22,5 @@ export default function Layout() {
         </div>
     );
 }
+
+export default Layout;
