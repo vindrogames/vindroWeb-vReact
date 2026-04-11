@@ -273,6 +273,59 @@
         }
     }
 
+    main.bracket-tournament-page {
+
+        .user-picks {}
+
+        .about-tournament {
+            padding: 14px;
+
+            .about-tournament-container {
+
+                .feature {
+
+                    .feature-text-container {
+
+                        .feature-title {
+                            h4 {
+                                font-size: 2.4rem;
+                            }
+
+                            p {
+                                font-size: 1.8rem;
+                            }
+                        }
+                        .feature-explanation {
+
+                            p {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+
+                    .feature-table {
+
+                        .table-container {
+
+                            table {
+
+                                th {
+                                    padding: 7px;
+                                    font-size: 1.6rem;
+
+                                }
+
+                                td {
+                                    font-size: 1.1rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     main#contact-page {
 
         section.hero-half {

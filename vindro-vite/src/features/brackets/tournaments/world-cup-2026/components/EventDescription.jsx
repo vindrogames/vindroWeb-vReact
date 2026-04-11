@@ -22,7 +22,7 @@ const EventDescription = () => {
 
                     <div className="feature-table">
                         <div className="table-container">
-                            <table>
+                            <table id="groups-points-table">
                                 <thead>
                                     <tr>
                                         <th>Metric</th>
@@ -68,7 +68,7 @@ const EventDescription = () => {
 
                     <div className="feature-table">
                         <div className="table-container">
-                            <table>
+                            <table id="bracket-points-table">
                                 <thead>
                                     <tr>
                                         <th>Round</th>
@@ -140,7 +140,7 @@ const EventDescription = () => {
 
                     <div className="feature-table">
                         <div className="table-container">
-                            <table>
+                            <table id="swap-table">
                                 <thead>
                                     <tr>
                                         <th>Swap nº</th>

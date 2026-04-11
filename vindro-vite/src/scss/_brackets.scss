@@ -64,14 +64,34 @@ main.bracket-tournament-page {
                         overflow: hidden;
 
                         tr {
-                            
+
                             td:first-child {
                                 //text-align: left;
-                                color: $vindro-teal;
-                                text-decoration: underline;
-                                cursor: pointer;
+
+                                a {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    gap: 14px;
+                                    color: $vindro-teal;
+                                    font-size: 1.2rem;
+                                    font-weight: 600;
+                                    cursor: pointer;
+                                    text-decoration: underline;
+                                    svg {
+                                        font-size: 1.8rem;
+                                        color: $vindro-tan;
+                                        cursor: pointer;
+                                    }
+
+                                    &:hover {
+                                        opacity: 0.84;
+                                    }
+                                }
+
+
                             }
-                            
+
                         }
 
                         th {
@@ -88,13 +108,6 @@ main.bracket-tournament-page {
                             font-weight: 300;
                             text-align: center;
                             padding: 7px 14px;
-
-                            a {
-                                color: var(--teal-yellow-swap);
-                                font-size: 1.2rem;
-                                font-weight: 600;
-                                text-decoration: underline;
-                            }
                         }
                     }
                 }
@@ -132,7 +145,8 @@ main.bracket-tournament-page {
                 border-radius: 3px;
                 text-align: center;
 
-                h5, p {
+                h5,
+                p {
                     color: white;
                     font-size: 1.8rem;
                     font-weight: 500;
@@ -165,6 +179,7 @@ main.bracket-tournament-page {
                 display: grid;
                 grid-template-columns: 2fr 1fr;
                 gap: 42px;
+                align-items: center;
 
                 .feature-text-container {
                     display: flex;
@@ -194,10 +209,12 @@ main.bracket-tournament-page {
                     }
 
                     .feature-explanation {
+
                         p {
                             font-size: 1.8rem;
                             font-weight: 400;
                             color: $vindro-gray;
+                            margin-bottom: 7px;
                         }
                     }
                 }
@@ -205,7 +222,6 @@ main.bracket-tournament-page {
                 .feature-table {
 
                     .table-container {
-                        flex-grow: 1;
                         border: 1px solid $vindro-tan;
                         border-radius: 7px;
                         background-color: $vindro-gray;
@@ -219,6 +235,22 @@ main.bracket-tournament-page {
                                 td:first-child {
                                     text-align: left;
                                     padding-left: 7px;
+                                }
+
+                                &:last-child {
+                                    td {
+                                        font-weight: 600;
+                                    }
+                                }
+                            }
+
+                            &#swap-table {
+
+                                tr:last-child {
+
+                                    td {
+                                        font-weight: 300;
+                                    }
                                 }
                             }
 
@@ -236,20 +268,10 @@ main.bracket-tournament-page {
                                 font-weight: 300;
                                 text-align: center;
                                 padding: 7px 0;
-
-                                a {
-                                    color: var(--teal-yellow-swap);
-                                    font-size: 1.2rem;
-                                    font-weight: 600;
-                                    text-decoration: underline;
-                                }
                             }
                         }
                     }
                 }
-
-
-
             }
         }
     }

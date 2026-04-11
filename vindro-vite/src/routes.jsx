@@ -19,7 +19,7 @@ import TestApi from './pages/TestApi';
 import UserProfile from './pages/UserProfile'; 
 import UserBrackets from './pages/UserBrackets';
 import UserTopScores from './pages/UserTopScores';
-import WorldCupTournament_2026 from './features/brackets/world-cup-2026/WorldCupTournament_2026';
+import WorldCupTournament_2026 from './features/brackets/tournaments/world-cup-2026/WorldCupTournament_2026';
 
 export const routes = createBrowserRouter([
   {

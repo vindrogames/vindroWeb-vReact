@@ -45,7 +45,7 @@
 
     section.hero-half {
         padding: 14px;
-        
+
         h2 {
             font-size: 1.8rem;
         }
@@ -123,28 +123,28 @@
 
         section#escape-the-cloud-container {
 
-        #escape-the-cloud-trailer {
+            #escape-the-cloud-trailer {
 
-            video {
-                width: 96%;
+                video {
+                    width: 96%;
+                }
             }
-        }
 
-        #escape-the-cloud-info {
+            #escape-the-cloud-info {
 
-            .buttons {
-                flex-direction: column;
-                gap: 21px;
+                .buttons {
+                    flex-direction: column;
+                    gap: 21px;
 
-                a {
-                    width: 100%;
-                    font-size: 1.6rem;
-                    text-align: center;
-                    padding: 14px;
+                    a {
+                        width: 100%;
+                        font-size: 1.6rem;
+                        text-align: center;
+                        padding: 14px;
+                    }
                 }
             }
         }
-    }
     }
 
     main#game-42 {
@@ -403,9 +403,25 @@
         }
     }
 
-    section#under-construction {
-        font-size: 1.8rem;
-        text-align: center;
+    main.bracket-tournament-page {
+
+        .user-picks {}
+
+        .about-tournament {
+
+            .about-tournament-container {
+                .feature {
+                    .feature-text-container {
+
+                        .feature-explanation {
+                            p {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     main#contact-page {
@@ -459,9 +475,10 @@
             .user-stat-container {
 
                 padding: 0 7px;
+
                 &#user-name-icon {
 
-                    
+
                     .user-name-data {
                         gap: 7px;
                     }
@@ -509,6 +526,46 @@
         }
     }
 
+    footer {
+
+
+        a {
+            font-size: 1rem;
+        }
+
+        .contact-info {
+            font-size: 1.2rem;
+
+            a {
+                color: var(--teal-yellow-swap);
+                font-weight: 600;
+
+                &:hover {
+                    color: $vindro-green;
+                }
+            }
+        }
+
+        .social {
+            height: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            gap: 14px;
+
+            a {
+
+                padding: 3px;
+                color: white;
+                border-radius: 3px;
+
+                svg {
+                    width: 3rem;
+                    height: 3rem;
+                }
+            }
+        }
+    }
+
     .how-to-play-content {
         .instructions-inner {
             padding: 63px 14px 21px;
@@ -549,43 +606,10 @@
         }
     }
 
-    footer {
-
-
-        a {
-            font-size: 1rem;
-        }
-
-        .contact-info {
-            font-size: 1.2rem;
-
-            a {
-                color: var(--teal-yellow-swap);
-                font-weight: 600;
-
-                &:hover {
-                    color: $vindro-green;
-                }
-            }
-        }
-
-        .social {
-            height: 100%;
-            display: flex;
-            justify-content: space-evenly;
-            gap: 14px;
-
-            a {
-
-                padding: 3px;
-                color: white;
-                border-radius: 3px;
-
-                svg {
-                    width: 3rem;
-                    height: 3rem;
-                }
-            }
-        }
+    section#under-construction {
+        font-size: 1.8rem;
+        text-align: center;
     }
+
+
 }

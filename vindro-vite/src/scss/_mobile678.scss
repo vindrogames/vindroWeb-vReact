@@ -528,6 +528,34 @@
         }
     }
 
+    main.bracket-tournament-page {
+
+        .user-picks {}
+
+        .about-tournament {
+            padding: 21px;
+
+            .about-tournament-container {
+
+                width: auto;
+                .feature {
+
+                    .feature-table {
+
+                        .table-container {
+                            width: auto;
+                            table {
+                                width: auto;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
+    }
+
     main#contact-page {
 
         section.hero-half {

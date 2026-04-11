@@ -237,14 +237,13 @@
                     gap: 21px;
 
                     .feature-table {
-                        width: 63%;
+                        width: auto;
                         align-self: center;
                         justify-self: center;
 
                         .table-container {
-
                             table {
-
+                                
                                 th {
                                     font-size: 1.6rem;
                                 }
