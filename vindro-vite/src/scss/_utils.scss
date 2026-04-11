@@ -416,6 +416,7 @@ section#under-construction {
 
                 &.no-game {
                     border-top: 1px solid $vindro-tan;
+
                     .status-dot {
                         background: $real-red;
                         box-shadow: 0 0 8px $real-red;
@@ -456,6 +457,56 @@ section#under-construction {
     }
 
 
+}
+
+.global-loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba($vindro-black, 0.7); // Subtle dimming
+    backdrop-filter: blur(4px); // Clean glass effect
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.apple-spinner {
+    position: relative;
+    width: 40px;
+    height: 40px;
+
+    .bar {
+        width: 8%;
+        height: 24%;
+        background: $vindro-teal; // Using your highlight color
+        position: absolute;
+        left: 46%;
+        top: 38%;
+        opacity: 0;
+        border-radius: 50px;
+        animation: apple-fade 1s linear infinite;
+    }
+
+    // Position each of the 12 bars in a circle
+    @for $i from 1 through 12 {
+        .bar:nth-child(#{$i}) {
+            transform: rotate(#{($i - 1) * 30}deg) translate(0, -130%);
+            animation-delay: #{($i - 1) * 0.083}s;
+        }
+    }
+}
+
+@keyframes apple-fade {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.25;
+    }
 }
 
 @keyframes glow {
@@ -531,23 +582,25 @@ section#under-construction {
 }
 
 @keyframes footy-move-right {
-    0% { 
-        left: -40px; 
-        transform: rotate(0deg); 
+    0% {
+        left: -40px;
+        transform: rotate(0deg);
     }
-    100% { 
-        left: 210%; 
-        transform: rotate(1440deg); 
+
+    100% {
+        left: 210%;
+        transform: rotate(1440deg);
     }
 }
 
 @keyframes footy-move-left {
-    0% { 
-        left: 110%; 
-        transform: rotate(0deg); 
+    0% {
+        left: 110%;
+        transform: rotate(0deg);
     }
-    100% { 
-        left: -40px; 
-        transform: rotate(-1440deg); 
+
+    100% {
+        left: -40px;
+        transform: rotate(-1440deg);
     }
 }

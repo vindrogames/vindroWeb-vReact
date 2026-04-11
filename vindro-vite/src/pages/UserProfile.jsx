@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import DataTable from '../components/pages/users/DataTable';
 import SmartLink from '../components/ui/SmartLink';
 import { useAuth } from '../contexts/AuthContext';
-import { authAPI } from '../services/api';
+import { authAPI } from '../services/auth_api';
 
 function getIconName(avatarUrl) {
     const match = avatarUrl?.match(/profile_icons\/(.+)\.webp/);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getBackendUrl } from '../../services/api';
+import { getBackendUrl } from '../../services/auth_api';
 import ShowcaseSection from "./ShowcaseSection";
 import LoginHelmet from '../../page-helmets/LoginHelmet';
 

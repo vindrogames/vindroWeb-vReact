@@ -8,7 +8,6 @@ import Story from './pages/Story';
 import Brackets from './pages/Brackets';
 import Games from './pages/Games';
 import Contact from './pages/Contact';
-import Login from './pages/Login';
 import Register from './pages/Register';
 import EscapeTheCloud from './features/escape-the-cloud/EscapeTheCloud';
 import PrivacyCookies from './pages/PrivacyCookies';
@@ -27,7 +26,6 @@ export const routes = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Home /> },
-      { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
       { path: 'story', element: <Story /> },
       { path: 'brackets', element: <Brackets /> },

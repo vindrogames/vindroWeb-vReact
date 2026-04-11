@@ -10,7 +10,7 @@ import { useAuth } from '../../../../contexts/AuthContext';
 const WorldCupTournament_2026 = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
-    
+
     const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
     const [showPoolModal, setShowPoolModal] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -30,7 +30,7 @@ const WorldCupTournament_2026 = () => {
     const handleCreatePlayConfirm = (playName) => {
         // Mocking the API response for now
         console.log('API POST -> /api/plays/ with name:', playName);
-        
+
         const mockPlayId = "new-play-123"; // This will come from your future endpoint
         setShowCreatePlayModal(false);
 
@@ -46,6 +46,10 @@ const WorldCupTournament_2026 = () => {
         setShowPoolModal(true);
     };
 
+    const handleCreatePool = () => {
+        return;
+    }
+
     // Auth Handlers
     const handleLoginClick = () => {
         setAuthModalMode('login');
@@ -60,28 +64,63 @@ const WorldCupTournament_2026 = () => {
     const handleScrollToAbout = () => {
         const element = document.getElementById('about-tournament');
         if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const navbarHeight = 90;
+            const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+            const offsetPosition = elementPosition - navbarHeight;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    };
+
+    const handleScrollToLeaderboard = () => {
+        const element = document.getElementById('tournament-leaderboard');
+        if (element) {
+            const navbarHeight = 90;
+            const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+            const offsetPosition = elementPosition - navbarHeight;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
         }
     };
 
     return (
         <main id="world-cup-2026" className="bracket-tournament-page">
-            <ShowcaseSection
-                classes="hero-half bg-black"
-                showButton={true}
-                buttonText="About the Tournament"
-                buttonClasses={'btn btn-tan'}
-                buttonOnClick={handleScrollToAbout}
-            >
+
+            <ShowcaseSection classes="hero-half bg-black brackets-hero">
                 <h1>world<span className="inline-bold inline-teal">Cup</span>2026</h1>
                 <h2>Make your picks. Submit to a pool. See how you do!</h2>
+
+                <div className="brackets-hero-buttons-wrapper">
+                    <button
+                        className="btn btn-tan"
+                        onClick={handleScrollToAbout}
+                    >
+                        About the Tournament
+                    </button>
+
+                    <button
+                        className="btn btn-tan"
+                        onClick={handleScrollToLeaderboard}
+                    >
+                        Leaderboard
+                    </button>
+                </div>
             </ShowcaseSection>
 
-            <section className="user-picks" style={{ position: 'relative' }}>
+            <ShowcaseSection id="user-picks-section" classes="hero-half bg-gray user-picks">
+
                 <div className="user-picks-container">
+                    {/* PLAYS COLUMN */}
                     <div className="title-container predictions">
                         <h3>Your Plays</h3>
                     </div>
+
                     <div className="user-stats-container">
                         <div className="table-container">
                             <table id="predictions-table">
@@ -94,12 +133,7 @@ const WorldCupTournament_2026 = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
+                                    <tr><td>-</td><td>-</td><td>-</td><td>-</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -113,11 +147,15 @@ const WorldCupTournament_2026 = () => {
                         </button>
                     </div>
 
+                    {/* POOLS COLUMN */}
                     <div className="title-container pools">
                         <h3>Your Pools</h3>
                     </div>
+
                     <div id="pools-stats" className="user-stats-container">
+
                         <div className="table-container">
+
                             <table id="pools-table">
                                 <thead>
                                     <tr>
@@ -128,26 +166,33 @@ const WorldCupTournament_2026 = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
+                                    <tr><td>-</td><td>-</td><td>-</td><td>-</td></tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <button
-                            id="join-pool-btn"
-                            className="btn btn-tan"
-                            onClick={handleJoinPool}
-                        >
-                            Join a Pool
-                        </button>
+                        <div className="pools-buttons-container">
+                            <button
+                                id="join-pool-btn"
+                                className="btn btn-tan"
+                                onClick={handleJoinPool}
+                            >
+                                Join a Pool
+                            </button>
+
+                            <button
+                                id="join-pool-btn"
+                                className="btn btn-tan"
+                                onClick={handleCreatePool}
+                            >
+                                Create a Pool
+                            </button>
+                        </div>
+
                     </div>
                 </div>
 
+                {/* AUTH PROMPT */}
                 {!user && (
                     <div className="auth-prompt-overlay">
                         <div className="auth-prompt-message">
@@ -160,9 +205,19 @@ const WorldCupTournament_2026 = () => {
                         </div>
                     </div>
                 )}
-            </section>
+            </ShowcaseSection>
 
             <EventDescription />
+
+            <ShowcaseSection id="tournament-leaderboard" classes="hero-half bg-tan tournament-leaderboard">
+
+                <div className="tournament-leaderboard-title">
+                    <h3>Leaderboard</h3>
+                </div>
+
+
+
+            </ShowcaseSection>
 
             <CreateNewPlayModal
                 isOpen={showCreatePlayModal}

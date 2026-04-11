@@ -22,27 +22,27 @@ import { useParams } from 'react-router-dom';
 import { mockPlay } from './data/mockPlay';
 
 const WorldCup2026PlayPage = () => {
-  const { playId, userId } = useParams();
-  
-  // TODO: Replace with actual API call
-  // const { data: play, isLoading } = useFetch(`/api/plays/${playId}/`);
-  const play = mockPlay;
-  const isLoading = false;
+    const { playId, userId } = useParams();
 
-  return (
-    <div className="world-cup-2026-play-page">
-      {isLoading ? (
-        <div className="loading">Loading...</div>
-      ) : (
-        <div className="play-content">
-          {/* Play page content will go here */}
-          <h1>{play.name}</h1>
-          <p>Tournament Play Page for World Cup 2026</p>
-          {/* TODO: Render stage cards, modals, and predictions UI */}
+    // TODO: Replace with actual API call
+    // const { data: play, isLoading } = useFetch(`/api/plays/${playId}/`);
+    const play = mockPlay;
+    const isLoading = false;
+
+    return (
+        <div className="world-cup-2026-play-page">
+            {isLoading ? (
+                <div className="loading">Loading...</div>
+            ) : (
+                <div className="play-content">
+                    {/* Play page content will go here */}
+                    <h1>{play.name}</h1>
+                    <p>Tournament Play Page for World Cup 2026</p>
+                    {/* TODO: Render stage cards, modals, and predictions UI */}
+                </div>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default WorldCup2026PlayPage;

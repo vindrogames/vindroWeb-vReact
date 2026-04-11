@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import ShowcaseSection from '../../../components/ui/ShowcaseSection';
 
 const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel }) => {
+
     const [playName, setPlayName] = useState('');
     const [error, setError] = useState('');
 
@@ -37,14 +39,14 @@ const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel }) => {
 
     return ReactDOM.createPortal(
         <div className="play-name-modal-overlay" onClick={onCancel}>
+
             <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
 
                 <button className="close-button" onClick={onCancel} aria-label="Close modal">
                     &times;
                 </button>
 
-
-                <div id="prediction-play-gallery" className="modal-header">
+                <ShowcaseSection id="prediction-play-gallery" className="modal-gallery">
                     <h2>prediction<span className='inline-teal inline-bold'>Play</span></h2>
 
                     <input
@@ -77,24 +79,24 @@ const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel }) => {
 
 
                     {error && <p className="error-message" style={{ color: '#ff4d4d', fontSize: '0.85rem' }}>{error}</p>}
-                </div>
+                </ShowcaseSection>
 
-                <div id="prediction-play-text">
-
-                    <div className="create-play-text">
-                        <p className="modal-description">To participate in the event, you create what we call <em><span className='inline-green inline-bold'>Prediction Plays</span></em>.</p>
-                        <p>A <em>play</em> consists of All the stages in the tournament and you will be able to manage your play throughout the tournament.</p>
-                        <p>All you have to do is give your play a name</p>
+                <ShowcaseSection id="prediction-play-text" className="bottom-modal-gallery">
+                    <div className="bottom-modal-header">
+                        <h3>Want to play?</h3>
                     </div>
 
-                </div>
+                    <div className="bottom-modal-text">
+                        <p>A <em><span className='inline-green inline-bold'>Play</span></em> includes predictions for both the Groups Stage & the Brackets Stage. You will be able to manage your predictions throughout the tournament.</p>
+                        <p>Anybody can have multiple play predictions and submit their plays to different private and public pools</p>
+                        <p>All you have to do is give your play a name and make your picks!</p>
+                    </div>
 
-                <div className="modal-footer">
-                    <button className="cancel-btn" onClick={onCancel}>
-                        Cancel
+                    <button className="btn btn-tan cancel-btn" onClick={onCancel}>
+                        Maybe Later
                     </button>
-
-                </div>
+                    
+                </ShowcaseSection>
             </div>
         </div>,
         document.body

@@ -139,7 +139,7 @@ export const authAPI = {
 /**
  * Generic API client for other endpoints
  */
-export const api = {
+export const auth_api = {
     get: (endpoint) => apiRequest(endpoint, { method: 'GET' }),
     post: (endpoint, data) => apiRequest(endpoint, {
         method: 'POST',

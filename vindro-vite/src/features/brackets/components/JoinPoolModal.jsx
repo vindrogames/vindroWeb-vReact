@@ -1,322 +1,100 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import ShowcaseSection from '../../../components/ui/ShowcaseSection';
+import SubmitPlayToPool from './SubmitPlayToPool'; // Import the new modal
 
-const JoinPoolModal = ({ isOpen, tournamentId, userId, onSuccess, onCancel }) => {
-  const [poolCode, setPoolCode] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedPoolType, setSelectedPoolType] = useState(null); // 'public' or 'private'
-  const [attemptCount, setAttemptCount] = useState(0); // Track failed attempts
+const JoinPoolModal = ({ isOpen, tournamentId, userId, plays = [], onCancel }) => {
+    // State to track if we should show the submission step
+    const [submissionFlow, setSubmissionFlow] = useState({
+        isOpen: false,
+        type: null // 'public' or 'private'
+    });
 
-  /**
-   * Validate pool code format
-   * @param {string} code - Code to validate
-   * @returns {string|false} Normalized code or false if invalid
-   */
-  const validatePoolCode = (code) => {
-    const trimmedCode = code.trim().toUpperCase();
+    if (!isOpen) return null;
 
-    // Length validation
-    if (trimmedCode.length < 6) {
-      setError('Pool code must be at least 6 characters');
-      return false;
-    }
+    /**
+     * Triggered when clicking 'Join' buttons.
+     * It closes the selection view and opens the submission view.
+     */
+    const handleJoinPool = (type) => {
+        setSubmissionFlow({
+            isOpen: true,
+            type: type
+        });
+    };
 
-    if (trimmedCode.length > 12) {
-      setError('Pool code must be 12 characters or less');
-      return false;
-    }
+    const closeSubmissionFlow = () => {
+        setSubmissionFlow({ isOpen: false, type: null });
+    };
 
-    // Alphanumeric only
-    if (!/^[A-Z0-9]+$/.test(trimmedCode)) {
-      setError('Pool code must contain only letters and numbers');
-      return false;
-    }
+    const handleSubmissionSuccess = (selectedIds, code) => {
+        console.log("Success! Plays submitted:", selectedIds, "to pool:", code || 'Public');
+        // Close everything
+        closeSubmissionFlow();
+        onCancel(); 
+        // Logic to refresh parent data would go here
+    };
 
-    return trimmedCode;
-  };
+    return (
+        <>
+            {/* 1. SELECTION MODAL (The Router) */}
+            {/* We only show this if the second modal isn't active */}
+            {!submissionFlow.isOpen && ReactDOM.createPortal(
+                <div className="play-name-modal-overlay" onClick={onCancel}>
+                    <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
 
-  /**
-   * Handle joining public vindroPool
-   */
-  const handleJoinPublicPool = async () => {
-    setIsLoading(true);
-    setError('');
+                        <button className="close-button" onClick={onCancel} aria-label="Close modal">
+                            &times;
+                        </button>
 
-    try {
-      // TODO: POST /api/pools/join-public
-      // {
-      //   tournament_id: tournamentId,
-      //   user_id: userId,
-      //   pool_name: 'vindroPool'
-      // }
+                        <ShowcaseSection id="join-pool-gallery" className="modal-gallery">
+                            <h2>tournament<span className="inline-teal inline-bold">Pools</span></h2>
+                            <div className="modal-gallery-text">
+                                <p>Anybody can join our Public Vindro Games Pool.</p>
+                                <p>A global Pool to compete against all players!</p>
+                            </div>
 
-      console.log(`User ${userId} joined public vindroPool for tournament ${tournamentId}`);
-      
-      // Success callback - parent will close modal
-      onSuccess?.('vindroPool', 'vindroPool');
-    } catch (err) {
-      // Generic error message (don't reveal specific reason)
-      setError('Unable to join pool. Please try again.');
-      console.error('Join public pool error:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+                            <button 
+                                className="btn btn-tan" 
+                                onClick={() => handleJoinPool('public')}
+                            >
+                                Join Vindro Public Pool
+                            </button>
+                        </ShowcaseSection>
 
-  /**
-   * Handle joining private pool with code
-   * Includes rate limiting and security checks
-   */
-  const handleJoinPrivatePool = async () => {
-    setError('');
-    const normalizedCode = validatePoolCode(poolCode);
+                        <ShowcaseSection id="join-private-pool" className="bottom-modal-gallery">
+                            <div className="bottom-modal-header">
+                                <h3>Have a Private code?</h3>
+                            </div>
+                            
+                            <div className="bottom-modal-text">
+                                <p>You can join Private Pools if the creator has given you a code.</p>
+                                <p>Classifications and Scores will only be visible to members of the private pool.</p>
+                            </div>
 
-    if (!normalizedCode) {
-      return;
-    }
+                            <button 
+                                className="btn btn-tan" 
+                                onClick={() => handleJoinPool('private')}
+                            >
+                                Join Private Pool
+                            </button>
+                        </ShowcaseSection>
+                        
+                    </div>
+                </div>,
+                document.body
+            )}
 
-    // Rate limiting: max 5 attempts before blocking
-    if (attemptCount >= 5) {
-      setError('Too many attempts. Please try again later.');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // TODO: POST /api/pools/join-private
-      // {
-      //   tournament_id: tournamentId,
-      //   user_id: userId,
-      //   code: normalizedCode
-      // }
-      // 
-      // BACKEND SHOULD:
-      // 1. Hash the code using bcrypt and compare with stored hash
-      // 2. Check rate limits per IP (max 5 attempts/hour)
-      // 3. Return generic error if code not found
-      // 4. Check if user already in pool
-      // 5. Check if pool is full
-      // 6. Log attempt with timestamp, IP, code (hashed)
-
-      console.log(`User ${userId} attempting to join private pool with code: ${normalizedCode}`);
-
-      // Success callback - parent will close modal
-      onSuccess?.(normalizedCode, 'Private Pool');
-    } catch (err) {
-      // Generic error message (security: don't reveal if code exists)
-      setError('Invalid pool code. Please check and try again.');
-      
-      // Increment attempt counter
-      const newAttemptCount = attemptCount + 1;
-      setAttemptCount(newAttemptCount);
-
-      // Trigger CAPTCHA after 3 failed attempts
-      if (newAttemptCount >= 3) {
-        console.warn(`Pool join attempts: ${newAttemptCount} - Consider requiring CAPTCHA`);
-        // TODO: Show CAPTCHA challenge here
-      }
-
-      console.error('Join private pool error:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleClose = () => {
-    onCancel?.();
-  };
-
-  if (!isOpen) return null;
-
-  return ReactDOM.createPortal(
-    <div className="play-name-modal-overlay" onClick={handleClose}>
-      <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
-        {/* POOL TYPE SELECTION SCREEN */}
-        {!selectedPoolType && (
-          <>
-            <div className="modal-header">
-              <h2>Join a Pool</h2>
-              <button
-                className="close-btn"
-                onClick={handleClose}
-                aria-label="Close modal"
-                disabled={isLoading}
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="modal-body">
-              <p className="modal-description">
-                Choose how you want to join a pool:
-              </p>
-
-              <div className="pool-type-options">
-                <button
-                  className="pool-option-btn public-pool-btn"
-                  onClick={() => setSelectedPoolType('public')}
-                  disabled={isLoading}
-                >
-                  <div className="option-icon">🌍</div>
-                  <div className="option-content">
-                    <h3>Public Pool</h3>
-                    <p>Join vindroPool with one click</p>
-                  </div>
-                </button>
-
-                <button
-                  className="pool-option-btn private-pool-btn"
-                  onClick={() => setSelectedPoolType('private')}
-                  disabled={isLoading}
-                >
-                  <div className="option-icon">🔒</div>
-                  <div className="option-content">
-                    <h3>Private Pool</h3>
-                    <p>Enter a code to join a custom pool</p>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* PUBLIC POOL CONFIRMATION SCREEN */}
-        {selectedPoolType === 'public' && (
-          <>
-            <div className="modal-header">
-              <h2>Join Public Pool</h2>
-              <button
-                className="close-btn"
-                onClick={handleClose}
-                aria-label="Close modal"
-                disabled={isLoading}
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="modal-body">
-              <p className="modal-description">
-                Join the vindroPool to compete with players worldwide.
-              </p>
-
-              <div className="pool-info">
-                <div className="info-item">
-                  <span className="info-label">Pool Name:</span>
-                  <span className="info-value">vindroPool</span>
-                </div>
-                <div className="info-item">
-                  <span className="info-label">Type:</span>
-                  <span className="info-value">Public</span>
-                </div>
-                <div className="info-item">
-                  <span className="info-label">Status:</span>
-                  <span className="info-value">Open</span>
-                </div>
-              </div>
-
-              {error && <p className="error-message">{error}</p>}
-            </div>
-
-            <div className="modal-footer">
-              <button
-                className="cancel-btn"
-                onClick={() => setSelectedPoolType(null)}
-                disabled={isLoading}
-              >
-                Back
-              </button>
-              <button
-                className="confirm-btn"
-                onClick={handleJoinPublicPool}
-                disabled={isLoading}
-              >
-                {isLoading ? 'Joining...' : 'Join Pool'}
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* PRIVATE POOL CODE ENTRY SCREEN */}
-        {selectedPoolType === 'private' && (
-          <>
-            <div className="modal-header">
-              <h2>Join Private Pool</h2>
-              <button
-                className="close-btn"
-                onClick={handleClose}
-                aria-label="Close modal"
-                disabled={isLoading}
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="modal-body">
-              <p className="modal-description">
-                Enter the pool code provided by your pool manager.
-              </p>
-
-              <input
-                type="text"
-                className={`pool-code-input ${error ? 'error' : ''}`}
-                placeholder="Enter pool code"
-                value={poolCode}
-                onChange={(e) => {
-                  setPoolCode(e.target.value.toUpperCase());
-                  setError('');
-                }}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' && !isLoading) {
-                    handleJoinPrivatePool();
-                  }
-                }}
-                maxLength={12}
-                disabled={isLoading}
-                autoFocus
-              />
-
-              <div className="code-format-hint">
-                6-12 characters • Letters and numbers only
-              </div>
-
-              {error && <p className="error-message">{error}</p>}
-
-              {attemptCount > 0 && (
-                <p className="attempt-warning">
-                  Failed attempts: {attemptCount}/5
-                </p>
-              )}
-            </div>
-
-            <div className="modal-footer">
-              <button
-                className="cancel-btn"
-                onClick={() => {
-                  setSelectedPoolType(null);
-                  setPoolCode('');
-                  setError('');
-                }}
-                disabled={isLoading}
-              >
-                Back
-              </button>
-              <button
-                className="confirm-btn"
-                onClick={handleJoinPrivatePool}
-                disabled={isLoading || !poolCode.trim() || attemptCount >= 5}
-              >
-                {isLoading ? 'Joining...' : 'Join Pool'}
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>,
-    document.body
-  );
+            {/* 2. SUBMISSION MODAL (The Action) */}
+            <SubmitPlayToPool 
+                isOpen={submissionFlow.isOpen}
+                type={submissionFlow.type}
+                plays={plays}
+                onConfirm={handleSubmissionSuccess}
+                onCancel={closeSubmissionFlow}
+            />
+        </>
+    );
 };
 
 export default JoinPoolModal;
