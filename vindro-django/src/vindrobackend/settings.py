@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     # Your apps
     'accounts',
     'highscores',
+    'tournament',
     'test',
 ]
 
