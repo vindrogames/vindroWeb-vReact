@@ -58,6 +58,7 @@ def logout_view(request):
 
 
 @require_http_methods(["GET", "PATCH"])
+@csrf_exempt
 def current_user(request):
     """GET /api/auth/me/ — PATCH /api/auth/me/"""
     if request.method == 'GET':
