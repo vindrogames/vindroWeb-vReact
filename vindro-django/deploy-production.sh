@@ -22,7 +22,6 @@ source .env.prod
 # Check required variables
 if [ -z "$GOOGLE_CLIENT_ID" ] || [ -z "$GOOGLE_CLIENT_SECRET" ]; then
     echo "⚠️  Warning: Google OAuth credentials not found in .env.prod"
-    echo "You will need to set up OAuth manually after deployment."
 fi
 
 # Build new image
@@ -58,13 +57,10 @@ fi
 echo "🔄 Running database migrations..."
 docker exec vindro-django uv run python src/manage.py migrate
 
-# Setup Google OAuth if credentials are available
-if [ -n "$GOOGLE_CLIENT_ID" ] && [ -n "$GOOGLE_CLIENT_SECRET" ]; then
-    echo "🔐 Setting up Google OAuth..."
-    docker exec vindro-django uv run python src/manage.py setup_google_oauth "$GOOGLE_CLIENT_ID" "$GOOGLE_CLIENT_SECRET"
-else
-    echo "⚠️  Skipping Google OAuth setup (credentials not found)"
-fi
+# Remove any legacy SocialApp DB records (OAuth is now configured via settings)
+echo "🔐 Cleaning up legacy OAuth DB records..."
+docker exec vindro-django uv run python src/manage.py shell -c \
+    "from allauth.socialaccount.models import SocialApp; count, _ = SocialApp.objects.all().delete(); print(f'Deleted {count} SocialApp record(s)')"
 
 # Collect static files
 echo "📦 Collecting static files..."

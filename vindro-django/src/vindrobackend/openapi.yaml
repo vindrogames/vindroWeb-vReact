@@ -1,0 +1,592 @@
+openapi: 3.0.3
+info:
+  title: Vindro Backend API
+  version: "1.0"
+  description: |
+    REST API for Vindro Games.
+    Authentication uses session cookies (set automatically after Google OAuth login).
+
+servers:
+  - url: http://localhost:8000
+    description: Local dev
+  - url: https://backend.vindrogames.com
+    description: Production
+
+components:
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:         { type: integer }
+        username:   { type: string }
+        email:      { type: string }
+        avatar:     { type: string, nullable: true }
+        is_authenticated: { type: boolean }
+        joined:     { type: string, format: date-time, nullable: true }
+
+    Tournament:
+      type: object
+      properties:
+        id:               { type: string, format: uuid }
+        name:             { type: string }
+        slug:             { type: string }
+        tournament_type:  { type: string, example: world_cup }
+        status:           { type: string, enum: [upcoming, active, completed] }
+        description:      { type: string }
+        image_url:        { type: string }
+        start_date:       { type: string, format: date-time }
+        end_date:         { type: string, format: date-time }
+        groups_end_date:  { type: string, format: date-time }
+        bracket_start_date: { type: string, format: date-time }
+
+    TournamentWithFormat:
+      allOf:
+        - $ref: '#/components/schemas/Tournament'
+        - type: object
+          properties:
+            format:
+              type: object
+              nullable: true
+              properties:
+                groups:  { type: object, description: "Static group/team structure" }
+                bracket: { type: object, description: "Static bracket structure" }
+
+    TournamentResults:
+      type: object
+      properties:
+        groups_results:   { type: object }
+        bracket_results:  { type: object }
+        last_updated:     { type: string, format: date-time, nullable: true }
+
+    TournamentPlay:
+      type: object
+      properties:
+        id:                   { type: string, format: uuid }
+        tournament_id:        { type: string, format: uuid }
+        name:                 { type: string }
+        status:               { type: string, enum: [in_progress, submitted, completed] }
+        current_phase:        { type: string, enum: [groups, bracket, review, submitted] }
+        group_predictions:    { type: object }
+        bracket_predictions:  { type: object }
+        score:                { type: integer }
+        created_at:           { type: string, format: date-time }
+        updated_at:           { type: string, format: date-time }
+
+    TournamentPool:
+      type: object
+      properties:
+        id:                   { type: string, format: uuid }
+        tournament_id:        { type: string, format: uuid }
+        name:                 { type: string }
+        description:          { type: string }
+        is_public:            { type: boolean }
+        current_member_count: { type: integer }
+        created_by:           { type: string, nullable: true, description: "Username of creator" }
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        play_id:   { type: string, format: uuid }
+        play_name: { type: string }
+        user:
+          type: object
+          properties:
+            id:       { type: integer }
+            username: { type: string }
+            avatar:   { type: string, nullable: true }
+        score:  { type: integer }
+        status: { type: string }
+
+    Error:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        error:   { type: string }
+
+tags:
+  - name: Auth
+    description: Authentication (social OAuth only)
+  - name: Highscores
+    description: Arcade game highscores
+  - name: Tournament
+    description: Tournament bracket predictions
+  - name: Tournament Plays
+    description: User play entries for a tournament
+  - name: Tournament Pools
+    description: Leaderboard groups (public + private)
+
+paths:
+
+  # ---------------------------------------------------------------------------
+  # Auth
+  # ---------------------------------------------------------------------------
+
+  /api/auth/me/:
+    get:
+      tags: [Auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user (null if not logged in)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                    nullable: true
+    patch:
+      tags: [Auth]
+      summary: Update profile (username or avatar)
+      security:
+        - sessionAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username: { type: string }
+                avatar:   { type: string, description: "Icon slug e.g. teal-simple" }
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  user:    { $ref: '#/components/schemas/User' }
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/auth/logout/:
+    post:
+      tags: [Auth]
+      summary: Logout
+      security:
+        - sessionAuth: []
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  message: { type: string }
+
+  # ---------------------------------------------------------------------------
+  # Highscores
+  # ---------------------------------------------------------------------------
+
+  /api/highscores/:
+    get:
+      tags: [Highscores]
+      summary: List highscores / leaderboard
+      parameters:
+        - in: query
+          name: game_name
+          schema: { type: string }
+          description: Filter by game (e.g. snake)
+        - in: query
+          name: limit
+          schema: { type: integer, default: 100 }
+        - in: query
+          name: offset
+          schema: { type: integer, default: 0 }
+      responses:
+        "200":
+          description: List of highscores
+
+  /api/highscores/create/:
+    post:
+      tags: [Highscores]
+      summary: Submit a highscore
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [game_name, game_score]
+              properties:
+                game_name:     { type: string, example: snake }
+                game_score:    { type: integer }
+                game_time:     { type: string, example: "02:00" }
+                game_metadata: { type: object }
+      responses:
+        "201":
+          description: Highscore created
+        "400":
+          description: Validation error
+
+  /api/highscores/me/:
+    get:
+      tags: [Highscores]
+      summary: Get current user's highscores
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: query
+          name: game_name
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 100 }
+        - in: query
+          name: offset
+          schema: { type: integer, default: 0 }
+      responses:
+        "200":
+          description: User's highscores
+
+  /api/highscores/{id}/:
+    delete:
+      tags: [Highscores]
+      summary: Delete own highscore
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Deleted
+        "403":
+          description: Not your highscore
+        "404":
+          description: Not found
+
+  # ---------------------------------------------------------------------------
+  # Tournament
+  # ---------------------------------------------------------------------------
+
+  /api/tournament/:
+    get:
+      tags: [Tournament]
+      summary: List all tournaments
+      parameters:
+        - in: query
+          name: status
+          schema: { type: string, enum: [upcoming, active, completed] }
+          description: Filter by status
+      responses:
+        "200":
+          description: List of tournaments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Tournament' }
+
+  /api/tournament/{tournament_id}/:
+    get:
+      tags: [Tournament]
+      summary: Tournament detail with format (groups + bracket structure)
+      parameters:
+        - in: path
+          name: tournament_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Tournament with format
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:    { $ref: '#/components/schemas/TournamentWithFormat' }
+        "404":
+          description: Not found
+
+  /api/tournament/{tournament_id}/results/:
+    get:
+      tags: [Tournament]
+      summary: Live results (groups standings + bracket outcomes)
+      parameters:
+        - in: path
+          name: tournament_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Current results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:    { $ref: '#/components/schemas/TournamentResults' }
+
+  # ---------------------------------------------------------------------------
+  # Tournament Plays
+  # ---------------------------------------------------------------------------
+
+  /api/tournament/{tournament_id}/plays/:
+    get:
+      tags: [Tournament Plays]
+      summary: List current user's plays for this tournament
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: tournament_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: User's plays
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/TournamentPlay' }
+    post:
+      tags: [Tournament Plays]
+      summary: Create a new play
+      description: Creates a play and automatically joins the public vindroPool.
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: tournament_id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, example: "My Bold Predictions" }
+      responses:
+        "201":
+          description: Play created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:    { $ref: '#/components/schemas/TournamentPlay' }
+        "400":
+          description: Validation error
+
+  /api/tournament/plays/{play_id}/:
+    get:
+      tags: [Tournament Plays]
+      summary: Get a specific play
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: play_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Play detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:    { $ref: '#/components/schemas/TournamentPlay' }
+        "403":
+          description: Not your play
+        "404":
+          description: Not found
+    patch:
+      tags: [Tournament Plays]
+      summary: Update predictions or phase
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: play_id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:                 { type: string }
+                current_phase:        { type: string, enum: [groups, bracket, review, submitted] }
+                group_predictions:    { type: object, description: "Same structure as groups_results" }
+                bracket_predictions:  { type: object, description: "Same structure as bracket_results" }
+      responses:
+        "200":
+          description: Updated play
+        "400":
+          description: Already submitted or invalid data
+
+  /api/tournament/plays/{play_id}/submit/:
+    post:
+      tags: [Tournament Plays]
+      summary: Submit (lock) a play
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: play_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Play submitted
+        "400":
+          description: Already submitted
+
+  # ---------------------------------------------------------------------------
+  # Tournament Pools
+  # ---------------------------------------------------------------------------
+
+  /api/tournament/{tournament_id}/pools/:
+    get:
+      tags: [Tournament Pools]
+      summary: Get public pool and user's private pools
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: tournament_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Pools
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      public_pool:
+                        $ref: '#/components/schemas/TournamentPool'
+                        nullable: true
+                      my_pools:
+                        type: array
+                        items: { $ref: '#/components/schemas/TournamentPool' }
+    post:
+      tags: [Tournament Pools]
+      summary: Create a private pool
+      description: Returns a one-time `join_code` for sharing with friends.
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: tournament_id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:        { type: string, example: "My Friends" }
+                description: { type: string }
+      responses:
+        "201":
+          description: Pool created — includes one-time join_code
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/TournamentPool'
+                  - type: object
+                    properties:
+                      join_code: { type: string, example: "aB3kQr2x" }
+
+  /api/tournament/{tournament_id}/pools/join/:
+    post:
+      tags: [Tournament Pools]
+      summary: Join a private pool via join code
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: tournament_id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, play_id]
+              properties:
+                code:    { type: string, example: "aB3kQr2x" }
+                play_id: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Joined pool
+        "400":
+          description: Invalid code or already a member
+
+  /api/tournament/pools/{pool_id}/leaderboard/:
+    get:
+      tags: [Tournament Pools]
+      summary: Pool leaderboard (plays ranked by score)
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: path
+          name: pool_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Leaderboard
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      pool: { $ref: '#/components/schemas/TournamentPool' }
+                      leaderboard:
+                        type: array
+                        items: { $ref: '#/components/schemas/LeaderboardEntry' }

@@ -1,6 +1,6 @@
 import Button from "./Button"; // adjust path if needed
 
-function ShowcaseSection({
+const ShowcaseSection = ({
     id,
     classes,
     children,
@@ -11,7 +11,7 @@ function ShowcaseSection({
     buttonClasses,
     buttonId,
     ...rest
-}) {
+})  => {
     return (
         <section id={id} className={classes} {...rest}>
             {children}

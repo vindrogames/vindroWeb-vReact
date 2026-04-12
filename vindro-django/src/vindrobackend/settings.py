@@ -54,8 +54,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
 
     # Your apps
-    'accounts',
+    'accounts.apps.AccountsConfig',
     'highscores',
+    'tournament',
     'test',
 ]
 
@@ -164,6 +165,9 @@ SESSION_COOKIE_DOMAIN = os.environ.get('SESSION_COOKIE_DOMAIN', None)  # Set to 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Custom user model
+AUTH_USER_MODEL = 'accounts.User'
+
 # Allauth configuration
 SITE_ID = 1  # Required by allauth
 
@@ -172,15 +176,13 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',  # Allauth
 ]
 
-# Allauth settings
-ACCOUNT_EMAIL_VERIFICATION = os.environ.get('ACCOUNT_EMAIL_VERIFICATION', 'optional')  # Set to 'mandatory' in production
-ACCOUNT_LOGIN_METHODS = {'email', 'username'}  # Allow both email and username login
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']  # Required signup fields
+# Allauth settings (social auth only)
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_AUTO_SIGNUP = True  # Auto-create user from OAuth
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Redirect directly to Google without intermediate page
 
-# After successful OAuth login, redirect to our custom view
-LOGIN_REDIRECT_URL = '/api/auth/oauth/redirect/'
+# After successful OAuth login, redirect directly to React frontend
+LOGIN_REDIRECT_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173/')
 ACCOUNT_LOGOUT_REDIRECT_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173/')
 
 # Store OAuth tokens (optional, for API calls to provider)
@@ -189,5 +191,49 @@ SOCIALACCOUNT_STORE_TOKENS = True
 # Custom adapter for OAuth to generate random usernames
 SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
 
-# Cloudflare Turnstile CAPTCHA
-CLOUDFLARE_TURNSTILE_SECRET_KEY = os.environ.get('CLOUDFLARE_TURNSTILE_SECRET_KEY', '')
+# OAuth provider credentials (loaded from environment)
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID', ''),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', ''),
+            'key': '',
+        },
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    },
+    'github': {
+        'APP': {
+            'client_id': os.environ.get('GITHUB_CLIENT_ID', ''),
+            'secret': os.environ.get('GITHUB_CLIENT_SECRET', ''),
+            'key': '',
+        },
+        'SCOPE': ['user:email'],
+    },
+    'facebook': {
+        'APP': {
+            'client_id': os.environ.get('FACEBOOK_APP_ID', ''),
+            'secret': os.environ.get('FACEBOOK_APP_SECRET', ''),
+            'key': '',
+        },
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+    },
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}

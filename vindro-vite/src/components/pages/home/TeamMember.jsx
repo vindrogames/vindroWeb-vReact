@@ -1,4 +1,4 @@
-function TeamMember({ imgSource, imgAltText, memberName, children }) {
+const TeamMember = ({ imgSource, imgAltText, memberName, children }) => {
 
     return (
 

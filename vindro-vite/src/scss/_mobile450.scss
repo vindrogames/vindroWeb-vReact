@@ -51,19 +51,21 @@
         }
     }
 
-    section#stories-page-content {
+    main#stories {
+        section#stories-page-content {
 
-        #timeline ul {
-            padding: 21px 0 42px 0;
+            #timeline ul {
+                padding: 21px 0 42px 0;
 
-            li {
+                li {
 
-                margin-left: 3px;
+                    margin-left: 3px;
 
-                div {
+                    div {
 
-                    h3 {
-                        font-size: 1.8rem;
+                        h3 {
+                            font-size: 1.8rem;
+                        }
                     }
                 }
             }
@@ -117,34 +119,29 @@
 
     }
 
-    main#escape-cloud {
-        section.hero-half {
-            h1 {
-                font-size: 3.6rem;
+    main#escape-the-cloud {
+
+        section#escape-the-cloud-container {
+
+            #escape-the-cloud-trailer {
+
+                video {
+                    width: 96%;
+                }
             }
-        }
-    }
 
-    section#escape-the-cloud {
+            #escape-the-cloud-info {
 
-        #escape-the-cloud-trailer {
+                .buttons {
+                    flex-direction: column;
+                    gap: 21px;
 
-            video {
-                width: 96%;
-            }
-        }
-
-        #escape-the-cloud-info {
-
-            .buttons {
-                flex-direction: column;
-                gap: 21px;
-
-                a {
-                    width: 100%;
-                    font-size: 1.6rem;
-                    text-align: center;
-                    padding: 14px;
+                    a {
+                        width: 100%;
+                        font-size: 1.6rem;
+                        text-align: center;
+                        padding: 14px;
+                    }
                 }
             }
         }
@@ -247,6 +244,7 @@
 
             section#game-intro {
                 padding-left: 7px;
+
                 h1 {
                     font-size: 3.6rem;
                 }
@@ -405,21 +403,23 @@
         }
     }
 
-    section#under-construction {
-        font-size: 1.8rem;
-        text-align: center;
-    }
+    main.bracket-tournament-page {
 
-    main#login-page {
-        section#login-content {
-            
-            h5 {
-                width: 100%;
-            }
+        .user-picks {}
 
-            .auth-container {
-                width: 100%;
-                padding: 14px;
+        .about-tournament {
+
+            .about-tournament-container {
+                .feature {
+                    .feature-text-container {
+
+                        .feature-explanation {
+                            p {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -455,6 +455,112 @@
                         width: 21px;
                         height: 21px;
                     }
+                }
+            }
+        }
+    }
+
+    main#user-profile {
+        padding: 90px 14px 0;
+
+        .profile-container {
+            width: 100%;
+            padding: 21px 0;
+            gap: 21px;
+
+            h1 {
+                font-size: 3.6rem;
+            }
+
+            .user-stat-container {
+
+                padding: 0 7px;
+
+                &#user-name-icon {
+
+
+                    .user-name-data {
+                        gap: 7px;
+                    }
+
+                    .user-icon {
+
+                        .icon-gallery {
+                            left: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    main#privacy-page-content {
+
+        section#privacy,
+        section#cookies,
+        section#terms {
+
+            padding: 14px;
+
+            h2 {
+                font-size: 2.8rem;
+            }
+
+            h3 {
+                font-size: 1.8rem;
+            }
+
+            h5 {
+                font-weight: 600;
+            }
+
+            h5,
+            p {
+                font-size: 1.6rem;
+            }
+
+            p.update {
+                font-size: 1.4rem;
+                font-weight: 500;
+            }
+        }
+    }
+
+    footer {
+
+
+        a {
+            font-size: 1rem;
+        }
+
+        .contact-info {
+            font-size: 1.2rem;
+
+            a {
+                color: var(--teal-yellow-swap);
+                font-weight: 600;
+
+                &:hover {
+                    color: $vindro-green;
+                }
+            }
+        }
+
+        .social {
+            height: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            gap: 14px;
+
+            a {
+
+                padding: 3px;
+                color: white;
+                border-radius: 3px;
+
+                svg {
+                    width: 3rem;
+                    height: 3rem;
                 }
             }
         }
@@ -500,43 +606,10 @@
         }
     }
 
-    footer {
-
-
-        a {
-            font-size: 1rem;
-        }
-
-        .contact-info {
-            font-size: 1.2rem;
-
-            a {
-                color: var(--teal-yellow-swap);
-                font-weight: 600;
-
-                &:hover {
-                    color: $vindro-green;
-                }
-            }
-        }
-
-        .social {
-            height: 100%;
-            display: flex;
-            justify-content: space-evenly;
-            gap: 14px;
-
-            a {
-
-                padding: 3px;
-                color: white;
-                border-radius: 3px;
-
-                svg {
-                    width: 3rem;
-                    height: 3rem;
-                }
-            }
-        }
+    section#under-construction {
+        font-size: 1.8rem;
+        text-align: center;
     }
+
+
 }

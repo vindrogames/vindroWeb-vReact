@@ -99,6 +99,10 @@
     }
 
     section.hero-half {
+        h1 {
+            font-size: 3.6rem;
+        }
+
         h2 {
             font-size: 2.1rem;
         }
@@ -148,13 +152,15 @@
         }
     }
 
-    section#stories-page-content {
+    main#stories {
+        section#stories-page-content {
 
-        #timeline ul {
+            #timeline ul {
 
-            li {
+                li {
 
-                margin-left: 21px;
+                    margin-left: 21px;
+                }
             }
         }
     }
@@ -180,7 +186,7 @@
 
             #games-gallery {
 
-                padding: 0 14px;
+                padding: 0;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 7px;
 
@@ -207,95 +213,14 @@
         }
     }
 
-    main#brackets-page {
+    main#escape-the-cloud {
 
-        section#brackets-events-container {
+        section#escape-the-cloud-container {
 
-            padding: 14px 7px;
+            #escape-the-cloud-trailer {
 
-            #brackets-events-gallery {
-
-                grid-template-columns: repeat(1, 1fr);
-                gap: 7px;
-
-                .bracket-event-card {
-                    width: 63%;
-                    margin: auto;
-
-                }
-            }
-        }
-    }
-
-    main#escape-cloud {
-        section.hero-half {
-            h1 {
-                font-size: 3.6rem;
-            }
-        }
-
-    }
-
-    section#escape-the-cloud {
-
-        #escape-the-cloud-trailer {
-
-            video {
-                width: 84%;
-            }
-        }
-    }
-
-    main#contact-page {
-
-        section.hero-half {
-            h2 {
-                font-size: 2.1rem;
-            }
-        }
-
-        section#contact-page-content {
-
-            h3 {
-                font-size: 2.1rem;
-            }
-        }
-
-        section#contact-page-emails {
-
-            ul {
-                width: 100%;
-
-                li {
-
-                    margin-left: 36px;
-
-                    div {
-                        width: calc(100vw - 100px);
-
-                        h4 {
-                            font-size: 1.8rem;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    main#login-page {
-        section#login-content {
-            padding: 21px;
-            padding-bottom: 42px;
-            h5 {
-                font-size: 1.8rem;
-            }
-
-            .auth-container {
-                .auth-info {
-                    h3,
-                    h4 {
-                        font-size: 1.8rem;
-                    }
+                video {
+                    width: 84%;
                 }
             }
         }
@@ -459,6 +384,7 @@
                 #resource-bar {
                     top: 80px;
                     right: 4%;
+
                     .resource-bar-container {
                         .column {
                             img {
@@ -477,9 +403,9 @@
                     grid-template-columns: 1.3fr 1fr;
 
                     .grid-cell-container {
-                        
+
                         .grid-cell-content {
-                            
+
                             .header-text,
                             .total-resource-grid-display {
                                 img {
@@ -581,6 +507,159 @@
             }
         }
     }
+
+    main#brackets-page {
+
+        section#brackets-events-container {
+
+            padding: 14px 7px;
+
+            #brackets-events-gallery {
+
+                grid-template-columns: repeat(1, 1fr);
+                gap: 7px;
+
+                .bracket-event-card {
+                    width: 63%;
+                    margin: auto;
+
+                }
+            }
+        }
+    }
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+            padding: 21px;
+        }
+
+        .about-tournament {
+            padding: 21px;
+
+            .about-tournament-container {
+
+                width: auto;
+                .feature {
+
+                    .feature-table {
+
+                        .table-container {
+                            width: auto;
+                            table {
+                                width: auto;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
+    }
+
+    main#contact-page {
+
+        section.hero-half {
+            h2 {
+                font-size: 2.1rem;
+            }
+        }
+
+        section#contact-page-content {
+
+            h3 {
+                font-size: 2.1rem;
+            }
+        }
+
+        section#contact-page-emails {
+
+            ul {
+                width: 100%;
+
+                li {
+
+                    margin-left: 36px;
+
+                    div {
+                        width: calc(100vw - 100px);
+
+                        h4 {
+                            font-size: 1.8rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    main#user-profile {
+
+        .profile-container {
+            width: 100%;
+
+            .user-stat-container#user-name-icon {
+                display: flex;
+                flex-direction: column;
+
+                .user-icon {
+
+                    .icon-gallery {
+                        left: -28px;
+
+                        .gallery-item {
+
+                            width: 42px;
+                            height: 42px;
+
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    main#privacy-page-content {
+
+        section#privacy,
+        section#cookies,
+        section#terms {
+
+            width: 100%;
+            padding: 21px;
+
+            h2,
+            h3,
+            h4,
+            h5,
+            p {
+                margin-bottom: 1rem;
+            }
+
+            h2 {
+                color: $vindro-green;
+                font-weight: 700;
+                font-size: 3.6rem;
+            }
+
+            h3 {
+                font-size: 2.1rem;
+            }
+
+            h5 {
+                font-weight: 600;
+            }
+
+            h5,
+            p {
+                font-size: 1.8rem;
+            }
+        }
+    }
+
+
 
     footer {
         padding: 14px 0;

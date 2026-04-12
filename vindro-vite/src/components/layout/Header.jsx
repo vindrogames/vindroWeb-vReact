@@ -3,16 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import NavBarLink from '../ui/NavBarLink';
 import SmartLink from '../ui/SmartLink';
 import { useAuth } from '../../contexts/AuthContext';
+import AuthModal from '../ui/AuthModal';
 
 const routes = [
     { text: 'home', route: '/' },
     { text: 'story', route: '/story' },
-    { text: 'brackets', route: '/brackets' },
     { text: 'games', route: '/games' },
+    { text: 'brackets', route: '/brackets' },
     { text: 'contact', route: '/contact' },
 ];
 
-function NavBar({ isMadrid }) {
+const NavBar = ({ isMadrid }) => {
+    
     const [menuOpen, setMenuOpen] = useState(false);
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
@@ -23,6 +25,7 @@ function NavBar({ isMadrid }) {
 
     const menuOpenRef = useRef(menuOpen);
     const userOpenRef = useRef(userDropdownOpen);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { user, logout } = useAuth();
     const navigate = useNavigate();
@@ -33,9 +36,13 @@ function NavBar({ isMadrid }) {
     const toggleMenu = () => setMenuOpen((p) => !p);
 
     useEffect(() => {
+
         function handleGlobalClick(e) {
+
             const t = e.target;
+
             if (menuOpenRef.current) {
+
                 const clickedInsideHamburger =
                     hamburgerMenuRef.current?.contains(t) ||
                     hamburgerToggleRef.current?.contains(t) ||
@@ -44,9 +51,11 @@ function NavBar({ isMadrid }) {
                 if (!clickedInsideHamburger) setMenuOpen(false);
             }
             if (userOpenRef.current) {
+
                 const clickedInsideDesktop = userDropdownRefDesktop.current?.contains(t);
                 const clickedInsideMobile = userDropdownRefMobile.current?.contains(t);
                 if (!clickedInsideDesktop && !clickedInsideMobile) {
+                    
                     setUserDropdownOpen(false);
                 }
             }
@@ -100,14 +109,12 @@ function NavBar({ isMadrid }) {
                                     className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
                                     onClick={() => setUserDropdownOpen(prev => !prev)}
                                 >
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                    </svg>
+                                    <img src={user.avatar} alt="User Avatar" />
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
                                         <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}`}
+                                            to={`/user/${user.id}`}
                                             className="dropdown-item"
                                             onClick={() => setUserDropdownOpen(false)}
                                         >
@@ -130,14 +137,14 @@ function NavBar({ isMadrid }) {
                                             Brackets
                                         </SmartLink>
                                         */}
-                                        
+
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}
                             </div>
                         ) : (
                             <ul>
-                                <NavBarLink route="/login" text="login" className="btn-login" />
+                                <button className='btn-login' onClick={() => setIsModalOpen(true)}>Login</button>
                             </ul>
                         )}
                     </div>
@@ -173,14 +180,12 @@ function NavBar({ isMadrid }) {
                                     className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
                                     onClick={() => setUserDropdownOpen(prev => !prev)}
                                 >
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                    </svg>
+                                    <img src={user.avatar} alt="User Avatar" />
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
                                         <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}`}
+                                            to={`/user/${user.id}`}
                                             className="dropdown-item"
                                             onClick={() => setUserDropdownOpen(false)}
                                         >
@@ -209,13 +214,18 @@ function NavBar({ isMadrid }) {
                             </div>
                         ) : (
                             <ul>
-                                <NavBarLink route="/login" text="login" className="btn-login" onClick={() => setMenuOpen(false)} />
+                                <button className='btn-login' onClick={() => setIsModalOpen(true)}>Login</button>
                             </ul>
                         )}
                     </div>
 
                 </nav>
             </div>
+
+            <AuthModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </header>
     );
 }

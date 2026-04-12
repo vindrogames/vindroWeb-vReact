@@ -1,14 +1,12 @@
-
-
-function CookieSection() {
+const CookieSection = () => {
 
     return (
         <section id="cookies">
-            <h2>Cookies & Data</h2>
+            <h2>Cookies & Local Storage</h2>
             <h5>What are Cookies</h5>
             <p>As is common practice with almost all professional websites this site uses cookies, which are tiny files that are downloaded to your computer, to improve your experience. This page describes what information they gather, how we use it and why we store these cookies. We will also share how you can prevent these cookies from being stored however this may downgrade or 'break' certain elements of the sites functionality.</p>
             <h5>Local storage</h5>
-            <p>We use Javascript to register your Google Analytics consent Mode as well as your game scores consent Mode on your browser. This information is stored on the specific browser of the specific device you are using when visiting www.vindrogames.com. We use this information to inform inform Google weather or not to install Cookies and save this information is saved for 2 months so you don't have to accept our consent each time you visit.</p>
+            <p>We use Javascript to register your Google Analytics consent Mode as well as your game scores consent Mode on your browser. This information is stored on the specific browser of the specific device you are using when visiting www.vindrogames.com. We use this information to inform Google whether or not to install Cookies and save this information is saved for 2 months so you don't have to accept our consent each time you visit.</p>
             <h5>Google Analytics</h5>
             <p>This site uses Google Analytics which is one of the most widespread and trusted analytics solution on the web for helping us to understand how you use the site, ways that we can improve your experience as well as an opportunity to get into data analytics. These cookies may track things such as how long you spend on the site and the pages that you visit so we can continue to produce engaging content.</p>
             <p>Our Google Analytics Cookies are NOT connected to any other Google services such as Google Ads, Youtube, etc... We only use anonymous information gathered from Google Analytics.</p>

@@ -2,7 +2,7 @@ import React from 'react';
 import { FaGithub, FaTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 import SmartLink from '../ui/SmartLink';
 
-function Footer({ isMadrid }) {
+const Footer = ({ isMadrid }) => {
 
     const inlineClass = isMadrid ? "inline-real-yellow" : "inline-teal";
 

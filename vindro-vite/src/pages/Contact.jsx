@@ -2,7 +2,7 @@ import React from 'react';
 import ContactHelmet from '../page-helmets/ContactHelmet';
 import ShowcaseSection from '../components/ui/ShowcaseSection';
 
-function Contact() {
+const Contact = () => {
 
     return (
 

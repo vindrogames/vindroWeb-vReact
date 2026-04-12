@@ -10,30 +10,40 @@
         }
     }
 
-    section#stories-page-content {
-        width: 100%;
-        background-color: $vindro-gray;
+    section.hero-half {
 
-        #timeline ul {
-            width: 84%;
-            margin: 0 auto;
+        h2 {
+            font-size: 2.4rem;
+            width: 100%;
+        }
+    }
 
-            li {
+    main#stories {
+        section#stories-page-content {
+            width: 100%;
+            background-color: $vindro-gray;
 
-                margin-left: 42px;
+            #timeline ul {
+                width: 84%;
+                margin: 0 auto;
 
-                div {
-                    width: 70vw;
-                }
+                li {
 
-                &:nth-child(even) div {
-                    left: 40px;
-                }
+                    margin-left: 42px;
 
-                &:nth-child(even) div:before {
-                    left: -15px;
-                    border-width: 8px 16px 8px 0;
-                    border-color: transparent #FFFFFF transparent transparent;
+                    div {
+                        width: 70vw;
+                    }
+
+                    &:nth-child(even) div {
+                        left: 40px;
+                    }
+
+                    &:nth-child(even) div:before {
+                        left: -15px;
+                        border-width: 8px 16px 8px 0;
+                        border-color: transparent #FFFFFF transparent transparent;
+                    }
                 }
             }
         }
@@ -57,39 +67,32 @@
         }
     }
 
-    main#brackets-page {
+    main#escape-the-cloud {
 
-        section#brackets-events-container {
+        section#escape-the-cloud-container {
+            height: 100%;
+            grid-template-columns: 1fr;
 
-            #brackets-events-gallery {
-                grid-template-columns: repeat(2, 1fr);
+            #escape-the-cloud-trailer {
+                min-height: 50vh;
+                padding: 7px;
+
+                video {
+                    width: 63%;
+                }
             }
-        }
-    }
 
-    section#escape-the-cloud {
-        height: 100%;
-        grid-template-columns: 1fr;
+            #escape-the-cloud-info {
+                min-height: 50vh;
 
-        #escape-the-cloud-trailer {
-            min-height: 50vh;
-            padding: 7px;
+                .buttons {
 
-            video {
-                width: 63%;
-            }
-        }
-
-        #escape-the-cloud-info {
-            min-height: 50vh;
-
-            .buttons {
-
-                a {
-                    width: 100%;
-                    font-size: 1.6rem;
-                    text-align: center;
-                    padding: 14px;
+                    a {
+                        width: 100%;
+                        font-size: 1.6rem;
+                        text-align: center;
+                        padding: 14px;
+                    }
                 }
             }
         }
@@ -186,6 +189,72 @@
         }
     }
 
+    main#brackets-page {
+
+        section#brackets-events-container {
+
+            #brackets-events-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    }
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+
+            .user-picks-container {
+                width: 100%;
+
+                .user-stats-container {
+                    grid-template-columns: 1fr;
+                    gap: 14px;
+
+                    button {
+                        width: 210px;
+                    }
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .about-tournament {
+
+            .about-tournament-container {
+                width: 100%;
+
+                .feature {
+                    grid-template-columns: 1fr;
+                    gap: 21px;
+
+                    .feature-table {
+                        width: auto;
+                        align-self: center;
+                        justify-self: center;
+
+                        .table-container {
+                            table {
+                                
+                                th {
+                                    font-size: 1.6rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     main#contact-page {
 
         section#contact-page-emails {
@@ -219,23 +288,23 @@
         }
     }
 
-    main#login-page {
-        section#login-content {
-            h5 {
-                width: 84%;
-                font-size: 2.1rem;
-            }
+    main#user-profile {
 
-            .auth-container {
-                width: 84%;
+        .profile-container {
 
-                .auth-info {
-                    h3,
-                    h4 {
-                        font-size: 2.1rem;
-                    }
-                }
+            .user-stat-container#user-name-icon {
+                display: flex;
+                flex-direction: column;
             }
+        }
+    }
+
+    main#privacy-page-content {
+
+        section#privacy,
+        section#cookies,
+        section#terms {
+            width: 84%;
         }
     }
 }

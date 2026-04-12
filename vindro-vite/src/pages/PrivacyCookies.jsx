@@ -2,8 +2,9 @@ import PrivacyCookiesHelmet from "../page-helmets/PrivacyCookiesHelmet";
 import ShowcaseSection from "../components/ui/ShowcaseSection";
 import CookieSection from "../components/pages/privacy-cookies/CookieSection";
 import PrivacyPolicySection from "../components/pages/privacy-cookies/PrivacyPolicySection"
+import TermsSection from "../components/pages/privacy-cookies/TermsSection";
 
-function PrivacyCookies() {
+const PrivacyCookies = () => {
 
     return (
         <>
@@ -21,6 +22,8 @@ function PrivacyCookies() {
                 <PrivacyPolicySection />
 
                 <CookieSection />
+
+                <TermsSection />
 
             </main>
         </>

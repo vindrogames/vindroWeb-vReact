@@ -3,7 +3,9 @@ Utility functions for accounts app
 """
 import string
 import random
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 def generate_random_username(prefixes=None, length=3):

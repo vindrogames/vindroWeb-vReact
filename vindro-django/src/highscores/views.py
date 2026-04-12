@@ -7,8 +7,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
-from accounts.decorators import login_required_api
-from .models import Highscore
+from accounts.views import login_required_api
+from .models import Gamescore
 from .serializers import serialize_highscore, serialize_highscore_list
 from .config import GAME_CONFIGS, RATE_LIMIT_WINDOW_SECONDS, RATE_LIMIT_MAX_SUBMISSIONS
 
@@ -22,7 +22,8 @@ def create_highscore(request):
     POST /api/highscores/create/
     Body: {
         "game_name": "snake",
-        "score": 1500,
+        "game_score": 1500,
+        "game_time": "02:00",
         "game_metadata": {"level": 5, "time_played": 120}  # optional
     }
     """
@@ -36,7 +37,7 @@ def create_highscore(request):
 
     # Extract and validate fields
     game_name = data.get('game_name', '').strip().lower()
-    score = data.get('score')
+    score = data.get('game_score')
     game_metadata = data.get('game_metadata', {})
 
     # Validation: Required fields
@@ -54,7 +55,7 @@ def create_highscore(request):
 
     # Validation: Score must be integer
     try:
-        score = int(score)
+        game_score = int(game_score)
     except (ValueError, TypeError):
         return JsonResponse(
             {'success': False, 'error': 'score must be an integer'},
@@ -70,7 +71,7 @@ def create_highscore(request):
 
     # Validation: Score range
     game_config = GAME_CONFIGS[game_name]
-    if score < game_config['min_score'] or score > game_config['max_score']:
+    if game_score < game_config['min_score'] or score > game_config['max_score']:
         return JsonResponse(
             {
                 'success': False,
@@ -88,7 +89,7 @@ def create_highscore(request):
 
     # Rate limiting check
     rate_limit_window = timezone.now() - timedelta(seconds=RATE_LIMIT_WINDOW_SECONDS)
-    recent_submissions = Highscore.objects.filter(
+    recent_submissions = Gamescore.objects.filter(
         user=request.user,
         created_at__gte=rate_limit_window
     ).count()
@@ -104,10 +105,11 @@ def create_highscore(request):
 
     # Create highscore
     try:
-        highscore = Highscore.objects.create(
+        highscore = Gamescore.objects.create(
             user=request.user,
             game_name=game_name,
-            score=score,
+            game_score=game_score,
+            game_time=data.get('game_time', ''),
             game_metadata=game_metadata
         )
 
@@ -155,7 +157,7 @@ def list_highscores(request):
         offset = 0
 
     # Build queryset
-    queryset = Highscore.objects.select_related('user').all()
+    queryset = Gamescore.objects.select_related('user').all()
 
     # Filter by game if specified
     if game_name:
@@ -216,7 +218,7 @@ def my_highscores(request):
         offset = 0
 
     # Build queryset for current user
-    queryset = Highscore.objects.filter(user=request.user)
+    queryset = Gamescore.objects.filter(user=request.user)
 
     # Filter by game if specified
     if game_name:
@@ -266,8 +268,8 @@ def delete_highscore(request, highscore_id):
 
     # Get highscore
     try:
-        highscore = Highscore.objects.get(id=highscore_id)
-    except Highscore.DoesNotExist:
+        highscore = Gamescore.objects.get(id=highscore_id)
+    except Gamescore.DoesNotExist:
         return JsonResponse(
             {'success': False, 'error': 'Highscore not found'},
             status=404

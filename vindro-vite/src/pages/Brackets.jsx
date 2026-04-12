@@ -3,7 +3,7 @@ import BracketHelmet from '../page-helmets/BracketHelmet';
 import ShowcaseSection from '../components/ui/ShowcaseSection';
 import BracketEventCard from '../components/pages/brackets/BracketEventCard';
 
-function Brackets() {
+const Brackets = () => {
 
     return (
 
@@ -31,7 +31,7 @@ function Brackets() {
                                 bracketPhases: ["Round of 32", "Round of 16", "Quarter-finals", "Semi-finals", "Finals"]
                             }}
                             startDate="Start: Jun 11, 2026"
-                            route='/wc-2026'
+                            route='/brackets/world-cup-2026'
                         />
 
                     </div>

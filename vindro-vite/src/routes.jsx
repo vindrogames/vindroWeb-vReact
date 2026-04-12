@@ -8,7 +8,6 @@ import Story from './pages/Story';
 import Brackets from './pages/Brackets';
 import Games from './pages/Games';
 import Contact from './pages/Contact';
-import Login from './pages/Login';
 import Register from './pages/Register';
 import EscapeTheCloud from './features/escape-the-cloud/EscapeTheCloud';
 import PrivacyCookies from './pages/PrivacyCookies';
@@ -19,6 +18,7 @@ import TestApi from './pages/TestApi';
 import UserProfile from './pages/UserProfile'; 
 import UserBrackets from './pages/UserBrackets';
 import UserTopScores from './pages/UserTopScores';
+import WorldCupTournament_2026 from './features/brackets/tournaments/world-cup-2026/WorldCupTournament_2026';
 
 export const routes = createBrowserRouter([
   {
@@ -26,7 +26,6 @@ export const routes = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Home /> },
-      { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
       { path: 'story', element: <Story /> },
       { path: 'brackets', element: <Brackets /> },
@@ -38,9 +37,10 @@ export const routes = createBrowserRouter([
       { path: 'games/madrid-calculator', element: <MadridCalculator />},
       { path: 'test-api', element: <TestApi />},
       { path: 'games/auto-miner', element: <Autominer /> },
+      { path: 'brackets/world-cup-2026', element: <WorldCupTournament_2026 /> },
       // Protected User Routes
       {
-        path: 'user/:userName',
+        path: 'user/:userId',
         element: (
           <ProtectedRoute>
             <UserProfile />
@@ -48,7 +48,7 @@ export const routes = createBrowserRouter([
         ),
       },
       {
-        path: 'user/:userName/brackets',
+        path: 'user/:userId/brackets',
         element: (
           <ProtectedRoute>
             <UserBrackets />
@@ -56,7 +56,7 @@ export const routes = createBrowserRouter([
         ),
       },
       {
-        path: 'user/:userName/topScores',
+        path: 'user/:userId/topScores',
         element: (
           <ProtectedRoute>
             <UserTopScores />

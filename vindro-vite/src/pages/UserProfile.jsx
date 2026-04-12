@@ -3,38 +3,89 @@ import { useParams } from 'react-router-dom';
 import DataTable from '../components/pages/users/DataTable';
 import SmartLink from '../components/ui/SmartLink';
 import { useAuth } from '../contexts/AuthContext';
+import { authAPI } from '../services/auth_api';
 
-export default function UserProfile() {
-    
-    const { userName: urlParamName } = useParams();
-    const { user } = useAuth(); // Cheat Mode Data
+function getIconName(avatarUrl) {
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [editValue, setEditValue] = useState(urlParamName || "");
+    const match = avatarUrl?.match(/profile_icons\/(.+)\.webp/);
+    return match ? match[1] : 'teal-simple';
+}
+
+const UserProfile = () => {
+
+    const { userId } = useParams();
+    const { user, updateUser } = useAuth();
+
+    const { 
+        login_count = 0, 
+        provider = 'local', 
+        date_joined = null 
+    } = user || {};
+
+    const [isEditingUserName, setIsEditingUserName] = useState(false);
+    const [isEditingUserIcon, setIsEditingUserIcon] = useState(false);
+    const [editValue, setEditValue] = useState(user?.username || "");
+    const [selectedIcon, setSelectedIcon] = useState(() => getIconName(user?.avatar));
+    const [profileError, setProfileError] = useState(null);
     const inputRef = useRef(null);
 
-    // 1. Sync input with Cheat Mode User
+    // Array of all available icon names (6 colors × 7 styles = 42 icons)
+    const colors = ['green', 'orange', 'pink', 'purple', 'teal', 'white'];
+    const styles = ['simple', 'black-shades', 'color-shades', 'pirate', 'music', 'office', 'snow'];
+    const allIcons = colors.flatMap(color =>
+        styles.map(style => `${color}-${style}`)
+    );
+
+    // Sync state when user data loads
     useEffect(() => {
-        if (user?.username) {
-            setEditValue(user.username);
-        }
-    }, [user?.username]);
+
+        if (user?.username) setEditValue(user.username);
+        if (user?.avatar) setSelectedIcon(getIconName(user.avatar));
+    }, [user?.username, user?.avatar]);
 
     // 2. Force Focus ONLY via Edit Button
     useEffect(() => {
-        if (isEditing && inputRef.current) {
+
+        if (isEditingUserName && inputRef.current) {
             inputRef.current.focus();
         }
-    }, [isEditing]);
+    }, [isEditingUserName]);
 
-    const handleEditToggle = () => {
-        if (isEditing) {
-            console.log("Cheat Mode Save: New Username is", editValue);
+    const handleEditUserNameToggle = async () => {
+        if (isEditingUserName) {
+            try {
+                setProfileError(null);
+                const data = await authAPI.updateProfile({ username: editValue });
+                updateUser({ username: data.user.username });
+            } catch (err) {
+                setProfileError(err.message);
+                return; // Keep editing mode open on error
+            }
         }
-        setIsEditing(!isEditing);
+        setIsEditingUserName(!isEditingUserName);
     };
 
+    const handleEditUserIconToggle = async () => {
+        if (isEditingUserIcon) {
+            try {
+                setProfileError(null);
+                const data = await authAPI.updateProfile({ avatar: selectedIcon });
+                updateUser({ avatar: data.user.avatar });
+            } catch (err) {
+                setProfileError(err.message);
+                return; // Keep editing mode open on error
+            }
+        }
+        setIsEditingUserIcon(!isEditingUserIcon);
+    };
+
+
     // --- Table Data Definitions ---
+
+    const providerMap = {
+        'google': 'Google',
+        'github': 'Git Hub'
+    }
 
     const scoreCols = [
         {
@@ -55,10 +106,10 @@ export default function UserProfile() {
     ];
 
     const bracketCols = [
-        { 
-            header: 'Event', 
+        {
+            header: 'Event',
             render: (row) => (
-                <SmartLink to={`/user/${editValue}/brackets/${row.id}`} className="table-link">
+                <SmartLink to={`/user/${userId}/brackets/${row.id}`} className="table-link">
                     {row.name}
                 </SmartLink>
             )
@@ -73,34 +124,82 @@ export default function UserProfile() {
 
     return (
         <>
-            
-
             <main id="user-profile">
                 <div className="profile-container">
 
                     {/* Header Section */}
-                    <div id="user-name-intro" className={`user-stat-container ${isEditing ? 'focused-mode' : ''}`}>
-                        <h1>Hello Friend!</h1>
-                        <h2>user<span className='inline-teal inline-bold'>Name</span></h2>
-                        
-                        <div className="editable-input-wrapper">
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                value={editValue}
-                                onChange={(e) => setEditValue(e.target.value)}
-                                readOnly={!isEditing}
-                                className={isEditing ? 'input-active' : 'input-frozen'}
-                                spellCheck="false"
-                            />
-                            <button className={`${isEditing ? 'input-active' : 'input-frozen'} btn-edit`} onClick={handleEditToggle}>
-                                {isEditing ? (
+                    <h1 className="profile-intro">Hello Friend!</h1>
+
+                    {/* Error feedback */}
+                    {profileError && (
+                        <p className="profile-error">{profileError}</p>
+                    )}
+
+                    {/* User Name + Profile Icon */}
+                    <div id="user-name-icon" className={`user-stat-container ${isEditingUserName ? 'focused-mode' : ''}`}>
+
+                        <div className="user-name-data">
+                            <h2>user<span className='inline-teal inline-bold'>Name</span></h2>
+
+                            <div className="editable-input-wrapper">
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                    readOnly={!isEditingUserName}
+                                    className={isEditingUserName ? 'input-active' : 'input-frozen'}
+                                    spellCheck="false"
+                                />
+                                <button className={`${isEditingUserName ? 'input-active' : 'input-frozen'} btn-edit`} onClick={handleEditUserNameToggle}>
+                                    {isEditingUserName ? (
+                                        'Save'
+                                    ) : (
+                                        'Edit'
+                                    )}
+                                </button>
+                            </div>
+
+                            <div className="user-joined">
+                                <h3>Joined {user.joined ? new Date(user.joined).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'today'}</h3>
+                            </div>
+
+                            <div className="user-email">
+                                <h3>Joined with {provider ? providerMap[provider] : '-'}</h3>
+                            </div>
+                            
+                            <div className='user-logins'>
+                                <h3>Logged in {login_count ? login_count : '0'} time{login_count == 1 ? '' : 's'}</h3>
+                            </div>
+                        </div>
+
+                        <div className="user-icon">
+                            <img src={`/img/profile_icons/${selectedIcon}.webp`} alt="User Avatar" />
+
+                            <button className={`${isEditingUserIcon ? 'input-active' : 'input-frozen'} btn-edit`} onClick={handleEditUserIconToggle}>
+                                {isEditingUserIcon ? (
                                     'Save'
                                 ) : (
                                     'Edit'
                                 )}
                             </button>
+
+                            {isEditingUserIcon && (
+                                <div className="icon-gallery">
+                                    {allIcons.map((iconName) => (
+                                        <button
+                                            key={iconName}
+                                            className={`gallery-item ${selectedIcon === iconName ? 'selected' : ''}`}
+                                            onClick={() => setSelectedIcon(iconName)}
+                                            title={iconName}
+                                        >
+                                            <img src={`/img/profile_icons/${iconName}.webp`} alt={iconName} />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
+
                     </div>
 
                     {/* Tables Section - These are blocked by the overlay when editing */}
@@ -123,3 +222,5 @@ export default function UserProfile() {
         </>
     );
 }
+
+export default UserProfile;
