@@ -10,7 +10,8 @@ urlpatterns = [
     path('<uuid:tournament_id>/results/', views.tournament_results, name='tournament_results'),
 
     # Plays
-    path('<uuid:tournament_id>/plays/', views.play_list_create, name='play_list_create'),
+    # path('<uuid:tournament_id>/plays/', views.play_list_create, name='play_list_create'),
+    path('<slug:tournament_slug>/plays/', views.play_list_create, name='play_list_create'),
     path('plays/<uuid:play_id>/', views.play_detail, name='play_detail'),
     path('plays/<uuid:play_id>/submit/', views.play_submit, name='play_submit'),
 

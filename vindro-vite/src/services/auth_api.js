@@ -45,7 +45,7 @@ function getCsrfToken() {
 /**
  * Fetch wrapper with credentials support for session-based auth
  */
-async function apiRequest(endpoint, options = {}) {
+export async function apiRequest(endpoint, options = {}) {
     const isWriteMethod = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method);
     const config = {
         ...options,
@@ -138,7 +138,7 @@ export const authAPI = {
 
 /**
  * Generic API client for other endpoints
- */
+
 export const auth_api = {
     get: (endpoint) => apiRequest(endpoint, { method: 'GET' }),
     post: (endpoint, data) => apiRequest(endpoint, {
@@ -151,3 +151,5 @@ export const auth_api = {
     }),
     delete: (endpoint) => apiRequest(endpoint, { method: 'DELETE' }),
 };
+
+ */

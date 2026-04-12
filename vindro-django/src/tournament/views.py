@@ -77,12 +77,12 @@ def tournament_results(request, tournament_id):
 @require_http_methods(["GET", "POST"])
 @csrf_exempt
 @login_required_api
-def play_list_create(request, tournament_id):
+def play_list_create(request, tournament_slug):
     """
     GET  /api/tournament/<id>/plays/  — list user's plays for this tournament
     POST /api/tournament/<id>/plays/  — create a new play
     """
-    tournament, err = _get_or_404(Tournament, id=tournament_id)
+    tournament, err = _get_or_404(Tournament, slug=tournament_slug)
     if err:
         return err
 
@@ -109,6 +109,7 @@ def play_list_create(request, tournament_id):
     )
 
     # Auto-join the public vindroPool
+    '''
     try:
         public_pool = TournamentPool.objects.get(tournament=tournament, is_public=True)
         PoolMembership.objects.create(pool=public_pool, play=play)
@@ -117,9 +118,9 @@ def play_list_create(request, tournament_id):
         )
     except TournamentPool.DoesNotExist:
         pass  # public pool not created yet (admin hasn't set it up)
-
+    '''
+    
     return JsonResponse({'success': True, 'data': serialize_play(play)}, status=201)
-
 
 @require_http_methods(["GET", "PATCH"])
 @csrf_exempt

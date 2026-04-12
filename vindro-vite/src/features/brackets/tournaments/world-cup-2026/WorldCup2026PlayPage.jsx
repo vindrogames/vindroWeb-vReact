@@ -1,47 +1,66 @@
-/**
- * WorldCup2026PlayPage.jsx
- * 
- * Tournament-specific play/prediction page for World Cup 2026
- * Route: /brackets/world-cup-2026/:userId/:playId
- * 
- * This component handles the full play experience for World Cup 2026
- * including groups stage and bracket predictions.
- * 
- * TODO: API Integration
- * Replace mockPlay with actual data fetch:
- * const { playId, userId } = useParams();
- * const { data: play, isLoading } = useFetch(`/api/plays/${playId}/`);
- */
-
-import React from 'react';
-import GroupStagePredictions from '../../components/GroupStagePredictions';
-import BracketStagePredictions from '../../components/BracketStagePredictions';
-import { useParams } from 'react-router-dom';
-// TODO: Import tournament-specific components and generic play components
-// import GenericTournamentPlayPage from './components/TournamentPlayPage';
-import { mockPlay } from './data/mockPlay';
+import React, { useEffect, useState } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
+import playService from '../../services/playService'; // Our specific play service
 
 const WorldCup2026PlayPage = () => {
-    const { playId, userId } = useParams();
+    // 1. Get readable data from the URL
+    const { tournament, userId, playName } = useParams();
+    
+    // 2. Get the "hidden" UUID from the navigation state
+    const location = useLocation();
+    const playId = location.state?.playId;
 
-    // TODO: Replace with actual API call
-    // const { data: play, isLoading } = useFetch(`/api/plays/${playId}/`);
-    const play = mockPlay;
-    const isLoading = false;
+    const [playData, setPlayData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+
+        const fetchPlayDetails = async () => {
+            if (!playId) {
+                // If they refreshed or linked directly, we might need 
+                // a service to fetch by slug/name instead of UUID
+                console.warn("No playId in state - need fallback fetch");
+                setLoading(false);
+                return;
+            }
+
+            try {
+                // We'll need to add getPlayById to our playService
+                const data = await playService.getPlayById(playId);
+                setPlayData(data);
+            } catch (err) {
+                console.error("Error fetching play:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPlayDetails();
+    }, [playId]);
+
+    if (loading) return <div>Loading your bracket...</div>;
 
     return (
-        <div className="world-cup-2026-play-page">
-            {isLoading ? (
-                <div className="loading">Loading...</div>
-            ) : (
-                <div className="play-content">
-                    {/* Play page content will go here */}
-                    <h1>{play.name}</h1>
-                    <p>Tournament Play Page for World Cup 2026</p>
-                    {/* TODO: Render stage cards, modals, and predictions UI */}
-                </div>
-            )}
-        </div>
+        <main className="play-page-container">
+            <section className="play-header">
+                <h1>{playName.replace(/-/g, ' ')}</h1>
+                <p>Tournament: {tournament}</p>
+                <p>User: {userId}</p>
+            </section>
+
+            {/* This is where the GroupPhase or BracketPhase components will go */}
+            <section className="play-content">
+                {playData ? (
+                    <div>
+                        <h3>Status: {playData.status}</h3>
+                        <p>Phase: {playData.current_phase}</p>
+                        {/* Placeholder for predictions logic */}
+                    </div>
+                ) : (
+                    <p>Could not load play details.</p>
+                )}
+            </section>
+        </main>
     );
 };
 

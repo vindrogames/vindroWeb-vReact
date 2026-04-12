@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import ShowcaseSection from '../../../components/ui/ShowcaseSection';
 
-const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel }) => {
-
+const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }) => {
     const [playName, setPlayName] = useState('');
-    const [error, setError] = useState('');
+    const [localError, setLocalError] = useState('');
 
-    // Reset state when modal opens/closes
+    // Clear state when modal toggles
     useEffect(() => {
         if (!isOpen) {
             setPlayName('');
-            setError('');
+            setLocalError('');
         }
     }, [isOpen]);
 
@@ -19,30 +18,36 @@ const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel }) => {
 
     const handleConfirm = () => {
         const trimmedName = playName.trim();
-
         if (!trimmedName) {
-            setError('Please enter a name for your play');
+            setLocalError('Please enter a name for your play');
             return;
         }
         if (trimmedName.length < 3) {
-            setError('Play name must be at least 3 characters');
+            setLocalError('Play name must be at least 3 characters');
             return;
         }
-
+        
         onConfirm(trimmedName);
     };
 
     const handleKeyDown = (e) => {
-        if (e.key === 'Enter') handleConfirm();
+        if (e.key === 'Enter' && !isLoading) handleConfirm();
         if (e.key === 'Escape') onCancel();
     };
 
+    // Show local validation error first, then fall back to API error
+    const activeError = localError || apiError;
+
     return ReactDOM.createPortal(
         <div className="play-name-modal-overlay" onClick={onCancel}>
-
             <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
-
-                <button className="close-button" onClick={onCancel} aria-label="Close modal">
+                
+                <button 
+                    className="close-button" 
+                    onClick={onCancel} 
+                    aria-label="Close modal"
+                    disabled={isLoading}
+                >
                     &times;
                 </button>
 
@@ -51,16 +56,17 @@ const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel }) => {
 
                     <input
                         type="text"
-                        className={`play-name-input ${error ? 'error' : ''}`}
+                        className={`play-name-input ${activeError ? 'error' : ''}`}
                         placeholder="e.g., My Bold Predictions"
                         value={playName}
                         onChange={(e) => {
                             setPlayName(e.target.value);
-                            if (error) setError('');
+                            if (localError) setLocalError('');
                         }}
                         onKeyDown={handleKeyDown}
                         maxLength={50}
                         autoFocus
+                        disabled={isLoading}
                     />
 
                     <div className="char-count-submit-container">
@@ -71,14 +77,17 @@ const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel }) => {
                         <button
                             className="btn btn-tan confirm-btn"
                             onClick={handleConfirm}
-                            disabled={!playName.trim()}
+                            disabled={!playName.trim() || isLoading}
                         >
-                            Create Play
+                            {isLoading ? 'Creating...' : 'Create Play'}
                         </button>
                     </div>
 
-
-                    {error && <p className="error-message" style={{ color: '#ff4d4d', fontSize: '0.85rem' }}>{error}</p>}
+                    {activeError && (
+                        <p className="error-message" style={{ color: '#ff4d4d', fontSize: '0.85rem', marginTop: '10px' }}>
+                            {activeError}
+                        </p>
+                    )}
                 </ShowcaseSection>
 
                 <ShowcaseSection id="prediction-play-text" className="bottom-modal-gallery">
@@ -87,15 +96,17 @@ const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel }) => {
                     </div>
 
                     <div className="bottom-modal-text">
-                        <p>A <em><span className='inline-green inline-bold'>Play</span></em> includes predictions for both the Groups Stage & the Brackets Stage. You will be able to manage your predictions throughout the tournament.</p>
-                        <p>Anybody can have multiple play predictions and submit their plays to different private and public pools</p>
-                        <p>All you have to do is give your play a name and make your picks!</p>
+                        <p>A <em><span className='inline-green inline-bold'>Play</span></em> includes predictions for both Groups and Brackets.</p>
+                        <p>You can create multiple plays and enter different pools!</p>
                     </div>
 
-                    <button className="btn btn-tan cancel-btn" onClick={onCancel}>
+                    <button 
+                        className="btn btn-tan cancel-btn" 
+                        onClick={onCancel}
+                        disabled={isLoading}
+                    >
                         Maybe Later
                     </button>
-                    
                 </ShowcaseSection>
             </div>
         </div>,
