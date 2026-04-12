@@ -36,9 +36,13 @@ const NavBar = ({ isMadrid }) => {
     const toggleMenu = () => setMenuOpen((p) => !p);
 
     useEffect(() => {
+
         function handleGlobalClick(e) {
+
             const t = e.target;
+
             if (menuOpenRef.current) {
+
                 const clickedInsideHamburger =
                     hamburgerMenuRef.current?.contains(t) ||
                     hamburgerToggleRef.current?.contains(t) ||
@@ -47,9 +51,11 @@ const NavBar = ({ isMadrid }) => {
                 if (!clickedInsideHamburger) setMenuOpen(false);
             }
             if (userOpenRef.current) {
+
                 const clickedInsideDesktop = userDropdownRefDesktop.current?.contains(t);
                 const clickedInsideMobile = userDropdownRefMobile.current?.contains(t);
                 if (!clickedInsideDesktop && !clickedInsideMobile) {
+                    
                     setUserDropdownOpen(false);
                 }
             }

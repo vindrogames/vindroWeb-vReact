@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { authAPI } from '../services/auth_api';
 
 function getIconName(avatarUrl) {
+
     const match = avatarUrl?.match(/profile_icons\/(.+)\.webp/);
     return match ? match[1] : 'teal-simple';
 }
@@ -14,6 +15,12 @@ const UserProfile = () => {
 
     const { userId } = useParams();
     const { user, updateUser } = useAuth();
+
+    const { 
+        login_count = 0, 
+        provider = 'local', 
+        date_joined = null 
+    } = user || {};
 
     const [isEditingUserName, setIsEditingUserName] = useState(false);
     const [isEditingUserIcon, setIsEditingUserIcon] = useState(false);
@@ -31,12 +38,14 @@ const UserProfile = () => {
 
     // Sync state when user data loads
     useEffect(() => {
+
         if (user?.username) setEditValue(user.username);
         if (user?.avatar) setSelectedIcon(getIconName(user.avatar));
     }, [user?.username, user?.avatar]);
 
     // 2. Force Focus ONLY via Edit Button
     useEffect(() => {
+
         if (isEditingUserName && inputRef.current) {
             inputRef.current.focus();
         }
@@ -72,6 +81,11 @@ const UserProfile = () => {
 
 
     // --- Table Data Definitions ---
+
+    const providerMap = {
+        'google': 'Google',
+        'github': 'Git Hub'
+    }
 
     const scoreCols = [
         {
@@ -146,14 +160,17 @@ const UserProfile = () => {
                                 </button>
                             </div>
 
-                            <div className="user-email">
-                                <h3>{user.email ? user.email : 'email@email.com'}</h3>
-                            </div>
-
                             <div className="user-joined">
-                                <h3>joined {user.joined ? new Date(user.joined).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'today'}</h3>
+                                <h3>Joined {user.joined ? new Date(user.joined).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'today'}</h3>
                             </div>
 
+                            <div className="user-email">
+                                <h3>Joined with {provider ? providerMap[provider] : '-'}</h3>
+                            </div>
+                            
+                            <div className='user-logins'>
+                                <h3>Logged in {login_count ? login_count : '0'} time{login_count == 1 ? '' : 's'}</h3>
+                            </div>
                         </div>
 
                         <div className="user-icon">

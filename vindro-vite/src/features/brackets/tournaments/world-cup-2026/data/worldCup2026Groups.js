@@ -41,10 +41,10 @@ export const WORLD_CUP_2026_GROUPS = {
     E: {
         name: 'Group E',
         teams: [
-            { id: 'england', name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
-            { id: 'belgium', name: 'Belgium', flag: '🇧🇪' },
-            { id: 'wales', name: 'Wales', flag: '🏴󠁧󠁢󠁷󠁬󠁳󠁿' },
-            { id: 'serbia', name: 'Serbia', flag: '🇷🇸' },
+                { id: 'england', name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+                { id: 'belgium', name: 'Belgium', flag: '🇧🇪' },
+                { id: 'wales', name: 'Wales', flag: '🏴󠁧󠁢󠁷󠁬󠁳󠁿' },
+                { id: 'serbia', name: 'Serbia', flag: '🇷🇸' },
         ]
     },
     F: {

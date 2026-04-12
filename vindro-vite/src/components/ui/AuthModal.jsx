@@ -15,7 +15,7 @@ import LoginHelmet from '../../page-helmets/LoginHelmet';
  *   defaultMode: String - 'login' or 'signup' - Initial tab to show (default: 'login')
  */
 const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }) => {
-    
+
     const [isSignUp, setIsSignUp] = useState(defaultMode === 'signup');
     const [isFading, setIsFading] = useState(false);
 
@@ -31,14 +31,17 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
 
     const handleLogin = (provider) => {
         const backendUrl = getBackendUrl();
+
+        // Use the current page URL if no specific redirectTo was provided
+        // window.location.href captures the full URL including current route/params
+        const finalRedirect = redirectTo || window.location.href;
+
         let oauthUrl = `${backendUrl}/accounts/${provider}/login/`;
-        
-        // Add redirect parameter if provided
-        if (redirectTo) {
-            const encodedRedirect = encodeURIComponent(redirectTo);
-            oauthUrl += `?next=${encodedRedirect}`;
-        }
-        
+
+        // Append the current location as the 'next' parameter
+        const encodedRedirect = encodeURIComponent(finalRedirect);
+        oauthUrl += `?next=${encodedRedirect}`;
+
         window.location.href = oauthUrl;
     };
 
@@ -103,7 +106,7 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
                             </div>
 
                             <div className="legal-info">
-                                
+
                                 <h5>If we detect you have already signed up with a selected provider, you will be logged in directly.</h5>
                                 <p>*By signing up, you agree to our Terms and Privacy Policy</p>
                             </div>

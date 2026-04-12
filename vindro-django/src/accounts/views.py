@@ -9,6 +9,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
+from allauth.socialaccount.models import SocialAccount
+
 
 User = get_user_model()
 
@@ -30,11 +32,18 @@ def serialize_user(user):
     """Convert Django User to JSON-serializable dict"""
     if not user or not user.is_authenticated:
         return None
+    
+    # Get the provider from the user's social account
+    social_account = SocialAccount.objects.filter(user=user).first()
+    provider = social_account.provider if social_account else user.provider
+
     return {
         'id': user.id,
         'username': user.username,
         'email': user.email,
         'avatar': user.avatar,
+        'provider': provider,
+        'login_count': user.login_count,
         'is_authenticated': True,
         'joined': user.date_joined.isoformat() if user.date_joined else None,
     }

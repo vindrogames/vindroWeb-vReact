@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
 
     # Your apps
-    'accounts',
+    'accounts.apps.AccountsConfig',
     'highscores',
     'tournament',
     'test',

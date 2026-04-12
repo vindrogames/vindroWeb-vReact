@@ -58,6 +58,7 @@ class TournamentPlay(models.Model):
         ('submitted', 'Submitted'),
         ('completed', 'Completed'),
     ]
+
     PHASE_CHOICES = [
         ('groups', 'Groups'),
         ('bracket', 'Bracket'),
@@ -69,9 +70,11 @@ class TournamentPlay(models.Model):
     tournament = models.ForeignKey(
         Tournament, on_delete=models.CASCADE, related_name='plays'
     )
+
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='tournament_plays'
     )
+
     name = models.CharField(max_length=100)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in_progress')
     current_phase = models.CharField(max_length=20, choices=PHASE_CHOICES, default='groups')
@@ -106,6 +109,7 @@ class TournamentPool(models.Model):
         null=True,
         blank=True,
     )
+    
     is_public = models.BooleanField(default=False)
     code_hash = models.CharField(max_length=255, unique=True, null=True, blank=True)
     current_member_count = models.IntegerField(default=0)

@@ -8,6 +8,7 @@ import { authAPI } from '../services/auth_api';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -29,7 +30,7 @@ export function AuthProvider({ children }) {
         // Only cheat if the variable is true AND we are in dev mode
         if (isCheatEnabled && import.meta.env.DEV) {
             console.log("🛠️ Auth: Using Frontend Cheat Mode");
-            setUser({ id: '999', username: 'dev_user', role: 'admin' });
+            setUser({ id: '999', username: 'dev_user', role: 'admin', provider: 'your mom', login_count: '420' });
             setLoading(false);
             return;
         }
