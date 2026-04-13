@@ -17,6 +17,7 @@ const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
     if (!isOpen) return null;
 
     const handleConfirm = () => {
+        
         const trimmedName = playName.trim();
         if (!trimmedName) {
             setLocalError('Please enter a name for your play');
@@ -27,6 +28,7 @@ const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
             return;
         }
         
+        // This triggers handleCreatePlayConfirm in TournamentPage
         onConfirm(trimmedName);
     };
 

@@ -3,7 +3,7 @@
  * Global authentication state management using React Context API
  */
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authAPI } from '../services/auth_api';
+import { authAPI } from './services/authService';
 
 const AuthContext = createContext(null);
 

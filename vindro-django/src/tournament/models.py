@@ -1,5 +1,6 @@
 from uuid import uuid4
 from django.db import models
+from django.db.models import UniqueConstraint
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -36,16 +37,18 @@ class Tournament(models.Model):
 
 
 class TournamentFormat(models.Model):
-    """
-    Static structure of a tournament entered once, plus live results filled in as it progresses.
-    """
     tournament = models.OneToOneField(
         Tournament, on_delete=models.CASCADE, related_name='format'
     )
-    groups = models.JSONField(default=dict)           # static: teams per group
-    bracket = models.JSONField(default=dict)          # static: bracket structure
-    groups_results = models.JSONField(default=dict)   # live: group standings
-    bracket_results = models.JSONField(default=dict)  # live: match results
+    # The static skeletons from your .py files
+    groups_stage = models.JSONField(default=dict)    
+    bracket_stage = models.JSONField(default=dict)   
+    
+    # Results (can stay empty until the tournament starts)
+    groups_results = models.JSONField(default=dict, blank=True)
+    bracket_results = models.JSONField(default=dict, blank=True)
+    
+    is_seeded = models.BooleanField(default=False) 
     last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -76,6 +79,15 @@ class TournamentPlay(models.Model):
     )
 
     name = models.CharField(max_length=100)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=['user', 'tournament', 'name'], 
+                name='unique_play_name_per_user_per_tournament'
+            )
+        ]
+
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in_progress')
     current_phase = models.CharField(max_length=20, choices=PHASE_CHOICES, default='groups')
     group_predictions = models.JSONField(default=dict)

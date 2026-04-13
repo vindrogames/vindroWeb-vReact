@@ -1,7 +1,9 @@
-import json
 import secrets
 import hashlib
+import json, uuid
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.db import IntegrityError
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from accounts.views import login_required_api
@@ -14,6 +16,7 @@ from .serializers import (
     serialize_pool,
     serialize_leaderboard_entry,
 )
+from .logic import initialize_user_play;
 
 
 # ---------------------------------------------------------------------------
@@ -74,6 +77,8 @@ def tournament_results(request, tournament_id):
 # Phase 3 — Play endpoints (auth required)
 # ---------------------------------------------------------------------------
 
+'''
+OLD
 @require_http_methods(["GET", "POST"])
 @csrf_exempt
 @login_required_api
@@ -109,7 +114,7 @@ def play_list_create(request, tournament_slug):
     )
 
     # Auto-join the public vindroPool
-    '''
+
     try:
         public_pool = TournamentPool.objects.get(tournament=tournament, is_public=True)
         PoolMembership.objects.create(pool=public_pool, play=play)
@@ -118,10 +123,84 @@ def play_list_create(request, tournament_slug):
         )
     except TournamentPool.DoesNotExist:
         pass  # public pool not created yet (admin hasn't set it up)
-    '''
     
     return JsonResponse({'success': True, 'data': serialize_play(play)}, status=201)
+'''
 
+
+# New -> Fetches ALL plays for specific tournament for specific user.
+# To populate TournamentPage table when user is logged in
+@require_http_methods(["GET"])
+@login_required_api
+def user_tournament_plays(request, tournament_slug):
+    """
+    Populates the 'Your Plays' table.
+    """
+    tournament, err = _get_or_404(Tournament, slug=tournament_slug)
+    if err: return err
+
+    # Strictly filter by the logged-in user session
+    plays = TournamentPlay.objects.filter(
+        tournament=tournament, 
+        user=request.user
+    ).order_by('-created_at')
+
+    return JsonResponse({
+        'success': True, 
+        'data': [serialize_play(p) for p in plays]
+    })
+
+
+# New -> Create a play from Modal
+@csrf_exempt
+@login_required_api 
+@require_http_methods(["POST"])
+def create_new_play(request, tournament_slug):
+    """
+    Creates a new Play. Only accessible to authenticated users.
+    """
+    # 1. Verify Tournament exists
+    tournament, err = _get_or_404(Tournament, slug=tournament_slug)
+    if err: 
+        return err
+
+    try:
+        # 2. Parse payload
+        body = json.loads(request.body)
+        name = body.get('name', '').strip()
+        
+        if not name:
+            return JsonResponse({'success': False, 'error': 'Name is required'}, status=400)
+
+        # 3. Create record using the authenticated user from the session
+        new_play = TournamentPlay.objects.create(
+            tournament=tournament,
+            user=request.user,
+            name=name,
+            status='draft'
+        )
+        
+        # 4. Populate with Master Map data (shuffled)
+        initialize_user_play(new_play)
+
+        return JsonResponse({
+            'success': True, 
+            'data': serialize_play(new_play) # Fixed: variable name matched to 'new_play'
+        }, status=201)
+
+    except IntegrityError:
+        return JsonResponse({
+            'success': False, 
+            'error': f'You already have a play named "{name}".'
+        }, status=400)
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON body'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+'''
+OLD
 @require_http_methods(["GET", "PATCH"])
 @csrf_exempt
 @login_required_api
@@ -172,8 +251,55 @@ def play_detail(request, play_id):
 
     play.save()
     return JsonResponse({'success': True, 'data': serialize_play(play)})
+'''
+
+# New -> Public View to display any specific TournamentPlay
+@require_http_methods(["GET", "PATCH"])
+@csrf_exempt
+def tournament_play_detail(request, play_id):
+    print('hola from play detail')
+    print(play_id)
+    play = get_object_or_404(TournamentPlay, id=play_id)
+
+    if request.method == 'GET':
+        return JsonResponse({'success': True, 'data': serialize_play(play)})
+
+    if request.method == 'PATCH':
+        # Backend Protection: Verify logged user is the actual owner
+        if not request.user.is_authenticated or play.user != request.user:
+            return JsonResponse({'success': False, 'error': 'Forbidden'}, status=403)
+        
+        try:
+            body = json.loads(request.body)
+            play.group_predictions = body.get('group_predictions', play.group_predictions)
+            play.bracket_predictions = body.get('bracket_predictions', play.bracket_predictions)
+            play.save()
+            return JsonResponse({'success': True, 'data': serialize_play(play)})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 
+'''
+Don't know about this submitting business. New proposal from Gemini:
+@require_http_methods(["POST"])
+@csrf_exempt
+@login_required_api
+def finalize_tournament_play(request, play_id):
+    """
+    Locks the play so no further PATCH edits can be made.
+    """
+    play, err = _get_or_404(TournamentPlay, id=play_id)
+    if err: return err
+    
+    if play.user != request.user:
+        return JsonResponse({'success': False, 'error': 'Forbidden'}, status=403)
+
+    play.status = 'submitted'
+    play.save()
+    return JsonResponse({'success': True, 'data': serialize_play(play)})
+'''
+
+# Original Play Submit
 @require_http_methods(["POST"])
 @csrf_exempt
 @login_required_api

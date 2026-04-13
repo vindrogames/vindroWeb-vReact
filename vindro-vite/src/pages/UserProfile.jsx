@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DataTable from '../components/pages/users/DataTable';
 import SmartLink from '../components/ui/SmartLink';
-import { useAuth } from '../contexts/AuthContext';
-import { authAPI } from '../services/auth_api';
+import { useAuth } from '../contexts/auth/AuthContext';
+import { authAPI } from '../contexts/auth/services/authService';
 
 function getIconName(avatarUrl) {
 
@@ -125,6 +125,7 @@ const UserProfile = () => {
     return (
         <>
             <main id="user-profile">
+
                 <div className="profile-container">
 
                     {/* Header Section */}
@@ -136,7 +137,7 @@ const UserProfile = () => {
                     )}
 
                     {/* User Name + Profile Icon */}
-                    <div id="user-name-icon" className={`user-stat-container ${isEditingUserName ? 'focused-mode' : ''}`}>
+                    <section id="user-name-icon" className={`user-stat-container ${isEditingUserName ? 'focused-mode' : ''}`}>
 
                         <div className="user-name-data">
                             <h2>user<span className='inline-teal inline-bold'>Name</span></h2>
@@ -200,22 +201,22 @@ const UserProfile = () => {
                             )}
                         </div>
 
-                    </div>
+                    </section>
 
                     {/* Tables Section - These are blocked by the overlay when editing */}
-                    <div id="user-top-scores" className="user-stat-container">
+                    <section id="user-top-scores" className="user-stat-container">
                         <h3>top<span className='inline-teal inline-bold'>Scores</span></h3>
                         <div className="table-container">
                             <DataTable data={scoreData} columns={scoreCols} />
                         </div>
-                    </div>
+                    </section>
 
-                    <div id="user-brackets" className="user-stat-container">
+                    <section id="user-brackets" className="user-stat-container">
                         <h3>brackets</h3>
                         <div className="table-container">
                             <DataTable data={bracketData} columns={bracketCols} />
                         </div>
-                    </div>
+                    </section>
 
                 </div>
             </main>

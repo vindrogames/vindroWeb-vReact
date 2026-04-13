@@ -1,6 +1,6 @@
 // src/game-42/components/GameDisplay.jsx
 import React, { useState, useEffect } from "react";
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/auth/AuthContext';
 
 export default function GameDisplay({
     gameStarted, numToPlace, points, startGame, playAgain,

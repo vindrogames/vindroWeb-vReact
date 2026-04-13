@@ -1,3 +1,5 @@
+@use 'config' as *;
+
 main.bracket-tournament-page {
 
     .brackets-hero {
@@ -18,7 +20,7 @@ main.bracket-tournament-page {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 21px;
+            gap: 14px;
 
             .title-container {
                 width: 100%;
@@ -43,6 +45,7 @@ main.bracket-tournament-page {
                 gap: 42px;
 
                 .table-container {
+
                     flex-grow: 1;
                     border: 1px solid $vindro-gray;
                     border-radius: 7px;
@@ -54,38 +57,6 @@ main.bracket-tournament-page {
                         border-collapse: collapse;
                         overflow: hidden;
 
-                        tr {
-
-                            td:first-child {
-                                //text-align: left;
-
-                                a {
-                                    display: flex;
-                                    justify-content: center;
-                                    align-items: center;
-                                    gap: 14px;
-                                    color: $vindro-teal;
-                                    font-size: 1.2rem;
-                                    font-weight: 600;
-                                    cursor: pointer;
-                                    text-decoration: underline;
-
-                                    svg {
-                                        font-size: 1.8rem;
-                                        color: $vindro-tan;
-                                        cursor: pointer;
-                                    }
-
-                                    &:hover {
-                                        opacity: 0.84;
-                                    }
-                                }
-
-
-                            }
-
-                        }
-
                         th {
                             font-size: 1.6rem;
                             font-weight: 500;
@@ -96,28 +67,51 @@ main.bracket-tournament-page {
                         }
 
                         td {
-                            font-size: 1.2rem;
+                            font-size: 1.4rem;
                             font-weight: 300;
                             text-align: center;
                             padding: 7px 14px;
                         }
+
+                        tr {
+
+                            td:first-child {
+                                color: $vindro-teal;
+                                padding-left: 7px;
+                            }
+
+                            &.clickable-row {
+                                cursor: pointer;
+                                transition: background-color 0.2s ease;
+
+                                &:hover {
+                                    background-color: lighten($vindro-black, 7);
+                                }
+                            }
+
+                        }
                     }
                 }
 
-                .pools-buttons-container {
-                    width: 100%;
+                .buttons-container {
                     display: flex;
-                    flex-direction: column;
-                    gap: 14px;
+                    justify-content: center;
+                    align-items: flex-start;
+
+                    &#pools-buttons-container {
+                        justify-content: space-evenly;
+                        gap: 14px;
+                    }
+
+                    button {
+                        width: auto;
+                        font-family: $vindro-Montserrat;
+                        font-size: 1.6rem;
+                        font-weight: 500;
+                    }
                 }
 
-                button {
-                    width: 84%;
-                    align-self: flex-start;
-                    font-family: $vindro-Montserrat;
-                    font-size: 1.6rem;
-                    font-weight: 500;
-                }
+
 
                 &#pools-stats {
                     margin-bottom: 21px;
@@ -293,6 +287,137 @@ main.bracket-tournament-page {
                 font-size: 3.6rem;
             }
         }
+    }
+}
+
+main.bracket-tournament-play {
+    width: 100%;
+    min-height: 100vh;
+    padding: 90px 42px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .bracket-tournament-play-container {
+        width: 84%;
+        height: 84%;
+        padding: 42px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 42px;
+
+        .header-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 21px;
+
+            .top-container {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 14px;
+                border-bottom: 1px solid $vindro-teal;
+
+                h1 {
+                    font-size: 4.2rem;
+                }
+            }
+
+            .play-specs {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+
+                h2 {
+                    font-size: 2.1rem;
+                }
+                img {
+                    height: 36px;
+                    width: 36px;
+                }
+            }
+        }
+
+        .groups-stage {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+
+            h3 {
+                font-size: 3.6rem;
+                font-weight: 400;
+            }
+
+            p {
+                font-size: 1.4rem;
+            }
+
+            .table-container {
+
+                    flex-grow: 1;
+                    border: 1px solid $vindro-black;
+                    border-radius: 7px;
+                    background-color: $vindro-tan;
+
+                    table {
+
+                        width: 100%;
+                        border-collapse: collapse;
+                        overflow: hidden;
+
+                        th {
+                            font-size: 1.6rem;
+                            font-weight: 600;
+                            // color: $vindro-green;
+                            font-family: $vindro-Montserrat;
+                            border: none;
+                            border-bottom: 3px solid $vindro-black;
+                            padding: 7px 14px;
+                        }
+
+                        td {
+                            font-size: 1.4rem;
+                            font-weight: 300;
+                            color: $vindro-gray;
+                            text-align: center;
+                            padding: 7px 14px;
+
+                            .team-info {
+                                display: flex;
+                                gap: 7px;
+                            }
+                        }
+
+                        tr {
+
+                            td:first-child {
+                                color: $vindro-black;
+                                padding-left: 7px;
+                                font-weight: 600;
+                            }
+
+                            &.clickable-row {
+                                cursor: pointer;
+                                transition: background-color 0.2s ease;
+
+                                &:hover {
+                                    background-color: lighten($vindro-black, 7);
+                                }
+                            }
+
+                        }
+                    }
+                }
+        }
+
+        .brackets-stage {
+
+        }
+
     }
 }
 
@@ -666,6 +791,11 @@ $error-red: #ff4d4d;
     }
 
 }
+
+@import 'mobile960';
+@import 'mobile678';
+@import 'mobile450';
+@import 'mobile376';
 
 @keyframes modalSlideUp {
     from {

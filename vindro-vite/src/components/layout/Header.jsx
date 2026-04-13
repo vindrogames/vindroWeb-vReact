@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBarLink from '../ui/NavBarLink';
 import SmartLink from '../ui/SmartLink';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 import AuthModal from '../ui/AuthModal';
 
 const routes = [

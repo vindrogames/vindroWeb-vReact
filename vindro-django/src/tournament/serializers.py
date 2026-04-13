@@ -15,6 +15,7 @@ def serialize_tournament(tournament):
 
 
 def serialize_tournament_with_format(tournament):
+    
     data = serialize_tournament(tournament)
     try:
         fmt = tournament.format
@@ -42,10 +43,19 @@ def serialize_results(tournament):
 def serialize_play(play):
     return {
         'id': str(play.id),
-        'tournament_id': str(play.tournament_id),
         'name': play.name,
         'status': play.status,
         'current_phase': play.current_phase,
+        
+        # Pull the descriptive names for the UI
+        'tournament_name': play.tournament.name, 
+        'user_name': play.user.username,
+        
+        # Keep the raw IDs for logic/filtering
+        'tournament_id': str(play.tournament_id),
+        'user': play.user.id,
+        'user_avatar': play.user.avatar,
+        
         'group_predictions': play.group_predictions,
         'bracket_predictions': play.bracket_predictions,
         'score': play.score,

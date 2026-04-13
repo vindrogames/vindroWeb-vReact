@@ -19,7 +19,7 @@ import UserProfile from './pages/UserProfile';
 import UserBrackets from './pages/UserBrackets';
 import UserTopScores from './pages/UserTopScores';
 import WorldCupTournament_2026 from './features/brackets/tournaments/world-cup-2026/WorldCupTournament_2026';
-import WorldCup2026PlayPage from './features/brackets/tournaments/world-cup-2026/WorldCup2026PlayPage';
+import PlayPage from './features/brackets/components/PlayPage';
 
 export const routes = createBrowserRouter([
     {
@@ -39,6 +39,7 @@ export const routes = createBrowserRouter([
             { path: 'test-api', element: <TestApi /> },
             { path: 'games/auto-miner', element: <Autominer /> },
             { path: 'brackets/world-cup-2026', element: <WorldCupTournament_2026 /> },
+            { path: 'brackets/:tournament/:userId/:playName', element: <PlayPage />},
             // Protected User Routes
             {
                 path: 'user/:userId',
@@ -46,14 +47,6 @@ export const routes = createBrowserRouter([
                     <ProtectedRoute>
                         <UserProfile />
                     </ProtectedRoute>
-                ),
-            },
-            {
-                path: 'brackets/:tournament/:userId/:playName',
-                element: (
-                    < ProtectedRoute >
-                        <WorldCup2026PlayPage />
-                    </ProtectedRoute >
                 ),
             },
             {

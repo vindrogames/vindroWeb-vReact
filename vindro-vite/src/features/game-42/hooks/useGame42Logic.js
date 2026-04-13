@@ -1,6 +1,6 @@
 // src/game-42/hooks/useGameLogic.js
 import { useState, useEffect } from "react";
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/auth/AuthContext';
 
 export default function useGame42Logic() {
     const { isAuthenticated, user } = useAuth();
