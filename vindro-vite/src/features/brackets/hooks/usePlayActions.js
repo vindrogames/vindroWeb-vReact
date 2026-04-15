@@ -5,11 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import playService from '../services/playService';
 
 export const usePlayActions = () => {
+    
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const handleCreatePlay = async (tournamentSlug, playName, user) => {
+    const handleCreatePlay = async (tournamentSlug, tournamentId, playName, user) => {
         if (!user?.id) {
             setError("You must be logged in to save your play.");
             return;
@@ -25,7 +26,7 @@ export const usePlayActions = () => {
 
         try {
             // 1. API Call
-            const newPlay = await playService.createPlay(tournamentSlug, playName);
+            const newPlay = await playService.createPlay(tournamentId, playName);
 
             // 2. Slugify name
             const slugPlayName = encodeURIComponent(

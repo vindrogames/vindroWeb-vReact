@@ -8,6 +8,10 @@ import { LoadingProvider } from './contexts/LoadingContext';
 import 'flag-icons/css/flag-icons.min.css';
 import './scss/main.scss';
 import './scss/_brackets.scss';
+import './scss/_mobile960.scss';
+import './scss/_mobile678.scss';
+import './scss/_mobile450.scss';
+import './scss/_mobile376.scss';
 
 export default function App() {
     return (

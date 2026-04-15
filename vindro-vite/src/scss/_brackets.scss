@@ -11,7 +11,7 @@ main.bracket-tournament-page {
 
     .user-picks {
         position: relative;
-        padding: 21px 42px;
+        padding: 21px 42px 42px;
         display: flex;
         //align-items: center;
         justify-content: center;
@@ -78,6 +78,10 @@ main.bracket-tournament-page {
                             td:first-child {
                                 color: $vindro-teal;
                                 padding-left: 7px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 7px;
                             }
 
                             &.clickable-row {
@@ -85,7 +89,7 @@ main.bracket-tournament-page {
                                 transition: background-color 0.2s ease;
 
                                 &:hover {
-                                    background-color: lighten($vindro-black, 7);
+                                    background-color: rgba($vindro-tan, 0.42);
                                 }
                             }
 
@@ -311,114 +315,355 @@ main.bracket-tournament-play {
         .header-container {
             width: 100%;
             display: flex;
-            flex-direction: column;
-            gap: 21px;
+            gap: 7px;
+            border-bottom: 1px solid $vindro-teal;
+            padding-bottom: 14px;
 
-            .top-container {
-                width: 100%;
+            .text-container {
+                flex-grow: 1;
                 display: flex;
+                flex-direction: column;
                 justify-content: space-between;
-                align-items: center;
-                padding-bottom: 14px;
-                border-bottom: 1px solid $vindro-teal;
+                align-items: flex-start;
+                gap: 7px;
 
                 h1 {
                     font-size: 4.2rem;
                 }
+
+                .play-specs {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+
+                    h2 {
+                        font-size: 2.1rem;
+                    }
+
+                    img {
+                        height: 36px;
+                        width: 36px;
+                    }
+                }
             }
 
-            .play-specs {
+            .go-back-button-container {
                 display: flex;
-                align-items: center;
-                gap: 14px;
-
-                h2 {
-                    font-size: 2.1rem;
-                }
-                img {
-                    height: 36px;
-                    width: 36px;
-                }
+                align-items: flex-end;
             }
+
+
         }
 
         .groups-stage {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
+            width: 100%; // Ensure the section takes full width of the parent
 
-            h3 {
-                font-size: 3.6rem;
-                font-weight: 400;
+            .stage-header {
+                margin-bottom: 21px;
+
+                h3 {
+                    font-size: 3.6rem;
+                    font-weight: 400;
+                    margin-bottom: 7px;
+                }
+
+                p {
+                    font-size: 1.4rem;
+                }
             }
 
-            p {
-                font-size: 1.4rem;
+            &:has(.focused-edit) {
+                .stage-header {
+                    filter: blur(4px);
+                    opacity: 0.5;
+                    transition: all 0.3s;
+                }
             }
 
-            .table-container {
 
-                    flex-grow: 1;
-                    border: 1px solid $vindro-black;
-                    border-radius: 7px;
-                    background-color: $vindro-tan;
+            .gallery-container {
+                position: relative;
+                width: 100%; // Changed from 84% to 100% to fit its parent properly
+                padding: 0 42px; // Increased padding to give arrows more room
+                background: #0f0f0f;
+                overflow: hidden; // Keeps the viewport from leaking out
+                box-sizing: border-box;
 
-                    table {
+                .nav-arrow {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: $vindro-tan;
+                    font-size: 2.1rem;
+                    color: $vindro-black;
+                    width: 36px;
+                    height: 63px;
+                    border-radius: 3px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.2s;
+                    z-index: 10;
 
-                        width: 100%;
-                        border-collapse: collapse;
-                        overflow: hidden;
+                    &:hover {
+                        background: $vindro-green;
+                        color: white;
+                    }
 
-                        th {
-                            font-size: 1.6rem;
-                            font-weight: 600;
-                            // color: $vindro-green;
-                            font-family: $vindro-Montserrat;
-                            border: none;
-                            border-bottom: 3px solid $vindro-black;
-                            padding: 7px 14px;
-                        }
+                    &.left {
+                        left: 5px;
+                    }
 
-                        td {
-                            font-size: 1.4rem;
-                            font-weight: 300;
-                            color: $vindro-gray;
-                            text-align: center;
-                            padding: 7px 14px;
+                    &.right {
+                        right: 5px;
+                    }
 
-                            .team-info {
-                                display: flex;
-                                gap: 7px;
-                            }
-                        }
-
-                        tr {
-
-                            td:first-child {
-                                color: $vindro-black;
-                                padding-left: 7px;
-                                font-weight: 600;
-                            }
-
-                            &.clickable-row {
-                                cursor: pointer;
-                                transition: background-color 0.2s ease;
-
-                                &:hover {
-                                    background-color: lighten($vindro-black, 7);
-                                }
-                            }
-
-                        }
+                    &.hidden {
+                        display: none;
                     }
                 }
+
+
+                .viewport {
+                    display: flex;
+                    gap: 20px;
+                    overflow: hidden;
+                    width: 100%;
+                    scroll-snap-type: x mandatory;
+                    scroll-behavior: smooth;
+                    padding: 14px;
+                    scrollbar-width: none;
+                    /* This creates the 'dead zone' for your arrows */
+                    //padding: 14px 60px;
+                    box-sizing: border-box;
+                    /* This ensures the padding acts as a wall */
+                    clip-path: inset(0 14px 0 14px);
+
+                    &::-webkit-scrollbar {
+                        display: none;
+                    }
+
+                    // 2. The Blur Logic
+                    // "When the container is in focus mode, target cards that ARE NOT being edited"
+                    &.has-active-focus {
+
+                        // Blur EVERY card inside the viewport...
+                        .group-card {
+                            filter: blur(6px);
+                            opacity: 0.4;
+                            pointer-events: none; // Deactivates interactions
+                            
+                        }
+
+                        // ...EXCEPT the one being edited!
+                        .group-card.focused-edit {
+
+                            filter: none;
+                            opacity: 1;
+                            pointer-events: all;
+                            z-index: 100;
+                            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+                        }
+                    }
+
+                    .group-card {
+
+                        flex: 0 0 100%; // Mobile: 1 card
+                        background: $vindro-gray;
+                        border: 1px solid rgba(255, 255, 255, 0.05);
+                        border-radius: 7px;
+                        padding: 14px;
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        flex-direction: column;
+                        gap: 14px;
+                        box-sizing: border-box;
+                        min-width: 0; // Crucial: prevents content from pushing card width
+                        scroll-snap-align: center; // This makes the "magnet" pull to the middle
+                        scroll-snap-stop: always; // Prevents the user from "flicking" past multiple cards
+
+                        .group-header {
+                            position: relative;
+                            text-align: left;
+                            gap: 7px;
+                            font-size: 1.8rem;
+                            font-family: $vindro-Montserrat;
+                            font-weight: 600;
+                            color: white;
+                            width: 100%;
+                            padding: 7px;
+                            border-bottom: 2px solid $vindro-teal;
+
+                            button {
+                                position: absolute;
+                                top: 7px;
+                                right: 0;
+                                font-size: 1.2rem;
+                                display: flex;
+                                align-items: flex-end;
+                                justify-content: center;
+                                align-items: center;
+                                width: 42px;
+                                padding: 3px 14px;
+
+                                &.active,
+                                &:hover {
+                                    background-color: $vindro-neon-pink;
+                                    color: white;
+                                }
+                            }
+                        }
+
+                        .team-list {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 12px; // Controls spacing between rows
+                            padding-top: 10px;
+
+                            .team-row {
+                                display: flex;
+                                align-items: center;
+                                gap: 7px;
+                                width: 100%;
+                                padding: 8px 12px;
+                                background: rgba(white, 0.63); // Subtle background for the row
+                                border-radius: 3px;
+                                transition: transform 0.2s ease, background 0.2s ease;
+
+                                // Visual indicator for qualifying spots (1st & 2nd)
+                                &.rank-1,
+                                &.rank-2 {
+                                    background: rgba(white, 0.84);
+                                    //border-left: 3px solid $vindro-black;
+                                }
+
+                                // Target specific upgraded classes
+                                .rank-num {
+                                    font-size: 1.6rem;
+                                    font-weight: 700;
+                                    color: $vindro-gray;
+                                    //width: 25px; // Fixed width keeps flags aligned vertically
+                                }
+
+                                .fi {
+                                    margin-left: 7px;
+                                    font-size: 2.1rem; // Adjust flag size
+                                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                                }
+
+                                .team-name {
+                                    flex: 1; // Takes up all remaining space, pushing handle to the right
+                                    font-size: 1.6rem;
+                                    color: $vindro-black;
+                                    font-weight: 500;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                }
+
+                                &.is-draggable {
+                                    cursor: grab; // Change cursor for the whole row
+                                    touch-action: none;
+
+                                    &:active {
+                                        cursor: grabbing;
+                                    }
+
+                                    &:hover {
+                                        background: white;
+                                        transform: translateX(4px); // Subtle nudge to show it's active
+                                    }
+                                }
+
+                                // Visual feedback for the item being moved
+                                &.dragging {
+                                    opacity: 0.14;
+                                    background: $vindro-teal !important;
+                                    border: 1px dashed white;
+                                }
+
+                                .rank-num,
+                                .team-flag,
+                                .team-name,
+                                .drag-handle {
+                                    pointer-events: none;
+                                }
+                            }
+                        }
+
+                        // 3. The Focused State
+                        &.focused-edit {
+                            z-index: 100; // Sit on top of the blur
+                            border: 1px solid $vindro-neon-pink;
+                            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+                            filter: none !important; // Force clear
+                            opacity: 1 !important;
+                            pointer-events: all;
+                        }
+
+                        // Remove default active/focus styles for a cleaner look
+                        .edit-toggle-btn,
+                        .team-row {
+                            outline: none;
+                            -webkit-tap-highlight-color: transparent;
+
+                            &:focus,
+                            &:active {
+                                outline: none;
+                            }
+                        }
+
+                        // 678px to 1100px: 2 Cards
+                        @media (min-width: 678px) {
+                            flex: 0 0 calc((100% - 20px) / 2);
+                            //scroll-snap-align: start; // Align to start for clean set scrolling
+                        }
+
+                        // Above 1100px: 3 Cards
+                        @media (min-width: 1100px) {
+                            flex: 0 0 calc((100% - 40px) / 3);
+                            //scroll-snap-align: start;
+                        }
+
+
+
+                        /*
+                        /*
+                        @media (min-width: 678px) {
+                            flex: 0 0 calc((100% - 20px) / 2);
+                        }
+
+                        @media (min-width: 960px) {
+                            flex: 0 0 calc((100% - 40px) / 3);
+                        }
+                        */
+                    }
+                }
+            }
         }
 
-        .brackets-stage {
-
-        }
+        .brackets-stage {}
 
     }
+}
+
+/* Add this to your _brackets.scss */
+[draggable="true"] {
+    /* Prevents the 'magnifying glass' or text selection on iPhone */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* The polyfill creates a 'ghost' element. Let's make it look like our rows */
+.dnd-poly-drag-image {
+    background: $vindro-teal !important;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    opacity: 0.9;
+    transform: scale(1.05); // Make it slightly bigger so user sees it under finger
 }
 
 
@@ -486,7 +731,7 @@ $error-red: #ff4d4d;
             justify-content: center;
             align-items: center;
             gap: 14px;
-            padding: 14px;
+            padding: 21px 14px 14px;
 
             h2 {
                 font-size: 3.6rem;
@@ -576,7 +821,7 @@ $error-red: #ff4d4d;
             background-color: $vindro-gray;
             height: 100%;
             width: 100%;
-            padding: 14px;
+            padding: 21px 14px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -619,7 +864,7 @@ $error-red: #ff4d4d;
     }
 }
 
-.submit-play-modal {
+.submit-play-modal, .submission-response-modal {
 
     .feature-table {
         margin: 20px auto 0 auto; // Centers the table container
@@ -635,7 +880,7 @@ $error-red: #ff4d4d;
                 overflow: hidden;
 
                 th {
-                    font-size: 1.4rem;
+                    font-size: 1.6rem;
                     font-weight: 600;
                     font-family: $vindro-Montserrat;
                     border: none;
@@ -646,12 +891,36 @@ $error-red: #ff4d4d;
                 }
 
                 td {
-                    font-size: 1.2rem;
+                    font-size: 1.4rem;
                     font-weight: 300;
                     padding: 10px 0;
                     color: white;
                     vertical-align: middle;
                     text-align: center; // Centers both checkbox and text
+
+                    &.response-status {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 14px;
+
+                        svg {
+                            height: 21px;
+                            width: 21px;
+                        }
+
+                        .success {
+                            color: $vindro-green;
+                        }
+
+                        .warning {
+                            color: $real-yellow;
+                        }
+
+                        .error {
+                            color: $real-red;
+                        }
+                    }
                 }
 
                 tr:last-child td {
@@ -762,7 +1031,7 @@ $error-red: #ff4d4d;
 
         .submit-plays-buttons {
             width: 100%;
-            padding: 14px 21px;
+            padding: 21px;
             display: flex;
             justify-content: space-between;
 
@@ -792,6 +1061,8 @@ $error-red: #ff4d4d;
 
 }
 
+
+
 @import 'mobile960';
 @import 'mobile678';
 @import 'mobile450';
@@ -808,3 +1079,64 @@ $error-red: #ff4d4d;
         transform: translateY(0);
     }
 }
+
+
+/* OLD TABLE STYLING FOR REFERENCE
+            .table-container {
+
+                    flex-grow: 1;
+                    border: 1px solid $vindro-black;
+                    border-radius: 7px;
+                    background-color: $vindro-tan;
+
+                    table {
+
+                        width: 100%;
+                        border-collapse: collapse;
+                        overflow: hidden;
+
+                        th {
+                            font-size: 1.6rem;
+                            font-weight: 600;
+                            // color: $vindro-green;
+                            font-family: $vindro-Montserrat;
+                            border: none;
+                            border-bottom: 3px solid $vindro-black;
+                            padding: 7px 14px;
+                        }
+
+                        td {
+                            font-size: 1.4rem;
+                            font-weight: 300;
+                            color: $vindro-gray;
+                            text-align: center;
+                            padding: 7px 14px;
+
+                            .team-info {
+                                display: flex;
+                                gap: 7px;
+                            }
+                        }
+
+                        tr {
+
+                            td:first-child {
+                                color: $vindro-black;
+                                padding-left: 7px;
+                                font-weight: 600;
+                            }
+
+                            &.clickable-row {
+                                cursor: pointer;
+                                transition: background-color 0.2s ease;
+
+                                &:hover {
+                                    background-color: lighten($vindro-black, 7);
+                                }
+                            }
+
+                        }
+                    }
+                }
+        }
+        */

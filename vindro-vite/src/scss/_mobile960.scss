@@ -1,3 +1,5 @@
+@use 'config' as *;
+
 @media(max-width: 960px) {
 
     #navbar {
@@ -243,7 +245,7 @@
 
                         .table-container {
                             table {
-                                
+
                                 th {
                                     font-size: 1.6rem;
                                 }
@@ -253,6 +255,42 @@
                 }
             }
         }
+    }
+
+    main.bracket-tournament-play {
+        .bracket-tournament-play-container {
+            width: 100%;
+            padding: 42px 0;
+
+            .groups-stage {
+
+                .gallery-container {
+
+                    .viewport {
+
+                        .group-card {
+
+                            .team-list {
+
+                                .team-row {
+
+                                    .rank-num,
+                                    .team-name {
+                                        font-size: 1.4rem;
+                                    }
+
+                                    .fi {
+                                        font-size: 1.8rem;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 
     main#contact-page {

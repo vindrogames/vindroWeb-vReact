@@ -76,6 +76,25 @@ button {
     color: white;
 }
 
+/* Global button fixes */
+button,
+.btn {
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus:not(:focus-visible),
+    &:active {
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: inherit;
+}
+
 section#under-construction {
     height: 50vh;
     background-color: $vindro-teal;

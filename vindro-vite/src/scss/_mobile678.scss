@@ -1,3 +1,5 @@
+@use 'config' as *;
+
 @media(max-width: 678px) {
 
     #navbar {
@@ -589,6 +591,43 @@
 
             }
 
+        }
+    }
+
+    main.bracket-tournament-play {
+
+        .bracket-tournament-play-container {
+            width: 100%;
+            padding: 42px 0;
+
+            .header-container {
+
+                .text-container {
+
+                    h1 {
+                        font-size: 2.8rem;
+                    }
+                }
+            }
+
+            .groups-stage {
+
+                .stage-header {
+                    margin-bottom: 0;
+                    h3 {
+                        font-size: 2.8rem;
+                    }
+                }
+
+
+                .gallery-container {
+                    padding: 36px;
+
+                    .nav-arrow {
+                        height: 56px;
+                    }
+                }
+            }
         }
     }
 

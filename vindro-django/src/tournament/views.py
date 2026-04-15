@@ -3,7 +3,7 @@ import hashlib
 import json, uuid
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction, models
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from accounts.views import login_required_api
@@ -16,13 +16,13 @@ from .serializers import (
     serialize_pool,
     serialize_leaderboard_entry,
 )
+
 from .logic import initialize_user_play;
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
 def _hash_code(plain_code):
     return hashlib.sha256(plain_code.encode()).hexdigest()
 
@@ -56,9 +56,9 @@ def tournament_list(request):
 
 
 @require_http_methods(["GET"])
-def tournament_detail(request, tournament_id):
+def tournament_detail(request, tournament_slug):
     """GET /api/tournament/<id>/"""
-    tournament, err = _get_or_404(Tournament, id=tournament_id)
+    tournament, err = _get_or_404(Tournament, slug=tournament_slug)
     if err:
         return err
     return JsonResponse({'success': True, 'data': serialize_tournament_with_format(tournament)})
@@ -77,66 +77,16 @@ def tournament_results(request, tournament_id):
 # Phase 3 — Play endpoints (auth required)
 # ---------------------------------------------------------------------------
 
-'''
-OLD
-@require_http_methods(["GET", "POST"])
-@csrf_exempt
-@login_required_api
-def play_list_create(request, tournament_slug):
-    """
-    GET  /api/tournament/<id>/plays/  — list user's plays for this tournament
-    POST /api/tournament/<id>/plays/  — create a new play
-    """
-    tournament, err = _get_or_404(Tournament, slug=tournament_slug)
-    if err:
-        return err
-
-    if request.method == 'GET':
-        plays = TournamentPlay.objects.filter(tournament=tournament, user=request.user)
-        return JsonResponse({'success': True, 'data': [serialize_play(p) for p in plays]})
-
-    # POST — create play
-    try:
-        body = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
-
-    name = body.get('name', '').strip()
-    if not name:
-        return JsonResponse({'success': False, 'error': 'name is required'}, status=400)
-    if len(name) > 100:
-        return JsonResponse({'success': False, 'error': 'name too long (max 100 characters)'}, status=400)
-
-    play = TournamentPlay.objects.create(
-        tournament=tournament,
-        user=request.user,
-        name=name,
-    )
-
-    # Auto-join the public vindroPool
-
-    try:
-        public_pool = TournamentPool.objects.get(tournament=tournament, is_public=True)
-        PoolMembership.objects.create(pool=public_pool, play=play)
-        TournamentPool.objects.filter(pk=public_pool.pk).update(
-            current_member_count=public_pool.current_member_count + 1
-        )
-    except TournamentPool.DoesNotExist:
-        pass  # public pool not created yet (admin hasn't set it up)
-    
-    return JsonResponse({'success': True, 'data': serialize_play(play)}, status=201)
-'''
-
 
 # New -> Fetches ALL plays for specific tournament for specific user.
 # To populate TournamentPage table when user is logged in
 @require_http_methods(["GET"])
 @login_required_api
-def user_tournament_plays(request, tournament_slug):
+def user_tournament_plays(request, tournament_id):
     """
     Populates the 'Your Plays' table.
     """
-    tournament, err = _get_or_404(Tournament, slug=tournament_slug)
+    tournament, err = _get_or_404(Tournament, id=tournament_id)
     if err: return err
 
     # Strictly filter by the logged-in user session
@@ -155,12 +105,12 @@ def user_tournament_plays(request, tournament_slug):
 @csrf_exempt
 @login_required_api 
 @require_http_methods(["POST"])
-def create_new_play(request, tournament_slug):
+def create_new_play(request, tournament_id):
     """
     Creates a new Play. Only accessible to authenticated users.
     """
     # 1. Verify Tournament exists
-    tournament, err = _get_or_404(Tournament, slug=tournament_slug)
+    tournament, err = _get_or_404(Tournament, id=tournament_id)
     if err: 
         return err
 
@@ -168,7 +118,7 @@ def create_new_play(request, tournament_slug):
         # 2. Parse payload
         body = json.loads(request.body)
         name = body.get('name', '').strip()
-        
+
         if not name:
             return JsonResponse({'success': False, 'error': 'Name is required'}, status=400)
 
@@ -199,124 +149,56 @@ def create_new_play(request, tournament_slug):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
-'''
-OLD
-@require_http_methods(["GET", "PATCH"])
+# 1. Public/Detail View
+@require_http_methods(["GET"])
+def tournament_play_detail(request, play_id):
+    """Publicly view any bracket by ID"""
+    play, err = _get_or_404(TournamentPlay, id=play_id)
+    if err: return err
+    return JsonResponse({'success': True, 'data': serialize_play(play)})
+
+
+# 2. Reorder Groups (Owner Only)
 @csrf_exempt
 @login_required_api
-def play_detail(request, play_id):
-    """
-    GET   /api/tournament/plays/<play_id>/  — get play
-    PATCH /api/tournament/plays/<play_id>/  — update predictions
-    """
-    play, err = _get_or_404(TournamentPlay, id=play_id)
-    if err:
-        return err
-    if play.user != request.user:
-        return JsonResponse({'success': False, 'error': 'Forbidden'}, status=403)
-
-    if request.method == 'GET':
-        return JsonResponse({'success': True, 'data': serialize_play(play)})
-
-    # PATCH
-    if play.status == 'submitted':
-        return JsonResponse({'success': False, 'error': 'Play already submitted'}, status=400)
+@require_http_methods(["PATCH"])
+def update_groups(request, play_id):
+    """PATCH /api/tournament/plays/<id>/update-groups/"""
+    # Security: Query by both ID and User in one shot
+    play, err = _get_or_404(TournamentPlay, id=play_id, user=request.user)
+    if err: return err
 
     try:
         body = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
-
-    if 'group_predictions' in body:
-        if not isinstance(body['group_predictions'], dict):
-            return JsonResponse({'success': False, 'error': 'group_predictions must be an object'}, status=400)
-        play.group_predictions = body['group_predictions']
-
-    if 'bracket_predictions' in body:
-        if not isinstance(body['bracket_predictions'], dict):
-            return JsonResponse({'success': False, 'error': 'bracket_predictions must be an object'}, status=400)
-        play.bracket_predictions = body['bracket_predictions']
-
-    if 'current_phase' in body:
-        valid_phases = [c[0] for c in TournamentPlay.PHASE_CHOICES]
-        if body['current_phase'] not in valid_phases:
-            return JsonResponse({'success': False, 'error': 'Invalid phase'}, status=400)
-        play.current_phase = body['current_phase']
-
-    if 'name' in body:
-        name = body['name'].strip()
-        if not name or len(name) > 100:
-            return JsonResponse({'success': False, 'error': 'Invalid name'}, status=400)
-        play.name = name
-
-    play.save()
-    return JsonResponse({'success': True, 'data': serialize_play(play)})
-'''
-
-# New -> Public View to display any specific TournamentPlay
-@require_http_methods(["GET", "PATCH"])
-@csrf_exempt
-def tournament_play_detail(request, play_id):
-    print('hola from play detail')
-    print(play_id)
-    play = get_object_or_404(TournamentPlay, id=play_id)
-
-    if request.method == 'GET':
+        # Surgical update of the JSON field
+        play.group_predictions = body.get('group_predictions', play.group_predictions)
+        play.save()
         return JsonResponse({'success': True, 'data': serialize_play(play)})
-
-    if request.method == 'PATCH':
-        # Backend Protection: Verify logged user is the actual owner
-        if not request.user.is_authenticated or play.user != request.user:
-            return JsonResponse({'success': False, 'error': 'Forbidden'}, status=403)
-        
-        try:
-            body = json.loads(request.body)
-            play.group_predictions = body.get('group_predictions', play.group_predictions)
-            play.bracket_predictions = body.get('bracket_predictions', play.bracket_predictions)
-            play.save()
-            return JsonResponse({'success': True, 'data': serialize_play(play)})
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 
-'''
-Don't know about this submitting business. New proposal from Gemini:
-@require_http_methods(["POST"])
+# 3. Choose Bracket Winners (Owner Only)
 @csrf_exempt
 @login_required_api
-def finalize_tournament_play(request, play_id):
-    """
-    Locks the play so no further PATCH edits can be made.
-    """
-    play, err = _get_or_404(TournamentPlay, id=play_id)
+@require_http_methods(["PATCH"])
+def update_bracket(request, play_id):
+    """PATCH /api/tournament/plays/<id>/update-bracket/"""
+    play, err = _get_or_404(TournamentPlay, id=play_id, user=request.user)
     if err: return err
-    
-    if play.user != request.user:
-        return JsonResponse({'success': False, 'error': 'Forbidden'}, status=403)
 
-    play.status = 'submitted'
-    play.save()
-    return JsonResponse({'success': True, 'data': serialize_play(play)})
-'''
-
-# Original Play Submit
-@require_http_methods(["POST"])
-@csrf_exempt
-@login_required_api
-def play_submit(request, play_id):
-    """POST /api/tournament/plays/<play_id>/submit/"""
-    play, err = _get_or_404(TournamentPlay, id=play_id)
-    if err:
-        return err
-    if play.user != request.user:
-        return JsonResponse({'success': False, 'error': 'Forbidden'}, status=403)
-    if play.status == 'submitted':
-        return JsonResponse({'success': False, 'error': 'Play already submitted'}, status=400)
-
-    play.status = 'submitted'
-    play.current_phase = 'submitted'
-    play.save()
-    return JsonResponse({'success': True, 'data': serialize_play(play)})
+    try:
+        body = json.loads(request.body)
+        play.bracket_predictions = body.get('bracket_predictions', play.bracket_predictions)
+        
+        # Logic: Progress the phase automatically
+        if play.current_phase == 'groups':
+            play.current_phase = 'bracket'
+            
+        play.save()
+        return JsonResponse({'success': True, 'data': serialize_play(play)})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 
 # ---------------------------------------------------------------------------
@@ -375,47 +257,104 @@ def pool_list_create(request, tournament_id):
     return JsonResponse({'success': True, 'data': result}, status=201)
 
 
-@require_http_methods(["POST"])
-@csrf_exempt
-@login_required_api
-def pool_join(request, tournament_id):
-    """POST /api/tournament/<id>/pools/join/  — join private pool via code"""
-    tournament, err = _get_or_404(Tournament, id=tournament_id)
-    if err:
-        return err
 
+@login_required_api
+@csrf_exempt
+@require_http_methods(["POST"])
+def pool_join(request, tournament_id):
+    # 1. Fetch Tournament
+    tournament, error_res = _get_or_404(Tournament, id=tournament_id)
+    if error_res:
+        return error_res
+
+    # 2. Parse Payload
     try:
         body = json.loads(request.body)
+        raw_play_id = body.get('play_id')
+        pool_type = body.get('pool_type')
+        code = body.get('code', '').strip()
     except json.JSONDecodeError:
         return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
 
-    code = body.get('code', '').strip()
-    play_id = body.get('play_id', '').strip()
+    # 3. Normalize IDs (Ensure it is a list of UUID strings)
+    play_ids = raw_play_id if isinstance(raw_play_id, list) else [raw_play_id]
 
-    if not code:
-        return JsonResponse({'success': False, 'error': 'code is required'}, status=400)
-    if not play_id:
-        return JsonResponse({'success': False, 'error': 'play_id is required'}, status=400)
+    # 4. Find the Pool
+    if pool_type == 'public':
+        pool = TournamentPool.objects.filter(tournament=tournament, is_public=True).first()
+    else:
+        # Match against your model's 'code_hash' field
+        pool = TournamentPool.objects.filter(tournament=tournament, code_hash=code).first()
 
-    play, err = _get_or_404(TournamentPlay, id=play_id, tournament=tournament, user=request.user)
-    if err:
-        return JsonResponse({'success': False, 'error': 'Play not found or not yours'}, status=404)
-
-    code_hash = _hash_code(code)
-    pool = TournamentPool.objects.filter(tournament=tournament, code_hash=code_hash).first()
     if not pool:
-        return JsonResponse({'success': False, 'error': 'Invalid join code'}, status=400)
+        return JsonResponse({'success': False, 'error': 'Pool not found or invalid code'}, status=404)
 
-    if PoolMembership.objects.filter(pool=pool, play=play).exists():
-        return JsonResponse({'success': False, 'error': 'Already a member of this pool'}, status=400)
+    # 5. Process Memberships
+    added_count = 0
+    results_map = {}
 
-    PoolMembership.objects.create(pool=pool, play=play)
-    TournamentPool.objects.filter(pk=pool.pk).update(
-        current_member_count=pool.current_member_count + 1
-    )
+    try:
+        with transaction.atomic():
+            # Filter for valid plays belonging to this user and tournament
+            # Using id__in handles the list correctly
+            valid_plays = TournamentPlay.objects.filter(
+                id__in=play_ids,
+                tournament=tournament,
+                user=request.user
+            )
 
-    return JsonResponse({'success': True, 'data': serialize_pool(pool)})
+            if not valid_plays.exists():
+                return JsonResponse({'success': False, 'error': 'No valid plays found'}, status=404)
 
+            # Check existing memberships to prevent unique constraint errors
+            # 2. Get EXISTING memberships for this pool and these plays
+            # We force this into a list of STRINGS immediately
+
+            existing_play_ids = [
+                str(pid) for pid in PoolMembership.objects.filter(
+                    pool=pool, 
+                    play__in=valid_plays
+                ).values_list('play_id', flat=True)
+            ]
+            existing_str_ids = set(str(pid) for pid in existing_play_ids)
+
+            print(f"DEBUG: Checking against these existing IDs: {existing_str_ids}")
+
+            new_memberships = []
+            
+
+            for play in valid_plays:
+
+                pid_str = str(play.id)
+
+                # Direct String-to-String comparison
+                if pid_str in existing_str_ids:
+                    results_map[pid_str] = 'already_joined'
+                else:
+                    new_memberships.append(PoolMembership(pool=pool, play=play))
+                    results_map[pid_str] = 'success'
+
+            if new_memberships:
+                PoolMembership.objects.bulk_create(new_memberships)
+                added_count = len(new_memberships)
+
+            if added_count > 0:
+                TournamentPool.objects.filter(pk=pool.pk).update(
+                    current_member_count=models.F('current_member_count') + added_count
+                )
+
+        return JsonResponse({
+            'success': True, 
+            'added_count': added_count,
+            'results': results_map,
+            'message': f'Processed {len(valid_plays)} plays.'
+        })
+
+    except Exception as e:
+        # This will catch and log the specific reason for the 500/Empty Response
+        print(f"Internal Server Error: {str(e)}") 
+        return JsonResponse({'success': False, 'error': 'Internal server error during join'}, status=500)
+    
 
 @require_http_methods(["GET"])
 @login_required_api

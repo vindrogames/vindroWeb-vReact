@@ -1,3 +1,5 @@
+@use 'config' as *;
+
 @media(max-width: 450px) {
 
     #navbar-hamburger {
@@ -52,6 +54,7 @@
     }
 
     main#stories {
+
         section#stories-page-content {
 
             #timeline ul {
@@ -418,6 +421,92 @@
                                 font-size: 1.6rem;
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    main.bracket-tournament-play {
+
+        padding: 90px 21px;
+
+        .bracket-tournament-play-container {
+            padding: 21px 0;
+
+            .header-container {
+
+                .text-container {
+
+                    h1 {
+                        font-size: 2.4rem;
+                    }
+
+                    .play-specs {
+                        gap: 7px;
+
+                        h2 {
+                            font-size: 1.8rem;
+                        }
+
+                        img {
+                            height: 28px;
+                            width: 28px;
+                        }
+                    }
+                }
+
+                .go-back-button-container {
+
+                    button {
+                        padding: 3px 14px;
+                    }
+                }
+            }
+
+            .groups-stage {
+
+                .stage-header {
+                    margin-bottom: 0;
+
+                    h3 {
+                        font-size: 2.8rem;
+                    }
+                }
+
+
+                .gallery-container {
+                    padding: 28px;
+
+                    .nav-arrow {
+                        height: 36px;
+                        width: 24px;
+                    }
+
+                    .viewport {
+
+                        padding: 8px;
+
+                        .group-card {
+
+                            .group-header {}
+
+                            .team-list {
+
+                                .team-row {
+
+                                    .rank-num,
+                                    .team-name {
+                                        font-size: 1.4rem;
+                                    }
+
+                                    .fi {
+                                        font-size: 1.8rem;
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 }
             }

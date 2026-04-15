@@ -6,7 +6,7 @@ app_name = 'tournament'
 urlpatterns = [
     # Tournament list & detail
     path('', views.tournament_list, name='tournament_list'),
-    path('<uuid:tournament_id>/', views.tournament_detail, name='tournament_detail'),
+    path('<slug:tournament_slug>/', views.tournament_detail, name='tournament_detail'),
     path('<uuid:tournament_id>/results/', views.tournament_results, name='tournament_results'),
 
     # Plays
@@ -15,12 +15,14 @@ urlpatterns = [
     # path('plays/<uuid:play_id>/', views.play_detail, name='play_detail'),
     # path('plays/<uuid:play_id>/submit/', views.play_submit, name='play_submit'),
     # Matches: /api/tournament/world-cup-2026/my-plays/
-    path('<slug:tournament_slug>/user-plays/', views.user_tournament_plays),
-    
+    path('<uuid:tournament_id>/user-plays/', views.user_tournament_plays),
+
     # Matches: /api/tournament/world-cup-2026/create/
-    path('<slug:tournament_slug>/create/', views.create_new_play),
-    
+    path('<uuid:tournament_id>/create/', views.create_new_play),
     path('plays/<uuid:play_id>/', views.tournament_play_detail),
+    path('plays/<uuid:play_id>/update-groups/', views.update_groups),
+    path('plays/<uuid:play_id>/update-bracket/', views.update_bracket),
+    # path('plays/<uuid:play_id>/group_stage', views.tournament)
     # Fallback for UUID lookup: /api/tournament/plays/UUID/
     # path('plays/<uuid:play_id>/', views.get_play_by_id),
     # path('plays/<uuid:play_id>/submit/', views.finalize_tournament_play),

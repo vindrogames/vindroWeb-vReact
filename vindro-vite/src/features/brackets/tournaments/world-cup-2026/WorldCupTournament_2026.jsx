@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react'; // Added useEffect
+import { FaEdit } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import CreateNewPlayModal from '../../components/CreateNewPlayModal';
 import JoinPoolModal from '../../components/JoinPoolModal';
 import EventDescription from './components/EventDescription';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import AuthModal from '../../../../components/ui/AuthModal';
+
+import { useTournament } from '../../hooks/useTournament';
+import tournamentServices from '../../services/tournamentService';
 import { useAuth } from '../../../../contexts/auth/AuthContext';
 import { usePlayActions } from '../../hooks/usePlayActions';
-import playService from '../../services/playService'; // Added for direct fetch
+import playServices from '../../services/playService'; // Added for direct fetch
 
 const WorldCupTournament_2026 = () => {
+
     const { user } = useAuth();
     const navigate = useNavigate(); // Added navigate
 
@@ -20,13 +25,39 @@ const WorldCupTournament_2026 = () => {
     const [authModalMode, setAuthModalMode] = useState('login');
 
     // --- Data State ---
-    const [userPlays, setUserPlays] = useState([]); // CHANGE: Added to store fetched plays
-    const [isLoadingPlays, setIsLoadingPlays] = useState(false); // CHANGE: Loading state for table
+    const [tournamentData, setTournamentData] = useState([]);
+    const [isLoadingTournamentData, setIsLoadingtournamentData] = useState(false);
+
+    const [userPlays, setUserPlays] = useState(null); // CHANGE: Added to store fetched plays
+    const [isLoadingPlays, setIsLoadingPlays] = useState([]); // CHANGE: Loading state for table
 
     // Logic Hook - handles API, slugifying, and navigation
     const { handleCreatePlay, isSubmitting, error: apiError } = usePlayActions();
 
     const tournamentSlug = "world-cup-2026";
+
+    useEffect(() => {
+
+        const fetchTournamentData = async () => {
+
+            setIsLoadingtournamentData(true);
+
+            try {
+                const response = await tournamentServices.getTournamentBySlug(tournamentSlug);
+
+                console.log("tournament Data Fetch:", response);
+
+                setTournamentData(response);
+            } catch (err) {
+                console.error("Failed to fetch Tournament Data:", err);
+                setTournamentData(null);
+            } finally {
+                setIsLoadingtournamentData(false);
+            }
+        }
+
+        fetchTournamentData()
+    }, [tournamentSlug]);
 
     useEffect(() => {
 
@@ -41,7 +72,7 @@ const WorldCupTournament_2026 = () => {
 
             try {
                 // This now contains the array: [{"id": "...", "name": "firstPlay", ...}]
-                const plays = await playService.getUserPlays(tournamentSlug);
+                const plays = await playServices.getUserPlays(tournamentData.id);
 
                 // Log it once to be 100% sure what's arriving
                 console.log("Dashboard plays received:", plays);
@@ -60,10 +91,11 @@ const WorldCupTournament_2026 = () => {
         };
 
         fetchDashboardData();
-    }, [user, tournamentSlug]);
+    }, [user, tournamentSlug, tournamentData.id]);
 
     // --- CORE HANDLERS ---
     const handleNewPlay = () => {
+
         if (!user) {
             handleLoginClick();
             return;
@@ -73,7 +105,7 @@ const WorldCupTournament_2026 = () => {
 
     const handleCreatePlayConfirm = async (playName) => {
 
-        await handleCreatePlay(tournamentSlug, playName, user);
+        await handleCreatePlay(tournamentSlug, tournamentData.id, playName, user);
         setShowCreatePlayModal(false);
     };
 
@@ -88,6 +120,7 @@ const WorldCupTournament_2026 = () => {
     };
 
     const handleJoinPool = () => {
+
         if (!user) {
             handleLoginClick();
             return;
@@ -109,6 +142,28 @@ const WorldCupTournament_2026 = () => {
             const offset = element.getBoundingClientRect().top + window.scrollY - 90;
             window.scrollTo({ top: offset, behavior: 'smooth' });
         }
+    };
+
+    const getUpdateStatus = (play) => {
+
+        const created = new Date(play.created_at);
+        const updated = new Date(play.updated_at);
+
+        // Calculate difference in seconds
+        const diffInSeconds = Math.abs(updated - created) / 1000;
+
+        // If updated within 5 seconds of creation, it's a "fresh" play
+        if (diffInSeconds < 5) {
+            return "Never";
+        }
+
+        // Otherwise, return a nice readable date
+        return updated.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     };
 
     return (
@@ -148,8 +203,8 @@ const WorldCupTournament_2026 = () => {
                                                 className="clickable-row"
                                                 style={{ cursor: 'pointer' }}
                                             >
-                                                <td>{play.name}</td>
-                                                <td>{play.status}</td>
+                                                <td>{play.name} <FaEdit /></td>
+                                                <td>{getUpdateStatus(play)}</td>
                                                 <td>{play.group_points || 0}</td>
                                                 <td>{play.bracket_points || 0}</td>
                                             </tr>
@@ -163,7 +218,7 @@ const WorldCupTournament_2026 = () => {
                         <div id="create-play-buttons-container" className="buttons-container">
                             <button className="btn btn-tan" onClick={handleNewPlay}>New Play</button>
                         </div>
-                        
+
                     </div>
 
                     <div className="title-container pools"><h3>Your Pools</h3></div>
@@ -204,6 +259,26 @@ const WorldCupTournament_2026 = () => {
                 <div id="tournament-leaderboard" className="tournament-leaderboard-title">
                     <h3>Leaderboard</h3>
                 </div>
+
+                <div className="vindro-leaderboard-table">
+                        <div className="table-container">
+                            <table id="groups-points-table">
+                                <thead>
+                                    <tr>
+                                        <th>Position</th>
+                                        <th>User</th>
+                                        <th>Play</th>
+                                        <th>Group Pts</th>
+                                        <th>Bracket Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* Map rows for each submitted play*/}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
             </ShowcaseSection>
 
             <CreateNewPlayModal
@@ -216,16 +291,16 @@ const WorldCupTournament_2026 = () => {
 
             <JoinPoolModal
                 isOpen={showPoolModal}
-                tournamentSlug={tournamentSlug}
-                userId={user?.id}
+                tournamentId={tournamentData.id}
+                //userId={user?.id}
                 onSuccess={() => setShowPoolModal(false)}
                 onCancel={() => setShowPoolModal(false)}
+                plays={userPlays}
             />
 
             <AuthModal
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
-                redirectTo={window.location.pathname}
                 defaultMode={authModalMode}
             />
         </main>

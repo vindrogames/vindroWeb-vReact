@@ -1,3 +1,5 @@
+@use 'config' as *;
+
 @media(max-width: 376px) {
     section.hero-full {
         //padding: 7px;
@@ -13,11 +15,6 @@
         button {
             font-size: 1.6rem;
             padding: 7px 14px;
-
-            &:hover {
-                background-color: $vindro-green;
-                color: white;
-            }
         }
     }
 
@@ -295,6 +292,7 @@
                                 font-size: 1.8rem;
                             }
                         }
+
                         .feature-explanation {
 
                             p {
@@ -322,6 +320,44 @@
                         }
                     }
                 }
+            }
+        }
+    }
+
+    main.bracket-tournament-play {
+
+        padding: 90px 14px;
+
+        .bracket-tournament-play-container {
+
+            .header-container {
+                flex-direction: column;
+
+                .text-container {
+
+                    h1 {
+                    }
+
+                    .play-specs {
+
+                        h2 {
+                            font-size: 1.6rem;
+                        }
+
+                        img {
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+                }
+
+                .go-back-button-container {
+
+                    button {
+                    }
+                }
+
+
             }
         }
     }
