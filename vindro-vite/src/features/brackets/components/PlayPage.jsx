@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import playService from '../services/playService';
+import playServices from '../services/playServices';
 import { useAuth } from '../../../contexts/auth/AuthContext';
-import GroupStagePredictions from './GroupStagePredictions';
-import BracketStagePredictions from './BracketStagePredictions';
+import GroupStagePredictions from './PlayGroupStagePredicts';
+import BracketStagePredictions from './PlayBracketStagePredicts';
 import formatDate from '../../../utils/dateFormatter';
 
 const PlayPage = () => {
@@ -26,7 +26,7 @@ const PlayPage = () => {
             if (!playId) return;
             try {
                 setLoading(true);
-                const result = await playService.getPlayById(playId);
+                const result = await playServices.getPlayById(playId);
 
                 // If backend follows the { success, data } pattern:
                 if (result && result.success) {
@@ -85,9 +85,9 @@ const PlayPage = () => {
                     <div className="text-container">
                         <h1 className="profile-intro">{playData.tournament_name}</h1>
                         <div className="play-specs">
-                            {isOwner ? 
+                            {!isOwner ? 
                                 (<><h2><span className="inline-bold">{playData.name}</span> <span className="inline-teal">by</span> <span className="inline-bold">{playData.user_name}</span></h2> <img src={playData.user_avatar} alt=""></img></>) : 
-                                (<h2><span className="inline-bold">{playData.name}</span></h2>)}
+                                (<h2>play: <span className="inline-bold">{playData.name}</span></h2>)}
                         </div>
                     </div>
                     <div className="go-back-button-container">
@@ -100,7 +100,7 @@ const PlayPage = () => {
 
                     <div className="stage-header">
                         <h3>group<span className="inline-teal inline-bold">Stage</span></h3>
-                        <p className="last-updated">Updated: {formatDate(playData.updated_at)}</p>
+                        <p className="last-updated">tba...</p>
                     </div>
 
                     {/* Pass isOwner down so sub-components can toggle editability */}
@@ -109,6 +109,10 @@ const PlayPage = () => {
                         isOwner={isOwner}
                         onUpdate={handleUpdateGroupOrder}
                     />
+
+                    <div className="last-updated">
+                        <p className="last-updated">Updated: {formatDate(playData.updated_at)}</p>
+                    </div>
 
                 </section>
 

@@ -1,6 +1,6 @@
 from uuid import uuid4
 from django.db import models
-from django.db.models import UniqueConstraint
+from django.db.models import UniqueConstraint, Q    
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -70,17 +70,25 @@ class TournamentPlay(models.Model):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    tournament = models.ForeignKey(
-        Tournament, on_delete=models.CASCADE, related_name='plays'
-    )
+    name = models.CharField(max_length=42)
 
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='tournament_plays'
-    )
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='plays')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tournament_plays')
 
-    name = models.CharField(max_length=100)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in_progress')
+    current_phase = models.CharField(max_length=20, choices=PHASE_CHOICES, default='groups')
+
+    group_predictions = models.JSONField(default=dict)
+    bracket_predictions = models.JSONField(default=dict)
+
+    group_points = models.IntegerField(default=0)
+    bracket_points = models.IntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        ordering = ['-created_at']
         constraints = [
             UniqueConstraint(
                 fields=['user', 'tournament', 'name'], 
@@ -88,31 +96,15 @@ class TournamentPlay(models.Model):
             )
         ]
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in_progress')
-    current_phase = models.CharField(max_length=20, choices=PHASE_CHOICES, default='groups')
-    group_predictions = models.JSONField(default=dict)
-    bracket_predictions = models.JSONField(default=dict)
-    score = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['-created_at']
-
     def __str__(self):
         return f'{self.user.username} — {self.name} ({self.tournament.name})'
 
 
 class TournamentPool(models.Model):
-    """
-    Leaderboard group. Every tournament gets one auto-created public pool ("vindroPool").
-    Users can create private pools shared via a join code.
-    """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    tournament = models.ForeignKey(
-        Tournament, on_delete=models.CASCADE, related_name='pools'
-    )
-    name = models.CharField(max_length=100)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='pools')
+    name = models.CharField(max_length=42)
+
     description = models.TextField(blank=True)
     created_by = models.ForeignKey(
         User,
@@ -126,6 +118,20 @@ class TournamentPool(models.Model):
     code_hash = models.CharField(max_length=255, unique=True, null=True, blank=True)
     current_member_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # MONEY FEATURES
+    is_money_pool = models.BooleanField(default=False)
+    cost_per_play = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
+    # SETTINGS
+    allow_multiple_plays_per_user = models.BooleanField(default=True)
+
+    # ADDITION: The 'through' relationship for easier querying
+    members = models.ManyToManyField(
+        TournamentPlay, 
+        through='PoolMembership', 
+        related_name='pools'
+    )
 
     class Meta:
         constraints = [
@@ -141,16 +147,20 @@ class TournamentPool(models.Model):
 
 
 class PoolMembership(models.Model):
-    pool = models.ForeignKey(
-        TournamentPool, on_delete=models.CASCADE, related_name='memberships'
-    )
-    play = models.ForeignKey(
-        TournamentPlay, on_delete=models.CASCADE, related_name='pool_memberships'
-    )
+    pool = models.ForeignKey('TournamentPool', on_delete=models.CASCADE, related_name='pool_memberships')
+    play = models.ForeignKey('TournamentPlay', on_delete=models.CASCADE, related_name='play_memberships')
+    
+    # NEW: Money tracking for private/money pools
+    has_paid = models.BooleanField(default=False, help_text="Tracks if the user has paid the entry fee for this specific play.")
+    
     joined_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        # Ensures a user cannot put the exact same Play into a Pool twice.
+        # However, they CAN put 'Play A' and 'Play B' into the same Pool.
         unique_together = [('pool', 'play')]
+        verbose_name = "Pool Membership"
+        verbose_name_plural = "Pool Memberships"
 
     def __str__(self):
-        return f'{self.play} in {self.pool}'
+        return f"{self.play.name} ({self.play.user.username}) in {self.pool.name}"

@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import ShowcaseSection from '../../../components/ui/ShowcaseSection';
-import useJoinPool from '../hooks/usePools';
+// 1. IMPORT HOOK: Ensure the path is correct for your file structure
+import usePools from '../hooks/usePools'; 
 
 const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, onCancel }) => {
-    const { joinPool, isLoading, error: apiError } = useJoinPool();
+    // 2. HOOK CONNECTION: 
+    // We destructure 'handleJoinPool' (matching your hook's export) 
+    // and 'isSubmitting' (which tracks the specific POST request state).
+    const { handleJoinPool, isSubmitting, error: apiError } = usePools(tournamentId);
+
+    // 3. LOCAL STATE:
     const [selectedPlayIds, setSelectedPlayIds] = useState([]);
     const [poolCode, setPoolCode] = useState('');
     const [localError, setLocalError] = useState('');
 
+    // RESET: Clear inputs whenever the modal closes or switches modes
     useEffect(() => {
         if (!isOpen) {
             setSelectedPlayIds([]);
@@ -19,6 +26,7 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
 
     if (!isOpen) return null;
 
+    // 4. SELECTION LOGIC: Toggle play IDs in the array
     const togglePlaySelection = (id) => {
         if (!id) return;
         setSelectedPlayIds(prev =>
@@ -26,20 +34,26 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
         );
     };
 
+    // 5. THE SUBMISSION: The bridge between UI and Service
     const handleConfirmSubmission = async () => {
-        if (type === 'private' && !poolCode) {
+        // VALIDATION: Ensure private pools have a code before hitting the API
+        if (type === 'private' && !poolCode.trim()) {
             setLocalError('Please enter a private pool code.');
             return;
         }
 
         try {
-            const response = await joinPool(tournamentId, selectedPlayIds, type, poolCode);
+            setLocalError(''); // Clear previous errors
+            
+            // CALL HOOK: This calls poolServices.joinPool via the hook
+            // Note: handleJoinPool returns the 'result' object from the service
+            const response = await handleJoinPool(selectedPlayIds, type, poolCode);
 
             if (response.success) {
-                // Pass 'response' as the 3rd argument to JoinPoolModal's handleSubmissionSuccess
+                // SIGNAL SUCCESS: Send the response back to JoinPoolModal (Stage 1)
+                // so it can build the report for the Response Modal (Stage 3).
                 onConfirm(selectedPlayIds, poolCode, response);
             } else {
-                // apiError from hook usually handles this, but setting local for redundancy
                 setLocalError(response.error || 'Failed to join pool.');
             }
         } catch (err) {
@@ -94,6 +108,7 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                 </ShowcaseSection>
 
                 <ShowcaseSection id="submission-actions">
+                    {/* PRIVATE CODE UI: Only visible if 'private' was selected in Step 1 */}
                     {type === 'private' && (
                         <div className="private-code-wrapper">
                             <h3>Enter Private Code</h3>
@@ -110,15 +125,15 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                     {activeError && <p className="error-message">{activeError}</p>}
 
                     <div className="submit-plays-buttons">
-                        <button className="btn btn-tan cancel-btn" onClick={onCancel} disabled={isLoading}>
+                        <button className="btn btn-tan cancel-btn" onClick={onCancel} disabled={isSubmitting}>
                             Go back
                         </button>
                         <button
                             className="btn btn-tan confirm-btn"
                             onClick={handleConfirmSubmission}
-                            disabled={isLoading || selectedPlayIds.length === 0}
+                            disabled={isSubmitting || selectedPlayIds.length === 0}
                         >
-                            {isLoading ? 'Submitting...' : `Submit ${selectedPlayIds.length} Play${selectedPlayIds.length !== 1 ? 's' : ''}`}
+                            {isSubmitting ? 'Submitting...' : `Submit ${selectedPlayIds.length} Play${selectedPlayIds.length !== 1 ? 's' : ''}`}
                         </button>
                     </div>
                 </ShowcaseSection>

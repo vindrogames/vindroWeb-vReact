@@ -408,17 +408,74 @@
 
     main.bracket-tournament-page {
 
-        .user-picks {}
+        .user-picks {
+
+            padding: 14px 14px 42px;
+            .user-picks-container {
+
+                .title-container {
+
+                    h3 {
+                        font-size: 2.8rem;
+                    }
+                }
+
+                .user-stats-container {
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.4rem;
+                                padding: 7px;
+                            }
+
+                            td {
+                                padding: 7px;
+                            }
+                        }
+
+
+                    }
+
+                    .buttons-container {
+
+                        button {
+                            font-size: 1.4rem;
+                        }
+                    }
+                }
+
+
+            }
+
+        }
 
         .about-tournament {
 
             .about-tournament-container {
+
                 .feature {
+
                     .feature-text-container {
 
                         .feature-explanation {
                             p {
                                 font-size: 1.6rem;
+                            }
+                        }
+                    }
+
+                    .feature-table {
+
+                        .table-container {
+
+                            table {
+
+                                th {
+                                    font-size: 1.4rem;
+                                }
                             }
                         }
                     }

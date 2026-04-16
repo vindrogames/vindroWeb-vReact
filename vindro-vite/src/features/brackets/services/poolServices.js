@@ -1,26 +1,42 @@
-import { apiRequest } from "../../../services/api";
+import { apiRequest } from '../../../services/api';
 
 const poolServices = {
+    // Fetch pools specific to a tournament and user
+    getUserPools: async (tournamentId) => {
 
-    joinPool: async (tournamentId, playIds, poolType, code = null) => {
-        // Clean log to see what is actually being sent
-        console.log("Submitting to API:", { tournamentId, playIds, poolType });
-
-        console.log('pool Ids:');
-        playIds.forEach(id => {
-            console.log(id);
+        const response =  await apiRequest(`/tournament/${tournamentId}/user-pool-submissions/`, {
+            method: 'GET'
         });
 
-        return await apiRequest(`/tournament/${tournamentId}/pools/join/`, {
+        return response;
+    },
+
+    // Join logic
+    joinPool: async (tournamentId, playIds, poolType, code = null) => {
+
+        const response =  await apiRequest(`/tournament/${tournamentId}/pools/join/`, {
+
             method: 'POST',
             body: JSON.stringify({
-                play_id: playIds, // Sending the array [id1, id2]
+                play_id: playIds, // Assuming backend handles the array here
                 pool_type: poolType,
                 code: code
             }),
         });
+
+        return response;
     },
 
-}
+    // Placeholder for future feature
+    createPool: async (tournamentId, poolData) => {
+
+        const response =  await apiRequest(`/tournament/${tournamentId}/pools/create/`, {
+            method: 'POST',
+            body: JSON.stringify(poolData)
+        });
+
+        return response;
+    }
+};
 
 export default poolServices;

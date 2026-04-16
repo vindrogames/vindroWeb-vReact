@@ -225,6 +225,12 @@
                             }
                         }
                     }
+
+                    .buttons-container {
+                        flex-direction: row;
+                        justify-content: center;
+                        gap: 42px;
+                    }
                 }
             }
         }

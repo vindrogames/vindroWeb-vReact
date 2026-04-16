@@ -1,140 +1,179 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect
-import { FaEdit } from "react-icons/fa";
+import React, { useState } from 'react';
+import { FaEdit, FaEye, FaPlus, FaUsers } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import CreateNewPlayModal from '../../components/CreateNewPlayModal';
-import JoinPoolModal from '../../components/JoinPoolModal';
-import EventDescription from './components/EventDescription';
+
+// UI Components
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import AuthModal from '../../../../components/ui/AuthModal';
+import EventDescription from './components/EventDescription';
+import LeaderboardDisplay from './components/LeaderboardDisplay';
+import CreateNewPlayModal from '../../components/CreateNewPlayModal';
+import JoinPoolModal from '../../components/PoolJoinModal';
 
-import { useTournament } from '../../hooks/useTournament';
-import tournamentServices from '../../services/tournamentService';
+// Custom Hooks
 import { useAuth } from '../../../../contexts/auth/AuthContext';
-import { usePlayActions } from '../../hooks/usePlayActions';
-import playServices from '../../services/playService'; // Added for direct fetch
+import { useTournament } from '../../hooks/useTournament';
+import { useLeaderboards } from '../../hooks/useLeaderboard';
+import { usePlays } from '../../hooks/usePlays';
+import { usePools } from '../../hooks/usePools';
 
 const WorldCupTournament_2026 = () => {
-
     const { user } = useAuth();
-    const navigate = useNavigate(); // Added navigate
-
-    // --- UI State ---
-    const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
-    const [showPoolModal, setShowPoolModal] = useState(false);
-    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-    const [authModalMode, setAuthModalMode] = useState('login');
-
-    // --- Data State ---
-    const [tournamentData, setTournamentData] = useState([]);
-    const [isLoadingTournamentData, setIsLoadingtournamentData] = useState(false);
-
-    const [userPlays, setUserPlays] = useState(null); // CHANGE: Added to store fetched plays
-    const [isLoadingPlays, setIsLoadingPlays] = useState([]); // CHANGE: Loading state for table
-
-    // Logic Hook - handles API, slugifying, and navigation
-    const { handleCreatePlay, isSubmitting, error: apiError } = usePlayActions();
-
+    const navigate = useNavigate();
     const tournamentSlug = "world-cup-2026";
 
-    useEffect(() => {
+    // ---------------------------------------------------------
+    // 1. TOURNAMENT DATA
+    // ---------------------------------------------------------
+    const { tournamentData, isLoading: tourneyLoading } = useTournament(tournamentSlug);
 
-        const fetchTournamentData = async () => {
+    // ---------------------------------------------------------
+    // 2. PLAYS FEATURE
+    // ---------------------------------------------------------
+    const {
+        userPlays,
+        isLoading: isLoadingPlays,
+        isSubmitting: isPlaySubmitting,
+        error: apiError, // This is what the Modal needs
+        handleCreatePlay
+    } = usePlays(tournamentData?.id, user, tournamentSlug);
 
-            setIsLoadingtournamentData(true);
+    const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
 
-            try {
-                const response = await tournamentServices.getTournamentBySlug(tournamentSlug);
-
-                console.log("tournament Data Fetch:", response);
-
-                setTournamentData(response);
-            } catch (err) {
-                console.error("Failed to fetch Tournament Data:", err);
-                setTournamentData(null);
-            } finally {
-                setIsLoadingtournamentData(false);
-            }
-        }
-
-        fetchTournamentData()
-    }, [tournamentSlug]);
-
-    useEffect(() => {
-
-        const fetchDashboardData = async () => {
-
-            if (!user) {
-                setUserPlays([]);
-                return;
-            }
-
-            setIsLoadingPlays(true);
-
-            try {
-                // This now contains the array: [{"id": "...", "name": "firstPlay", ...}]
-                const plays = await playServices.getUserPlays(tournamentData.id);
-
-                // Log it once to be 100% sure what's arriving
-                console.log("Dashboard plays received:", plays);
-
-                if (Array.isArray(plays)) {
-                    setUserPlays(plays);
-                } else {
-                    setUserPlays([]);
-                }
-            } catch (err) {
-                console.error("Failed to load dashboard plays:", err);
-                setUserPlays([]);
-            } finally {
-                setIsLoadingPlays(false);
-            }
-        };
-
-        fetchDashboardData();
-    }, [user, tournamentSlug, tournamentData.id]);
-
-    // --- CORE HANDLERS ---
     const handleNewPlay = () => {
-
-        if (!user) {
-            handleLoginClick();
-            return;
-        }
+        if (!user) { handleLoginClick(); return; }
         setShowCreatePlayModal(true);
     };
 
     const handleCreatePlayConfirm = async (playName) => {
+        // Trigger hook logic
+        const newPlay = await handleCreatePlay(playName);
 
-        await handleCreatePlay(tournamentSlug, tournamentData.id, playName, user);
-        setShowCreatePlayModal(false);
+        // If successful, the hook returns the object containing the ID
+        if (newPlay && newPlay.id) {
+            setShowCreatePlayModal(false);
+
+            // Standardize slug for the URL
+            const slugPlayName = encodeURIComponent(
+                newPlay.name.trim().replace(/\s+/g, '-').toLowerCase()
+            );
+
+            // REDIRECT: Passing the ID in state so PlayPage can fetch it
+            navigate(`/brackets/${tournamentSlug}/${user.id}/${slugPlayName}`, {
+                state: { playId: newPlay.id }
+            });
+        }
     };
 
-    // CHANGE: Added navigation handler for existing plays
     const handleNavigateToPlay = (play) => {
-        // Convert "My Play Name" to "my-play-name"
+        if (!user) return;
         const playSlug = play.name.trim().toLowerCase().replace(/\s+/g, '-');
-        // Routing: /brackets/:tournament/:userId/:playName
         navigate(`/brackets/${tournamentSlug}/${user.id}/${playSlug}`, {
-            state: { playId: play.id } // Pass UUID in state for immediate lookup
+            state: { playId: play.id }
         });
     };
 
-    const handleJoinPool = () => {
+    const getUpdateStatus = (play) => {
+        const updated = new Date(play.updated_at);
+        const created = new Date(play.created_at);
+        if (Math.abs(updated - created) / 1000 < 5) return "Never";
+        return updated.toLocaleDateString('en-GB', {
+            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+        });
+    };
 
-        if (!user) {
-            handleLoginClick();
-            return;
-        }
+    // ---------------------------------------------------------
+    // 3. POOLS FEATURE
+    // ---------------------------------------------------------
+    const {
+        userPools,
+        refreshPools,
+        handleJoinPool,
+        handleCreatePool,
+        isLoading: isLoadingPools,
+        isSubmitting: isPoolSubmitting
+    } = usePools(tournamentData?.id, user);
+
+    const [showPoolModal, setShowPoolModal] = useState(false);
+    const [poolModalMode, setPoolModalMode] = useState('join'); // 'join' or 'create'
+
+    const handleJoinPoolClick = () => {
+        if (!user) { handleLoginClick(); return; }
+        setPoolModalMode('join');
         setShowPoolModal(true);
     };
 
-    const handleCreatePool = () => {
-        console.log("Create Pool feature coming soon");
-    }
+    const handleCreatePoolClick = () => {
+        if (!user) { handleLoginClick(); return; }
+        setPoolModalMode('create');
+        setShowPoolModal(true);
+    };
 
-    // Auth & Scroll Handlers
-    const handleLoginClick = () => { setAuthModalMode('login'); setIsAuthModalOpen(true); };
-    const handleSignUpClick = () => { setAuthModalMode('signup'); setIsAuthModalOpen(true); };
+    const onJoinPoolConfirm = async (poolData) => {
+        // poolData usually contains { inviteCode, playId }
+        await handleJoinPool(poolData);
+        setShowPoolModal(false);
+    };
+
+    const onCreatePoolConfirm = async (poolData) => {
+        // poolData usually contains { name, description, etc }
+        await handleCreatePool(poolData);
+        setShowPoolModal(false);
+    };
+
+    // ---------------------------------------------------------
+    // 4. LEADERBOARD FEATURE
+    // ---------------------------------------------------------
+    const {
+        publicLeaderboard,
+        isPublicLoading,
+        refreshPublic
+    } = useLeaderboards(tournamentData?.id);
+
+    const leaderboardCols = [
+        {
+            header: "Pos.",
+            render: (_, idx) => <strong>{idx + 1}</strong>
+        },
+        {
+            header: "Player",
+            render: (item) => (
+                <div className="avatar-wrapper" data-tooltip={item.user?.username || 'Anonymous'}>
+                    <img
+                        src={item.user?.avatar || '¿?'}
+                        className="player-avatar"
+                        alt="avatar"
+                    />
+                </div>
+            )
+        },
+        {
+            header: "Play",
+            render: (item) => (
+                <span className="play-name-cell">
+                    {item.play_name} <FaEye style={{ marginLeft: '5px', fontSize: '0.8em' }} />
+                </span>
+            )
+        },
+        { header: "Groups Pts", render: (item) => (item.group_points ?? 0).toString() },
+        { header: "Bracket Pts", render: (item) => (item.bracket_points ?? 0).toString() }
+    ];
+
+    // ---------------------------------------------------------
+    // 5. UI & AUTH HELPERS
+    // ---------------------------------------------------------
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [authModalMode, setAuthModalMode] = useState('login');
+
+    const handleLoginClick = () => {
+        setAuthModalMode('login');
+        setIsAuthModalOpen(true);
+    };
+
+    const handleSignUpClick = () => {
+        setAuthModalMode('signup');
+        setIsAuthModalOpen(true);
+    };
 
     const handleScrollToSection = (id) => {
         const element = document.getElementById(id);
@@ -142,28 +181,6 @@ const WorldCupTournament_2026 = () => {
             const offset = element.getBoundingClientRect().top + window.scrollY - 90;
             window.scrollTo({ top: offset, behavior: 'smooth' });
         }
-    };
-
-    const getUpdateStatus = (play) => {
-
-        const created = new Date(play.created_at);
-        const updated = new Date(play.updated_at);
-
-        // Calculate difference in seconds
-        const diffInSeconds = Math.abs(updated - created) / 1000;
-
-        // If updated within 5 seconds of creation, it's a "fresh" play
-        if (diffInSeconds < 5) {
-            return "Never";
-        }
-
-        // Otherwise, return a nice readable date
-        return updated.toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
     };
 
     return (
@@ -192,17 +209,11 @@ const WorldCupTournament_2026 = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* CHANGE: Dynamic rendering of plays */}
                                     {isLoadingPlays ? (
                                         <tr><td colSpan="4">Loading plays...</td></tr>
-                                    ) : userPlays.length > 0 ? (
+                                    ) : userPlays?.length > 0 ? (
                                         userPlays.map((play) => (
-                                            <tr
-                                                key={play.id}
-                                                onClick={() => handleNavigateToPlay(play)}
-                                                className="clickable-row"
-                                                style={{ cursor: 'pointer' }}
-                                            >
+                                            <tr key={play.id} onClick={() => handleNavigateToPlay(play)} className="clickable-row">
                                                 <td>{play.name} <FaEdit /></td>
                                                 <td>{getUpdateStatus(play)}</td>
                                                 <td>{play.group_points || 0}</td>
@@ -215,10 +226,9 @@ const WorldCupTournament_2026 = () => {
                                 </tbody>
                             </table>
                         </div>
-                        <div id="create-play-buttons-container" className="buttons-container">
+                        <div className="buttons-container">
                             <button className="btn btn-tan" onClick={handleNewPlay}>New Play</button>
                         </div>
-
                     </div>
 
                     <div className="title-container pools"><h3>Your Pools</h3></div>
@@ -226,15 +236,29 @@ const WorldCupTournament_2026 = () => {
                         <div className="table-container">
                             <table>
                                 <thead>
-                                    <tr><th>Pool</th><th>Play</th><th>Manager</th><th>Position</th></tr>
+                                    <tr><th>Pool</th><th>Play</th><th>Manager</th><th>Pos.</th></tr>
                                 </thead>
-                                <tbody><tr><td>-</td><td>-</td><td>-</td><td>-</td></tr></tbody>
+                                <tbody>
+                                    {isLoadingPools ? (
+                                        <tr><td colSpan="4">Loading pools...</td></tr>
+                                    ) : userPools?.length > 0 ? (
+                                        userPools.map(pool => (
+                                            <tr key={pool.id}>
+                                                <td>{pool.pool_name}</td>
+                                                <td>{pool.play_name}</td>
+                                                <td>{pool.manager}</td>
+                                                <td>{pool.rank || '-'}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr><td colSpan="4">You haven't joined any pools yet.</td></tr>
+                                    )}
+                                </tbody>
                             </table>
                         </div>
-
-                        <div id="pools-buttons-container" className="buttons-container">
-                            <button className="btn btn-tan" onClick={handleJoinPool}>Join a Pool</button>
-                            <button className="btn btn-tan" onClick={handleCreatePool}>Create a Pool</button>
+                        <div className="buttons-container">
+                            <button className="btn btn-tan" onClick={handleJoinPoolClick}>Join a Pool</button>
+                            <button className="btn btn-tan" onClick={handleCreatePoolClick}>Create a Pool</button>
                         </div>
                     </div>
                 </div>
@@ -255,47 +279,40 @@ const WorldCupTournament_2026 = () => {
 
             <EventDescription />
 
-            <ShowcaseSection id="user-picks-section" classes="hero-half bg-tan tournament-leaderboard">
-                <div id="tournament-leaderboard" className="tournament-leaderboard-title">
-                    <h3>Leaderboard</h3>
-                </div>
-
-                <div className="vindro-leaderboard-table">
-                        <div className="table-container">
-                            <table id="groups-points-table">
-                                <thead>
-                                    <tr>
-                                        <th>Position</th>
-                                        <th>User</th>
-                                        <th>Play</th>
-                                        <th>Group Pts</th>
-                                        <th>Bracket Points</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {/* Map rows for each submitted play*/}
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-            </ShowcaseSection>
+            <div id="tournament-leaderboard">
+                <LeaderboardDisplay
+                    title={<>vindro<span className='inline-green inline-bold'>Pool</span> Leaderboard</>}
+                    data={publicLeaderboard}
+                    columns={leaderboardCols}
+                    isLoading={isPublicLoading}
+                    showBack={false}
+                    onRowClick={handleNavigateToPlay}
+                    emptyMessage="No entries found."
+                    classes="bg-tan hero-half"
+                />
+            </div>
 
             <CreateNewPlayModal
                 isOpen={showCreatePlayModal}
                 onConfirm={handleCreatePlayConfirm}
                 onCancel={() => setShowCreatePlayModal(false)}
-                isLoading={isSubmitting}
+                isLoading={isPlaySubmitting}
                 apiError={apiError}
             />
 
             <JoinPoolModal
                 isOpen={showPoolModal}
-                tournamentId={tournamentData.id}
-                //userId={user?.id}
-                onSuccess={() => setShowPoolModal(false)}
+                mode={poolModalMode} // Pass the mode so the modal knows what to show
+                tournamentId={tournamentData?.id}
+                onConfirm={poolModalMode === 'join' ? onJoinPoolConfirm : onCreatePoolConfirm}
                 onCancel={() => setShowPoolModal(false)}
                 plays={userPlays}
+                isLoading={isPoolSubmitting}
+                onSuccess={() => {
+                    refreshPools();          // 1. Fetch the fresh data from the API
+                    refreshPublic();
+                    setShowPoolModal(false); // 2. Close the modal
+                }}
             />
 
             <AuthModal

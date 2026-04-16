@@ -46,6 +46,8 @@ def serialize_play(play):
         'name': play.name,
         'status': play.status,
         'current_phase': play.current_phase,
+        'group_points': play.group_points,
+        'bracket_points': play.bracket_points,
         
         # Pull the descriptive names for the UI
         'tournament_name': play.tournament.name, 
@@ -56,11 +58,37 @@ def serialize_play(play):
         'user': play.user.id,
         'user_avatar': play.user.avatar,
         
+
         'group_predictions': play.group_predictions,
         'bracket_predictions': play.bracket_predictions,
-        'score': play.score,
+
         'created_at': play.created_at.isoformat(),
         'updated_at': play.updated_at.isoformat(),
+
+        'joined_pools': [
+            {'id': str(m.pool.id), 'name': m.pool.name} 
+            for m in play.play_memberships.all()
+        ]
+    }
+
+
+def serialize_pool_submission(membership):
+    """Serializes a PoolMembership for the 'Your Pools' table."""
+    pool = membership.pool
+    play = membership.play
+    
+    return {
+        'id': str(membership.id),
+        'pool_id': str(pool.id),
+        'pool_name': pool.name,
+        'play_id': str(play.id),
+        'play_name': play.name,
+        'manager': 'vindroGames' if pool.is_public else (pool.created_by.username if pool.created_by else "Manager"),
+        'has_paid': membership.has_paid,
+        'group_points': play.group_points,
+        'bracket_points': play.bracket_points,
+        'total_points': play.group_points + play.bracket_points,
+        'is_public': pool.is_public
     }
 
 
@@ -82,10 +110,11 @@ def serialize_leaderboard_entry(membership):
         'play_id': str(play.id),
         'play_name': play.name,
         'user': {
-            'id': play.user.id,
             'username': play.user.username,
             'avatar': play.user.avatar,
         },
-        'score': play.score,
-        'status': play.status,
+        'group_points': play.group_points,
+        'bracket_points': play.bracket_points,
+        'total_points': play.group_points + play.bracket_points,
+        'has_paid': membership.has_paid
     }

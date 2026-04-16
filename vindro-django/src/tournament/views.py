@@ -14,6 +14,7 @@ from .serializers import (
     serialize_results,
     serialize_play,
     serialize_pool,
+    serialize_pool_submission,
     serialize_leaderboard_entry,
 )
 
@@ -74,13 +75,12 @@ def tournament_results(request, tournament_id):
 
 
 # ---------------------------------------------------------------------------
-# Phase 3 — Play endpoints (auth required)
+# When Landing on TournamentPage ()
 # ---------------------------------------------------------------------------
-
-
 # New -> Fetches ALL plays for specific tournament for specific user.
 # To populate TournamentPage table when user is logged in
 @require_http_methods(["GET"])
+@csrf_exempt
 @login_required_api
 def user_tournament_plays(request, tournament_id):
     """
@@ -99,6 +99,32 @@ def user_tournament_plays(request, tournament_id):
         'success': True, 
         'data': [serialize_play(p) for p in plays]
     })
+
+
+@require_http_methods(["GET"])
+@csrf_exempt
+@login_required_api
+def user_pool_submissions(request, tournament_id):
+    """
+    Populates the 'Your Pools' table.
+    Returns every instance of a user's play inside a pool.
+    """
+    # We query PoolMembership directly because this table represents
+    # one "submission" (A specific play in a specific pool).
+    submissions = PoolMembership.objects.filter(
+        play__user=request.user,
+        pool__tournament_id=tournament_id
+    ).select_related('pool', 'play', 'pool__created_by').order_by('-joined_at')
+
+    return JsonResponse({
+        'success': True,
+        'data': [serialize_pool_submission(s) for s in submissions]
+    })
+
+# ---------------------------------------------------------------------------
+# Phase 3 — Play endpoints (auth required)
+# ---------------------------------------------------------------------------
+
 
 
 # New -> Create a play from Modal
@@ -205,58 +231,6 @@ def update_bracket(request, play_id):
 # Phase 4 — Pool endpoints (auth required)
 # ---------------------------------------------------------------------------
 
-@require_http_methods(["GET", "POST"])
-@csrf_exempt
-@login_required_api
-def pool_list_create(request, tournament_id):
-    """
-    GET  /api/tournament/<id>/pools/  — public pool + user's private pools
-    POST /api/tournament/<id>/pools/  — create private pool
-    """
-    tournament, err = _get_or_404(Tournament, id=tournament_id)
-    if err:
-        return err
-
-    if request.method == 'GET':
-        public_pool = TournamentPool.objects.filter(tournament=tournament, is_public=True).first()
-        user_pools = TournamentPool.objects.filter(
-            tournament=tournament,
-            is_public=False,
-            created_by=request.user,
-        )
-        data = {
-            'public_pool': serialize_pool(public_pool) if public_pool else None,
-            'my_pools': [serialize_pool(p) for p in user_pools],
-        }
-        return JsonResponse({'success': True, 'data': data})
-
-    # POST — create private pool
-    try:
-        body = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
-
-    name = body.get('name', '').strip()
-    if not name:
-        return JsonResponse({'success': False, 'error': 'name is required'}, status=400)
-    if len(name) > 100:
-        return JsonResponse({'success': False, 'error': 'name too long (max 100 characters)'}, status=400)
-
-    plain_code = secrets.token_urlsafe(8)  # e.g. "aB3kQr2x"
-    pool = TournamentPool.objects.create(
-        tournament=tournament,
-        name=name,
-        description=body.get('description', '').strip(),
-        created_by=request.user,
-        is_public=False,
-        code_hash=_hash_code(plain_code),
-    )
-
-    result = serialize_pool(pool)
-    result['join_code'] = plain_code  # only returned once at creation
-    return JsonResponse({'success': True, 'data': result}, status=201)
-
-
 
 @login_required_api
 @csrf_exempt
@@ -354,7 +328,99 @@ def pool_join(request, tournament_id):
         # This will catch and log the specific reason for the 500/Empty Response
         print(f"Internal Server Error: {str(e)}") 
         return JsonResponse({'success': False, 'error': 'Internal server error during join'}, status=500)
+
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def public_leaderboard(request, tournament_id):
+    """Specific to the 'Vindro Global' standings."""
+    target_pool = TournamentPool.objects.filter(
+        tournament_id=tournament_id, 
+        is_public=True
+    ).first()
     
+    if not target_pool:
+        return JsonResponse({'success': True, 'data': []})
+
+    # Fetch top 100 for global
+    memberships = PoolMembership.objects.filter(pool=target_pool)\
+    .select_related('play', 'play__user')\
+    .order_by('-play__bracket_points', '-play__group_points', 'play__created_at')[:100]
+    
+    return JsonResponse({'success': True, 'data': [serialize_leaderboard_entry(m) for m in memberships]})
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+@login_required_api
+def private_pool_leaderboard(request, tournament_id, pool_id):
+    """Specific to a private group or money pool."""
+    # Logic to ensure the user is allowed to see this pool could go here
+    target_pool = get_object_or_404(TournamentPool, id=pool_id, tournament_id=tournament_id)
+
+    memberships = PoolMembership.objects.filter(pool=target_pool)\
+        .select_related('play', 'play__user')\
+        .order_by('-play__bracket_points', '-play__group_points')
+
+    return JsonResponse({
+        'success': True, 
+        'pool_name': target_pool.name,
+        'data': [serialize_leaderboard_entry(m) for m in memberships]
+    })
+
+@require_http_methods(["GET", "POST"])
+@csrf_exempt
+@login_required_api
+def pool_list_create(request, tournament_id):
+    """
+    GET  /api/tournament/<id>/pools/  — public pool + user's private pools
+    POST /api/tournament/<id>/pools/  — create private pool
+    """
+    tournament, err = _get_or_404(Tournament, id=tournament_id)
+    if err:
+        return err
+
+    if request.method == 'GET':
+        public_pool = TournamentPool.objects.filter(tournament=tournament, is_public=True).first()
+        user_pools = TournamentPool.objects.filter(
+            tournament=tournament,
+            is_public=False,
+            created_by=request.user,
+        )
+        data = {
+            'public_pool': serialize_pool(public_pool) if public_pool else None,
+            'my_pools': [serialize_pool(p) for p in user_pools],
+        }
+        return JsonResponse({'success': True, 'data': data})
+
+    # POST — create private pool
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+
+    name = body.get('name', '').strip()
+    if not name:
+        return JsonResponse({'success': False, 'error': 'name is required'}, status=400)
+    if len(name) > 100:
+        return JsonResponse({'success': False, 'error': 'name too long (max 100 characters)'}, status=400)
+
+    plain_code = secrets.token_urlsafe(8)  # e.g. "aB3kQr2x"
+    pool = TournamentPool.objects.create(
+        tournament=tournament,
+        name=name,
+        description=body.get('description', '').strip(),
+        created_by=request.user,
+        is_public=False,
+        code_hash=_hash_code(plain_code),
+    )
+
+    result = serialize_pool(pool)
+    result['join_code'] = plain_code  # only returned once at creation
+    return JsonResponse({'success': True, 'data': result}, status=201)
+
+
 
 @require_http_methods(["GET"])
 @login_required_api

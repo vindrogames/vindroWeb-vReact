@@ -99,13 +99,10 @@ main.bracket-tournament-page {
 
                 .buttons-container {
                     display: flex;
-                    justify-content: center;
-                    align-items: flex-start;
-
-                    &#pools-buttons-container {
-                        justify-content: space-evenly;
-                        gap: 14px;
-                    }
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: 14px;
 
                     button {
                         width: auto;
@@ -114,8 +111,6 @@ main.bracket-tournament-page {
                         font-weight: 500;
                     }
                 }
-
-
 
                 &#pools-stats {
                     margin-bottom: 21px;
@@ -270,25 +265,6 @@ main.bracket-tournament-page {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    .tournament-leaderboard {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-
-        .tournament-leaderboard-title {
-            padding: 14px;
-            width: 84%;
-            border-top: 1px solid $vindro-green;
-
-            h3 {
-                width: 100%;
-                text-align: center;
-                font-size: 3.6rem;
             }
         }
     }
@@ -453,7 +429,7 @@ main.bracket-tournament-play {
                             filter: blur(6px);
                             opacity: 0.4;
                             pointer-events: none; // Deactivates interactions
-                            
+
                         }
 
                         // ...EXCEPT the one being edited!
@@ -648,11 +624,132 @@ main.bracket-tournament-play {
     }
 }
 
-/* Add this to your _brackets.scss */
-[draggable="true"] {
-    /* Prevents the 'magnifying glass' or text selection on iPhone */
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
+section.leaderboard-display-container {
+    justify-content: flex-start;
+
+    .leaderboard-header {
+        padding: 14px;
+        width: 84%;
+        border-top: 1px solid $vindro-green;
+
+        h3 {
+            width: 100%;
+            text-align: center;
+            font-size: 3.6rem;
+        }
+    }
+
+    .leaderboard-table {
+
+        .table-container {
+            border: 1px solid $vindro-tan;
+            border-radius: 7px;
+            background-color: $vindro-gray;
+
+            table {
+                width: auto;
+                border-collapse: collapse;
+                overflow: hidden;
+
+                th {
+                    font-size: 1.8rem;
+                    font-weight: 600;
+                    font-family: $vindro-Montserrat;
+                    border: none;
+                    border-bottom: 3px solid $vindro-tan;
+                    padding: 7px 14px;
+                    color: white;
+                }
+
+                tr {
+                    padding: 7px 14px;
+
+                    td:first-child {
+                        font-weight: 600;
+                    }
+
+                    td:nth-child(3) {
+                        color: $vindro-teal;
+                        padding-left: 7px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 7px;
+                    }
+
+                    td {
+                        vertical-align: middle;
+
+                        img.player-avatar {
+                            height: 24px;
+                            width: 24px;
+                            object-fit: cover;
+                            cursor: help; // Indicates there's more info on hover
+                            position: relative;
+
+                            &:hover {
+                                transform: scale(1.1);
+                                z-index: 10;
+                            }
+                        }
+
+                        // The Tooltip Logic
+                        .avatar-wrapper {
+                            position: relative;
+                            display: inline-flex;
+                            align-items: center;
+
+                            &:hover::after {
+                                content: attr(data-tooltip); // Pulls from the prop
+                                position: absolute;
+                                bottom: 84%;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                background-color: $vindro-black;
+                                color: #fff;
+                                padding: 7px 14px;
+                                border-radius: 3px;
+                                font-size: 1.2rem;
+                                white-space: nowrap;
+                                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                                z-index: 100;
+                                pointer-events: none;
+                            }
+
+                            // Tiny triangle arrow for the tooltip
+                            &:hover::before {
+                                content: '';
+                                position: absolute;
+                                bottom: 110%;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                border: 6px solid transparent;
+                                border-top-color: #333;
+                                z-index: 100;
+                            }
+                        }
+                    }
+
+                    &.clickable-row {
+                        cursor: pointer;
+                        transition: background-color 0.2s ease;
+
+                        &:hover {
+                            background-color: rgba($vindro-tan, 0.42);
+                        }
+                    }
+                }
+
+                td {
+                    font-size: 1.2rem;
+                    font-weight: 300;
+                    text-align: center;
+                    padding: 7px 0;
+                    color: white;
+                }
+            }
+        }
+    }
 }
 
 /* The polyfill creates a 'ghost' element. Let's make it look like our rows */
@@ -864,7 +961,8 @@ $error-red: #ff4d4d;
     }
 }
 
-.submit-play-modal, .submission-response-modal {
+.submit-play-modal,
+.submission-response-modal {
 
     .feature-table {
         margin: 20px auto 0 auto; // Centers the table container

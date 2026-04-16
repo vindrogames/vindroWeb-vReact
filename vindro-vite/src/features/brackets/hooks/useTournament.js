@@ -1,28 +1,56 @@
-// hooks/useTournament.js
-import { useState, useEffect } from 'react';
-import tournamentService from '../services/tournamentService';
+import { useState, useEffect } from 'react'; // <--- THIS WAS MISSING
+import tournamentServices from '../services/tournamentServices';
 
-export const useTournament = (slug) => {
-
-    const [tournament, setTournament] = useState(null);
-    const [loading, setLoading] = useState(true);
+const useTournament = (slug, doGetResults = false) => {
+    const [tournamentData, setTournamentData] = useState(null);
+    const [results, setResults] = useState(null); // Real match results (Group/Bracket scores)
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Fetch Tournament Metadata
     useEffect(() => {
-
-        console.log(slug);
-        const fetchTournament = async () => {
+        const loadTournament = async () => {
+            if (!slug) return;
+            setIsLoading(true);
             try {
-                const data = await tournamentService.getTournamentBySlug(slug);
-                setTournament(data);
+                const result = await tournamentServices.getTournamentBySlug(slug);
+                setTournamentData(result.data);
             } catch (err) {
-                setError(err.status === 404 ? 'Tournament not found' : 'Failed to load');
+                setError(err);
+                console.error("Error loading tournament data:", err);
             } finally {
-                setLoading(false);
+                setIsLoading(false);
             }
         };
-        if (slug) fetchTournament();
+
+        loadTournament();
     }, [slug]);
 
-    return { tournament, loading, error };
+    // Tournament Results Placeholder - Dormant unless doGetResults is true
+    useEffect(() => {
+        const loadResults = async () => {
+            // Strictly guard against undefined IDs and the manual toggle
+            if (!tournamentData?.id || !doGetResults) return;
+
+            try {
+                const res = await tournamentServices.getTournamentResults(tournamentData.id);
+                if (res && res.success) {
+                    setResults(res.data);
+                }
+            } catch (err) {
+                console.warn("Tournament results fetch failed or endpoint missing:", err.message);
+            }
+        };
+
+        loadResults();
+    }, [tournamentData?.id, doGetResults]);
+
+    return {
+        tournamentData,
+        results,
+        isLoading,
+        error
+    };
 };
+
+export { useTournament };

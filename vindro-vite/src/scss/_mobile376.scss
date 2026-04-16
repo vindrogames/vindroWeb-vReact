@@ -272,7 +272,50 @@
 
     main.bracket-tournament-page {
 
-        .user-picks {}
+        .user-picks {
+
+            .user-picks-container {
+
+                .title-container {
+
+                    h3 {
+                        font-size: 2.8rem;
+                    }
+                }
+
+                .user-stats-container {
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.2rem;
+                                padding: 4px;
+                            }
+
+                            td {
+                                padding: 7px 4px;
+                            }
+                        }
+
+
+                    }
+
+                    .buttons-container {
+
+                        flex-direction: column;
+                        gap: 14px;
+                        button {
+                            font-size: 1.4rem;
+                        }
+                    }
+                }
+
+
+            }
+
+        }
 
         .about-tournament {
             padding: 14px;

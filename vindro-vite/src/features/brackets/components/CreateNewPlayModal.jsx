@@ -66,14 +66,14 @@ const CreateNewPlayModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
                             if (localError) setLocalError('');
                         }}
                         onKeyDown={handleKeyDown}
-                        maxLength={50}
+                        maxLength={42}
                         autoFocus
                         disabled={isLoading}
                     />
 
                     <div className="char-count-submit-container">
                         <div className="character-count">
-                            {playName.length} / 50
+                            {playName.length} / 42
                         </div>
 
                         <button
