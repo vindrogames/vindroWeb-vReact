@@ -149,11 +149,8 @@ const WorldCupTournament_2026 = () => {
         },
         {
             header: "Play",
-            render: (item) => (
-                <span className="play-name-cell">
-                    {item.play_name} <FaEye style={{ marginLeft: '5px', fontSize: '0.8em' }} />
-                </span>
-            )
+            className: "table-link",
+            render: (item) => item.play_name,
         },
         { header: "Groups Pts", render: (item) => (item.group_points ?? 0).toString() },
         { header: "Bracket Pts", render: (item) => (item.bracket_points ?? 0).toString() }
@@ -198,7 +195,7 @@ const WorldCupTournament_2026 = () => {
                 <div className="user-picks-container">
                     <div className="title-container predictions"><h3>Your Plays</h3></div>
                     <div className="user-stats-container">
-                        <div className="table-container">
+                        <div className="table-container bg-black backdrop-gray">
                             <table>
                                 <thead>
                                     <tr>
@@ -214,7 +211,7 @@ const WorldCupTournament_2026 = () => {
                                     ) : userPlays?.length > 0 ? (
                                         userPlays.map((play) => (
                                             <tr key={play.id} onClick={() => handleNavigateToPlay(play)} className="clickable-row">
-                                                <td>{play.name} <FaEdit /></td>
+                                                <td className="table-link">{play.name}</td>
                                                 <td>{getUpdateStatus(play)}</td>
                                                 <td>{play.group_points || 0}</td>
                                                 <td>{play.bracket_points || 0}</td>
@@ -289,6 +286,7 @@ const WorldCupTournament_2026 = () => {
                     onRowClick={handleNavigateToPlay}
                     emptyMessage="No entries found."
                     classes="bg-tan hero-half"
+                    tableContainerClasses="table-container bg-gray backdrop-tan"
                 />
             </div>
 

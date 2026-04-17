@@ -14,6 +14,7 @@ const LeaderboardDisplay = ({
     actions = [],
     emptyMessage = "No entries found.",
     classes = "",
+    tableContainerClasses = ""
 }) => {
     const navigate = useNavigate();
 
@@ -37,7 +38,7 @@ const LeaderboardDisplay = ({
             {/* 2. Table Section (Keep your existing logic here) */}
             <div className="leaderboard-table">
                 
-                <div className="table-container">
+                <div className={`table-container ${tableContainerClasses}`}>
                     <table>
                         <thead>
                             <tr>{columns.map((col, i) => <th key={i}>{col.header}</th>)}</tr>
@@ -49,7 +50,7 @@ const LeaderboardDisplay = ({
                                 data.map((item, idx) => (
                                     <tr key={item.id || idx} onClick={() => onRowClick?.(item)} className={onRowClick ? "clickable-row" : ""}>
                                         {columns.map((col, i) => (
-                                            <td key={i}>
+                                            <td key={i} className={col.className || ""}>
                                                 {/* CRITICAL: Ensure 'idx' is passed as the second argument here */}
                                                 {col.render ? col.render(item, idx) : (item[col.key] ?? '-')}
                                             </td>

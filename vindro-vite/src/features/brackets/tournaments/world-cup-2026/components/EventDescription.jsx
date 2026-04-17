@@ -21,7 +21,7 @@ const EventDescription = () => {
                     </div>
 
                     <div className="feature-table">
-                        <div className="table-container">
+                        <div className="table-container bg-gray backdrop-tan">
                             <table id="groups-points-table">
                                 <thead>
                                     <tr>
@@ -67,7 +67,7 @@ const EventDescription = () => {
                     </div>
 
                     <div className="feature-table">
-                        <div className="table-container">
+                        <div className="table-container bg-gray backdrop-tan">
                             <table id="bracket-points-table">
                                 <thead>
                                     <tr>
@@ -139,7 +139,7 @@ const EventDescription = () => {
 
 
                     <div className="feature-table">
-                        <div className="table-container">
+                        <div className="table-container bg-gray backdrop-tan">
                             <table id="swap-table">
                                 <thead>
                                     <tr>
