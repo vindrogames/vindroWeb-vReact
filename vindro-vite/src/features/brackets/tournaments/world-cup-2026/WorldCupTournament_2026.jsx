@@ -137,20 +137,43 @@ const WorldCupTournament_2026 = () => {
         },
         {
             header: "Player",
-            render: (item) => (
-                <div className="avatar-wrapper" data-tooltip={item.user?.username || 'Anonymous'}>
-                    <img
-                        src={item.user?.avatar || '¿?'}
-                        className="player-avatar"
-                        alt="avatar"
-                    />
-                </div>
-            )
+            render: (item) => {
+                const avatarUrl = item.user?.avatar || '';
+                // List of base colors to check for in the URL
+                const colors = ['teal', 'green', 'gray', 'yellow', 'red', 'orange', 'pink', 'purple'];
+                const colorMatch = colors.find(c => avatarUrl.includes(c)) || 'gray';
+
+                // Handle the "neon" or "real" naming convention mismatch
+                let colorClass = `inline-${colorMatch}`;
+                if (['orange', 'pink', 'purple'].includes(colorMatch)) colorClass = `inline-neon-${colorMatch}`;
+                if (['yellow', 'red'].includes(colorMatch)) colorClass = `inline-real-${colorMatch}`;
+
+                return (
+                    <div className={`avatar-wrapper ${colorClass}`} data-tooltip={item.user?.username || 'Anonymous'}>
+                        <img
+                            src={avatarUrl || '/img/profile_icons/gray-simple.webp'}
+                            className="player-avatar"
+                            alt="avatar"
+                        />
+                    </div>
+                );
+            }
         },
         {
             header: "Play",
             className: "table-link",
-            render: (item) => item.play_name,
+            render: (item) => {
+                const avatarUrl = item.user?.avatar || '';
+                const colors = ['teal', 'green', 'gray', 'yellow', 'red', 'orange', 'pink', 'purple', 'white'];
+                const colorMatch = colors.find(c => avatarUrl.includes(c)) || 'gray';
+
+                // Map the found color to your specific SCSS classes
+                let colorClass = `inline-${colorMatch}`;
+                if (['orange', 'pink', 'purple', 'green', 'white', 'teal'].includes(colorMatch)) colorClass = `inline-neon-${colorMatch}`;
+                if (['yellow', 'red'].includes(colorMatch)) colorClass = `inline-real-${colorMatch}`;
+
+                return <span className={`${colorClass} inline-bold table-link`}>{item.play_name}</span>;
+            },
         },
         { header: "Groups Pts", render: (item) => (item.group_points ?? 0).toString() },
         { header: "Bracket Pts", render: (item) => (item.bracket_points ?? 0).toString() }

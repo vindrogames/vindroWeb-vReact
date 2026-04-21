@@ -1,32 +1,32 @@
 // Inline span classes
-.inline-teal {
-    color: $vindro-teal;
-}
 
-.inline-green {
-    color: $vindro-green;
-}
+.inline {
+    &-teal { color: $vindro-teal; }
 
-.inline-gray {
-    color: $vindro-gray;
-}
+    &-green { color: $vindro-green; }
 
-.inline-bold {
-    font-weight: 700;
-}
+    &-gray { color: $vindro-gray; }
 
-.inline-light {
-    font-weight: 300;
-}
+    &-real-yellow { color: $real-yellow; }
 
-.inline-real-yellow {
-    color: $real-yellow;
-}
+    &-real-red { color: $real-red; }
 
-.inline-real-red {
-    color: $real-red;
-}
+    &-bold { font-weight: 700; }
 
+    &-light { font-weight: 300; }
+
+    &-neon-green { color: $vindro-neon-green; }
+
+    &-neon-pink {color: $vindro-neon-pink; }
+
+    &-neon-white { color: white; }
+
+    &-neon-teal { color: $vindro-teal }
+
+    &-neon-orange { color: $vindro-neon-orange; }
+
+    &-neon-purple { color: $vindro-neon-purple; }
+}
 // Buttons
 button {
     border: none;
@@ -557,8 +557,8 @@ section#under-construction {
         padding: 7px 14px;
         color: white;
 
-        &.table-link {
-            color: $vindro-teal;
+        span.table-link {
+            //color: $vindro-teal;
             text-decoration: underline;
             cursor: pointer;
         }

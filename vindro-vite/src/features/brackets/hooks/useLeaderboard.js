@@ -57,7 +57,7 @@ const useLeaderboards = (tournamentId) => {
         isPrivateLoading,  // Conditional UI control
         error,
         fetchPrivateLeaderboard,
-        refreshPublic: fetchPublicLeaderboard 
+        refreshPublic: fetchPublicLeaderboard
     };
 };
 
