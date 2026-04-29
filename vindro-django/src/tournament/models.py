@@ -116,6 +116,7 @@ class TournamentPool(models.Model):
     
     is_public = models.BooleanField(default=False)
     code_hash = models.CharField(max_length=255, unique=True, null=True, blank=True)
+    join_code = models.CharField(max_length=16, null=True, blank=True)
     current_member_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 

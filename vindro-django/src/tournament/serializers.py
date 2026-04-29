@@ -101,6 +101,7 @@ def serialize_pool(pool):
         'is_public': pool.is_public,
         'current_member_count': pool.current_member_count,
         'created_by': pool.created_by.username if pool.created_by else None,
+        'join_code': pool.join_code,
     }
 
 

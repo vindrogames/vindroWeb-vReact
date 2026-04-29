@@ -11,6 +11,7 @@ import CreateNewPlayModal from '../../components/CreateNewPlayModal';
 
 // Modals
 import JoinPoolModal from '../../components/modals/PoolJoinModal';
+import PoolDetailModal from '../../components/modals/PoolDetailModal';
 
 // Custom Hooks
 import { useAuth } from '../../../../contexts/auth/AuthContext';
@@ -96,6 +97,7 @@ const WorldCupTournament_2026 = () => {
     // ---------------------------------------------------------
     const {
         userPools,
+        myCreatedPools,
         refreshPools,
         handleJoinPool,
         handleCreatePool,
@@ -104,7 +106,8 @@ const WorldCupTournament_2026 = () => {
     } = usePools(tournamentData?.id, user);
 
     const [showPoolModal, setShowPoolModal] = useState(false);
-    const [poolModalMode, setPoolModalMode] = useState('join'); // 'join' or 'create'
+    const [poolModalMode, setPoolModalMode] = useState('join');
+    const [selectedPool, setSelectedPool] = useState(null);
 
     const handleJoinPoolClick = () => {
         if (!user) { handleLoginClick(); return; }
@@ -296,22 +299,20 @@ const WorldCupTournament_2026 = () => {
                         <div className="table-container bg-black backdrop-gray">
                             <table>
                                 <thead>
-                                    <tr><th>Pool</th><th>Play</th><th>Manager</th><th>Pos.</th></tr>
+                                    <tr><th>Pool</th><th>Members</th></tr>
                                 </thead>
                                 <tbody>
                                     {isLoadingPools ? (
-                                        <tr><td colSpan="4">Loading pools...</td></tr>
-                                    ) : userPools?.length > 0 ? (
-                                        userPools.map(pool => (
-                                            <tr key={pool.id} className="clickable-row">
-                                                <td>{pool.pool_name}</td>
-                                                <td>{pool.play_name}</td>
-                                                <td>{pool.manager}</td>
-                                                <td>{pool.rank || '-'}</td>
+                                        <tr><td colSpan="2">Loading pools...</td></tr>
+                                    ) : myCreatedPools?.length > 0 ? (
+                                        myCreatedPools.map(pool => (
+                                            <tr key={pool.id} className="clickable-row" onClick={() => setSelectedPool(pool)}>
+                                                <td>{pool.name}</td>
+                                                <td>{pool.current_member_count}</td>
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="4">You haven't joined any pools yet.</td></tr>
+                                        <tr><td colSpan="2">You haven't created any pools yet.</td></tr>
                                     )}
                                 </tbody>
                             </table>
@@ -379,6 +380,11 @@ const WorldCupTournament_2026 = () => {
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
                 defaultMode={authModalMode}
+            />
+
+            <PoolDetailModal
+                pool={selectedPool}
+                onClose={() => setSelectedPool(null)}
             />
         </main>
     );

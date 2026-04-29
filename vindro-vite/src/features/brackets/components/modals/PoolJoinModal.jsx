@@ -1,69 +1,115 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
-import SubmitPlayToPool from './PoolSubmitPlayModal'; 
+import SubmitPlayToPool from './PoolSubmitPlayModal';
 import PoolSubmitResponseModal from './PoolSubmitResponseModal';
+import usePools from '../../hooks/usePools';
 
-const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess }) => {
-    // 1. MANAGE SUB-FLOW STATE
-    // submissionFlow: Controls the "Select Plays" modal (Step 2)
+const JoinPoolModal = ({ isOpen, mode = 'join', tournamentId, plays = [], onCancel, onSuccess }) => {
+    const { handleCreatePool, isSubmitting } = usePools(tournamentId);
+
     const [submissionFlow, setSubmissionFlow] = useState({ isOpen: false, type: null });
-    // responseFlow: Controls the "Status Report" modal (Step 3)
     const [responseFlow, setResponseFlow] = useState({ isOpen: false, results: [] });
+    const [newPoolName, setNewPoolName] = useState('');
+    const [createError, setCreateError] = useState('');
+    const [createSuccess, setCreateSuccess] = useState(null);
 
-    // Standard guard clause for Modal visibility
     if (!isOpen) return null;
 
-    // 2. TRIGGER STEP 2
-    // When user clicks 'Join Public' or 'Join Private', we open the next modal
-    const handleJoinPool = (type) => {
-        setSubmissionFlow({ isOpen: true, type: type });
-    };
+    // --- Join flow ---
+    const handleJoinPool = (type) => setSubmissionFlow({ isOpen: true, type });
+    const closeSubmissionFlow = () => setSubmissionFlow({ isOpen: false, type: null });
 
-    const closeSubmissionFlow = () => {
-        setSubmissionFlow({ isOpen: false, type: null });
-    };
-
-    // 3. PROCESS API RESULTS (Called by Step 2 on Success)
-    // selectedIds: the IDs the user checked
-    // responseData: the raw JSON from the server containing { results: { "id": "status" } }
     const handleSubmissionSuccess = (selectedIds, code, responseData) => {
         const serverResults = responseData.results || {};
-        
-        // Transform server data into a readable report for the UI
         const report = plays
             .filter(p => selectedIds.includes(p.id))
-            .map(p => {
-                const playIdStr = String(p.id);
-                const statusFromServer = serverResults[playIdStr];
-                return {
-                    name: p.name,
-                    status: statusFromServer ? statusFromServer : 'success'
-                };
-            });
-
-        setSubmissionFlow({ isOpen: false, type: null }); // Close Step 2
-        setResponseFlow({ isOpen: true, results: report }); // Open Step 3
+            .map(p => ({
+                name: p.name,
+                status: serverResults[String(p.id)] || 'success',
+            }));
+        setSubmissionFlow({ isOpen: false, type: null });
+        setResponseFlow({ isOpen: true, results: report });
     };
 
-    // 4. CLEANUP
     const handleFinalClose = () => {
         setResponseFlow({ isOpen: false, results: [] });
-        if (onSuccess) onSuccess(); // Triggers a list refresh in the parent page
-        onCancel(); // Closes the entire gateway
+        if (onSuccess) onSuccess();
+        onCancel();
     };
 
+    // --- Create flow ---
+    const handleCreatePoolSubmit = async () => {
+        if (!newPoolName.trim()) {
+            setCreateError('Pool name is required.');
+            return;
+        }
+        setCreateError('');
+        try {
+            const result = await handleCreatePool({ name: newPoolName.trim() });
+            if (result.success) {
+                setCreateSuccess(result.data);
+                setNewPoolName('');
+                if (onSuccess) onSuccess();
+            } else {
+                setCreateError(result.error || 'Failed to create pool.');
+            }
+        } catch (err) {
+            setCreateError(err.message || 'A network error occurred.');
+        }
+    };
+
+    if (mode === 'create') {
+        return ReactDOM.createPortal(
+            <div className="play-name-modal-overlay" onClick={onCancel}>
+                <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
+                    <button className="close-button" onClick={onCancel}>&times;</button>
+                    <ShowcaseSection id="create-pool" className="modal-gallery">
+                        <h2>create<span className="inline-teal inline-bold">Pool</span></h2>
+                        {createSuccess ? (
+                            <div className="modal-gallery-text">
+                                <p>Pool <strong>{createSuccess.name}</strong> created!</p>
+                                <p>Share this code with friends: <strong>{createSuccess.join_code}</strong></p>
+                                <button className="btn btn-tan" onClick={() => setCreateSuccess(null)}>Create another</button>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="modal-gallery-text">
+                                    <p>Give your pool a name and share the generated code with friends.</p>
+                                </div>
+                                <input
+                                    type="text"
+                                    className="play-name-input"
+                                    placeholder="Pool name"
+                                    maxLength={100}
+                                    value={newPoolName}
+                                    onChange={(e) => setNewPoolName(e.target.value)}
+                                />
+                                {createError && <p className="error-message">{createError}</p>}
+                                <button
+                                    className="btn btn-tan"
+                                    onClick={handleCreatePoolSubmit}
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? 'Creating...' : 'Create Pool'}
+                                </button>
+                            </>
+                        )}
+                    </ShowcaseSection>
+                </div>
+            </div>,
+            document.body
+        );
+    }
+
+    // mode === 'join'
     return (
         <>
-            {/* Only show the Choice UI if neither the Submission nor Response modals are active.
-               We use createPortal to ensure the modal sits at the root of the DOM.
-            */}
             {!submissionFlow.isOpen && !responseFlow.isOpen && ReactDOM.createPortal(
                 <div className="play-name-modal-overlay" onClick={onCancel}>
                     <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
                         <button className="close-button" onClick={onCancel}>&times;</button>
-                        
-                        {/* PUBLIC POOL CHOICE */}
+
                         <ShowcaseSection id="join-pool-gallery" className="modal-gallery">
                             <h2>tournament<span className="inline-teal inline-bold">Pools</span></h2>
                             <div className="modal-gallery-text">
@@ -74,7 +120,6 @@ const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess }
                             </button>
                         </ShowcaseSection>
 
-                        {/* PRIVATE POOL CHOICE */}
                         <ShowcaseSection id="join-private-pool" className="bottom-modal-gallery">
                             <div className="bottom-modal-header">
                                 <h3>Have a Private code?</h3>
@@ -88,19 +133,17 @@ const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess }
                 document.body
             )}
 
-            {/* STEP 2: SELECT PLAYS MODAL */}
-            <SubmitPlayToPool 
+            <SubmitPlayToPool
                 isOpen={submissionFlow.isOpen}
                 type={submissionFlow.type}
                 tournamentId={tournamentId}
                 plays={plays}
-                onConfirm={handleSubmissionSuccess} // Passing logic back up
+                onConfirm={handleSubmissionSuccess}
                 onCancel={closeSubmissionFlow}
             />
 
-            {/* STEP 3: FEEDBACK MODAL */}
             {responseFlow.isOpen && (
-                <PoolSubmitResponseModal 
+                <PoolSubmitResponseModal
                     results={responseFlow.results}
                     onClose={handleFinalClose}
                 />

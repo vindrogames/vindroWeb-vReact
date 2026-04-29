@@ -257,8 +257,7 @@ def pool_join(request, tournament_id):
     if pool_type == 'public':
         pool = TournamentPool.objects.filter(tournament=tournament, is_public=True).first()
     else:
-        # Match against your model's 'code_hash' field
-        pool = TournamentPool.objects.filter(tournament=tournament, code_hash=code).first()
+        pool = TournamentPool.objects.filter(tournament=tournament, join_code__iexact=code).first()
 
     if not pool:
         return JsonResponse({'success': False, 'error': 'Pool not found or invalid code'}, status=404)
@@ -407,7 +406,7 @@ def pool_create(request, tournament_id):
     if len(name) > 100:
         return JsonResponse({'success': False, 'error': 'name too long (max 100 characters)'}, status=400)
 
-    plain_code = secrets.token_urlsafe(8)  # e.g. "aB3kQr2x"
+    plain_code = secrets.token_urlsafe(8)
     pool = TournamentPool.objects.create(
         tournament=tournament,
         name=name,
@@ -415,11 +414,10 @@ def pool_create(request, tournament_id):
         created_by=request.user,
         is_public=False,
         code_hash=_hash_code(plain_code),
+        join_code=plain_code,
     )
 
-    result = serialize_pool(pool)
-    result['join_code'] = plain_code  # only returned once at creation
-    return JsonResponse({'success': True, 'data': result}, status=201)
+    return JsonResponse({'success': True, 'data': serialize_pool(pool)}, status=201)
 
 
 

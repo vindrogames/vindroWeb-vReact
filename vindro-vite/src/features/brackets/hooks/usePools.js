@@ -4,17 +4,21 @@ import poolServices from '../services/poolServices';
 export const usePools = (tournamentId, user) => {
 
     const [userPools, setUserPools] = useState([]);
+    const [myCreatedPools, setMyCreatedPools] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false); // Separate state for actions
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
 
     const fetchUserPools = useCallback(async () => {
-
         if (!tournamentId || !user) return;
         setIsLoading(true);
         try {
-            const result = await poolServices.getUserPools(tournamentId);
-            if (result.success) setUserPools(result.data);
+            const [submissionsResult, createdResult] = await Promise.all([
+                poolServices.getUserPools(tournamentId),
+                poolServices.getMyCreatedPools(tournamentId),
+            ]);
+            if (submissionsResult.success) setUserPools(submissionsResult.data);
+            if (createdResult.success) setMyCreatedPools(createdResult.data.my_pools || []);
         } catch (err) {
             setError(err.message || 'Failed to fetch pools');
         } finally {
@@ -62,14 +66,15 @@ export const usePools = (tournamentId, user) => {
         }
     };
 
-    return { 
-        userPools, 
-        handleJoinPool, 
+    return {
+        userPools,
+        myCreatedPools,
+        handleJoinPool,
         handleCreatePool,
         refreshPools: fetchUserPools,
-        isLoading, 
+        isLoading,
         isSubmitting,
-        error 
+        error
     };
 };
 

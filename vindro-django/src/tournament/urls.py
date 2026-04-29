@@ -19,6 +19,7 @@ urlpatterns = [
     # Pools
     path('<uuid:tournament_id>/user-pool-submissions/', views.user_pool_submissions),
     path('<uuid:tournament_id>/pools/join/', views.pool_join, name='pool_join'),
+    path('<uuid:tournament_id>/pools/create/', views.pool_create, name='pool_create'),
 
     # Leaderboards
     # Hit this on page load for everyone

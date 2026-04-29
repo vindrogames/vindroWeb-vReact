@@ -27,15 +27,15 @@ const poolServices = {
         return response;
     },
 
-    // Placeholder for future feature
-    createPool: async (tournamentId, poolData) => {
+    getMyCreatedPools: async (tournamentId) => {
+        return await apiRequest(`/tournament/${tournamentId}/pools/create/`, { method: 'GET' });
+    },
 
-        const response =  await apiRequest(`/tournament/${tournamentId}/pools/create/`, {
+    createPool: async (tournamentId, poolData) => {
+        return await apiRequest(`/tournament/${tournamentId}/pools/create/`, {
             method: 'POST',
             body: JSON.stringify(poolData)
         });
-
-        return response;
     }
 };
 
