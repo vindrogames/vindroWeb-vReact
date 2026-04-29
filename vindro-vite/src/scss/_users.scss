@@ -188,27 +188,21 @@ main#user-profile {
 
             .table-container {
                 margin-top: 7px;
-                width: 240px;
                 border: 1px solid $vindro-black;
                 border-radius: 7px;
                 background-color: $vindro-gray;
+                width: 360px;
 
                 table {
-
                     width: 100%;
                     border-collapse: collapse;
                     overflow: hidden;
 
-                    tr {
-                        td:first-child {
-                            text-align: left;
-                            padding-left: 7px;
-                        }
-                    }
 
                     th {
-                        font-size: 1.4rem;
-                        font-weight: 300;
+                        font-size: 1.6rem;
+                        font-weight: 500;
+                        font-family: $vindro-Montserrat;
                         border: none;
                         border-bottom: 2px solid $vindro-black;
                         padding: 7px 14px;

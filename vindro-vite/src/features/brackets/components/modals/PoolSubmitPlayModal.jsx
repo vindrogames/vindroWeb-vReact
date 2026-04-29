@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import ShowcaseSection from '../../../components/ui/ShowcaseSection';
+import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
+
 // 1. IMPORT HOOK: Ensure the path is correct for your file structure
-import usePools from '../hooks/usePools'; 
+import usePools from '../../hooks/usePools'; 
 
 const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, onCancel }) => {
     // 2. HOOK CONNECTION: 

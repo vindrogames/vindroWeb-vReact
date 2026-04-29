@@ -59,4 +59,17 @@ export const authAPI = {
         method: 'POST',
         body: JSON.stringify(passwords),
     }),
+
+    /**
+     * Get public profile data for any user by ID (no auth required)
+     * @param {string|number} userId
+     * @returns {Promise<Object>} { user: { id, username, avatar, joined } }
+     */
+    getPublicProfile: (userId) => apiRequest(`/users/${userId}/`, {
+        method: 'GET',
+    }),
+
+    getUserBracketSummary: (userId) => apiRequest(`/users/${userId}/brackets/`, {
+        method: 'GET',
+    }),
 };

@@ -110,6 +110,7 @@ def serialize_leaderboard_entry(membership):
         'play_id': str(play.id),
         'play_name': play.name,
         'user': {
+            'id': str(play.user.id),
             'username': play.user.username,
             'avatar': play.user.avatar,
         },

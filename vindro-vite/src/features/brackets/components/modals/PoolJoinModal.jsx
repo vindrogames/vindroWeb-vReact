@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import ShowcaseSection from '../../../components/ui/ShowcaseSection';
-import SubmitPlayToPool from './PoolSubmitPlay'; 
+import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
+import SubmitPlayToPool from './PoolSubmitPlayModal'; 
 import PoolSubmitResponseModal from './PoolSubmitResponseModal';
 
 const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess }) => {

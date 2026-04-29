@@ -1,13 +1,25 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 const LoadingContext = createContext();
+const MIN_DURATION = 840;
 
 export const LoadingProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const startTimeRef = useRef(null);
+    const hideTimerRef = useRef(null);
 
-    const showLoader = () => setIsLoading(true);
-    const hideLoader = () => setIsLoading(false);
+    const showLoader = () => {
+        if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+        startTimeRef.current = Date.now();
+        setIsLoading(true);
+    };
+
+    const hideLoader = () => {
+        const elapsed = Date.now() - (startTimeRef.current || 0);
+        const remaining = Math.max(0, MIN_DURATION - elapsed);
+        hideTimerRef.current = setTimeout(() => setIsLoading(false), remaining);
+    };
 
     return (
         <LoadingContext.Provider value={{ showLoader, hideLoader }}>

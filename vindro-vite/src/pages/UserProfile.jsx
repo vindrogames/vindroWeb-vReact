@@ -6,7 +6,6 @@ import { useAuth } from '../contexts/auth/AuthContext';
 import { authAPI } from '../contexts/auth/services/authService';
 
 function getIconName(avatarUrl) {
-
     const match = avatarUrl?.match(/profile_icons\/(.+)\.webp/);
     return match ? match[1] : 'teal-simple';
 }
@@ -16,36 +15,62 @@ const UserProfile = () => {
     const { userId } = useParams();
     const { user, updateUser } = useAuth();
 
-    const { 
-        login_count = 0, 
-        provider = 'local', 
-        date_joined = null 
-    } = user || {};
+    const [profileUser, setProfileUser] = useState(null);
+    const [profileLoading, setProfileLoading] = useState(true);
+    const [profileNotFound, setProfileNotFound] = useState(false);
+    const [bracketSummary, setBracketSummary] = useState([]);
+
+    // True only when the logged-in user is viewing their own profile
+    const isOwner = user && String(user.id) === userId;
 
     const [isEditingUserName, setIsEditingUserName] = useState(false);
     const [isEditingUserIcon, setIsEditingUserIcon] = useState(false);
-    const [editValue, setEditValue] = useState(user?.username || "");
-    const [selectedIcon, setSelectedIcon] = useState(() => getIconName(user?.avatar));
+    const [editValue, setEditValue] = useState('');
+    const [selectedIcon, setSelectedIcon] = useState('teal-simple');
     const [profileError, setProfileError] = useState(null);
     const inputRef = useRef(null);
 
-    // Array of all available icon names (6 colors × 7 styles = 42 icons)
     const colors = ['green', 'orange', 'pink', 'purple', 'teal', 'white'];
     const styles = ['simple', 'black-shades', 'color-shades', 'pirate', 'music', 'office', 'snow'];
     const allIcons = colors.flatMap(color =>
         styles.map(style => `${color}-${style}`)
     );
 
-    // Sync state when user data loads
+    // Fetch the profile and bracket summary in parallel
     useEffect(() => {
+        let cancelled = false;
+        async function loadProfile() {
+            setProfileLoading(true);
+            setProfileNotFound(false);
+            try {
+                const [profileData, bracketsData] = await Promise.all([
+                    authAPI.getPublicProfile(userId),
+                    authAPI.getUserBracketSummary(userId),
+                ]);
+                if (cancelled) return;
+                setProfileUser(profileData.user);
+                setEditValue(profileData.user.username || '');
+                setSelectedIcon(getIconName(profileData.user.avatar));
+                setBracketSummary(bracketsData.data || []);
+            } catch {
+                if (!cancelled) setProfileNotFound(true);
+            } finally {
+                if (!cancelled) setProfileLoading(false);
+            }
+        }
+        loadProfile();
+        return () => { cancelled = true; };
+    }, [userId]);
 
-        if (user?.username) setEditValue(user.username);
-        if (user?.avatar) setSelectedIcon(getIconName(user.avatar));
+    // Keep edit fields in sync when the owner's auth context updates after a save
+    useEffect(() => {
+        if (isOwner) {
+            if (user?.username) setEditValue(user.username);
+            if (user?.avatar) setSelectedIcon(getIconName(user.avatar));
+        }
     }, [user?.username, user?.avatar]);
 
-    // 2. Force Focus ONLY via Edit Button
     useEffect(() => {
-
         if (isEditingUserName && inputRef.current) {
             inputRef.current.focus();
         }
@@ -57,9 +82,10 @@ const UserProfile = () => {
                 setProfileError(null);
                 const data = await authAPI.updateProfile({ username: editValue });
                 updateUser({ username: data.user.username });
+                setProfileUser(prev => ({ ...prev, username: data.user.username }));
             } catch (err) {
                 setProfileError(err.message);
-                return; // Keep editing mode open on error
+                return;
             }
         }
         setIsEditingUserName(!isEditingUserName);
@@ -71,21 +97,19 @@ const UserProfile = () => {
                 setProfileError(null);
                 const data = await authAPI.updateProfile({ avatar: selectedIcon });
                 updateUser({ avatar: data.user.avatar });
+                setProfileUser(prev => ({ ...prev, avatar: data.user.avatar }));
             } catch (err) {
                 setProfileError(err.message);
-                return; // Keep editing mode open on error
+                return;
             }
         }
         setIsEditingUserIcon(!isEditingUserIcon);
     };
 
-
-    // --- Table Data Definitions ---
-
     const providerMap = {
         'google': 'Google',
-        'github': 'Git Hub'
-    }
+        'github': 'Git Hub',
+    };
 
     const scoreCols = [
         {
@@ -107,20 +131,39 @@ const UserProfile = () => {
 
     const bracketCols = [
         {
-            header: 'Event',
+            header: 'Tournament',
             render: (row) => (
-                <SmartLink to={`/user/${userId}/brackets/${row.id}`} className="table-link">
-                    {row.name}
+                <SmartLink to={`/brackets/${row.tournament_slug}`} className="table-link">
+                    {row.tournament_name}
                 </SmartLink>
             )
         },
-        { header: 'Status', key: 'status' }
+        { header: 'Pools', render: (row) => row.pools_joined },
+        { header: 'Plays', render: (row) => row.play_count },
+        { header: 'Top Pos.', render: (row) => row.top_position ?? '-' },
     ];
 
-    const bracketData = [
-        { id: 'm1', name: 'Madrid Open', status: 'Active' },
-        { id: 'v1', name: 'Vindro Cup', status: 'Finished' }
-    ];
+    if (profileLoading) {
+        return (
+            <main id="user-profile">
+                <div className="profile-container">
+                    <p>Loading...</p>
+                </div>
+            </main>
+        );
+    }
+
+    if (profileNotFound) {
+        return (
+            <main id="user-profile">
+                <div className="profile-container">
+                    <p>User not found.</p>
+                </div>
+            </main>
+        );
+    }
+
+    const { login_count = 0, provider = 'local' } = user || {};
 
     return (
         <>
@@ -128,15 +171,17 @@ const UserProfile = () => {
 
                 <div className="profile-container">
 
-                    {/* Header Section */}
-                    <h1 className="profile-intro">Hello Friend!</h1>
+                    {isOwner ? (
+                        <h1 className="profile-intro">Hello Friend!</h1>
+                    ) : (
+                        <h1 className="profile-intro">Visiting vindroUser <span className='inline-green inline-bold'>{profileUser.id}</span></h1>
+                    )}
 
-                    {/* Error feedback */}
+
                     {profileError && (
                         <p className="profile-error">{profileError}</p>
                     )}
 
-                    {/* User Name + Profile Icon */}
                     <section id="user-name-icon" className={`user-stat-container ${isEditingUserName ? 'focused-mode' : ''}`}>
 
                         <div className="user-name-data">
@@ -146,46 +191,53 @@ const UserProfile = () => {
                                 <input
                                     ref={inputRef}
                                     type="text"
-                                    value={editValue}
+                                    value={isEditingUserName ? editValue : profileUser.username}
                                     onChange={(e) => setEditValue(e.target.value)}
                                     readOnly={!isEditingUserName}
                                     className={isEditingUserName ? 'input-active' : 'input-frozen'}
                                     spellCheck="false"
                                 />
-                                <button className={`${isEditingUserName ? 'input-active' : 'input-frozen'} btn-edit`} onClick={handleEditUserNameToggle}>
-                                    {isEditingUserName ? (
-                                        'Save'
-                                    ) : (
-                                        'Edit'
-                                    )}
-                                </button>
+                                {isOwner && (
+                                    <button
+                                        className={`${isEditingUserName ? 'input-active' : 'input-frozen'} btn-edit`}
+                                        onClick={handleEditUserNameToggle}
+                                    >
+                                        {isEditingUserName ? 'Save' : 'Edit'}
+                                    </button>
+                                )}
                             </div>
 
-                            <div className="user-joined">
-                                <h3>Joined {user.joined ? new Date(user.joined).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'today'}</h3>
-                            </div>
-
-                            <div className="user-email">
-                                <h3>Joined with {provider ? providerMap[provider] : '-'}</h3>
-                            </div>
+                            {isOwner && (
+                                <>
+                                    <div className="user-email">
+                                        <h3>Joined with {providerMap[provider] || provider || '-'}</h3>
+                                    </div>
+                                </>
+                            )}
                             
-                            <div className='user-logins'>
-                                <h3>Logged in {login_count ? login_count : '0'} time{login_count == 1 ? '' : 's'}</h3>
+                            <div className="user-joined">
+                                <h3>Joined {profileUser.joined ? new Date(profileUser.joined).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'today'}</h3>
                             </div>
+                            <div className='user-logins'>
+                                <h3>Logged in {login_count || '0'} time{login_count === 1 ? '' : 's'}</h3>
+                            </div>
+
+                            
                         </div>
 
                         <div className="user-icon">
                             <img src={`/img/profile_icons/${selectedIcon}.webp`} alt="User Avatar" />
 
-                            <button className={`${isEditingUserIcon ? 'input-active' : 'input-frozen'} btn-edit`} onClick={handleEditUserIconToggle}>
-                                {isEditingUserIcon ? (
-                                    'Save'
-                                ) : (
-                                    'Edit'
-                                )}
-                            </button>
+                            {isOwner && (
+                                <button
+                                    className={`${isEditingUserIcon ? 'input-active' : 'input-frozen'} btn-edit`}
+                                    onClick={handleEditUserIconToggle}
+                                >
+                                    {isEditingUserIcon ? 'Save' : 'Edit'}
+                                </button>
+                            )}
 
-                            {isEditingUserIcon && (
+                            {isOwner && isEditingUserIcon && (
                                 <div className="icon-gallery">
                                     {allIcons.map((iconName) => (
                                         <button
@@ -203,7 +255,6 @@ const UserProfile = () => {
 
                     </section>
 
-                    {/* Tables Section - These are blocked by the overlay when editing */}
                     <section id="user-top-scores" className="user-stat-container">
                         <h3>top<span className='inline-teal inline-bold'>Scores</span></h3>
                         <div className="table-container">
@@ -214,7 +265,7 @@ const UserProfile = () => {
                     <section id="user-brackets" className="user-stat-container">
                         <h3>brackets</h3>
                         <div className="table-container">
-                            <DataTable data={bracketData} columns={bracketCols} />
+                            <DataTable data={bracketSummary} columns={bracketCols} tableType="brackets-table" />
                         </div>
                     </section>
 

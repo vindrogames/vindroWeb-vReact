@@ -18,6 +18,7 @@ from pathlib import Path
 from django.contrib import admin
 from django.urls import include, path
 from django.http import HttpResponse, FileResponse
+from accounts.views import public_profile, user_bracket_summary
 
 def swagger_ui(request):
     html = """<!DOCTYPE html>
@@ -50,6 +51,8 @@ def openapi_schema(request):
 
 urlpatterns = [
     path("api/auth/", include("accounts.urls")),
+    path("api/users/<int:user_id>/", public_profile),
+    path("api/users/<int:user_id>/brackets/", user_bracket_summary),
     path("api/highscores/", include("highscores.urls")),
     path("api/tournament/", include("tournament.urls")),
     path("accounts/", include("allauth.urls")),  # OAuth endpoints

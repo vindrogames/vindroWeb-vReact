@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { FaCheckCircle, FaExclamationTriangle, FaTimesCircle } from 'react-icons/fa';
-import ShowcaseSection from '../../../components/ui/ShowcaseSection';
+import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 
 const PoolSubmitResponseModal = ({ results = [], onClose }) => {
     const getStatusIcon = (status) => {

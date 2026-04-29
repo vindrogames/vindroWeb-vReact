@@ -351,6 +351,7 @@ def public_leaderboard(request, tournament_id):
     return JsonResponse({'success': True, 'data': [serialize_leaderboard_entry(m) for m in memberships]})
 
 
+
 @csrf_exempt
 @require_http_methods(["GET"])
 @login_required_api
@@ -372,7 +373,7 @@ def private_pool_leaderboard(request, tournament_id, pool_id):
 @require_http_methods(["GET", "POST"])
 @csrf_exempt
 @login_required_api
-def pool_list_create(request, tournament_id):
+def pool_create(request, tournament_id):
     """
     GET  /api/tournament/<id>/pools/  — public pool + user's private pools
     POST /api/tournament/<id>/pools/  — create private pool

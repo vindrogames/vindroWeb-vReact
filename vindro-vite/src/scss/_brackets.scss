@@ -48,6 +48,19 @@ main.bracket-tournament-page {
 
                     table {
                         width: 100%;
+
+                        td.table-link.play-link {
+                            color: $vindro-teal;
+                            font-weight: 400;
+                            text-decoration: underline;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+
+                            &:hover {
+                                color: lighten($vindro-teal, 14);
+
+                            }
+                        }
                     }
                 }
 
@@ -256,10 +269,20 @@ main.bracket-tournament-play {
                         font-size: 2.1rem;
                     }
 
-                    img {
-                        height: 36px;
-                        width: 36px;
+                    button {
+                        background-color: transparent;
+                        cursor: pointer;
+
+                        &:hover {
+                            transform: scale(1.1)
+                        }
+
+                        img {
+                            height: 36px;
+                            width: 36px;
+                        }
                     }
+
                 }
             }
 
@@ -272,7 +295,7 @@ main.bracket-tournament-play {
         }
 
         .groups-stage {
-            width: 100%; // Ensure the section takes full width of the parent
+            width: 100%;
 
             .stage-header {
                 margin-bottom: 21px;
@@ -296,13 +319,12 @@ main.bracket-tournament-play {
                 }
             }
 
-
             .gallery-container {
                 position: relative;
-                width: 100%; // Changed from 84% to 100% to fit its parent properly
-                padding: 0 42px; // Increased padding to give arrows more room
+                width: 100%;
+                padding: 0 42px;
                 background: #0f0f0f;
-                overflow: hidden; // Keeps the viewport from leaking out
+                overflow: hidden;
                 box-sizing: border-box;
 
                 .nav-arrow {
@@ -340,7 +362,6 @@ main.bracket-tournament-play {
                     }
                 }
 
-
                 .viewport {
                     display: flex;
                     gap: 20px;
@@ -350,31 +371,21 @@ main.bracket-tournament-play {
                     scroll-behavior: smooth;
                     padding: 14px;
                     scrollbar-width: none;
-                    /* This creates the 'dead zone' for your arrows */
-                    //padding: 14px 60px;
                     box-sizing: border-box;
-                    /* This ensures the padding acts as a wall */
-                    clip-path: inset(0 14px 0 14px);
+                    clip-path: inset(0 4px 0 4px);
 
                     &::-webkit-scrollbar {
                         display: none;
                     }
 
-                    // 2. The Blur Logic
-                    // "When the container is in focus mode, target cards that ARE NOT being edited"
                     &.has-active-focus {
-
-                        // Blur EVERY card inside the viewport...
                         .group-card {
                             filter: blur(6px);
                             opacity: 0.4;
-                            pointer-events: none; // Deactivates interactions
-
+                            pointer-events: none;
                         }
 
-                        // ...EXCEPT the one being edited!
                         .group-card.focused-edit {
-
                             filter: none;
                             opacity: 1;
                             pointer-events: all;
@@ -384,8 +395,7 @@ main.bracket-tournament-play {
                     }
 
                     .group-card {
-
-                        flex: 0 0 100%; // Mobile: 1 card
+                        flex: 0 0 100%;
                         background: $vindro-gray;
                         border: 1px solid rgba(255, 255, 255, 0.05);
                         border-radius: 7px;
@@ -395,9 +405,9 @@ main.bracket-tournament-play {
                         flex-direction: column;
                         gap: 14px;
                         box-sizing: border-box;
-                        min-width: 0; // Crucial: prevents content from pushing card width
-                        scroll-snap-align: center; // This makes the "magnet" pull to the middle
-                        scroll-snap-stop: always; // Prevents the user from "flicking" past multiple cards
+                        min-width: 0;
+                        scroll-snap-align: center;
+                        scroll-snap-stop: always;
 
                         .group-header {
                             position: relative;
@@ -417,16 +427,48 @@ main.bracket-tournament-play {
                                 right: 0;
                                 font-size: 1.2rem;
                                 display: flex;
-                                align-items: flex-end;
-                                justify-content: center;
                                 align-items: center;
+                                justify-content: center;
                                 width: 42px;
                                 padding: 3px 14px;
+                                transition: all 0.2s ease;
 
-                                &.active,
-                                &:hover {
-                                    background-color: $vindro-neon-pink;
-                                    color: white;
+                                // 2. THE STUCK HOVER FIX
+                                // Only apply hover color changes if the device actually has a mouse
+                                @media (hover: hover) {
+                                    &:hover:not(:disabled) {
+                                        background-color: $vindro-neon-pink;
+                                        color: white;
+                                    }
+
+                                    // On Desktop, if the class .active is present, make it pink
+                                    &.active {
+                                        background-color: $vindro-neon-pink;
+                                        color: white;
+                                    }
+                                }
+
+                                // 3. TOUCH/MOBILE LOGIC
+                                @media (hover: none) {
+
+                                    // If it has the .active class on mobile, it's pink
+                                    &.active {
+                                        background-color: $vindro-neon-pink;
+                                        color: white;
+                                    }
+
+                                    // When NOT active on mobile, force it back to default 
+                                    // to prevent the "stuck pink hover"
+                                    &:not(.active) {
+                                        background-color: $vindro-tan;
+                                        color: $vindro-black;
+                                    }
+                                }
+
+                                // 4. PHYSICAL PRESS FEEDBACK (The Moment of Clicking)
+                                &:active:not(:disabled) {
+                                    background-color: darken($vindro-neon-pink, 10%);
+                                    transform: scale(0.95);
                                 }
                             }
                         }
@@ -434,7 +476,7 @@ main.bracket-tournament-play {
                         .team-list {
                             display: flex;
                             flex-direction: column;
-                            gap: 12px; // Controls spacing between rows
+                            gap: 12px;
                             padding-top: 10px;
 
                             .team-row {
@@ -443,33 +485,24 @@ main.bracket-tournament-play {
                                 gap: 7px;
                                 width: 100%;
                                 padding: 8px 12px;
-                                background: rgba(white, 0.63); // Subtle background for the row
+                                //background: rgba(white, 0.63);
                                 border-radius: 3px;
                                 transition: transform 0.2s ease, background 0.2s ease;
 
-                                // Visual indicator for qualifying spots (1st & 2nd)
-                                &.rank-1,
-                                &.rank-2 {
-                                    background: rgba(white, 0.84);
-                                    //border-left: 3px solid $vindro-black;
-                                }
-
-                                // Target specific upgraded classes
                                 .rank-num {
                                     font-size: 1.6rem;
                                     font-weight: 700;
                                     color: $vindro-gray;
-                                    //width: 25px; // Fixed width keeps flags aligned vertically
                                 }
 
                                 .fi {
                                     margin-left: 7px;
-                                    font-size: 2.1rem; // Adjust flag size
+                                    font-size: 2.1rem;
                                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                                 }
 
                                 .team-name {
-                                    flex: 1; // Takes up all remaining space, pushing handle to the right
+                                    flex: 1;
                                     font-size: 1.6rem;
                                     color: $vindro-black;
                                     font-weight: 500;
@@ -478,47 +511,82 @@ main.bracket-tournament-play {
                                     text-overflow: ellipsis;
                                 }
 
-                                &.is-draggable {
-                                    cursor: grab; // Change cursor for the whole row
-                                    touch-action: none;
+                                @for $i from 1 through 8 {
+                                    &.rank-#{$i} {
+                                        // Calculation: Rank 1 = 90% white, Rank 8 = 40% white
+                                        $opacity: 0.90 - (($i - 1) * 0.1);
+                                        background: rgba(white, $opacity);
 
-                                    &:active {
-                                        cursor: grabbing;
-                                    }
-
-                                    &:hover {
-                                        background: white;
-                                        transform: translateX(4px); // Subtle nudge to show it's active
+                                        // Optional: Slightly darken text for the very light top rows 
+                                        // to keep contrast high if needed.
+                                        @if $i >4 {
+                                            .rank-num {
+                                                color: rgba(black, 0.5);
+                                            }
+                                        }
                                     }
                                 }
 
-                                // Visual feedback for the item being moved
-                                &.dragging {
-                                    opacity: 0.14;
-                                    background: $vindro-teal !important;
-                                    border: 1px dashed white;
+                                /*
+                                // Highlight override for the focused card's qualifying spots
+                                .group-card.focused-edit & {
+
+                                    &.rank-1,
+                                    &.rank-2 {
+                                        background: white; // Solid white for emphasis
+                                        border-left: 4px solid $vindro-teal;
+                                    }
+                                }*/
+
+
+                                /* Reorder Controls Styling */
+                                .reorder-controls {
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 2px;
+                                    margin-left: 7px;
+
+                                    .move-btn {
+                                        background: #2a2a2a; // Dark metallic gray
+                                        color: $vindro-tan;
+                                        border: none;
+                                        font-size: 0.8rem;
+                                        line-height: 1;
+                                        padding: 2px 6px;
+                                        cursor: pointer;
+                                        border-radius: 2px;
+                                        transition: all 0.2s;
+
+                                        &:hover:not(:disabled) {
+                                            background: $vindro-teal;
+                                            color: white;
+                                        }
+
+                                        &:disabled {
+                                            opacity: 0.1;
+                                            cursor: not-allowed;
+                                        }
+                                    }
                                 }
 
+                                /* Ensure row elements don't interfere with button clicks */
                                 .rank-num,
                                 .team-flag,
-                                .team-name,
-                                .drag-handle {
+                                .team-name {
                                     pointer-events: none;
                                 }
                             }
                         }
 
-                        // 3. The Focused State
                         &.focused-edit {
-                            z-index: 100; // Sit on top of the blur
+                            z-index: 100;
                             border: 1px solid $vindro-neon-pink;
                             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-                            filter: none !important; // Force clear
+                            filter: none !important;
                             opacity: 1 !important;
                             pointer-events: all;
                         }
 
-                        // Remove default active/focus styles for a cleaner look
                         .edit-toggle-btn,
                         .team-row {
                             outline: none;
@@ -530,30 +598,14 @@ main.bracket-tournament-play {
                             }
                         }
 
-                        // 678px to 1100px: 2 Cards
+                        /* Responsive Card Widths */
                         @media (min-width: 678px) {
                             flex: 0 0 calc((100% - 20px) / 2);
-                            //scroll-snap-align: start; // Align to start for clean set scrolling
                         }
 
-                        // Above 1100px: 3 Cards
                         @media (min-width: 1100px) {
                             flex: 0 0 calc((100% - 40px) / 3);
-                            //scroll-snap-align: start;
                         }
-
-
-
-                        /*
-                        /*
-                        @media (min-width: 678px) {
-                            flex: 0 0 calc((100% - 20px) / 2);
-                        }
-
-                        @media (min-width: 960px) {
-                            flex: 0 0 calc((100% - 40px) / 3);
-                        }
-                        */
                     }
                 }
             }
@@ -563,6 +615,7 @@ main.bracket-tournament-play {
 
     }
 }
+
 
 section.leaderboard-display-container {
     justify-content: flex-start;
@@ -586,7 +639,7 @@ section.leaderboard-display-container {
 
             table {
                 overflow: visible !important;
-                
+
                 tr {
                     overflow: visible !important;
                     position: relative;
@@ -597,7 +650,7 @@ section.leaderboard-display-container {
 
                         &:hover {
                             background-color: rgba($vindro-tan, 0.42);
-                            
+
                             z-index: 42;
                         }
                     }
@@ -608,8 +661,9 @@ section.leaderboard-display-container {
 
                     td {
                         overflow: visible !important;
-                        position: relative;;
-                        
+                        position: relative;
+                        ;
+
                         img.player-avatar {
                             height: 24px;
                             width: 24px;
@@ -664,18 +718,6 @@ section.leaderboard-display-container {
         }
     }
 }
-
-/* The polyfill creates a 'ghost' element. Let's make it look like our rows */
-.dnd-poly-drag-image {
-    background: $vindro-teal !important;
-    color: white;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    opacity: 0.9;
-    transform: scale(1.05); // Make it slightly bigger so user sees it under finger
-}
-
 
 $error-red: #ff4d4d;
 
@@ -873,7 +915,6 @@ $error-red: #ff4d4d;
         }
     }
 }
-
 
 .submit-play-modal,
 .submission-response-modal {
@@ -1073,8 +1114,6 @@ $error-red: #ff4d4d;
 
 }
 
-
-
 @import 'mobile960';
 @import 'mobile678';
 @import 'mobile450';
@@ -1091,64 +1130,3 @@ $error-red: #ff4d4d;
         transform: translateY(0);
     }
 }
-
-
-/* OLD TABLE STYLING FOR REFERENCE
-            .table-container {
-
-                    flex-grow: 1;
-                    border: 1px solid $vindro-black;
-                    border-radius: 7px;
-                    background-color: $vindro-tan;
-
-                    table {
-
-                        width: 100%;
-                        border-collapse: collapse;
-                        overflow: hidden;
-
-                        th {
-                            font-size: 1.6rem;
-                            font-weight: 600;
-                            // color: $vindro-green;
-                            font-family: $vindro-Montserrat;
-                            border: none;
-                            border-bottom: 3px solid $vindro-black;
-                            padding: 7px 14px;
-                        }
-
-                        td {
-                            font-size: 1.4rem;
-                            font-weight: 300;
-                            color: $vindro-gray;
-                            text-align: center;
-                            padding: 7px 14px;
-
-                            .team-info {
-                                display: flex;
-                                gap: 7px;
-                            }
-                        }
-
-                        tr {
-
-                            td:first-child {
-                                color: $vindro-black;
-                                padding-left: 7px;
-                                font-weight: 600;
-                            }
-
-                            &.clickable-row {
-                                cursor: pointer;
-                                transition: background-color 0.2s ease;
-
-                                &:hover {
-                                    background-color: lighten($vindro-black, 7);
-                                }
-                            }
-
-                        }
-                    }
-                }
-        }
-        */

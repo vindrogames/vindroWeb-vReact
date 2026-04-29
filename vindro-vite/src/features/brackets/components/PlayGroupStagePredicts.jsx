@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import GroupCard from './GroupCard'; // We will create this next
 
-const GroupStagePredictions = ({ data, isOwner, onUpdate }) => {
+const GroupStagePredictions = ({ data, isOwner, onUpdate, onSave }) => {
 
     const [focusedGroup, setFocusedGroup] = useState(null);
     const scrollRef = useRef(null);
@@ -46,6 +46,7 @@ const GroupStagePredictions = ({ data, isOwner, onUpdate }) => {
                         teams={teams}
                         isOwner={isOwner}
                         onUpdate={onUpdate}
+                        onSave={onSave}
                         isDimmed={focusedGroup && focusedGroup !== groupName}
                         onEditingChange={(isEditing) => handleEditingChange(groupName, isEditing)}
                     />

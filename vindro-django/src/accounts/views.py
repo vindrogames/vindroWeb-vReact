@@ -106,3 +106,77 @@ def oauth_redirect(request):
     """OAuth redirect fallback — redirects to the React frontend."""
     frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:5173/')
     return redirect(frontend_url)
+
+
+@require_http_methods(["GET"])
+def user_bracket_summary(request, user_id):
+    """GET /api/users/<user_id>/brackets/ — public tournament bracket summary"""
+    from tournament.models import TournamentPlay, PoolMembership
+    from django.db.models import F
+
+    try:
+        profile_user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    plays = TournamentPlay.objects.filter(user=profile_user).select_related('tournament')
+
+    tournament_map = {}
+    for play in plays:
+        t_id = str(play.tournament_id)
+        if t_id not in tournament_map:
+            tournament_map[t_id] = {
+                'tournament_name': play.tournament.name,
+                'tournament_slug': play.tournament.slug,
+                'plays': [],
+            }
+        tournament_map[t_id]['plays'].append(play)
+
+    result = []
+    for t_id, data in tournament_map.items():
+        play_list = data['plays']
+
+        memberships = PoolMembership.objects.filter(
+            play__in=play_list
+        ).select_related('pool', 'play')
+
+        pools_joined = len(set(str(m.pool_id) for m in memberships))
+
+        top_position = None
+        for m in memberships:
+            total_points = m.play.group_points + m.play.bracket_points
+            higher = PoolMembership.objects.filter(pool=m.pool).annotate(
+                total=F('play__group_points') + F('play__bracket_points')
+            ).filter(total__gt=total_points).count()
+            pos = higher + 1
+            if top_position is None or pos < top_position:
+                top_position = pos
+
+        result.append({
+            'tournament_id': t_id,
+            'tournament_name': data['tournament_name'],
+            'tournament_slug': data['tournament_slug'],
+            'play_count': len(play_list),
+            'pools_joined': pools_joined,
+            'top_position': top_position,
+        })
+
+    return JsonResponse({'success': True, 'data': result})
+
+
+@require_http_methods(["GET"])
+def public_profile(request, user_id):
+    """GET /api/users/<user_id>/ — public profile data, no auth required"""
+    try:
+        profile_user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    return JsonResponse({
+        'user': {
+            'id': profile_user.id,
+            'username': profile_user.username,
+            'avatar': profile_user.avatar,
+            'joined': profile_user.date_joined.isoformat() if profile_user.date_joined else None,
+        }
+    })

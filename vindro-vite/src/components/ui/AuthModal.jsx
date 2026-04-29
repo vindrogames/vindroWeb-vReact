@@ -31,17 +31,14 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
 
     const handleLogin = (provider) => {
         const backendUrl = getBackendUrl();
-
-        // Use the current page URL if no specific redirectTo was provided
-        // window.location.href captures the full URL including current route/params
         const finalRedirect = redirectTo || window.location.href;
 
         let oauthUrl = `${backendUrl}/accounts/${provider}/login/`;
-
-        // Append the current location as the 'next' parameter
         const encodedRedirect = encodeURIComponent(finalRedirect);
         oauthUrl += `?next=${encodedRedirect}`;
 
+        // Flag for checkAuth to show the loader when the user returns from OAuth
+        sessionStorage.setItem('oauth_pending', '1');
         window.location.href = oauthUrl;
     };
 

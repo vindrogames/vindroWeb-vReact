@@ -37,7 +37,7 @@ class Gamescore(models.Model):
     
 
     def __str__(self):
-        return f"{self.user.username} - {self.game_name}: {self.score}"
+        return f"{self.user.username} - {self.game_name}: {self.game_score}"
 
     class Meta:
         verbose_name = 'Gamescore'

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import playServices from '../services/playServices';
 import { useAuth } from '../../../contexts/auth/AuthContext';
+import { useLoading } from '../../../contexts/LoadingContext';
 import GroupStagePredictions from './PlayGroupStagePredicts';
 import BracketStagePredictions from './PlayBracketStagePredicts';
 import formatDate from '../../../utils/dateFormatter';
@@ -13,6 +14,7 @@ const PlayPage = () => {
 
     const location = useLocation();
     const { user } = useAuth();
+    const { showLoader, hideLoader } = useLoading();
     const [playData, setPlayData] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -62,6 +64,29 @@ const PlayPage = () => {
         );
     }
 
+    const avatarUrl = playData?.user_avatar || '';
+    // List of base colors to check for in the URL
+    console.log(playData.user.avatar);
+
+    const colorMap = {
+        pink: '#ff2edcff',
+        green: '#b4ff00ff',
+        orange: '#D97706',
+        purple: '#a020f0',
+        teal: '#66FCF1',
+        green: '#45A29E',
+        white: '#ffffff',
+    };
+
+    // find first match in URL
+    const matchedKey = Object.keys(colorMap).find(c =>
+        avatarUrl.toLowerCase().includes(c)
+    );
+
+    const borderColor = colorMap[matchedKey] || 'transparent';
+
+
+
     const handleUpdateGroupOrder = (groupName, newOrder) => {
         setPlayData(prevData => {
             if (!prevData) return prevData;
@@ -70,10 +95,22 @@ const PlayPage = () => {
                 ...prevData,
                 group_predictions: {
                     ...prevData.group_predictions,
-                    [groupName]: newOrder // Replace only the specific group's array
+                    [groupName]: newOrder
                 }
             };
         });
+    };
+
+    const handleSaveGroup = async () => {
+        showLoader();
+        try {
+            const result = await playServices.updateGroupPredictions(playId, playData.group_predictions);
+            if (result?.success) {
+                setPlayData(prev => ({ ...prev, updated_at: result.data.updated_at }));
+            }
+        } finally {
+            hideLoader();
+        }
     };
 
     return (
@@ -85,8 +122,8 @@ const PlayPage = () => {
                     <div className="text-container">
                         <h1 className="profile-intro">{playData.tournament_name}</h1>
                         <div className="play-specs">
-                            {!isOwner ? 
-                                (<><h2><span className="inline-bold">{playData.name}</span> <span className="inline-teal">by</span> <span className="inline-bold">{playData.user_name}</span></h2> <img src={playData.user_avatar} alt=""></img></>) : 
+                            {!isOwner ?
+                                (<><h2><span className="inline-bold">{playData.name}</span> <span className="inline-teal">by</span> <span className="inline-bold">{playData.user_name}</span></h2> <button className="avatar-link-btn" style={{ borderBottom: `2px solid ${borderColor}` }} onClick={() => navigate(`/user/${playData.user}`)}><img src={playData.user_avatar} alt={playData.user_name} /></button></>) :
                                 (<h2>play: <span className="inline-bold">{playData.name}</span></h2>)}
                         </div>
                     </div>
@@ -108,6 +145,7 @@ const PlayPage = () => {
                         data={playData.group_predictions}
                         isOwner={isOwner}
                         onUpdate={handleUpdateGroupOrder}
+                        onSave={handleSaveGroup}
                     />
 
                     <div className="last-updated">

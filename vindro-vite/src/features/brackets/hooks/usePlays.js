@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-
 import playServices from '../services/playServices';
+import { useLoading } from '../../../contexts/LoadingContext';
 
 const usePlays = (tournamentId, user, tournamentSlug) => {
+
+    const { showLoader, hideLoader } = useLoading();
 
     // --- State ---
     const [userPlays, setUserPlays] = useState([]);
@@ -51,14 +53,12 @@ const usePlays = (tournamentId, user, tournamentSlug) => {
 
         setIsSubmitting(true);
         setError(null);
+        showLoader();
 
         try {
-            // 2. API CALL
             const response = await playServices.createPlay(tournamentId, trimmedName);
 
             if (response.success) {
-                // 3. RETURN DATA: We return the response data (which contains the ID)
-                // so the TournamentPage can navigate using it.
                 return response.data;
             } else {
                 setError(response.error || "Failed to create play.");
@@ -70,6 +70,7 @@ const usePlays = (tournamentId, user, tournamentSlug) => {
             return null;
         } finally {
             setIsSubmitting(false);
+            hideLoader();
         }
     };
 

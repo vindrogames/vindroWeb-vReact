@@ -8,7 +8,9 @@ import AuthModal from '../../../../components/ui/AuthModal';
 import EventDescription from './components/EventDescription';
 import LeaderboardDisplay from './components/LeaderboardDisplay';
 import CreateNewPlayModal from '../../components/CreateNewPlayModal';
-import JoinPoolModal from '../../components/PoolJoinModal';
+
+// Modals
+import JoinPoolModal from '../../components/modals/PoolJoinModal';
 
 // Custom Hooks
 import { useAuth } from '../../../../contexts/auth/AuthContext';
@@ -70,6 +72,13 @@ const WorldCupTournament_2026 = () => {
         const playSlug = play.name.trim().toLowerCase().replace(/\s+/g, '-');
         navigate(`/brackets/${tournamentSlug}/${user.id}/${playSlug}`, {
             state: { playId: play.id }
+        });
+    };
+
+    const handleLeaderboardPlayClick = (item) => {
+        const playSlug = item.play_name.trim().toLowerCase().replace(/\s+/g, '-');
+        navigate(`/brackets/${tournamentSlug}/${item.user.id}/${playSlug}`, {
+            state: { playId: item.play_id }
         });
     };
 
@@ -217,6 +226,7 @@ const WorldCupTournament_2026 = () => {
             <ShowcaseSection id="user-picks-section" classes="hero-half bg-gray user-picks">
                 <div className="user-picks-container">
                     <div className="title-container predictions"><h3>Your Plays</h3></div>
+
                     <div className="user-stats-container">
                         <div className="table-container bg-black backdrop-gray">
                             <table>
@@ -234,7 +244,7 @@ const WorldCupTournament_2026 = () => {
                                     ) : userPlays?.length > 0 ? (
                                         userPlays.map((play) => (
                                             <tr key={play.id} onClick={() => handleNavigateToPlay(play)} className="clickable-row">
-                                                <td className="table-link">{play.name}</td>
+                                                <td className="table-link play-link">{play.name}</td>
                                                 <td>{getUpdateStatus(play)}</td>
                                                 <td>{play.group_points || 0}</td>
                                                 <td>{play.bracket_points || 0}</td>
@@ -251,9 +261,9 @@ const WorldCupTournament_2026 = () => {
                         </div>
                     </div>
 
-                    <div className="title-container pools"><h3>Your Pools</h3></div>
+                    <div className="title-container plays-in-pools"><h3>Your Plays in Pools</h3></div>
                     <div className="user-stats-container">
-                        <div className="table-container">
+                        <div className="table-container bg-black backdrop-gray">
                             <table>
                                 <thead>
                                     <tr><th>Pool</th><th>Play</th><th>Manager</th><th>Pos.</th></tr>
@@ -263,7 +273,7 @@ const WorldCupTournament_2026 = () => {
                                         <tr><td colSpan="4">Loading pools...</td></tr>
                                     ) : userPools?.length > 0 ? (
                                         userPools.map(pool => (
-                                            <tr key={pool.id}>
+                                            <tr key={pool.id} className="clickable-row">
                                                 <td>{pool.pool_name}</td>
                                                 <td>{pool.play_name}</td>
                                                 <td>{pool.manager}</td>
@@ -278,6 +288,35 @@ const WorldCupTournament_2026 = () => {
                         </div>
                         <div className="buttons-container">
                             <button className="btn btn-tan" onClick={handleJoinPoolClick}>Join a Pool</button>
+                        </div>
+                    </div>
+
+                    <div className="title-container your-pools"><h3>Your Pools</h3></div>
+                    <div className="user-stats-container">
+                        <div className="table-container bg-black backdrop-gray">
+                            <table>
+                                <thead>
+                                    <tr><th>Pool</th><th>Play</th><th>Manager</th><th>Pos.</th></tr>
+                                </thead>
+                                <tbody>
+                                    {isLoadingPools ? (
+                                        <tr><td colSpan="4">Loading pools...</td></tr>
+                                    ) : userPools?.length > 0 ? (
+                                        userPools.map(pool => (
+                                            <tr key={pool.id} className="clickable-row">
+                                                <td>{pool.pool_name}</td>
+                                                <td>{pool.play_name}</td>
+                                                <td>{pool.manager}</td>
+                                                <td>{pool.rank || '-'}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr><td colSpan="4">You haven't joined any pools yet.</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="buttons-container">
                             <button className="btn btn-tan" onClick={handleCreatePoolClick}>Create a Pool</button>
                         </div>
                     </div>
@@ -306,7 +345,7 @@ const WorldCupTournament_2026 = () => {
                     columns={leaderboardCols}
                     isLoading={isPublicLoading}
                     showBack={false}
-                    onRowClick={handleNavigateToPlay}
+                    onRowClick={handleLeaderboardPlayClick}
                     emptyMessage="No entries found."
                     classes="bg-tan hero-half"
                     tableContainerClasses="table-container bg-gray backdrop-tan"

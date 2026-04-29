@@ -4,6 +4,7 @@
  */
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from './services/authService';
+import { useLoading } from '../LoadingContext';
 
 const AuthContext = createContext(null);
 
@@ -12,6 +13,7 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { showLoader, hideLoader } = useLoading();
 
     /**
      * Check authentication status on mount
@@ -27,13 +29,19 @@ export function AuthProvider({ children }) {
 
         const isCheatEnabled = import.meta.env.VITE_AUTH_CHEAT === 'true';
 
-        // Only cheat if the variable is true AND we are in dev mode
         if (isCheatEnabled && import.meta.env.DEV) {
             console.log("🛠️ Auth: Using Frontend Cheat Mode");
             setUser({ id: '999', username: 'dev_user', role: 'admin', provider: 'your mom', login_count: '420' });
             setLoading(false);
             return;
         }
+
+        const returningFromOAuth = sessionStorage.getItem('oauth_pending') === '1';
+        if (returningFromOAuth) {
+            sessionStorage.removeItem('oauth_pending');
+            showLoader();
+        }
+
         console.log("🌐 Auth: Attempting Backend Sync...");
 
         try {
@@ -42,9 +50,9 @@ export function AuthProvider({ children }) {
             setError(null);
         } catch (err) {
             setUser(null);
-            // Don't set error for initial auth check
         } finally {
             setLoading(false);
+            if (returningFromOAuth) hideLoader();
         }
     }
 
@@ -53,6 +61,7 @@ export function AuthProvider({ children }) {
      * @param {Object} credentials - {username, password}
      */
     async function login(credentials) {
+        showLoader();
         try {
             setError(null);
             const data = await authAPI.login(credentials);
@@ -61,6 +70,8 @@ export function AuthProvider({ children }) {
         } catch (err) {
             setError(err.message);
             throw err;
+        } finally {
+            hideLoader();
         }
     }
 
@@ -91,15 +102,17 @@ export function AuthProvider({ children }) {
      * Logout current user
      */
     async function logout() {
+        showLoader();
         try {
             await authAPI.logout();
             setUser(null);
             setError(null);
         } catch (err) {
-            // Even if logout fails on backend, clear local state
             setUser(null);
             setError(err.message);
             throw err;
+        } finally {
+            hideLoader();
         }
     }
 

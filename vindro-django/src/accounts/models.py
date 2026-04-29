@@ -32,7 +32,7 @@ class User(AbstractUser):
     )
     
     login_count = models.IntegerField(
-        default=1,
+        default=0,
         help_text='Number of times user has logged in'
     )
 
