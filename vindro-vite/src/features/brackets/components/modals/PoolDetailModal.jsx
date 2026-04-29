@@ -5,8 +5,12 @@ import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 const PoolDetailModal = ({ pool, onClose }) => {
     if (!pool) return null;
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(pool.join_code);
+    const handleCopy = () => navigator.clipboard.writeText(pool.join_code);
+
+    const handleWhatsApp = () => {
+        const url = `${window.location.origin}${window.location.pathname}?pool=${pool.join_code}`;
+        const text = encodeURIComponent(`Join my pool "${pool.name}" on Vindro Games! Use code: ${pool.join_code} or click here: ${url}`);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
     };
 
     return ReactDOM.createPortal(
@@ -31,9 +35,8 @@ const PoolDetailModal = ({ pool, onClose }) => {
                         <p>Share this code with friends so they can join your pool.</p>
                         <p className="join-code-display">{pool.join_code}</p>
                     </div>
-                    <button className="btn btn-tan" onClick={handleCopy}>
-                        Copy Code
-                    </button>
+                    <button className="btn btn-tan" onClick={handleCopy}>Copy Code</button>
+                    <button className="btn btn-tan" onClick={handleWhatsApp}>Share via WhatsApp</button>
                 </ShowcaseSection>
             </div>
         </div>,

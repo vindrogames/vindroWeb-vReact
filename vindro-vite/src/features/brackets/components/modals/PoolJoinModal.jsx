@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import SubmitPlayToPool from './PoolSubmitPlayModal';
 import PoolSubmitResponseModal from './PoolSubmitResponseModal';
 import usePools from '../../hooks/usePools';
 
-const JoinPoolModal = ({ isOpen, mode = 'join', tournamentId, plays = [], onCancel, onSuccess }) => {
+const buildShareUrl = (code) => {
+    const base = `${window.location.origin}${window.location.pathname}`;
+    return `${base}?pool=${code}`;
+};
+
+const whatsappShare = (code) => {
+    const url = buildShareUrl(code);
+    const text = encodeURIComponent(`Join my pool on Vindro Games! Use code: ${code} or click here: ${url}`);
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+};
+
+const JoinPoolModal = ({ isOpen, mode = 'join', tournamentId, plays = [], onCancel, onSuccess, initialCode = '', onCreatePlay }) => {
     const { handleCreatePool, isSubmitting } = usePools(tournamentId);
 
     const [submissionFlow, setSubmissionFlow] = useState({ isOpen: false, type: null });
@@ -13,6 +24,12 @@ const JoinPoolModal = ({ isOpen, mode = 'join', tournamentId, plays = [], onCanc
     const [newPoolName, setNewPoolName] = useState('');
     const [createError, setCreateError] = useState('');
     const [createSuccess, setCreateSuccess] = useState(null);
+
+    useEffect(() => {
+        if (isOpen && initialCode) {
+            setSubmissionFlow({ isOpen: true, type: 'private' });
+        }
+    }, [isOpen, initialCode]);
 
     if (!isOpen) return null;
 
@@ -69,7 +86,10 @@ const JoinPoolModal = ({ isOpen, mode = 'join', tournamentId, plays = [], onCanc
                         {createSuccess ? (
                             <div className="modal-gallery-text">
                                 <p>Pool <strong>{createSuccess.name}</strong> created!</p>
-                                <p>Share this code with friends: <strong>{createSuccess.join_code}</strong></p>
+                                <p>Code: <strong>{createSuccess.join_code}</strong></p>
+                                <button className="btn btn-tan" onClick={() => whatsappShare(createSuccess.join_code)}>
+                                    Share via WhatsApp
+                                </button>
                                 <button className="btn btn-tan" onClick={() => setCreateSuccess(null)}>Create another</button>
                             </div>
                         ) : (
@@ -140,6 +160,8 @@ const JoinPoolModal = ({ isOpen, mode = 'join', tournamentId, plays = [], onCanc
                 plays={plays}
                 onConfirm={handleSubmissionSuccess}
                 onCancel={closeSubmissionFlow}
+                initialCode={submissionFlow.type === 'private' ? initialCode : ''}
+                onCreatePlay={onCreatePlay}
             />
 
             {responseFlow.isOpen && (

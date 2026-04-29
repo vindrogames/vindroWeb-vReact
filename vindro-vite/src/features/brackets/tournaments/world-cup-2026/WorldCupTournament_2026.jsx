@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { FaEdit, FaEye, FaPlus, FaUsers } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
@@ -37,8 +38,9 @@ const WorldCupTournament_2026 = () => {
         userPlays,
         isLoading: isLoadingPlays,
         isSubmitting: isPlaySubmitting,
-        error: apiError, // This is what the Modal needs
-        handleCreatePlay
+        error: apiError,
+        handleCreatePlay,
+        refreshPlays
     } = usePlays(tournamentData?.id, user, tournamentSlug);
 
     const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
@@ -48,24 +50,32 @@ const WorldCupTournament_2026 = () => {
         setShowCreatePlayModal(true);
     };
 
-    const handleCreatePlayConfirm = async (playName) => {
-        // Trigger hook logic
-        const newPlay = await handleCreatePlay(playName);
+    const [returnToPool, setReturnToPool] = useState(false);
 
-        // If successful, the hook returns the object containing the ID
+    const handleCreatePlayConfirm = async (playName) => {
+        const newPlay = await handleCreatePlay(playName);
         if (newPlay && newPlay.id) {
             setShowCreatePlayModal(false);
-
-            // Standardize slug for the URL
+            if (returnToPool) {
+                setReturnToPool(false);
+                await refreshPlays();
+                setPoolModalMode('join');
+                setShowPoolModal(true);
+                return;
+            }
             const slugPlayName = encodeURIComponent(
                 newPlay.name.trim().replace(/\s+/g, '-').toLowerCase()
             );
-
-            // REDIRECT: Passing the ID in state so PlayPage can fetch it
             navigate(`/brackets/${tournamentSlug}/${user.id}/${slugPlayName}`, {
                 state: { playId: newPlay.id }
             });
         }
+    };
+
+    const handleCreatePlayFromPool = () => {
+        setShowPoolModal(false);
+        setReturnToPool(true);
+        setShowCreatePlayModal(true);
     };
 
     const handleNavigateToPlay = (play) => {
@@ -108,9 +118,33 @@ const WorldCupTournament_2026 = () => {
     const [showPoolModal, setShowPoolModal] = useState(false);
     const [poolModalMode, setPoolModalMode] = useState('join');
     const [selectedPool, setSelectedPool] = useState(null);
+    const [prefilledCode, setPrefilledCode] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // On mount: capture ?pool= param and store it so it survives OAuth redirects
+    useEffect(() => {
+        const code = searchParams.get('pool');
+        if (code) {
+            sessionStorage.setItem('pendingPoolCode', code);
+            setSearchParams({}, { replace: true });
+        }
+    }, []);
+
+    // Once user is authenticated, consume any pending pool code
+    useEffect(() => {
+        if (!user) return;
+        const code = sessionStorage.getItem('pendingPoolCode');
+        if (code) {
+            sessionStorage.removeItem('pendingPoolCode');
+            setPrefilledCode(code);
+            setPoolModalMode('join');
+            setShowPoolModal(true);
+        }
+    }, [user]);
 
     const handleJoinPoolClick = () => {
         if (!user) { handleLoginClick(); return; }
+        setPrefilledCode('');
         setPoolModalMode('join');
         setShowPoolModal(true);
     };
@@ -196,6 +230,16 @@ const WorldCupTournament_2026 = () => {
     // ---------------------------------------------------------
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authModalMode, setAuthModalMode] = useState('login');
+
+    // If a pending pool code exists but the user isn't logged in, prompt login
+    useEffect(() => {
+        if (user) return;
+        const code = sessionStorage.getItem('pendingPoolCode');
+        if (code) {
+            setAuthModalMode('login');
+            setIsAuthModalOpen(true);
+        }
+    }, [user]);
 
     const handleLoginClick = () => {
         setAuthModalMode('login');
@@ -363,16 +407,18 @@ const WorldCupTournament_2026 = () => {
 
             <JoinPoolModal
                 isOpen={showPoolModal}
-                mode={poolModalMode} // Pass the mode so the modal knows what to show
+                mode={poolModalMode}
                 tournamentId={tournamentData?.id}
                 onConfirm={poolModalMode === 'join' ? onJoinPoolConfirm : onCreatePoolConfirm}
                 onCancel={() => setShowPoolModal(false)}
                 plays={userPlays}
                 isLoading={isPoolSubmitting}
+                initialCode={prefilledCode}
+                onCreatePlay={handleCreatePlayFromPool}
                 onSuccess={() => {
-                    refreshPools();          // 1. Fetch the fresh data from the API
+                    refreshPools();
                     refreshPublic();
-                    setShowPoolModal(false); // 2. Close the modal
+                    setShowPoolModal(false);
                 }}
             />
 

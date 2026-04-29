@@ -5,16 +5,16 @@ import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 // 1. IMPORT HOOK: Ensure the path is correct for your file structure
 import usePools from '../../hooks/usePools'; 
 
-const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, onCancel }) => {
-    // 2. HOOK CONNECTION: 
-    // We destructure 'handleJoinPool' (matching your hook's export) 
-    // and 'isSubmitting' (which tracks the specific POST request state).
+const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, onCancel, initialCode = '', onCreatePlay }) => {
     const { handleJoinPool, isSubmitting, error: apiError } = usePools(tournamentId);
 
-    // 3. LOCAL STATE:
     const [selectedPlayIds, setSelectedPlayIds] = useState([]);
-    const [poolCode, setPoolCode] = useState('');
+    const [poolCode, setPoolCode] = useState(initialCode);
     const [localError, setLocalError] = useState('');
+
+    useEffect(() => {
+        if (initialCode) setPoolCode(initialCode);
+    }, [initialCode]);
 
     // RESET: Clear inputs whenever the modal closes or switches modes
     useEffect(() => {
@@ -74,6 +74,11 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                     <h2>select<span className="inline-teal inline-bold">Plays</span></h2>
                     <div className="modal-gallery-text">
                         <p>{hasNoPlays ? "No plays to submit yet." : "Select plays to submit to this pool."}</p>
+                        {hasNoPlays && onCreatePlay && (
+                            <button className="btn btn-tan" onClick={onCreatePlay}>
+                                Create a Play first
+                            </button>
+                        )}
                     </div>
 
                     <div className="feature-table">

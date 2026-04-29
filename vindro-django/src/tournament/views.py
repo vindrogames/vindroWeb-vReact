@@ -1,4 +1,5 @@
-import secrets
+import random
+import string
 import hashlib
 import json, uuid
 from django.http import JsonResponse
@@ -406,7 +407,7 @@ def pool_create(request, tournament_id):
     if len(name) > 100:
         return JsonResponse({'success': False, 'error': 'name too long (max 100 characters)'}, status=400)
 
-    plain_code = secrets.token_urlsafe(8)
+    plain_code = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
     pool = TournamentPool.objects.create(
         tournament=tournament,
         name=name,
