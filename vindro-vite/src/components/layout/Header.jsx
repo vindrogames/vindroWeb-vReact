@@ -75,7 +75,7 @@ const NavBar = ({ isMadrid }) => {
         }
     }
 
-    const logoSrc = isMadrid ? "/img/vindro-logo-real-yellow.png" : "/img/vindro_logo_1.png";
+    const logoSrc = isMadrid ? "/img/vindro-logo-real-yellow.webp" : "/img/vindro-logo-teal.webp";
     const inlineClass = isMadrid ? "inline-real-yellow" : "inline-teal";
 
     const LogoBlock = () => (

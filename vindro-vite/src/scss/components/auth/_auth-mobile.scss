@@ -1,0 +1,81 @@
+@use '../../config' as *;
+
+@media(max-width: 450px) {
+
+    .modal-overlay {
+
+        .modal-content.auth-modal-layout {
+
+            #social-signup-gallery {
+                //padding: 14px;
+
+                .social-login {
+                    
+                    .btn-social {
+                        width: 100%;
+                        //font-size: 1.6rem;
+                        //font-weight: 500;
+
+                        svg {
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+                }
+            }
+
+            .no-account-container {
+                padding: 0 14px;
+
+                #sign-up-header h3 {
+                     font-size: 2.1rem;
+                }
+
+                .auth-info {
+
+                    h4, p {
+                        font-size: 1.6rem;
+                    }
+                }
+
+                h5 {
+                    font-size: 1.2rem;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    .modal-overlay {
+
+        .modal-content.auth-modal-layout {
+
+            #social-signup-gallery {
+                padding: 14px;
+
+                .social-login {
+                    
+                    .btn-social {
+                        width: 100%;
+                        padding: 7px;
+                        font-size: 1.4rem;
+
+                        svg {
+                            width: 21px;
+                            height: 21px;
+                        }
+                    }
+                }
+            }
+
+            .no-account-container {
+
+                .modal-footer {
+                    padding: 7px 0px 14px;
+                }
+            }
+        }
+    }
+}

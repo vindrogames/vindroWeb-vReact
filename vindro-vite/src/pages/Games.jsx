@@ -29,7 +29,7 @@ const Games = () => {
                             key="game-1"
                             route="/games/auto-miner"
                             galleryImg={
-                                <img src="/img/auto-miner-gallery.png" alt="Autominer, an Idle Game by Vindrogames" />
+                                <img src="/img/auto-miner-gallery.webp" alt="Autominer, an Idle Game by Vindrogames" />
                             }
                             gameTitle="Autominer"
                             gameDescription="An idle game. Start mining, automate production and leave your tab open."
@@ -49,7 +49,7 @@ const Games = () => {
                             key="game-3"
                             route="/games/escape-the-cloud"
                             galleryImg={
-                                <img src="/img/escapeTheCloud.png" alt="Digital Escaperoom to learn about Google Workspace tools" />
+                                <img src="/img/escapeTheCloud.webp" alt="Digital Escaperoom to learn about Google Workspace tools" />
                             }
                             gameTitle="Digital BreakOut"
                             gameDescription="Inspired by Escape Rooms, this game teacher players tricks and functionalities of Google tools."
@@ -59,7 +59,7 @@ const Games = () => {
                             key="game-4"
                             route="https://cerebro.vindrogames.com"
                             galleryImg={
-                                <img src="/img/brainGame.png" alt="A zfantasy style RPG to learn how the brain processes information" />
+                                <img src="/img/brainGame.webp" alt="A zfantasy style RPG to learn how the brain processes information" />
                             }
                             gameTitle="Brain Game"
                             gameDescription="A role playing type game designed to teach people about the human brain and how we process visual information."
@@ -69,7 +69,7 @@ const Games = () => {
                             key="game-5"
                             route="https://set.vindrogames.com"
                             galleryImg={
-                                <img src="/img/setGame.png" alt="Set is a classNameic boardgame putting to the test your concentration and speed. This is vindrogame's solitaire version" />
+                                <img src="/img/setGame.webp" alt="Set is a classNameic boardgame putting to the test your concentration and speed. This is vindrogame's solitaire version" />
                             }
                             gameTitle="Set"
                             gameDescription="A great boardgame we have recreated to play on screen. Simple but mentally exhausting, how many sets can you find?"
@@ -79,7 +79,7 @@ const Games = () => {
                             key="game-6"
                             route="https://greek-tale.vindrogames.com"
                             galleryImg={
-                                <img src="/img/greekTale.png" alt="A Greek Tale is a game with a metaphor of hacking computers with trojan horses by avoiding firewalls" />
+                                <img src="/img/greekTale.webp" alt="A Greek Tale is a game with a metaphor of hacking computers with trojan horses by avoiding firewalls" />
                             }
                             gameTitle="A Greek Tale"
                             gameDescription="A short game inspired by Troy with a digital spin. Can you send your Trojan Horses through all the firewalls?"
@@ -89,7 +89,7 @@ const Games = () => {
                             key="game-7"
                             route="/games/madrid-calculator"
                             galleryImg={
-                                <img src="/img/madrid-calculator.png" alt="La calculadora madridista, calcula como siempre o por el número de champions del Real Madrid" />
+                                <img src="/img/madrid-calculator.webp" alt="La calculadora madridista, calcula como siempre o por el número de champions del Real Madrid" />
                             }
                             gameTitle="Calculadora Madridista"
                             gameDescription="Calcula como siempre o por el número de champions que tiene el Real Madrid"

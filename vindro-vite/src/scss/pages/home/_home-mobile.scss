@@ -1,0 +1,145 @@
+@use '../../config' as *;
+
+@media(max-width: 960px) {
+
+    main#home-page {
+
+        section.hero-full h2 {
+            font-size: 2.8rem;
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main#home-page {
+
+        section.hero-full {
+            h1 {
+                font-size: 4.2rem;
+            }
+
+            h2 {
+                font-size: 2.1rem;
+            }
+
+            button {
+                padding: 7px 21px;
+            }
+        }
+
+        section#what-we-do {
+
+            h3 {
+                font-family: $vindro-openSans;
+            }
+
+            h3,
+            h4 {
+                font-size: 2.1rem;
+            }
+
+            a {
+                padding: 7px 21px;
+            }
+        }
+
+        section#home-about {
+            height: 100%;
+            min-height: 50vh;
+
+            .team-container {
+                flex-direction: column;
+                gap: 21px;
+
+                .team-member {
+                    width: 100%;
+
+                    img {
+                        width: 120px;
+                        height: 120px;
+                    }
+
+                    >div h5 {
+                        font-size: 2.7rem;
+                    }
+
+                    >div p {
+                        font-size: 1.8rem;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    main#home-page {
+
+        section.hero-full {
+
+            h2 {
+                width: 84%;
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    main#home-page {
+
+        section.hero-full {
+
+            h1 {
+                font-size: 3.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            button {
+                font-size: 1.6rem;
+                padding: 7px 14px;
+            }
+        }
+
+        section#what-we-do {
+
+            h3,
+            h4 {
+                font-size: 1.8rem;
+            }
+
+            a {
+                padding: 7px 14px;
+                font-size: 1.6rem;
+            }
+        }
+
+        section#home-about {
+
+            .team-container {
+
+                .team-member {
+
+                    img {
+                        width: 120px;
+                        height: 120px;
+                    }
+
+                    >div h5 {
+                        font-size: 2.4rem;
+                    }
+
+                    >div p {
+                        font-size: 1.6rem;
+                    }
+                }
+            }
+        }
+    }
+}

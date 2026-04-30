@@ -90,7 +90,7 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
                 <div className="auth-footer-wrapper">
                     {isSignUp ? (
                         <ShowcaseSection className="no-account-container signup-view">
-                            <div className="auth-info-header">
+                            <div id="sign-up-header" className="auth-info-header">
                                 <h3>The full vindro<span className='inline-teal inline-bold'>Experience</span></h3>
                             </div>
 
@@ -115,7 +115,8 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
                             </div>
                             <div className="auth-info">
                                 <h4>Join us for the full vindro<span className='inline-teal inline-bold'>Experience</span></h4>
-                                <p>We make it easy, no password needed.</p>
+                                <p>We make it easy.</p>
+                                <p>No password needed</p>
                             </div>
 
                             <div className="modal-footer-toggle">

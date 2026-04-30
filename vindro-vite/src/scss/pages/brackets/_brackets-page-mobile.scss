@@ -1,0 +1,38 @@
+@use '../../config' as *;
+
+@media(max-width: 960px) {
+
+    main#brackets-page {
+
+        section#brackets-events-container {
+
+            #brackets-events-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main#brackets-page {
+
+        section#brackets-events-container {
+
+            padding: 14px 7px;
+
+            #brackets-events-gallery {
+
+                grid-template-columns: repeat(1, 1fr);
+                gap: 7px;
+
+                .bracket-event-card {
+                    width: 63%;
+                    margin: auto;
+
+                }
+            }
+        }
+    }
+}
+

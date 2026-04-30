@@ -1,0 +1,109 @@
+@use '../../../../config' as *;
+
+@media(max-width: 960px) {
+
+    main#escape-the-cloud {
+
+        section#escape-the-cloud-container {
+            height: 100%;
+            grid-template-columns: 1fr;
+
+            #escape-the-cloud-trailer {
+                min-height: 50vh;
+                padding: 7px;
+
+                video {
+                    width: 63%;
+                }
+            }
+
+            #escape-the-cloud-info {
+                min-height: 50vh;
+
+                .buttons {
+
+                    a {
+                        width: 100%;
+                        font-size: 1.6rem;
+                        text-align: center;
+                        padding: 14px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main#escape-the-cloud {
+
+        section#escape-the-cloud-container {
+
+            #escape-the-cloud-trailer {
+
+                video {
+                    width: 84%;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    main#escape-the-cloud {
+
+        section#escape-the-cloud-container {
+
+            #escape-the-cloud-trailer {
+
+                video {
+                    width: 96%;
+                }
+            }
+
+            #escape-the-cloud-info {
+
+                .buttons {
+                    flex-direction: column;
+                    gap: 21px;
+
+                    a {
+                        width: 100%;
+                        font-size: 1.6rem;
+                        text-align: center;
+                        padding: 14px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    main#escape-the-cloud {
+
+        section#escape-the-cloud-container {
+
+            #escape-the-cloud-trailer {
+                min-height: 36vh;
+                padding: 7px;
+            }
+
+            #escape-the-cloud-info {
+                min-height: 50vh;
+                padding: 21px;
+                gap: 28px;
+
+                .buttons {
+
+                    a {
+                        padding: 7px;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -20,10 +20,10 @@ urlpatterns = [
     path('<uuid:tournament_id>/user-pool-submissions/', views.user_pool_submissions),
     path('<uuid:tournament_id>/pools/join/', views.pool_join, name='pool_join'),
     path('<uuid:tournament_id>/pools/create/', views.pool_create, name='pool_create'),
+    path('pools/<uuid:pool_id>/', views.pool_detail, name='pool_detail'),
+    path('pools/<uuid:pool_id>/leave/', views.pool_leave, name='pool_leave'),
+    path('pools/<uuid:pool_id>/plays/<uuid:play_id>/remove/', views.pool_remove_play, name='pool_remove_play'),
 
-    # Leaderboards
-    # Hit this on page load for everyone
-    path('<uuid:tournament_id>/leaderboard/public/', views.public_leaderboard),
-    # Hit this only when a user clicks a specific private pool in their table
-    path('<uuid:tournament_id>/leaderboard/pool/<uuid:pool_id>/', views.private_pool_leaderboard),
+    # Leaderboard — unified endpoint for any pool (public or private)
+    path('pools/<uuid:pool_id>/leaderboard/', views.pool_leaderboard, name='pool_leaderboard'),
 ]

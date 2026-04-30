@@ -1,0 +1,73 @@
+@use '../../../config' as *;
+
+main#pool-page {
+
+    width: 100%;
+    min-height: 100vh;
+    padding: 90px 42px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .pool-page-container {
+        width: 84%;
+        height: 84%;
+        padding: 42px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 42px;
+
+        .header-container {
+            width: 100%;
+            display: flex;
+            gap: 7px;
+            border-bottom: 1px solid $vindro-teal;
+            padding-bottom: 14px;
+
+            .text-container {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 7px;
+
+                h1 {
+                    font-size: 4.2rem;
+                }
+
+                .play-specs {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+
+                    h2 {
+                        font-size: 2.1rem;
+                    }
+
+                    button {
+                        background-color: transparent;
+                        cursor: pointer;
+
+                        &:hover {
+                            transform: scale(1.1)
+                        }
+
+                        img {
+                            height: 36px;
+                            width: 36px;
+                        }
+                    }
+
+                }
+            }
+
+            .go-back-button-container {
+                display: flex;
+                align-items: flex-end;
+            }
+        }
+    }
+}

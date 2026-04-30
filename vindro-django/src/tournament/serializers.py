@@ -88,7 +88,9 @@ def serialize_pool_submission(membership):
         'group_points': play.group_points,
         'bracket_points': play.bracket_points,
         'total_points': play.group_points + play.bracket_points,
-        'is_public': pool.is_public
+        'is_public': pool.is_public,
+        'is_money_pool': pool.is_money_pool,
+        'cost_per_play': str(pool.cost_per_play)
     }
 
 
@@ -99,8 +101,12 @@ def serialize_pool(pool):
         'name': pool.name,
         'description': pool.description,
         'is_public': pool.is_public,
+        'is_money_pool': pool.is_money_pool,
+        'cost_per_play': str(pool.cost_per_play),
         'current_member_count': pool.current_member_count,
         'created_by': pool.created_by.username if pool.created_by else None,
+        'created_by_id': str(pool.created_by.id) if pool.created_by else None,
+        'created_by_avatar': pool.created_by.avatar if pool.created_by else None,
         'join_code': pool.join_code,
     }
 

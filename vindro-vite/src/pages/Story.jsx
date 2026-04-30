@@ -8,8 +8,6 @@ const Story = () => {
 
     const cards = document.querySelectorAll('li.card')
 
-    console.log(cards);
-
     return (
         <>
             <StoryHelmet />

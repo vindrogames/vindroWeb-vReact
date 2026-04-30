@@ -1,0 +1,311 @@
+@use '../../../config' as *;
+
+@media(max-width: 960px) {
+
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+
+            .user-picks-container {
+                width: 100%;
+
+                .user-stats-container {
+                    grid-template-columns: 1fr;
+                    gap: 14px;
+
+                    button {
+                        width: 210px;
+                    }
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+
+                    .buttons-container {
+                        flex-direction: row;
+                        justify-content: center;
+                        gap: 42px;
+                    }
+                }
+            }
+        }
+
+        .about-tournament {
+
+            .about-tournament-container {
+                width: 100%;
+
+                .feature {
+                    grid-template-columns: 1fr;
+                    gap: 21px;
+
+                    .feature-table {
+                        width: 63%;
+                        align-self: center;
+                        justify-self: center;
+
+                        .table-container {
+                            table {
+
+                                th {
+                                    font-size: 1.6rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+            padding: 21px;
+
+            .user-picks-container {
+
+                .title-container {
+
+                    h3 {
+                        font-size: 3.6rem;
+                    }
+                }
+
+                .user-stats-container {
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.4rem;
+                            }
+
+                            td {
+                                font-size: 1.2rem;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        .about-tournament {
+            padding: 21px;
+
+            .about-tournament-container {
+
+
+                .feature {
+
+                    .feature-table {
+                        width: auto;
+
+                        .table-container {
+                            width: auto;
+
+                            table {
+                                width: auto;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+
+            padding: 14px 14px 42px;
+            .user-picks-container {
+
+                .title-container {
+
+                    h3 {
+                        font-size: 2.8rem;
+                    }
+                }
+
+                .user-stats-container {
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.4rem;
+                                padding: 7px;
+                            }
+
+                            td {
+                                padding: 7px;
+                            }
+                        }
+
+
+                    }
+
+                    .buttons-container {
+
+                        button {
+                            font-size: 1.4rem;
+                        }
+                    }
+                }
+
+
+            }
+
+        }
+
+        .about-tournament {
+
+            .about-tournament-container {
+
+                .feature {
+
+                    .feature-text-container {
+
+                        .feature-explanation {
+                            p {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+
+                    .feature-table {
+
+                        .table-container {
+
+                            table {
+
+                                th {
+                                    font-size: 1.4rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+
+            .user-picks-container {
+
+                .title-container {
+
+                    h3 {
+                        font-size: 2.8rem;
+                    }
+                }
+
+                .user-stats-container {
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.2rem;
+                                padding: 4px;
+                            }
+
+                            td {
+                                padding: 7px 4px;
+                            }
+                        }
+
+
+                    }
+
+                    .buttons-container {
+
+                        flex-direction: column;
+                        gap: 14px;
+                        button {
+                            font-size: 1.4rem;
+                        }
+                    }
+                }
+
+
+            }
+
+        }
+
+        .about-tournament {
+            padding: 14px;
+
+            .about-tournament-container {
+
+                .feature {
+
+                    .feature-text-container {
+
+                        .feature-title {
+                            h4 {
+                                font-size: 2.4rem;
+                            }
+
+                            p {
+                                font-size: 1.8rem;
+                            }
+                        }
+
+                        .feature-explanation {
+
+                            p {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+
+                    .feature-table {
+
+                        .table-container {
+
+                            table {
+
+                                th {
+                                    padding: 7px;
+                                    font-size: 1.6rem;
+
+                                }
+
+                                td {
+                                    font-size: 1.1rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -5,13 +5,14 @@ import { routes } from './routes';
 import { AuthProvider } from './contexts/auth/AuthContext';
 import { LoadingProvider } from './contexts/LoadingContext';
 
+// Self-hosted variable fonts — loaded once, bundled with Vite, cached permanently
+import '@fontsource-variable/montserrat';
+import '@fontsource-variable/montserrat/wght-italic.css';
+import '@fontsource-variable/open-sans';
+import '@fontsource-variable/open-sans/wght-italic.css';
+
 import 'flag-icons/css/flag-icons.min.css';
 import './scss/main.scss';
-import './scss/_brackets.scss';
-import './scss/_mobile960.scss';
-import './scss/_mobile678.scss';
-import './scss/_mobile450.scss';
-import './scss/_mobile376.scss';
 
 export default function App() {
     return (

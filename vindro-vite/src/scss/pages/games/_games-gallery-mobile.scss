@@ -1,0 +1,147 @@
+@use '../../config' as *;
+
+@media(max-width: 960px) {
+
+    main#games-showcase {
+
+        section.hero-half {
+
+            h2 {
+                font-size: 2.4rem;
+            }
+        }
+
+        section#games-gallery-container {
+
+            #games-gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 21px;
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main#games-showcase {
+
+        section.hero-half {
+            padding: 42px 21px 21px;
+
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            h2 {
+                text-align: center;
+                font-size: 2.1rem;
+            }
+        }
+
+        section#games-gallery-container {
+
+            padding: 14px 7px;
+
+            #games-gallery {
+
+                padding: 0;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 7px;
+
+                .game {
+                    width: 84%;
+                    margin: auto;
+
+                    &-text {
+                        padding: 3px;
+
+                        a {
+
+                            h3 {
+                                font-size: 1.8rem;
+                            }
+                        }
+
+                        p {
+                            font-size: 1.4rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    main#games-showcase {
+
+        section.hero-half {
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            h2 {
+                width: 100%;
+                font-size: 1.8rem;
+            }
+        }
+
+        section#games-gallery-container {
+
+            padding: 0 0 42px;
+
+            #games-gallery {
+
+                grid-template-columns: 1fr;
+                padding: 0 21px;
+
+                .game {
+
+                    &-text {
+
+                        a {
+                            justify-content: center;
+
+                            h3 {
+
+                                font-size: 1.8rem;
+                                text-align: center;
+                            }
+                        }
+
+                        p {
+
+                            font-size: 1.6rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    main#games-showcase {
+
+        section.hero-half {
+            
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        section#games-gallery-container {
+
+            #games-gallery {
+                padding: 0 7px;
+            }
+        }
+
+    }
+}

@@ -3,7 +3,6 @@ import string
 import hashlib
 import json, uuid
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from django.db import IntegrityError, transaction, models
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
@@ -63,7 +62,12 @@ def tournament_detail(request, tournament_slug):
     tournament, err = _get_or_404(Tournament, slug=tournament_slug)
     if err:
         return err
-    return JsonResponse({'success': True, 'data': serialize_tournament_with_format(tournament)})
+    data = serialize_tournament_with_format(tournament)
+    public_pool = TournamentPool.objects.filter(
+        tournament=tournament, is_public=True
+    ).values_list('id', flat=True).first()
+    data['public_pool_id'] = str(public_pool) if public_pool else None
+    return JsonResponse({'success': True, 'data': data})
 
 
 @require_http_methods(["GET"])
@@ -126,8 +130,6 @@ def user_pool_submissions(request, tournament_id):
 # Phase 3 — Play endpoints (auth required)
 # ---------------------------------------------------------------------------
 
-
-
 # New -> Create a play from Modal
 @csrf_exempt
 @login_required_api 
@@ -177,6 +179,7 @@ def create_new_play(request, tournament_id):
 
 
 # 1. Public/Detail View
+@csrf_exempt
 @require_http_methods(["GET"])
 def tournament_play_detail(request, play_id):
     """Publicly view any bracket by ID"""
@@ -231,8 +234,6 @@ def update_bracket(request, play_id):
 # ---------------------------------------------------------------------------
 # Phase 4 — Pool endpoints (auth required)
 # ---------------------------------------------------------------------------
-
-
 @login_required_api
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -330,46 +331,6 @@ def pool_join(request, tournament_id):
         return JsonResponse({'success': False, 'error': 'Internal server error during join'}, status=500)
 
 
-
-@csrf_exempt
-@require_http_methods(["GET"])
-def public_leaderboard(request, tournament_id):
-    """Specific to the 'Vindro Global' standings."""
-    target_pool = TournamentPool.objects.filter(
-        tournament_id=tournament_id, 
-        is_public=True
-    ).first()
-    
-    if not target_pool:
-        return JsonResponse({'success': True, 'data': []})
-
-    # Fetch top 100 for global
-    memberships = PoolMembership.objects.filter(pool=target_pool)\
-    .select_related('play', 'play__user')\
-    .order_by('-play__bracket_points', '-play__group_points', 'play__created_at')[:100]
-    
-    return JsonResponse({'success': True, 'data': [serialize_leaderboard_entry(m) for m in memberships]})
-
-
-
-@csrf_exempt
-@require_http_methods(["GET"])
-@login_required_api
-def private_pool_leaderboard(request, tournament_id, pool_id):
-    """Specific to a private group or money pool."""
-    # Logic to ensure the user is allowed to see this pool could go here
-    target_pool = get_object_or_404(TournamentPool, id=pool_id, tournament_id=tournament_id)
-
-    memberships = PoolMembership.objects.filter(pool=target_pool)\
-        .select_related('play', 'play__user')\
-        .order_by('-play__bracket_points', '-play__group_points')
-
-    return JsonResponse({
-        'success': True, 
-        'pool_name': target_pool.name,
-        'data': [serialize_leaderboard_entry(m) for m in memberships]
-    })
-
 @require_http_methods(["GET", "POST"])
 @csrf_exempt
 @login_required_api
@@ -421,11 +382,15 @@ def pool_create(request, tournament_id):
     return JsonResponse({'success': True, 'data': serialize_pool(pool)}, status=201)
 
 
-
 @require_http_methods(["GET"])
 @login_required_api
-def pool_leaderboard(request, pool_id):
-    """GET /api/tournament/pools/<pool_id>/leaderboard/"""
+def pool_detail(request, pool_id):
+    """
+    GET /api/tournament/pools/<pool_id>/
+    Auth required. Frontend only calls this when user is logged in —
+    same pattern as user_tournament_plays. Overlay is handled by frontend.
+    Returns pool info, ordered leaderboard, and caller's membership context.
+    """
     pool, err = _get_or_404(TournamentPool, id=pool_id)
     if err:
         return err
@@ -434,13 +399,108 @@ def pool_leaderboard(request, pool_id):
         PoolMembership.objects
         .filter(pool=pool)
         .select_related('play', 'play__user')
-        .order_by('-play__score', 'play__created_at')
+        .order_by('-play__bracket_points', '-play__group_points', 'joined_at')
     )
+
+    my_memberships = memberships.filter(play__user=request.user)
 
     return JsonResponse({
         'success': True,
         'data': {
             'pool': serialize_pool(pool),
             'leaderboard': [serialize_leaderboard_entry(m) for m in memberships],
+            'is_owner': pool.created_by == request.user,
+            'is_member': my_memberships.exists(),
+            'my_plays': [serialize_pool_submission(m) for m in my_memberships],
         },
     })
+
+
+@csrf_exempt
+@login_required_api
+@require_http_methods(["DELETE"])
+def pool_leave(request, pool_id):
+    """
+    DELETE /api/tournament/pools/<pool_id>/leave/
+    Member removes all their own plays from the pool.
+    """
+    pool, err = _get_or_404(TournamentPool, id=pool_id)
+    if err:
+        return err
+
+    deleted_count, _ = PoolMembership.objects.filter(
+        pool=pool,
+        play__user=request.user
+    ).delete()
+
+    if deleted_count == 0:
+        return JsonResponse({'success': False, 'error': 'You are not a member of this pool'}, status=400)
+
+    TournamentPool.objects.filter(pk=pool.pk).update(
+        current_member_count=models.F('current_member_count') - deleted_count
+    )
+
+    return JsonResponse({'success': True, 'removed': deleted_count})
+
+
+@csrf_exempt
+@login_required_api
+@require_http_methods(["DELETE"])
+def pool_remove_play(request, pool_id, play_id):
+    """
+    DELETE /api/tournament/pools/<pool_id>/plays/<play_id>/remove/
+    Owner only. Removes a PoolMembership — does not delete the play itself.
+    """
+    pool, err = _get_or_404(TournamentPool, id=pool_id)
+    if err:
+        return err
+
+    if pool.created_by != request.user:
+        return JsonResponse({'success': False, 'error': 'Not authorized'}, status=403)
+
+    try:
+        membership = PoolMembership.objects.get(pool=pool, play_id=play_id)
+        membership.delete()
+        TournamentPool.objects.filter(pk=pool.pk).update(
+            current_member_count=models.F('current_member_count') - 1
+        )
+        return JsonResponse({'success': True})
+    except PoolMembership.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Play not in this pool'}, status=404)
+
+
+@require_http_methods(["GET"])
+def pool_leaderboard(request, pool_id):
+    """
+    GET /api/tournament/pools/<pool_id>/leaderboard/
+    Unified leaderboard for any pool — public or private.
+    Public: no auth required, capped at 100 entries.
+    Private/money: auth required.
+    """
+    pool, err = _get_or_404(TournamentPool, id=pool_id)
+    if err:
+        return err
+
+    if not pool.is_public and not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+
+    qs = (
+        PoolMembership.objects
+        .filter(pool=pool)
+        .select_related('play', 'play__user')
+        .order_by('-play__bracket_points', '-play__group_points', 'play__created_at')
+    )
+
+    if pool.is_public:
+        qs = qs[:100]
+
+    return JsonResponse({
+        'success': True,
+        'data': {
+            'pool_id': str(pool.id),
+            'pool_name': pool.name,
+            'is_public': pool.is_public,
+            'leaderboard': [serialize_leaderboard_entry(m) for m in qs],
+        }
+    })
+

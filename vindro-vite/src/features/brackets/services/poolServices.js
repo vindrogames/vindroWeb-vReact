@@ -36,7 +36,19 @@ const poolServices = {
             method: 'POST',
             body: JSON.stringify(poolData)
         });
-    }
+    },
+
+    getPoolDetail: async (poolId) => {
+        return await apiRequest(`/tournament/pools/${poolId}/`, { method: 'GET' });
+    },
+
+    leavePool: async (poolId) => {
+        return await apiRequest(`/tournament/pools/${poolId}/leave/`, { method: 'DELETE' });
+    },
+
+    removePlayFromPool: async (poolId, playId) => {
+        return await apiRequest(`/tournament/pools/${poolId}/plays/${playId}/remove/`, { method: 'DELETE' });
+    },
 };
 
 export default poolServices;

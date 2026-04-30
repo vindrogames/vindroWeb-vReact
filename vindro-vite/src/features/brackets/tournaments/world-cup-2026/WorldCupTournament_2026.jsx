@@ -8,7 +8,7 @@ import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import AuthModal from '../../../../components/ui/AuthModal';
 import EventDescription from './components/EventDescription';
 import LeaderboardDisplay from './components/LeaderboardDisplay';
-import CreateNewPlayModal from '../../components/CreateNewPlayModal';
+import PlayCreateNewModal from '../../components/modals/PlayCreateNewModal';
 
 // Modals
 import JoinPoolModal from '../../components/modals/PoolJoinModal';
@@ -66,7 +66,7 @@ const WorldCupTournament_2026 = () => {
             const slugPlayName = encodeURIComponent(
                 newPlay.name.trim().replace(/\s+/g, '-').toLowerCase()
             );
-            navigate(`/brackets/${tournamentSlug}/${user.id}/${slugPlayName}`, {
+            navigate(`/brackets/${tournamentSlug}/${user.id}/${slugPlayName}?pid=${newPlay.id}`, {
                 state: { playId: newPlay.id }
             });
         }
@@ -81,14 +81,25 @@ const WorldCupTournament_2026 = () => {
     const handleNavigateToPlay = (play) => {
         if (!user) return;
         const playSlug = play.name.trim().toLowerCase().replace(/\s+/g, '-');
-        navigate(`/brackets/${tournamentSlug}/${user.id}/${playSlug}`, {
+        navigate(`/brackets/${tournamentSlug}/${user.id}/${playSlug}?pid=${play.id}`, {
             state: { playId: play.id }
         });
     };
 
+    const handleNavigateToPool = (pool) => {
+        if (!user) return;
+        const poolId = pool.pool_id || pool.id;
+        const poolName = (pool.pool_name || pool.name || '').trim().toLowerCase().replace(/\s+/g, '-');
+        if (pool.is_public) {
+            handleScrollToSection('tournament-leaderboard');
+        } else {
+            navigate(`/brackets/${tournamentSlug}/pool/${poolName}`, { state: { poolId } });
+        }
+    };
+
     const handleLeaderboardPlayClick = (item) => {
         const playSlug = item.play_name.trim().toLowerCase().replace(/\s+/g, '-');
-        navigate(`/brackets/${tournamentSlug}/${item.user.id}/${playSlug}`, {
+        navigate(`/brackets/${tournamentSlug}/${item.user.id}/${playSlug}?pid=${item.play_id}`, {
             state: { playId: item.play_id }
         });
     };
@@ -174,7 +185,7 @@ const WorldCupTournament_2026 = () => {
         publicLeaderboard,
         isPublicLoading,
         refreshPublic
-    } = useLeaderboards(tournamentData?.id);
+    } = useLeaderboards(tournamentData?.public_pool_id);
 
     const leaderboardCols = [
         {
@@ -313,16 +324,16 @@ const WorldCupTournament_2026 = () => {
                         <div className="table-container bg-black backdrop-gray">
                             <table>
                                 <thead>
-                                    <tr><th>Pool</th><th>Play</th><th>Manager</th><th>Pos.</th></tr>
+                                    <tr><th>Play</th><th>Pool</th><th>Manager</th><th>Pos.</th></tr>
                                 </thead>
                                 <tbody>
                                     {isLoadingPools ? (
                                         <tr><td colSpan="4">Loading pools...</td></tr>
                                     ) : userPools?.length > 0 ? (
                                         userPools.map(pool => (
-                                            <tr key={pool.id} className="clickable-row">
-                                                <td>{pool.pool_name}</td>
+                                            <tr key={pool.id} className="clickable-row" onClick={() => handleNavigateToPool(pool)}>
                                                 <td>{pool.play_name}</td>
+                                                <td className="table-link pool-link">{pool.pool_name}</td>
                                                 <td>{pool.manager}</td>
                                                 <td>{pool.rank || '-'}</td>
                                             </tr>
@@ -343,20 +354,22 @@ const WorldCupTournament_2026 = () => {
                         <div className="table-container bg-black backdrop-gray">
                             <table>
                                 <thead>
-                                    <tr><th>Pool</th><th>Members</th></tr>
+                                    <tr><th>Pool</th><th>Members</th><th>Paid</th><th>Prizes</th></tr>
                                 </thead>
                                 <tbody>
                                     {isLoadingPools ? (
-                                        <tr><td colSpan="2">Loading pools...</td></tr>
+                                        <tr><td colSpan="4">Loading pools...</td></tr>
                                     ) : myCreatedPools?.length > 0 ? (
                                         myCreatedPools.map(pool => (
-                                            <tr key={pool.id} className="clickable-row" onClick={() => setSelectedPool(pool)}>
-                                                <td>{pool.name}</td>
+                                            <tr key={pool.id} className="clickable-row" onClick={() => handleNavigateToPool(pool)}>
+                                                <td className="table-link pool-link">{pool.name}</td>
                                                 <td>{pool.current_member_count}</td>
+                                                <td>{pool.paid_count ?? '—'}</td>
+                                                <td>{pool.is_money_pool ? `€${pool.cost_per_play}` : '—'}</td>
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="2">You haven't created any pools yet.</td></tr>
+                                        <tr><td colSpan="4">You haven't created any pools yet.</td></tr>
                                     )}
                                 </tbody>
                             </table>
@@ -397,7 +410,7 @@ const WorldCupTournament_2026 = () => {
                 />
             </div>
 
-            <CreateNewPlayModal
+            <PlayCreateNewModal
                 isOpen={showCreatePlayModal}
                 onConfirm={handleCreatePlayConfirm}
                 onCancel={() => setShowCreatePlayModal(false)}

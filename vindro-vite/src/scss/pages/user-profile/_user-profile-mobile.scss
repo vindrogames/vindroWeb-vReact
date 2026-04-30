@@ -1,0 +1,142 @@
+@use '../../config' as *;
+
+@media(max-width: 960px) {
+
+    main#user-profile {
+
+        .profile-container {
+
+            .user-stat-container#user-name-icon {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main#user-profile {
+
+        .profile-container {
+            width: 100%;
+
+            .user-stat-container#user-name-icon {
+                display: flex;
+                flex-direction: column;
+
+                .user-icon {
+
+                    .icon-gallery {
+                        left: -28px;
+
+                        .gallery-item {
+
+                            width: 42px;
+                            height: 42px;
+
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    main#user-profile {
+        padding: 90px 21px 0;
+
+        .profile-container {
+            width: 100%;
+            padding: 21px 0;
+            gap: 21px;
+
+            h1 {
+                font-size: 3.6rem;
+            }
+
+            .user-stat-container {
+
+                padding: 0 7px;
+
+                &#user-name-icon {
+
+
+                    .user-name-data {
+                        gap: 7px;
+                    }
+
+                    .user-icon {
+
+                        .icon-gallery {
+                            left: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    main#user-profile {
+        padding: 90px 14px 0;
+
+        .profile-container {
+            width: 100%;
+
+            h1 {
+                font-size: 3.6rem;
+            }
+
+            .user-stat-container#user-name-icon {
+                display: flex;
+                flex-direction: column;
+
+                .editable-input-wrapper {
+                    flex-direction: column;
+
+                    input {
+                        width: 100%;
+                    }
+
+                    button.btn-edit {
+                        align-self: flex-start;
+                    }
+                }
+
+                .user-icon {
+                    flex-direction: column;
+                    gap: 3px;
+
+                    img {
+                        width: 192px;
+                        height: 192px;
+                    }
+
+                    button.btn-edit {
+                        align-self: flex-start;
+                    }
+
+                    .icon-gallery {
+                        top: 230px;
+                        left: -7px;
+                        right: 0;
+                        width: fit-content;
+                        margin-left: auto;
+                        margin-right: auto;
+                        padding: 3px;
+                        gap: 3px;
+                        grid-template-columns: repeat(6, 1fr);
+                        grid-template-rows: repeat(7, auto);
+                        grid-auto-flow: column;
+                    }
+                }
+            }
+        }
+    }
+}
