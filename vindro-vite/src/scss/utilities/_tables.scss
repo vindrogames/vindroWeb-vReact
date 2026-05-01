@@ -54,6 +54,18 @@
         text-overflow: ellipsis;
     }
 
+    th.narrow-header {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    td.truncate-cell {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 0;
+    }
+
     &.bg-gray.backdrop-tan {
         border: 1px solid $vindro-tan;
         background-color: $vindro-gray;
@@ -75,6 +87,14 @@
             th {
                 border-bottom: 3px solid $vindro-gray;
             }
+        }
+    }
+}
+
+@media (max-width: 678px) {
+    .table-container {
+        th, td {
+            text-align: left;
         }
     }
 }

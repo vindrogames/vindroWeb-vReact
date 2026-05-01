@@ -246,7 +246,7 @@ const UserProfile = () => {
                                             onClick={() => setSelectedIcon(iconName)}
                                             title={iconName}
                                         >
-                                            <img src={`/img/profile_icons/${iconName}.webp`} alt={iconName} />
+                                            <img src={`/img/profile_icons/${iconName}-96.webp`} alt={iconName} />
                                         </button>
                                     ))}
                                 </div>

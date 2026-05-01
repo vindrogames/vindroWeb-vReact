@@ -45,6 +45,7 @@ main.bracket-tournament-page {
                 gap: 42px;
 
                 .table-container {
+                    overflow-x: auto;
 
                     table {
                         width: 100%;
@@ -246,24 +247,31 @@ main.bracket-tournament-page {
         }
 
         .leaderboard-table {
+            overflow-x: auto;
 
             .table-container {
-                overflow: visible !important;
 
                 table {
-                    overflow: visible !important;
+                    table-layout: fixed;
+
+                    th {
+                        white-space: normal;
+                        word-break: break-word;
+
+                        &.narrow-header {
+                            white-space: nowrap;
+                            overflow: hidden;
+                        }
+                    }
 
                     tr {
-                        overflow: visible !important;
                         position: relative;
 
                         &.clickable-row {
-                            overflow: visible !important;
                             transition: background-color 0.2s ease;
 
                             &:hover {
                                 background-color: rgba($vindro-tan, 0.42);
-
                                 z-index: 42;
                             }
                         }
@@ -273,15 +281,13 @@ main.bracket-tournament-page {
                         }
 
                         td {
-                            overflow: visible !important;
                             position: relative;
-                            ;
 
                             img.player-avatar {
                                 height: 24px;
                                 width: 24px;
                                 object-fit: cover;
-                                cursor: help; // Indicates there's more info on hover
+                                cursor: help;
                                 position: relative;
 
                                 &:hover {
@@ -290,14 +296,13 @@ main.bracket-tournament-page {
                                 }
                             }
 
-                            // The Tooltip Logic
                             .avatar-wrapper {
                                 position: relative;
                                 display: inline-flex;
                                 align-items: center;
 
                                 &:hover::after {
-                                    content: attr(data-tooltip); // Pulls from the prop
+                                    content: attr(data-tooltip);
                                     position: absolute;
                                     bottom: 84%;
                                     left: 50%;
@@ -313,7 +318,6 @@ main.bracket-tournament-page {
                                     pointer-events: none;
                                 }
 
-                                // Tiny triangle arrow for the tooltip
                                 &:hover::before {
                                     content: '';
                                     position: absolute;

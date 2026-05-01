@@ -190,10 +190,14 @@ const WorldCupTournament_2026 = () => {
     const leaderboardCols = [
         {
             header: "Pos.",
+            width: "7%",
+            narrow: true,
             render: (_, idx) => <strong>{idx + 1}</strong>
         },
         {
             header: "Player",
+            width: "10%",
+            narrow: true,
             render: (item) => {
                 const avatarUrl = item.user?.avatar || '';
                 // List of base colors to check for in the URL
@@ -218,6 +222,8 @@ const WorldCupTournament_2026 = () => {
         },
         {
             header: "Play",
+            width: "42%",
+            truncate: true,
             className: "table-link",
             render: (item) => {
                 const avatarUrl = item.user?.avatar || '';
@@ -232,8 +238,8 @@ const WorldCupTournament_2026 = () => {
                 return <span className={`${colorClass} inline-bold table-link`}>{item.play_name}</span>;
             },
         },
-        { header: "Groups Pts", render: (item) => (item.group_points ?? 0).toString() },
-        { header: "Bracket Pts", render: (item) => (item.bracket_points ?? 0).toString() }
+        { header: "Groups Pts", width: "20.5%", render: (item) => (item.group_points ?? 0).toString() },
+        { header: "Bracket Pts", width: "20.5%", render: (item) => (item.bracket_points ?? 0).toString() }
     ];
 
     // ---------------------------------------------------------

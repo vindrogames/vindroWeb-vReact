@@ -41,7 +41,17 @@ const LeaderboardDisplay = ({
                 <div className={`table-container ${tableContainerClasses}`}>
                     <table>
                         <thead>
-                            <tr>{columns.map((col, i) => <th key={i}>{col.header}</th>)}</tr>
+                            <tr>
+                                {columns.map((col, i) => (
+                                    <th
+                                        key={i}
+                                        style={col.width ? { width: col.width } : {}}
+                                        className={col.narrow ? 'narrow-header' : ''}
+                                    >
+                                        {col.header}
+                                    </th>
+                                ))}
+                            </tr>
                         </thead>
                         <tbody>
                             {isLoading ? (
@@ -50,8 +60,10 @@ const LeaderboardDisplay = ({
                                 data.map((item, idx) => (
                                     <tr key={item.id || idx} onClick={() => onRowClick?.(item)} className={onRowClick ? "clickable-row" : ""}>
                                         {columns.map((col, i) => (
-                                            <td key={i} className={col.className || ""}>
-                                                {/* CRITICAL: Ensure 'idx' is passed as the second argument here */}
+                                            <td
+                                                key={i}
+                                                className={[col.className, col.truncate ? 'truncate-cell' : ''].filter(Boolean).join(' ')}
+                                            >
                                                 {col.render ? col.render(item, idx) : (item[col.key] ?? '-')}
                                             </td>
                                         ))}

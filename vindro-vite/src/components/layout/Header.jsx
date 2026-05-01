@@ -109,7 +109,7 @@ const NavBar = ({ isMadrid }) => {
                                     className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
                                     onClick={() => setUserDropdownOpen(prev => !prev)}
                                 >
-                                    <img src={user.avatar} alt="User Avatar" />
+                                    <img src={(user.avatar).replace(/\.(\w+)$/, `-${96}.$1`)} alt="User Avatar" />
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
@@ -120,23 +120,6 @@ const NavBar = ({ isMadrid }) => {
                                         >
                                             Profile
                                         </SmartLink>
-
-                                        {/* Possible Profile options
-                                        <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/brackets`}
-                                            className="dropdown-item"
-                                            onClick={() => { setUserDropdownOpen(false) }}
-                                        >
-                                            Top Scores
-                                        </SmartLink>
-                                        <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/topScores`}
-                                            className="dropdown-item"
-                                            onClick={() => { setUserDropdownOpen(false) }}
-                                        >
-                                            Brackets
-                                        </SmartLink>
-                                        */}
 
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
                                     </div>
@@ -180,7 +163,7 @@ const NavBar = ({ isMadrid }) => {
                                     className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
                                     onClick={() => setUserDropdownOpen(prev => !prev)}
                                 >
-                                    <img src={user.avatar} alt="User Avatar" />
+                                    <img src={(user.avatar).replace(/\.(\w+)$/, `-${96}.$1`)} alt="User Avatar" />
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
@@ -191,23 +174,7 @@ const NavBar = ({ isMadrid }) => {
                                         >
                                             Profile
                                         </SmartLink>
-
-                                        {/* Possible Profile options
-                                        <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/brackets`}
-                                            className="dropdown-item"
-                                            onClick={() => { setUserDropdownOpen(false) }}
-                                        >
-                                            Top Scores
-                                        </SmartLink>
-                                        <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/topScores`}
-                                            className="dropdown-item"
-                                            onClick={() => { setUserDropdownOpen(false) }}
-                                        >
-                                            Brackets
-                                        </SmartLink>
-                                        */}
+                                        
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}
