@@ -23,17 +23,17 @@ const PoolSubmitResponseModal = ({ results = [], onClose }) => {
     };
 
     return ReactDOM.createPortal(
-        <div className="play-name-modal-overlay" onClick={onClose}>
-            <div className="play-name-modal submission-response-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-overlay-content-container submission-response-modal" onClick={(e) => e.stopPropagation()}>
                 
                 <button className="close-button" onClick={onClose}>&times;</button>
                 
                 <ShowcaseSection id="submission-results-gallery" className="modal-gallery">
-                    <h2>submission<span className="inline-teal inline-bold">Results</span></h2>
+                    <h2>submit<span className="inline-teal inline-bold">Results</span></h2>
                     <div className="modal-gallery-text">
-                        <p>Processing complete. Here is the status of your plays:</p>
+                        <p>Process complete. Here is the status of your plays:</p>
                     </div>
-                    <div className="feature-table">
+                    <div className="submit-results-table">
                         <div className="table-container">
                             <table>
                                 <thead>
@@ -45,7 +45,7 @@ const PoolSubmitResponseModal = ({ results = [], onClose }) => {
                                 <tbody>
                                     {results.map((result, index) => (
                                         <tr key={index} className="result-row">
-                                            <td className="play-info-name">{result.name}</td>
+                                            <td className="play-info-name"><span>{result.name}</span></td>
                                             <td className="response-status">{getStatusText(result.status)}{getStatusIcon(result.status)}</td>
                                         </tr>
                                     ))}
@@ -55,7 +55,7 @@ const PoolSubmitResponseModal = ({ results = [], onClose }) => {
                     </div>
                 </ShowcaseSection>
                 <ShowcaseSection id="submission-actions">
-                    <div className="submit-plays-buttons">
+                    <div id="awesome-button-container" className="submit-plays-buttons">
                         <button className="btn btn-tan confirm-btn" onClick={onClose}>Awesome</button>
                     </div>
                 </ShowcaseSection>

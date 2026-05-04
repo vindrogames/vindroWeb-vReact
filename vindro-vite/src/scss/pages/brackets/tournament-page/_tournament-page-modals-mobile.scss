@@ -1,1 +1,122 @@
 @use '../../../config' as *;
+
+@media(max-width: 450px) {
+
+    .modal-overlay {
+
+        &-content-container {
+
+            .modal-gallery {
+
+                h2 {
+                    font-size: 2.8rem;
+                }
+            }
+        }
+    }
+
+    #prediction-play-gallery {
+        .play-name-input {
+            padding: 7px;
+        }
+    }
+
+    #select-plays-gallery, #submission-results-gallery {
+
+        .select-table, .submit-results-table {
+            width: 100%;
+
+            .table-container {
+
+                table {
+
+                    td.response-status {
+
+                        svg {
+                            width: 18px;
+                            height: 18px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #submission-actions {
+
+        .submit-plays-buttons {
+            width: 100%;
+            padding: 21px 14px;
+
+            .btn {
+                padding: 7px 14px;
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    .modal-overlay {
+
+        &-content-container {
+            width: 100%;
+
+            .modal-gallery {
+
+                h2 {
+                    font-size: 2.4rem;
+                }
+            }
+
+            .bottom-modal-gallery {
+
+                .bottom-modal-text {
+
+                    p {
+                        font-size: 1.6rem;
+                    }
+                }
+            }
+        }
+    }
+
+    #prediction-play-gallery {
+
+        .play-name-input {
+            width: 100%;
+        }
+
+        .char-count-submit-container {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    #submission-results-gallery {
+
+        .submit-results-table {
+
+            .table-container {
+
+                table {
+                    table-layout: auto;
+                    th {
+                        padding: 7px;
+                    }
+
+                    td.response-status {
+                        padding-left: 0px;
+                        font-size: 1.2rem;
+                        gap: 7px;
+
+                        svg {
+                            width: 14px;
+                            height: 14px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

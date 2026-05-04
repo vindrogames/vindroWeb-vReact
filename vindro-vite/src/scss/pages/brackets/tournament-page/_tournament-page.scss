@@ -10,14 +10,16 @@ main.bracket-tournament-page {
     }
 
     .user-picks {
+        width: 100%;
         position: relative;
         padding: 21px 42px 42px;
         display: flex;
-        //align-items: center;
+        align-items: center;
         justify-content: center;
+        gap: 42px;
 
         .user-picks-container {
-            width: 100%;
+            width: 84%;
             display: flex;
             flex-direction: column;
             gap: 14px;
@@ -26,6 +28,10 @@ main.bracket-tournament-page {
                 width: 100%;
                 padding: 7px;
                 border-bottom: 1px solid $vindro-teal;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 42px;
 
                 h3 {
                     font-size: 4.2rem;
@@ -37,12 +43,25 @@ main.bracket-tournament-page {
                 &.pools {
                     margin-top: 21px;
                 }
+
+                .buttons-container {
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    align-items: flex-end;
+
+                    button {
+                        width: auto;
+                        font-family: $vindro-Montserrat;
+                        font-size: 1.6rem;
+                        font-weight: 500;
+                        padding: 7px 14px;
+                    }
+                }
             }
 
             .user-stats-container {
-                display: grid;
-                grid-template-columns: 4fr 1fr;
-                gap: 42px;
 
                 .table-container {
                     overflow-x: auto;
@@ -57,7 +76,8 @@ main.bracket-tournament-page {
 
                         td.table-link {
 
-                            &.play-link, &.pool-link {
+                            &.play-link,
+                            &.pool-link {
                                 color: $vindro-teal;
                                 font-weight: 400;
                                 text-decoration: underline;
@@ -70,21 +90,6 @@ main.bracket-tournament-page {
                                 }
                             }
                         }
-                    }
-                }
-
-                .buttons-container {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-start;
-                    align-items: center;
-                    gap: 14px;
-
-                    button {
-                        width: auto;
-                        font-family: $vindro-Montserrat;
-                        font-size: 1.6rem;
-                        font-weight: 500;
                     }
                 }
 
@@ -236,102 +241,12 @@ main.bracket-tournament-page {
 
         .leaderboard-header {
             padding: 14px;
-            width: 84%;
-            border-top: 1px solid $vindro-green;
+            //border-bottom: 1px solid $vindro-green;
 
             h3 {
                 width: 100%;
                 text-align: center;
                 font-size: 3.6rem;
-            }
-        }
-
-        .leaderboard-table {
-            overflow-x: auto;
-
-            .table-container {
-
-                table {
-                    table-layout: fixed;
-
-                    th {
-                        white-space: normal;
-                        word-break: break-word;
-
-                        &.narrow-header {
-                            white-space: nowrap;
-                            overflow: hidden;
-                        }
-                    }
-
-                    tr {
-                        position: relative;
-
-                        &.clickable-row {
-                            transition: background-color 0.2s ease;
-
-                            &:hover {
-                                background-color: rgba($vindro-tan, 0.42);
-                                z-index: 42;
-                            }
-                        }
-
-                        td:first-child {
-                            font-weight: 600;
-                        }
-
-                        td {
-                            position: relative;
-
-                            img.player-avatar {
-                                height: 24px;
-                                width: 24px;
-                                object-fit: cover;
-                                cursor: help;
-                                position: relative;
-
-                                &:hover {
-                                    transform: scale(1.1);
-                                    z-index: 14;
-                                }
-                            }
-
-                            .avatar-wrapper {
-                                position: relative;
-                                display: inline-flex;
-                                align-items: center;
-
-                                &:hover::after {
-                                    content: attr(data-tooltip);
-                                    position: absolute;
-                                    bottom: 84%;
-                                    left: 50%;
-                                    transform: translateX(-50%);
-                                    background-color: $vindro-black;
-                                    color: #fff;
-                                    padding: 7px 14px;
-                                    border-radius: 3px;
-                                    font-size: 1.2rem;
-                                    white-space: nowrap;
-                                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-                                    z-index: 84;
-                                    pointer-events: none;
-                                }
-
-                                &:hover::before {
-                                    content: '';
-                                    position: absolute;
-                                    bottom: 110%;
-                                    left: 50%;
-                                    transform: translateX(-50%);
-                                    border: 6px solid transparent;
-                                    border-top-color: #333;
-                                    z-index: 84;
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }

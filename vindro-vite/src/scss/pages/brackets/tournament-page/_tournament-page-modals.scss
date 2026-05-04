@@ -1,6 +1,6 @@
 @use '../../../config' as *;
 
-.play-name-modal-overlay {
+.modal-overlay {
     // CRITICAL: This prevents the "scroll to bottom" jump
     position: fixed;
     top: 0;
@@ -14,11 +14,12 @@
     z-index: 9999;
     backdrop-filter: blur(4px);
 
-    .play-name-modal {
+    &-content-container {
         position: relative;
         background-color: $vindro-black;
-        width: 90%;
+        width: 84%;
         max-width: 450px;
+        max-height: 90vh;
         border-radius: 3px;
         border: 1px solid $vindro-teal;
         color: white;
@@ -63,6 +64,8 @@
             align-items: center;
             gap: 14px;
             padding: 21px 14px 14px;
+            overflow-y: auto;
+            flex-shrink: 1;
 
             h2 {
                 font-size: 3.6rem;
@@ -72,87 +75,13 @@
             p {
                 font-size: 1.8rem;
             }
-
-            .play-name-input {
-                width: 84%;
-                padding: 14px;
-                background: $vindro-tan;
-                border: 1px solid transparent;
-                border-radius: 3px;
-                color: $vindro-black;
-                font-size: 1.6rem;
-                outline: none;
-                transition: all 0.2s;
-
-                &:focus {
-                    border-color: white;
-                    background-color: lighten($vindro-tan, 21);
-                }
-
-                &.error {
-                    border-color: $error-red;
-                }
-            }
-
-            .char-count-submit-container {
-                width: 84%;
-                display: flex;
-                justify-content: flex-end;
-                align-items: center;
-                gap: 14px;
-
-                .character-count {
-                    font-size: 1.1rem;
-                    color: $vindro-tan;
-                    margin-left: 7px;
-                }
-
-                button {
-
-                    &:disabled {
-                        opacity: 0.5;
-                        cursor: not-allowed;
-
-                        // Force the background to stay tan, preventing the 
-                        // utility class from making it transparent/black
-                        background-color: $vindro-tan !important;
-                        color: #000 !important; // Keeps text visible
-
-                        // Strip all interactive effects
-                        filter: none !important;
-                        transform: none !important;
-                        transition: none !important;
-                        box-shadow: none !important;
-
-                        // Force hover and active states to look identical to the static disabled state
-                        &:hover,
-                        &:active,
-                        &:focus {
-                            background-color: $vindro-tan !important;
-                            color: #000 !important;
-                            filter: none !important;
-                            opacity: 0.5 !important; // Keep the same opacity as the base disabled state
-                        }
-                    }
-                }
-            }
-
-            .error-message {
-                color: $error-red;
-                font-size: 0.8rem;
-                margin-top: 0.5rem;
-            }
-
-            button {
-                margin-top: 14px;
-            }
         }
 
         .bottom-modal-gallery {
             background-color: $vindro-gray;
             height: 100%;
             width: 100%;
-            padding: 21px 14px;
+            padding: 14px 14px 21px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -173,14 +102,17 @@
             }
 
             .bottom-modal-text {
-
+                width: 100%;
                 margin-top: 3px;
                 display: flex;
                 flex-direction: column;
-                gap: 7px;
+                align-items: center;
+                gap: 14px;
 
                 p {
+                    width: 84%;
                     font-size: 1.8rem;
+                    text-align: center;
                     color: white;
                     font-weight: 400;
                 }
@@ -195,21 +127,209 @@
     }
 }
 
-.submit-play-modal,
-.submission-response-modal {
+#prediction-play-gallery, #create-pool-gallery {
 
-    .feature-table {
-        margin: 20px auto 0 auto; // Centers the table container
-        width: 84%; // Set to 84% width as requested
+    .play-name-input {
+        width: 84%;
+        padding: 14px;
+        background: $vindro-tan;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        color: $vindro-black;
+        font-size: 1.6rem;
+        outline: none;
+        transition: all 0.2s;
+
+        &:focus {
+            border-color: white;
+            background-color: lighten($vindro-tan, 21);
+        }
+
+        &.error {
+            border-color: $error-red;
+        }
+    }
+
+    .char-count-submit-container {
+        width: 84%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 14px;
+
+        .character-count {
+            font-size: 1.1rem;
+            color: $vindro-tan;
+            margin-left: 7px;
+        }
+
+        button {
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+
+                // Force the background to stay tan, preventing the 
+                // utility class from making it transparent/black
+                background-color: $vindro-tan !important;
+                color: #000 !important; // Keeps text visible
+
+                // Strip all interactive effects
+                filter: none !important;
+                transform: none !important;
+                transition: none !important;
+                box-shadow: none !important;
+
+                // Force hover and active states to look identical to the static disabled state
+                &:hover,
+                &:active,
+                &:focus {
+                    background-color: $vindro-tan !important;
+                    color: #000 !important;
+                    filter: none !important;
+                    opacity: 0.5 !important; // Keep the same opacity as the base disabled state
+                }
+            }
+        }
+    }
+
+    .char-count-container {
+        width: 84%;
+        display: flex;
+        justify-content: flex-end;
+
+        .character-count {
+            font-size: 1.1rem;
+            color: $vindro-tan;
+        }
+    }
+
+    .error-message {
+        color: $error-red;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+    }
+
+    .submit-button-container {
+        width: 84%;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+#create-pool-gallery {
+
+    .permit-multi-play,
+    .is-money-container {
+        width: 84%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .pool-option-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: white;
+        user-select: none;
+
+        .custom-checkbox {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            border: 2px solid $vindro-tan;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+
+            &.checked {
+                background-color: $vindro-teal;
+                border-color: $vindro-teal;
+                color: $vindro-black;
+            }
+        }
+    }
+
+    .cost-per-play-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding-left: 30px;
+        transition: opacity 0.2s ease;
+
+        &.inactive {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .currency-symbol {
+            font-size: 1.5rem;
+            color: $vindro-tan;
+        }
+
+        .cost-input {
+            width: 84px;
+            padding: 7px 10px;
+            background: $vindro-tan;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            color: $vindro-black;
+            font-size: 1.4rem;
+            outline: none;
+            transition: all 0.2s;
+
+            &:focus {
+                border-color: white;
+                background-color: lighten($vindro-tan, 21);
+            }
+
+            &.error {
+                border-color: $error-red;
+            }
+
+            // Hide number spinners
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .cost-label {
+            font-size: 1.4rem;
+            color: $vindro-tan;
+        }
+    }
+}
+
+
+#select-plays-gallery, #submission-results-gallery {
+    margin-top: 42px;
+
+    .select-table, .submit-results-table {
+        margin: 20px auto 0 auto;
+        width: 84%;
 
         .table-container {
             border-radius: 7px;
             background-color: $vindro-gray;
+            max-height: 210px;
+            overflow-y: auto;
+            overflow-x: hidden;
 
             table {
                 width: 100%;
                 border-collapse: collapse;
-                overflow: hidden;
+                table-layout: fixed;
 
                 th {
                     font-size: 1.6rem;
@@ -217,7 +337,7 @@
                     font-family: $vindro-Montserrat;
                     border: none;
                     border-bottom: 3px solid $vindro-black;
-                    padding: 10px 14px;
+                    padding: 7px 14px;
                     color: white;
                     text-align: center; // Headers centered
                 }
@@ -225,7 +345,7 @@
                 td {
                     font-size: 1.4rem;
                     font-weight: 300;
-                    padding: 10px 0;
+                    padding: 7px;
                     color: white;
                     vertical-align: middle;
                     text-align: center; // Centers both checkbox and text
@@ -259,9 +379,12 @@
                     border-bottom: none;
                 }
 
-                // Play Name column specific adjustment if needed
                 .play-info-name {
-                    // text-align: center; // Already inherited from td
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 0;
+                    text-align: left;
                 }
 
                 .disabled-row {
@@ -281,114 +404,121 @@
                         font-weight: 600;
                     }
                 }
-            }
-        }
-    }
 
-    .checkbox-container {
-        display: flex;
-        justify-content: center; // Centers checkbox horizontally within td
-    }
+                .checkbox-container {
+                    display: flex;
+                    justify-content: center;
 
-    .custom-checkbox {
-        width: 18px;
-        height: 18px;
-        border: 2px solid $vindro-tan;
-        border-radius: 3px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        transition: all 0.2s ease;
-        cursor: pointer;
+                    .custom-checkbox {
+                        width: 18px;
+                        height: 18px;
+                        border: 2px solid $vindro-tan;
+                        border-radius: 3px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 12px;
+                        transition: all 0.2s ease;
+                        cursor: pointer;
 
-        &.checked {
-            background-color: $vindro-teal;
-            border-color: $vindro-teal;
-            color: white;
-        }
+                        &.checked {
+                            background-color: $vindro-teal;
+                            border-color: $vindro-teal;
+                            color: white;
+                        }
 
-        &.deactivated {
-            border-color: rgba($vindro-tan, 0.3);
-            background-color: rgba(0, 0, 0, 0.2);
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-    }
-
-    #submission-actions {
-        background-color: $vindro-gray;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .private-code-wrapper {
-            padding: 14px 0;
-            width: 84%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-            padding-bottom: 14px;
-
-            h3 {
-                width: 84%;
-                text-align: center;
-                font-size: 1.8rem;
-                padding: 14px;
-                border-bottom: 1px solid $vindro-teal;
-            }
-
-            input {
-                width: 210px;
-                padding: 7px;
-                background: $vindro-tan;
-                border: 1px solid transparent;
-                border-radius: 3px;
-                color: $vindro-black;
-                font-size: 1.4rem;
-                outline: none;
-                transition: all 0.2s;
-
-                &:focus {
-                    border-color: white;
-                    background-color: lighten($vindro-tan, 21);
-                }
-
-                &.error {
-                    border-color: $error-red;
-                }
-            }
-        }
-
-        .submit-plays-buttons {
-            width: 100%;
-            padding: 21px;
-            display: flex;
-            justify-content: space-between;
-
-            .btn {
-                &:disabled {
-                    opacity: 0.5;
-                    cursor: not-allowed;
-                    background-color: $vindro-tan !important;
-                    color: #000 !important;
-                    filter: none !important;
-                    transform: none !important;
-                    transition: none !important;
-                    box-shadow: none !important;
-
-                    &:hover,
-                    &:active,
-                    &:focus {
-                        background-color: $vindro-tan !important;
-                        color: #000 !important;
-                        filter: none !important;
-                        opacity: 0.5 !important;
+                        &.deactivated {
+                            border-color: rgba($vindro-tan, 0.3);
+                            background-color: rgba(0, 0, 0, 0.2);
+                            cursor: not-allowed;
+                            opacity: 0.5;
+                        }
                     }
                 }
             }
         }
     }
+}
 
+#create-pool-gallery {
+    padding-top: 42px;
+}
+
+#submission-actions {
+    background-color: $vindro-gray;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .private-code-wrapper {
+        padding: 14px 0;
+        width: 84%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding-bottom: 14px;
+
+        h3 {
+            width: 84%;
+            text-align: center;
+            font-size: 1.8rem;
+            padding: 14px;
+            border-bottom: 1px solid $vindro-teal;
+        }
+
+        input {
+            width: 210px;
+            padding: 7px;
+            background: $vindro-tan;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            color: $vindro-black;
+            font-size: 1.4rem;
+            outline: none;
+            transition: all 0.2s;
+
+            &:focus {
+                border-color: white;
+                background-color: lighten($vindro-tan, 21);
+            }
+
+            &.error {
+                border-color: $error-red;
+            }
+        }
+    }
+
+    .submit-plays-buttons {
+        width: 84%;
+        padding: 21px 0px;
+        display: flex;
+        justify-content: space-between;
+
+        &#awesome-button-container {
+            justify-content: center;
+        }
+        .btn {
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                background-color: $vindro-tan !important;
+                color: #000 !important;
+                filter: none !important;
+                transform: none !important;
+                transition: none !important;
+                box-shadow: none !important;
+
+                &:hover,
+                &:active,
+                &:focus {
+                    background-color: $vindro-tan !important;
+                    color: #000 !important;
+                    filter: none !important;
+                    opacity: 0.5 !important;
+                }
+            }
+        }
+    }
 }

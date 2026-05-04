@@ -18,6 +18,7 @@ const UserProfile           = lazy(() => import('./pages/UserProfile'));
 const WorldCupTournament_2026 = lazy(() => import('./features/brackets/tournaments/world-cup-2026/WorldCupTournament_2026'));
 const PlayPage              = lazy(() => import('./features/brackets/pages/PlayPage'));
 const PoolPage              = lazy(() => import('./features/brackets/pages/PoolPage'));
+const NotFoundPage          = lazy(() => import('./pages/NotFoundPage'));
 
 export const routes = createBrowserRouter([
     {
@@ -39,6 +40,7 @@ export const routes = createBrowserRouter([
             { path: 'brackets/:tournament/:userId/:playName', element: <PlayPage />},
             { path: 'brackets/:tournament/pool/:poolName', element: <PoolPage /> },
             { path: 'user/:userId', element: <UserProfile /> },
+            { path: '*', element: <NotFoundPage /> },
         ],
     },
 ]);

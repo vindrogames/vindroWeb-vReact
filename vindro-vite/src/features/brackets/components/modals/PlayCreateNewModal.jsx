@@ -41,8 +41,8 @@ const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
     const activeError = localError || apiError;
 
     return ReactDOM.createPortal(
-        <div className="play-name-modal-overlay" onClick={onCancel}>
-            <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={onCancel}>
+            <div className="modal-overlay-content-container" onClick={(e) => e.stopPropagation()}>
                 
                 <button 
                     className="close-button" 

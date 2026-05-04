@@ -3,27 +3,10 @@ import ReactDOM from 'react-dom';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import SubmitPlayToPool from './PoolSubmitPlayModal';
 import PoolSubmitResponseModal from './PoolSubmitResponseModal';
-import usePools from '../../hooks/usePools';
-
-const buildShareUrl = (code) => {
-    const base = `${window.location.origin}${window.location.pathname}`;
-    return `${base}?pool=${code}`;
-};
-
-const whatsappShare = (code) => {
-    const url = buildShareUrl(code);
-    const text = encodeURIComponent(`Join my pool on Vindro Games! Use code: ${code} or click here: ${url}`);
-    window.open(`https://wa.me/?text=${text}`, '_blank');
-};
-
-const JoinPoolModal = ({ isOpen, mode = 'join', tournamentId, plays = [], onCancel, onSuccess, initialCode = '', onCreatePlay }) => {
-    const { handleCreatePool, isSubmitting } = usePools(tournamentId);
+const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, initialCode = '', onCreatePlay }) => {
 
     const [submissionFlow, setSubmissionFlow] = useState({ isOpen: false, type: null });
     const [responseFlow, setResponseFlow] = useState({ isOpen: false, results: [] });
-    const [newPoolName, setNewPoolName] = useState('');
-    const [createError, setCreateError] = useState('');
-    const [createSuccess, setCreateSuccess] = useState(null);
 
     useEffect(() => {
         if (isOpen && initialCode) {
@@ -55,79 +38,11 @@ const JoinPoolModal = ({ isOpen, mode = 'join', tournamentId, plays = [], onCanc
         onCancel();
     };
 
-    // --- Create flow ---
-    const handleCreatePoolSubmit = async () => {
-        if (!newPoolName.trim()) {
-            setCreateError('Pool name is required.');
-            return;
-        }
-        setCreateError('');
-        try {
-            const result = await handleCreatePool({ name: newPoolName.trim() });
-            if (result.success) {
-                setCreateSuccess(result.data);
-                setNewPoolName('');
-                if (onSuccess) onSuccess();
-            } else {
-                setCreateError(result.error || 'Failed to create pool.');
-            }
-        } catch (err) {
-            setCreateError(err.message || 'A network error occurred.');
-        }
-    };
-
-    if (mode === 'create') {
-        return ReactDOM.createPortal(
-            <div className="play-name-modal-overlay" onClick={onCancel}>
-                <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
-                    <button className="close-button" onClick={onCancel}>&times;</button>
-                    <ShowcaseSection id="create-pool" className="modal-gallery">
-                        <h2>create<span className="inline-teal inline-bold">Pool</span></h2>
-                        {createSuccess ? (
-                            <div className="modal-gallery-text">
-                                <p>Pool <strong>{createSuccess.name}</strong> created!</p>
-                                <p>Code: <strong>{createSuccess.join_code}</strong></p>
-                                <button className="btn btn-tan" onClick={() => whatsappShare(createSuccess.join_code)}>
-                                    Share via WhatsApp
-                                </button>
-                                <button className="btn btn-tan" onClick={() => setCreateSuccess(null)}>Create another</button>
-                            </div>
-                        ) : (
-                            <>
-                                <div className="modal-gallery-text">
-                                    <p>Give your pool a name and share the generated code with friends.</p>
-                                </div>
-                                <input
-                                    type="text"
-                                    className="play-name-input"
-                                    placeholder="Pool name"
-                                    maxLength={100}
-                                    value={newPoolName}
-                                    onChange={(e) => setNewPoolName(e.target.value)}
-                                />
-                                {createError && <p className="error-message">{createError}</p>}
-                                <button
-                                    className="btn btn-tan"
-                                    onClick={handleCreatePoolSubmit}
-                                    disabled={isSubmitting}
-                                >
-                                    {isSubmitting ? 'Creating...' : 'Create Pool'}
-                                </button>
-                            </>
-                        )}
-                    </ShowcaseSection>
-                </div>
-            </div>,
-            document.body
-        );
-    }
-
-    // mode === 'join'
     return (
         <>
             {!submissionFlow.isOpen && !responseFlow.isOpen && ReactDOM.createPortal(
-                <div className="play-name-modal-overlay" onClick={onCancel}>
-                    <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-overlay" onClick={onCancel}>
+                    <div className="modal-overlay-content-container" onClick={(e) => e.stopPropagation()}>
                         <button className="close-button" onClick={onCancel}>&times;</button>
 
                         <ShowcaseSection id="join-pool-gallery" className="modal-gallery">

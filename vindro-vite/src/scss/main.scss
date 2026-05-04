@@ -9,8 +9,11 @@
 @use 'components/auth';
 @use 'components/loader';
 @use 'components/how-to-play-instruct';
+@use 'components/leaderboard';
+@use 'components/error-modal';
 
 // ─── 4. Pages ────────────────────────────────────────────────────────────────
+@use 'pages/not-found';
 @use 'pages/home';
 @use 'pages/stories';
 @use 'pages/contact';
@@ -26,6 +29,7 @@
 
 // ─── 6. Brackets ─────────────────────────────────────────────────────────────
 @use 'pages/brackets';
-@use 'pages/brackets/play-page';
 @use 'pages/brackets/tournament-page';
+@use 'pages/brackets/bracket-utils';
+@use 'pages/brackets/play-page';
 @use 'pages/brackets/pool-page';

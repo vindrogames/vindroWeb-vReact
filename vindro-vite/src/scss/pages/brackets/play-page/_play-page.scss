@@ -1,86 +1,34 @@
 @use '../../../config' as *;
 
-main.bracket-tournament-play {
-    width: 100%;
-    min-height: 100vh;
-    padding: 90px 42px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .bracket-tournament-play-container {
-        width: 84%;
-        height: 84%;
-        padding: 42px 14px;
+main.bracket-tournament-play-pool {
+    
+    section.play-prediction-container {
+        background-color: $vindro-gray;
+        width: 100%;
+        padding: 42px 0px;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
+        justify-content: center;
+        align-items: center;
         gap: 42px;
 
-        .header-container {
-            width: 100%;
-            display: flex;
-            gap: 7px;
-            border-bottom: 1px solid $vindro-teal;
-            padding-bottom: 14px;
-
-            .text-container {
-                flex-grow: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: flex-start;
-                gap: 7px;
-
-                h1 {
-                    font-size: 4.2rem;
-                }
-
-                .play-specs {
-                    display: flex;
-                    align-items: center;
-                    gap: 14px;
-
-                    h2 {
-                        font-size: 2.1rem;
-                    }
-
-                    button {
-                        background-color: transparent;
-                        cursor: pointer;
-
-                        &:hover {
-                            transform: scale(1.1)
-                        }
-
-                        img {
-                            height: 36px;
-                            width: 36px;
-                        }
-                    }
-
-                }
-            }
-
-            .go-back-button-container {
-                display: flex;
-                align-items: flex-end;
-            }
-
-
-        }
-
-        .groups-stage {
-            width: 100%;
+        .prediction-display-wrapper {
+            width: 84%;
 
             .stage-header {
                 margin-bottom: 21px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 14px;
 
                 h3 {
+                    width: 100%;
                     font-size: 3.6rem;
                     font-weight: 400;
-                    margin-bottom: 7px;
+                    text-align: center;
+                    padding-bottom: 14px;
+                    border-bottom: 1px solid $vindro-teal;
                 }
 
                 p {
@@ -100,7 +48,7 @@ main.bracket-tournament-play {
                 position: relative;
                 width: 100%;
                 padding: 0 42px;
-                background: #0f0f0f;
+                background: $vindro-gray;
                 overflow: hidden;
                 box-sizing: border-box;
 
@@ -173,7 +121,7 @@ main.bracket-tournament-play {
 
                     .group-card {
                         flex: 0 0 100%;
-                        background: $vindro-gray;
+                        background: $vindro-black;
                         border: 1px solid rgba(255, 255, 255, 0.05);
                         border-radius: 7px;
                         padding: 14px;
@@ -262,7 +210,6 @@ main.bracket-tournament-play {
                                 gap: 7px;
                                 width: 100%;
                                 padding: 8px 12px;
-                                //background: rgba(white, 0.63);
                                 border-radius: 3px;
                                 transition: transform 0.2s ease, background 0.2s ease;
 
@@ -304,18 +251,6 @@ main.bracket-tournament-play {
                                     }
                                 }
 
-                                /*
-                                // Highlight override for the focused card's qualifying spots
-                                .group-card.focused-edit & {
-
-                                    &.rank-1,
-                                    &.rank-2 {
-                                        background: white; // Solid white for emphasis
-                                        border-left: 4px solid $vindro-teal;
-                                    }
-                                }*/
-
-
                                 /* Reorder Controls Styling */
                                 .reorder-controls {
                                     display: flex;
@@ -334,10 +269,20 @@ main.bracket-tournament-play {
                                         border-radius: 2px;
                                         transition: all 0.2s;
 
-                                        &:hover:not(:disabled) {
-                                            background: $vindro-teal;
-                                            color: white;
+                                        &.down {
+                                            &:hover:not(:disabled) {
+                                                background: $vindro-neon-pink;
+                                                color: white;
+                                            }
                                         }
+
+                                        &.up {
+                                            &:hover:not(:disabled) {
+                                                background: $vindro-neon-green;
+                                                color: white;
+                                            }
+                                        }
+
 
                                         &:disabled {
                                             opacity: 0.1;
@@ -386,10 +331,14 @@ main.bracket-tournament-play {
                     }
                 }
             }
+
+            .last-updated p {
+                width: 100%;
+                padding: 21px;
+                font-size: 1.6rem;
+                text-align: center;
+            }
         }
-
-        .brackets-stage {}
-
     }
 }
 

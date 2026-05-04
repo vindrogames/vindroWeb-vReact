@@ -2,6 +2,7 @@ import random
 import string
 import hashlib
 import json, uuid
+from decimal import Decimal, InvalidOperation
 from django.http import JsonResponse
 from django.db import IntegrityError, transaction, models
 from django.views.decorators.http import require_http_methods
@@ -150,6 +151,8 @@ def create_new_play(request, tournament_id):
 
         if not name:
             return JsonResponse({'success': False, 'error': 'Name is required'}, status=400)
+        if len(name) > 42:
+            return JsonResponse({'success': False, 'error': 'Play name too long (max 42 characters)'}, status=400)
 
         # 3. Create record using the authenticated user from the session
         new_play = TournamentPlay.objects.create(
@@ -365,8 +368,20 @@ def pool_create(request, tournament_id):
     name = body.get('name', '').strip()
     if not name:
         return JsonResponse({'success': False, 'error': 'name is required'}, status=400)
-    if len(name) > 100:
-        return JsonResponse({'success': False, 'error': 'name too long (max 100 characters)'}, status=400)
+    if len(name) > 42:
+        return JsonResponse({'success': False, 'error': 'Pool name too long (max 42 characters)'}, status=400)
+
+    is_money_pool = bool(body.get('is_money_pool', False))
+    allow_multiple_plays_per_user = bool(body.get('allow_multiple_plays_per_user', True))
+
+    cost_per_play = Decimal('0.00')
+    if is_money_pool:
+        try:
+            cost_per_play = Decimal(str(body.get('cost_per_play', '0')))
+        except InvalidOperation:
+            return JsonResponse({'success': False, 'error': 'Invalid cost per play value.'}, status=400)
+        if cost_per_play <= 0:
+            return JsonResponse({'success': False, 'error': 'Cost per play must be greater than 0.'}, status=400)
 
     plain_code = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
     pool = TournamentPool.objects.create(
@@ -377,6 +392,9 @@ def pool_create(request, tournament_id):
         is_public=False,
         code_hash=_hash_code(plain_code),
         join_code=plain_code,
+        is_money_pool=is_money_pool,
+        cost_per_play=cost_per_play,
+        allow_multiple_plays_per_user=allow_multiple_plays_per_user,
     )
 
     return JsonResponse({'success': True, 'data': serialize_pool(pool)}, status=201)

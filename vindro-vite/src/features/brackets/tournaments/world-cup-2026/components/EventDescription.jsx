@@ -25,7 +25,7 @@ const EventDescription = () => {
                             <table id="groups-points-table">
                                 <thead>
                                     <tr>
-                                        <th>Metric</th>
+                                        <th>Prediction</th>
                                         <th>Pts</th>
                                     </tr>
                                 </thead>

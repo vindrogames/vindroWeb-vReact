@@ -18,7 +18,12 @@ export const LoadingProvider = ({ children }) => {
     const hideLoader = () => {
         const elapsed = Date.now() - (startTimeRef.current || 0);
         const remaining = Math.max(0, MIN_DURATION - elapsed);
-        hideTimerRef.current = setTimeout(() => setIsLoading(false), remaining);
+        return new Promise(resolve => {
+            hideTimerRef.current = setTimeout(() => {
+                setIsLoading(false);
+                resolve();
+            }, remaining);
+        });
     };
 
     return (

@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import AuthModal from '../../../../components/ui/AuthModal';
 import EventDescription from './components/EventDescription';
-import LeaderboardDisplay from './components/LeaderboardDisplay';
+import Leaderboard from '../../../../components/ui/Leaderboard';
 import PlayCreateNewModal from '../../components/modals/PlayCreateNewModal';
 
 // Modals
 import JoinPoolModal from '../../components/modals/PoolJoinModal';
+import PoolCreateNewModal from '../../components/modals/PoolCreateNewModal';
 import PoolDetailModal from '../../components/modals/PoolDetailModal';
 
 // Custom Hooks
@@ -59,8 +60,7 @@ const WorldCupTournament_2026 = () => {
             if (returnToPool) {
                 setReturnToPool(false);
                 await refreshPlays();
-                setPoolModalMode('join');
-                setShowPoolModal(true);
+                setShowJoinModal(true);
                 return;
             }
             const slugPlayName = encodeURIComponent(
@@ -73,7 +73,7 @@ const WorldCupTournament_2026 = () => {
     };
 
     const handleCreatePlayFromPool = () => {
-        setShowPoolModal(false);
+        setShowJoinModal(false);
         setReturnToPool(true);
         setShowCreatePlayModal(true);
     };
@@ -93,7 +93,7 @@ const WorldCupTournament_2026 = () => {
         if (pool.is_public) {
             handleScrollToSection('tournament-leaderboard');
         } else {
-            navigate(`/brackets/${tournamentSlug}/pool/${poolName}`, { state: { poolId } });
+            navigate(`/brackets/${tournamentSlug}/pool/${poolName}?pool_id=${poolId}`, { state: { poolId } });
         }
     };
 
@@ -120,14 +120,12 @@ const WorldCupTournament_2026 = () => {
         userPools,
         myCreatedPools,
         refreshPools,
-        handleJoinPool,
-        handleCreatePool,
         isLoading: isLoadingPools,
         isSubmitting: isPoolSubmitting
     } = usePools(tournamentData?.id, user);
 
-    const [showPoolModal, setShowPoolModal] = useState(false);
-    const [poolModalMode, setPoolModalMode] = useState('join');
+    const [showJoinModal, setShowJoinModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
     const [selectedPool, setSelectedPool] = useState(null);
     const [prefilledCode, setPrefilledCode] = useState('');
     const [searchParams, setSearchParams] = useSearchParams();
@@ -148,34 +146,19 @@ const WorldCupTournament_2026 = () => {
         if (code) {
             sessionStorage.removeItem('pendingPoolCode');
             setPrefilledCode(code);
-            setPoolModalMode('join');
-            setShowPoolModal(true);
+            setShowJoinModal(true);
         }
     }, [user]);
 
     const handleJoinPoolClick = () => {
         if (!user) { handleLoginClick(); return; }
         setPrefilledCode('');
-        setPoolModalMode('join');
-        setShowPoolModal(true);
+        setShowJoinModal(true);
     };
 
     const handleCreatePoolClick = () => {
         if (!user) { handleLoginClick(); return; }
-        setPoolModalMode('create');
-        setShowPoolModal(true);
-    };
-
-    const onJoinPoolConfirm = async (poolData) => {
-        // poolData usually contains { inviteCode, playId }
-        await handleJoinPool(poolData);
-        setShowPoolModal(false);
-    };
-
-    const onCreatePoolConfirm = async (poolData) => {
-        // poolData usually contains { name, description, etc }
-        await handleCreatePool(poolData);
-        setShowPoolModal(false);
+        setShowCreateModal(true);
     };
 
     // ---------------------------------------------------------
@@ -288,18 +271,24 @@ const WorldCupTournament_2026 = () => {
             </ShowcaseSection>
 
             <ShowcaseSection id="user-picks-section" classes="hero-half bg-gray user-picks">
+                
                 <div className="user-picks-container">
-                    <div className="title-container predictions"><h3>Your Plays</h3></div>
+                    <div className="title-container predictions">
+                        <h3>Your Plays</h3>
+                        <div className="buttons-container">
+                            <button className="btn btn-tan" onClick={handleNewPlay}>Create a Play</button>
+                        </div>
+                    </div>
 
                     <div className="user-stats-container">
                         <div className="table-container bg-black backdrop-gray">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Play Name</th>
-                                        <th>Updated</th>
-                                        <th>Groups Pts.</th>
-                                        <th>Bracket Pts.</th>
+                                        <th className="centered-text">Play Name</th>
+                                        <th className="centered-text">Updated</th>
+                                        <th className="centered-text">Groups Pts.</th>
+                                        <th className="centered-text">Bracket Pts.</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -310,8 +299,8 @@ const WorldCupTournament_2026 = () => {
                                             <tr key={play.id} onClick={() => handleNavigateToPlay(play)} className="clickable-row">
                                                 <td className="table-link play-link">{play.name}</td>
                                                 <td>{getUpdateStatus(play)}</td>
-                                                <td>{play.group_points || 0}</td>
-                                                <td>{play.bracket_points || 0}</td>
+                                                <td className="centered-text">{play.group_points || 0}</td>
+                                                <td className="centered-text">{play.bracket_points || 0}</td>
                                             </tr>
                                         ))
                                     ) : (
@@ -320,17 +309,27 @@ const WorldCupTournament_2026 = () => {
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+
+                <div className="user-picks-container">
+                    <div className="title-container plays-in-pools">
+                        <h3>Your Plays in Pools</h3>
                         <div className="buttons-container">
-                            <button className="btn btn-tan" onClick={handleNewPlay}>New Play</button>
+                            <button className="btn btn-tan" onClick={handleJoinPoolClick}>Join a Pool</button>
                         </div>
                     </div>
 
-                    <div className="title-container plays-in-pools"><h3>Your Plays in Pools</h3></div>
                     <div className="user-stats-container">
                         <div className="table-container bg-black backdrop-gray">
                             <table>
                                 <thead>
-                                    <tr><th>Play</th><th>Pool</th><th>Manager</th><th>Pos.</th></tr>
+                                    <tr>
+                                        <th className="centered-text">Play</th>
+                                        <th className="centered-text">Pool</th>
+                                        <th className="centered-text">Manager</th>
+                                        <th className="centered-text">Pos.</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     {isLoadingPools ? (
@@ -341,7 +340,7 @@ const WorldCupTournament_2026 = () => {
                                                 <td>{pool.play_name}</td>
                                                 <td className="table-link pool-link">{pool.pool_name}</td>
                                                 <td>{pool.manager}</td>
-                                                <td>{pool.rank || '-'}</td>
+                                                <td className="centered-text">{pool.rank || '-'}</td>
                                             </tr>
                                         ))
                                     ) : (
@@ -350,17 +349,27 @@ const WorldCupTournament_2026 = () => {
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+
+                <div className="user-picks-container">                    
+                    <div className="title-container your-pools">
+                        <h3>Your Pools</h3>
                         <div className="buttons-container">
-                            <button className="btn btn-tan" onClick={handleJoinPoolClick}>Join a Pool</button>
+                            <button className="btn btn-tan" onClick={handleCreatePoolClick}>Create a Pool</button>
                         </div>
                     </div>
 
-                    <div className="title-container your-pools"><h3>Your Pools</h3></div>
                     <div className="user-stats-container">
                         <div className="table-container bg-black backdrop-gray">
                             <table>
                                 <thead>
-                                    <tr><th>Pool</th><th>Members</th><th>Paid</th><th>Prizes</th></tr>
+                                    <tr>
+                                        <th>Pool</th>
+                                        <th>Members</th>
+                                        <th>Paid</th>
+                                        <th>Prizes</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     {isLoadingPools ? (
@@ -379,9 +388,6 @@ const WorldCupTournament_2026 = () => {
                                     )}
                                 </tbody>
                             </table>
-                        </div>
-                        <div className="buttons-container">
-                            <button className="btn btn-tan" onClick={handleCreatePoolClick}>Create a Pool</button>
                         </div>
                     </div>
                 </div>
@@ -402,19 +408,23 @@ const WorldCupTournament_2026 = () => {
 
             <EventDescription />
 
-            <div id="tournament-leaderboard">
-                <LeaderboardDisplay
-                    title={<>vindro<span className='inline-green inline-bold'>Pool</span> Leaderboard</>}
+            <section id="tournament-leaderboard" className="leaderboard-display-container bg-black hero-half">
+
+                <div className="leaderboard-header">
+                    <div className="title">
+                        <h3 className="main-title">vindro<span className='inline-teal inline-bold'>Pool</span> Leaderboard</h3>
+                    </div>
+                </div>
+
+                <Leaderboard
                     data={publicLeaderboard}
                     columns={leaderboardCols}
                     isLoading={isPublicLoading}
-                    showBack={false}
                     onRowClick={handleLeaderboardPlayClick}
                     emptyMessage="No entries found."
-                    classes="bg-tan hero-half"
-                    tableContainerClasses="table-container bg-gray backdrop-tan"
+                    tableContainerClasses="table-container bg-gray backdrop-black"
                 />
-            </div>
+            </section>
 
             <PlayCreateNewModal
                 isOpen={showCreatePlayModal}
@@ -425,19 +435,27 @@ const WorldCupTournament_2026 = () => {
             />
 
             <JoinPoolModal
-                isOpen={showPoolModal}
-                mode={poolModalMode}
+                isOpen={showJoinModal}
                 tournamentId={tournamentData?.id}
-                onConfirm={poolModalMode === 'join' ? onJoinPoolConfirm : onCreatePoolConfirm}
-                onCancel={() => setShowPoolModal(false)}
+                onCancel={() => setShowJoinModal(false)}
                 plays={userPlays}
-                isLoading={isPoolSubmitting}
                 initialCode={prefilledCode}
                 onCreatePlay={handleCreatePlayFromPool}
                 onSuccess={() => {
                     refreshPools();
                     refreshPublic();
-                    setShowPoolModal(false);
+                    setShowJoinModal(false);
+                }}
+            />
+
+            <PoolCreateNewModal
+                isOpen={showCreateModal}
+                tournamentId={tournamentData?.id}
+                tournamentSlug={tournamentSlug}
+                onCancel={() => setShowCreateModal(false)}
+                onCreated={() => {
+                    refreshPools();
+                    setShowCreateModal(false);
                 }}
             />
 

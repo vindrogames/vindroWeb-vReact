@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
-
-// 1. IMPORT HOOK: Ensure the path is correct for your file structure
-import usePools from '../../hooks/usePools'; 
+import usePools from '../../hooks/usePools';
+import { useLoading } from '../../../../contexts/LoadingContext';
 
 const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, onCancel, initialCode = '', onCreatePlay }) => {
     const { handleJoinPool, isSubmitting, error: apiError } = usePools(tournamentId);
+    const { showLoader, hideLoader } = useLoading();
 
     const [selectedPlayIds, setSelectedPlayIds] = useState([]);
     const [poolCode, setPoolCode] = useState(initialCode);
@@ -35,29 +35,27 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
         );
     };
 
-    // 5. THE SUBMISSION: The bridge between UI and Service
     const handleConfirmSubmission = async () => {
-        // VALIDATION: Ensure private pools have a code before hitting the API
         if (type === 'private' && !poolCode.trim()) {
             setLocalError('Please enter a private pool code.');
             return;
         }
 
+        setLocalError('');
+        showLoader();
+
         try {
-            setLocalError(''); // Clear previous errors
-            
-            // CALL HOOK: This calls poolServices.joinPool via the hook
-            // Note: handleJoinPool returns the 'result' object from the service
             const response = await handleJoinPool(selectedPlayIds, type, poolCode);
 
             if (response.success) {
-                // SIGNAL SUCCESS: Send the response back to JoinPoolModal (Stage 1)
-                // so it can build the report for the Response Modal (Stage 3).
+                await hideLoader();
                 onConfirm(selectedPlayIds, poolCode, response);
             } else {
+                await hideLoader();
                 setLocalError(response.error || 'Failed to join pool.');
             }
         } catch (err) {
+            await hideLoader();
             setLocalError(err.message || 'A network error occurred.');
         }
     };
@@ -66,13 +64,13 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
     const activeError = apiError || localError;
 
     return ReactDOM.createPortal(
-        <div className="play-name-modal-overlay" onClick={onCancel}>
-            <div className="play-name-modal submit-play-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={onCancel}>
+            <div className="modal-overlay-content-container submit-play-modal" onClick={(e) => e.stopPropagation()}>
                 <button className="close-button" onClick={onCancel}>&times;</button>
 
                 <ShowcaseSection id="select-plays-gallery" className="modal-gallery">
                     <h2>select<span className="inline-teal inline-bold">Plays</span></h2>
-                    <div className="modal-gallery-text">
+                    <div className="">
                         <p>{hasNoPlays ? "No plays to submit yet." : "Select plays to submit to this pool."}</p>
                         {hasNoPlays && onCreatePlay && (
                             <button className="btn btn-tan" onClick={onCreatePlay}>
@@ -81,13 +79,13 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                         )}
                     </div>
 
-                    <div className="feature-table">
+                    <div className="select-table">
                         <div className="table-container">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style={{ width: '80px' }}>Select</th>
                                         <th>Play Name</th>
+                                        <th style={{ width: '84px' }}>Select</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,6 +95,7 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                                             className={selectedPlayIds.includes(play.id) ? 'selected-row' : ''}
                                             onClick={() => togglePlaySelection(play.id)}
                                         >
+                                            <td className="play-info-name">{play.name}</td>
                                             <td>
                                                 <div className="checkbox-container">
                                                     <div className={`custom-checkbox ${selectedPlayIds.includes(play.id) ? 'checked' : ''}`}>
@@ -104,7 +103,7 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="play-info-name">{play.name}</td>
+                                            
                                         </tr>
                                     ))}
                                 </tbody>

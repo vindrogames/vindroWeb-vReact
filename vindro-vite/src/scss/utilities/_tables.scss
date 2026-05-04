@@ -17,6 +17,7 @@
         border: none;
         padding: 7px 14px;
         color: white;
+        text-align: center;
     }
 
     tr {
@@ -89,12 +90,28 @@
             }
         }
     }
+
+    &.bg-gray.backdrop-black {
+        border: 1px solid $vindro-black;
+        background-color: $vindro-gray;
+
+        table {
+            th {
+                border-bottom: 3px solid $vindro-black;
+            }
+        }
+    }
 }
 
-@media (max-width: 678px) {
+@media(max-width: 678px) {
+
     .table-container {
-        th, td {
-            text-align: left;
+
+        table {
+
+            td.left-text {
+                text-align: left;
+            }
         }
     }
 }

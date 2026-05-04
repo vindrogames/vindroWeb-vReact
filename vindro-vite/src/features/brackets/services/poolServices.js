@@ -49,6 +49,11 @@ const poolServices = {
     removePlayFromPool: async (poolId, playId) => {
         return await apiRequest(`/tournament/pools/${poolId}/plays/${playId}/remove/`, { method: 'DELETE' });
     },
+
+    // PATCH /tournament/pools/<poolId>/plays/<playId>/paid/  — backend endpoint required
+    togglePaid: async (poolId, playId) => {
+        return await apiRequest(`/tournament/pools/${poolId}/plays/${playId}/paid/`, { method: 'PATCH' });
+    },
 };
 
 export default poolServices;

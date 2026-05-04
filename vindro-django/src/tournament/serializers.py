@@ -68,7 +68,10 @@ def serialize_play(play):
         'joined_pools': [
             {'id': str(m.pool.id), 'name': m.pool.name} 
             for m in play.play_memberships.all()
-        ]
+        ],
+
+        'group_stage_close_date': play.tournament.start_date,
+        'bracket_stage_close_date': play.tournament.bracket_start_date,
     }
 
 
@@ -98,6 +101,7 @@ def serialize_pool(pool):
     return {
         'id': str(pool.id),
         'tournament_id': str(pool.tournament_id),
+        'tournament_name': pool.tournament.name,
         'name': pool.name,
         'description': pool.description,
         'is_public': pool.is_public,

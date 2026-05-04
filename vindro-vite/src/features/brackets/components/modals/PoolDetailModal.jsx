@@ -14,8 +14,8 @@ const PoolDetailModal = ({ pool, onClose }) => {
     };
 
     return ReactDOM.createPortal(
-        <div className="play-name-modal-overlay" onClick={onClose}>
-            <div className="play-name-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-overlay-content-container" onClick={(e) => e.stopPropagation()}>
                 <button className="close-button" onClick={onClose}>&times;</button>
 
                 <ShowcaseSection id="pool-detail" className="modal-gallery">

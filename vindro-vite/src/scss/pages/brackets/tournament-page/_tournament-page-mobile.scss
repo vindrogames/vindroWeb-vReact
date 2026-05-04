@@ -78,7 +78,14 @@
                 .title-container {
 
                     h3 {
-                        font-size: 3.6rem;
+                        font-size: 2.8rem;
+                    }
+
+                    .buttons-container {
+
+                        button {
+                            font-size: 1.4rem;
+                        }
                     }
                 }
 
@@ -90,6 +97,7 @@
 
                             th {
                                 font-size: 1.4rem;
+                                white-space: normal;
                             }
 
                             td {
@@ -126,6 +134,14 @@
             }
 
         }
+
+        section.leaderboard-display-container {
+            padding: 21px;
+
+            .leaderboard-header {
+                width: 100%;
+            }
+        }
     }
 }
 
@@ -133,15 +149,34 @@
 
     main.bracket-tournament-page {
 
+        .brackets-hero {
+            .brackets-hero-buttons-wrapper {
+                width: 100%;
+                justify-content: space-around;
+                gap: 7px;
+            }
+        }
+
         .user-picks {
 
             padding: 14px 14px 42px;
+
             .user-picks-container {
 
                 .title-container {
+                    flex-direction: column;
+                    gap: 7px;
+                    padding-bottom: 14px;
 
                     h3 {
                         font-size: 2.8rem;
+                    }
+
+                    .buttons-container {
+
+                        button {
+                            font-size: 1.4rem;
+                        }
                     }
                 }
 
@@ -163,18 +198,8 @@
 
 
                     }
-
-                    .buttons-container {
-
-                        button {
-                            font-size: 1.4rem;
-                        }
-                    }
                 }
-
-
             }
-
         }
 
         .about-tournament {
@@ -230,27 +255,55 @@
                     .table-container {
 
                         table {
+                            table-layout: fixed;
+                            width: 100%;
 
                             th {
                                 font-size: 1.2rem;
                                 padding: 4px;
+                                white-space: normal;
                             }
 
                             td {
                                 padding: 7px 4px;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
                             }
                         }
-
-
                     }
 
                     .buttons-container {
-
                         flex-direction: column;
                         gap: 14px;
+
                         button {
                             font-size: 1.4rem;
                         }
+                    }
+                }
+
+                // Your Plays: Play Name (flex) | Updated (flex) | Groups Pts (fixed) | Bracket Pts (fixed)
+                .title-container.predictions + .user-stats-container {
+                    .table-container table {
+                        th:nth-child(3) { width: 48px; }
+                        th:nth-child(4) { width: 48px; }
+                    }
+                }
+
+                // Your Plays in Pools: Play (flex) | Pool (flex) | Manager (flex) | Pos. (fixed)
+                .title-container.plays-in-pools + .user-stats-container {
+                    .table-container table {
+                        th:nth-child(4) { width: 28px; }
+                    }
+                }
+
+                // Your Pools: Pool (flex) | Members (fixed) | Paid (fixed) | Prizes (fixed)
+                .title-container.your-pools + .user-stats-container {
+                    .table-container table {
+                        th:nth-child(2) { width: 48px; }
+                        th:nth-child(3) { width: 36px; }
+                        th:nth-child(4) { width: 48px; }
                     }
                 }
 
