@@ -29,6 +29,10 @@ const UserProfile = () => {
     const [selectedIcon, setSelectedIcon] = useState('teal-simple');
     const [profileError, setProfileError] = useState(null);
     const inputRef = useRef(null);
+    const usernameWrapperRef = useRef(null);
+    const iconWrapperRef = useRef(null);
+    const saveUsernameRef = useRef(null);
+    const saveIconRef = useRef(null);
 
     const colors = ['green', 'orange', 'pink', 'purple', 'teal', 'white'];
     const styles = ['simple', 'black-shades', 'color-shades', 'pirate', 'music', 'office', 'snow'];
@@ -70,11 +74,62 @@ const UserProfile = () => {
         }
     }, [user?.username, user?.avatar]);
 
+    // Keep refs current every render so stale-closure effects always call the latest handler
+    saveUsernameRef.current = handleEditUserNameToggle;
+    saveIconRef.current = handleEditUserIconToggle;
+
     useEffect(() => {
         if (isEditingUserName && inputRef.current) {
             inputRef.current.focus();
         }
     }, [isEditingUserName]);
+
+    // Silent cancel for username: Escape key or click outside the input wrapper
+    useEffect(() => {
+        if (!isEditingUserName) return;
+        const originalUsername = profileUser?.username;
+        const cancel = () => {
+            setEditValue(originalUsername || '');
+            setProfileError(null);
+            setIsEditingUserName(false);
+        };
+        const onKey = (e) => {
+            if (e.key === 'Escape') cancel();
+            if (e.key === 'Enter') saveUsernameRef.current();
+        };
+        const onDown = (e) => {
+            if (usernameWrapperRef.current && !usernameWrapperRef.current.contains(e.target)) cancel();
+        };
+        document.addEventListener('keydown', onKey);
+        document.addEventListener('mousedown', onDown);
+        return () => {
+            document.removeEventListener('keydown', onKey);
+            document.removeEventListener('mousedown', onDown);
+        };
+    }, [isEditingUserName]);
+
+    // Silent cancel for avatar gallery: Escape key or click outside the icon wrapper
+    useEffect(() => {
+        if (!isEditingUserIcon) return;
+        const originalIcon = getIconName(profileUser?.avatar);
+        const cancel = () => {
+            setSelectedIcon(originalIcon);
+            setIsEditingUserIcon(false);
+        };
+        const onKey = (e) => { 
+            if (e.key === 'Escape') cancel();
+            if (e.key === 'Enter') saveIconRef.current();
+        };
+        const onDown = (e) => {
+            if (iconWrapperRef.current && !iconWrapperRef.current.contains(e.target)) cancel();
+        };
+        document.addEventListener('keydown', onKey);
+        document.addEventListener('mousedown', onDown);
+        return () => {
+            document.removeEventListener('keydown', onKey);
+            document.removeEventListener('mousedown', onDown);
+        };
+    }, [isEditingUserIcon]);
 
     const handleEditUserNameToggle = async () => {
         if (isEditingUserName) {
@@ -177,34 +232,47 @@ const UserProfile = () => {
                         <h1 className="profile-intro">Visiting vindroUser <span className='inline-green inline-bold'>{profileUser.id}</span></h1>
                     )}
 
-
-                    {profileError && (
-                        <p className="profile-error">{profileError}</p>
-                    )}
-
                     <section id="user-name-icon" className={`user-stat-container ${isEditingUserName ? 'focused-mode' : ''}`}>
 
                         <div className="user-name-data">
                             <h2>user<span className='inline-teal inline-bold'>Name</span></h2>
 
-                            <div className="editable-input-wrapper">
-                                <input
-                                    ref={inputRef}
-                                    type="text"
-                                    value={isEditingUserName ? editValue : profileUser.username}
-                                    onChange={(e) => setEditValue(e.target.value)}
-                                    readOnly={!isEditingUserName}
-                                    className={isEditingUserName ? 'input-active' : 'input-frozen'}
-                                    spellCheck="false"
-                                />
-                                {isOwner && (
-                                    <button
-                                        className={`${isEditingUserName ? 'input-active' : 'input-frozen'} btn-edit`}
-                                        onClick={handleEditUserNameToggle}
-                                    >
-                                        {isEditingUserName ? 'Save' : 'Edit'}
-                                    </button>
-                                )}
+                            <div className="editable-input-wrapper" ref={usernameWrapperRef}>
+
+                                <div className="input-button-container">
+                                    <div className="input-container">
+                                        <input
+                                            ref={inputRef}
+                                            type="text"
+                                            value={isEditingUserName ? editValue : profileUser.username}
+                                            onChange={(e) => setEditValue(e.target.value)}
+                                            readOnly={!isEditingUserName}
+                                            className={isEditingUserName ? 'input-active' : 'input-frozen'}
+                                            maxLength={21}
+                                            spellCheck="false"
+                                        />
+                                        {isEditingUserName && (
+                                            <span className={`char-count${editValue.length >= 21 ? ' at-limit' : ''}`}>
+                                                {editValue.length}/21
+                                            </span>
+                                        )}
+                                    </div>
+                                    {isOwner && (
+                                        <button
+                                            className={`${isEditingUserName ? 'input-active' : 'input-frozen'} btn-edit`}
+                                            onClick={handleEditUserNameToggle}
+                                        >
+                                            {isEditingUserName ? 'Save' : 'Edit'}
+                                        </button>
+                                    )}
+                                </div>
+
+                                <div className="profile-error-container">
+                                    <p className={`profile-error${profileError ? ' visible' : ''}`}>
+                                        {profileError || '-'}
+                                    </p>
+                                </div>
+
                             </div>
 
                             {isOwner && (
@@ -214,7 +282,7 @@ const UserProfile = () => {
                                     </div>
                                 </>
                             )}
-                            
+
                             <div className="user-joined">
                                 <h3>Joined {profileUser.joined ? new Date(profileUser.joined).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'today'}</h3>
                             </div>
@@ -222,10 +290,10 @@ const UserProfile = () => {
                                 <h3>Logged in {login_count || '0'} time{login_count === 1 ? '' : 's'}</h3>
                             </div>
 
-                            
+
                         </div>
 
-                        <div className="user-icon">
+                        <div className="user-icon" ref={iconWrapperRef}>
                             <img src={`/img/profile_icons/${selectedIcon}.webp`} alt="User Avatar" />
 
                             {isOwner && (

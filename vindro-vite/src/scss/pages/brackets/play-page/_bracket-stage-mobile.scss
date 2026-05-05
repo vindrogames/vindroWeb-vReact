@@ -1,0 +1,207 @@
+@use '../../../config' as *;
+
+// ── STRIP VIEW (<1100px) ──────────────────────────────────────────────────────
+// Applies to both medium (678–1099) and small (<678).
+// Active round col expands; others collapse to 14px peek strips.
+@media (max-width: 1099px) {
+
+    .bk-medium-tabs {
+        display: flex;
+    }
+
+    .bk-quarter-card {
+        overflow: hidden; // restore clipping for strip view
+
+        .round-col {
+            flex: 0 0 21px;
+            overflow: hidden;
+            opacity: 0.42;
+            transition: flex 0.22s ease, opacity 0.22s ease;
+        }
+
+        // Active round expands
+        &[data-round="R32"] .round-1-col,
+        &[data-round="R16"] .round-2-col,
+        &[data-round="QF"] .round-3-col,
+        &[data-round="SF"] .round-4-col {
+            flex: 1;
+            overflow: visible;
+            opacity: 1;
+        }
+
+        // Adjacent rounds slightly more visible
+        &[data-round="R32"] .round-2-col,
+        &[data-round="R16"] .round-1-col,
+        &[data-round="R16"] .round-3-col,
+        &[data-round="QF"] .round-2-col,
+        &[data-round="QF"] .round-4-col,
+        &[data-round="SF"] .round-3-col {
+            opacity: 0.55;
+        }
+    }
+
+    .connector-col {
+        opacity: 0.42;
+    }
+}
+
+// ── MEDIUM (678–1099px): center 24%, slimmer connectors ──────────────────────
+@media (min-width: 678px) and (max-width: 1099px) {
+
+    .bk-center {
+        flex: 0 0 24%;
+    }
+
+    .bk-bracket-half {
+        flex: 1;
+    }
+
+    .connector-col {
+        width: 14px;
+    }
+}
+
+// ── SMALL (<678px): one half at a time, finals pinned to centre ───────────────
+@media (max-width: 677px) {
+
+    // Grid keeps finals column at viewport centre regardless of which half shows.
+    // Empty 1fr column holds the space when its bracket half is hidden.
+    .bk-tree {
+        display: grid;
+        grid-template-columns: 1fr 32% 1fr;
+
+        .bk-bracket-half--left {
+            grid-column: 1;
+        }
+
+        .bk-center {
+            grid-column: 2;
+        }
+
+        .bk-bracket-half--right {
+            grid-column: 3;
+        }
+
+        &[data-section="left"] .bk-bracket-half--left {
+            display: flex;
+        }
+
+        &[data-section="right"] .bk-bracket-half--right {
+            display: flex;
+        }
+    }
+
+    .bk-quarter-card {
+        padding-top: 21px;
+
+        .round-col {
+            flex: 0 0 4px;
+            overflow: hidden;
+            transition: flex 0.22s ease, opacity 0.22s ease;
+        }
+    }
+
+    .connector-col {
+        width: 7px;
+    }
+
+    main.bracket-tournament-play-pool {
+
+        section.play-prediction-container {
+
+            .prediction-display-wrapper {
+
+                .edit-toggle-btn {
+                    top: 4px;
+                    padding: 3px 7px;
+
+                    &#bk-left {
+                        right: 4px;
+                    }
+
+                    &#bk-right {
+                        left: 4px;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+// ── ACCORDION SECTION VIEW (≤450px) ──────────────────────────────────────────
+// Left | Finals | Right toggle drives which section fills the viewport.
+// Inactive sections squish to thin slivers so users can see they exist.
+@media (max-width: 450px) {
+
+    main.bracket-tournament-play-pool section.play-prediction-container .prediction-display-wrapper .bk-stage .bk-stage-container {
+        padding: 4px 21px 28px;
+
+    }
+    .bk-half-toggle {
+        display: flex;
+    }
+
+    .bk-tree {
+        display: flex; // override the grid from ≤677px
+
+        .bk-bracket-half--left,
+        .bk-center,
+        .bk-bracket-half--right {
+            min-width: 0;
+            overflow: hidden;
+            transition: flex 0.28s ease, opacity 0.28s ease;
+        }
+
+        &[data-section="left"] {
+            .bk-bracket-half--left  { flex: 1; opacity: 1; overflow: visible; }
+            .bk-center              { flex: 0 0 42px; opacity: 0.22; pointer-events: none; }
+            .bk-bracket-half--right { flex: 0 0 42px; opacity: 0.22; pointer-events: none; }
+        }
+
+        &[data-section="center"] {
+            .bk-bracket-half--left  { flex: 0 0 42px; opacity: 0.22; pointer-events: none; }
+            .bk-center              { flex: 1; opacity: 1; overflow: visible; }
+            .bk-bracket-half--right { flex: 0 0 42px; opacity: 0.22; pointer-events: none; }
+        }
+
+        &[data-section="right"] {
+            .bk-bracket-half--left  { flex: 0 0 42px; opacity: 0.22; pointer-events: none; }
+            .bk-center              { flex: 0 0 42px; opacity: 0.22; pointer-events: none; }
+            .bk-bracket-half--right { flex: 1; opacity: 1; overflow: visible; }
+        }
+    }
+
+    .bk-quarter-card {
+        &.focused-edit { overflow: visible; }
+
+        .round-col {
+            flex: 0 0 14px;
+        }
+    }
+
+    .connector-col {
+        width: 9px;
+    }
+}
+
+@media (max-width: 376px) {
+
+    .bk-tree {
+
+        &[data-section="left"] {
+            .bk-center              { flex-basis: 14px; }
+            .bk-bracket-half--right { flex-basis: 14px; }
+        }
+
+        &[data-section="center"] {
+            .bk-bracket-half--left  { flex-basis: 14px; }
+            .bk-bracket-half--right { flex-basis: 14px; }
+        }
+
+        &[data-section="right"] {
+            .bk-bracket-half--left  { flex-basis: 14px; }
+            .bk-center              { flex-basis: 14px; }
+        }
+    }
+}

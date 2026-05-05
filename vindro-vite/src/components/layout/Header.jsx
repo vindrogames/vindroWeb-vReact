@@ -69,7 +69,7 @@ const NavBar = ({ isMadrid }) => {
             await logout();
             setUserDropdownOpen(false);
             setMenuOpen(false);
-            navigate('/');
+            navigate('/logout');
         } catch (err) {
             console.error('Logout failed:', err);
         }

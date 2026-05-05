@@ -80,8 +80,8 @@ def current_user(request):
         new_username = body['username'].strip()
         if not new_username:
             errors['username'] = 'Username cannot be empty'
-        elif len(new_username) > 150:
-            errors['username'] = 'Username too long (max 150 characters)'
+        elif len(new_username) > 21:
+            errors['username'] = 'Username too long (max 21 characters)'
         elif User.objects.exclude(pk=user.pk).filter(username=new_username).exists():
             errors['username'] = 'Username already taken'
         else:

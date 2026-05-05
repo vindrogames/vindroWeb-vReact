@@ -3,10 +3,17 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import playServices from '../services/playServices';
 import { useAuth } from '../../../contexts/auth/AuthContext';
 import { useLoading } from '../../../contexts/LoadingContext';
-import GroupStagePredictions from '../components/PlayGroupStagePredicts';
-import BracketStagePredictions from '../components/PlayBracketStagePredicts';
 import formatDate from '../../../utils/dateFormatter';
 import ErrorDisplayModal from '../../../components/ui/ErrorDisplayModal';
+import WorldCupGroupStage from '../tournaments/world-cup-2026/stages/WorldCupGroupStage';
+import WorldCupBracketStage from '../tournaments/world-cup-2026/stages/WorldCupBracketStage';
+
+const STAGE_MAP = {
+    'world-cup-2026': {
+        GroupStage: WorldCupGroupStage,
+        BracketStage: WorldCupBracketStage,
+    },
+};
 
 const toErrorCode = (err) => {
     const msg = err?.message?.toLowerCase() || '';
@@ -57,13 +64,32 @@ const PlayPage = () => {
     const [playData, setPlayData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [countdown, setCountdown] = useState('');
+    const [bracketCountdown, setBracketCountdown] = useState('');
     const [errorCode, setErrorCode] = useState(null);
+
+    // The "Master Switch": holds the ID of whatever is being edited
+    const [activeEditId, setActiveEditId] = useState(null);
 
     const playId = location.state?.playId || searchParams.get('pid');
 
-    // PlayPage.jsx (The useEffect snippet)
-    useEffect(() => {
+    // ── STAGE GATES ─────────────────────────────────────────────────────────────
+    // Three scenarios per stage: not_ready | open | closed
+    // A stage is "not_ready" when no close date has been set on the play data.
+    // To manually force a scenario, comment out the derived lines and set directly:
+    //   not_ready → const isGroupOpen = false; const isGroupClosed = false;
+    //   open      → const isGroupOpen = true;  const isGroupClosed = false;
+    //   closed    → const isGroupOpen = false; const isGroupClosed = true;
+    const groupStageConfigured   = !!playData?.group_stage_close_date;
+    const isGroupOpen            = groupStageConfigured && new Date() < new Date(playData.group_stage_close_date);
+    const isGroupClosed          = groupStageConfigured && !isGroupOpen;
 
+    const bracketStageConfigured = !!playData?.bracket_stage_close_date;
+    const isBracketOpen          = bracketStageConfigured && new Date() < new Date(playData.bracket_stage_close_date);
+    const isBracketClosed        = bracketStageConfigured && !isBracketOpen;
+
+    // ─────────────────────────────────────────────────────────────────────────
+
+    useEffect(() => {
         const fetchPlay = async () => {
             if (!playId) {
                 setLoading(false);
@@ -72,12 +98,9 @@ const PlayPage = () => {
             try {
                 setLoading(true);
                 const result = await playServices.getPlayById(playId);
-
-                // If backend follows the { success, data } pattern:
                 if (result && result.success) {
                     setPlayData(result.data);
                 } else {
-                    // Fallback if your backend sends the play directly
                     setPlayData(result);
                 }
             } catch (error) {
@@ -89,16 +112,34 @@ const PlayPage = () => {
         fetchPlay();
     }, [playId]);
 
+    // Group stage countdown — always running so the "Closed" signal fires automatically
     useEffect(() => {
         if (!playData?.group_stage_close_date) return;
         const interval = startCountdown(playData.group_stage_close_date, setCountdown);
         return () => clearInterval(interval);
     }, [playData?.group_stage_close_date]);
 
+    // Bracket countdown — only starts once group stage has closed
+    useEffect(() => {
+        if (!playData?.bracket_stage_close_date) return;
+        if (new Date() < new Date(playData.group_stage_close_date)) return;
+        const interval = startCountdown(playData.bracket_stage_close_date, setBracketCountdown);
+        return () => clearInterval(interval);
+    }, [playData?.bracket_stage_close_date, playData?.group_stage_close_date]);
+
     const isOwner =
         playData &&
         user &&
         String(playData.user) === String(user.id);
+
+    // isEditable = owner AND the relevant stage is still open
+    const isGroupEditable = isOwner && isGroupOpen;
+
+    const isBracketEditing = activeEditId?.startsWith('bk-');
+    const isGroupEditing   = !!activeEditId && !isBracketEditing;
+
+    const stages = STAGE_MAP[tournament] ?? {};
+    const { GroupStage, BracketStage } = stages;
 
     if (loading) {
         return <div className="bracket-tournament-play page-loading">Loading...</div>;
@@ -148,7 +189,6 @@ const PlayPage = () => {
         white: '#ffffff',
     };
 
-    // find first match in URL
     const matchedKey = Object.keys(colorMap).find(c =>
         avatarUrl.toLowerCase().includes(c)
     );
@@ -156,11 +196,9 @@ const PlayPage = () => {
     const borderColor = colorMap[matchedKey] || 'transparent';
 
 
-
     const handleUpdateGroupOrder = (groupName, newOrder) => {
         setPlayData(prevData => {
             if (!prevData) return prevData;
-
             return {
                 ...prevData,
                 group_predictions: {
@@ -185,17 +223,40 @@ const PlayPage = () => {
         }
     };
 
-    return (
-        <main id="play-page" className="bracket-tournament-play-pool">
+    // This function is passed down to all children
+    const handleEditingChange = (elementId, isEditing) => {
+        setActiveEditId(isEditing ? elementId : null);
+    };
 
-            <section className="play-pool-intro hero-half bg-black">
+    return (
+        <main id="play-page" className={`bracket-tournament-play-pool ${activeEditId ? 'has-active-focus' : ''}`}>
+
+            <section className={`play-pool-intro hero-half bg-black${activeEditId ? ' is-dimmed' : ''}`}>
                 <div className="play-pool-intro-wrapper">
                     <div className="text-container">
                         <h1 className="profile-intro">{playData.tournament_name || tournament}</h1>
                         <div className="play-specs">
-                            {!isOwner ?
-                                (<><h2><span className="inline-bold">{playData.name}</span> <span className="inline-teal">by</span> <span className="inline-bold">{playData.user_name}</span></h2> <button className="avatar-link-btn" style={{ borderBottom: `2px solid ${borderColor}` }} onClick={() => navigate(`/user/${playData.user}`)}><img src={playData.user_avatar} alt={playData.user_name} /></button></>) :
-                                (<h2><span className="inline-teal inline-bold">play</span> <span >{playData.name}</span></h2>)}
+                            {!isOwner ? (
+                                <>
+                                    <h2>
+                                        <span className="inline-bold">{playData.name}</span>
+                                        {' '}<span className="inline-teal">by</span>{' '}
+                                        <span className="inline-bold">{playData.user_name}</span>
+                                    </h2>
+                                    <button
+                                        className="avatar-link-btn"
+                                        style={{ borderBottom: `2px solid ${borderColor}` }}
+                                        onClick={() => navigate(`/user/${playData.user}`)}
+                                    >
+                                        <img src={playData.user_avatar} alt={playData.user_name} />
+                                    </button>
+                                </>
+                            ) : (
+                                <h2>
+                                    <span className="inline-teal inline-bold">play</span>{' '}
+                                    <span>{playData.name}</span>
+                                </h2>
+                            )}
                         </div>
                     </div>
 
@@ -205,48 +266,93 @@ const PlayPage = () => {
                 </div>
             </section>
 
-            <section id="groups-predictions" className="play-prediction-container">
+            {/* ── GROUP STAGE ── */}
+            <section id="groups-predictions" className={`play-prediction-container${isBracketEditing ? ' is-dimmed' : ''}`}>
 
-                <div className="prediction-display-wrapper">
+                {GroupStage ? (
+                    <div className="prediction-display-wrapper">
+                        <div className={`stage-header${isGroupEditing ? ' is-dimmed' : ''}`}>
+                            <h3>group<span className="inline-teal inline-bold">Stage</span></h3>
+                            {/* Scenario 1 (not_ready): no status line */}
+                            {isGroupOpen && (
+                                <p className="last-updated">
+                                    Closes in <span className="inline-neon-pink inline-bold">{countdown}</span>
+                                </p>
+                            )}
+                            {isGroupClosed && (
+                                <p className="last-updated">
+                                    <span className="inline-neon-pink inline-bold">Stage closed</span>
+                                    {' · '}<span className="inline-teal inline-bold">{playData.group_points} pts</span>
+                                </p>
+                            )}
+                        </div>
 
-                    <div className="stage-header">
-                        <h3>group<span className="inline-teal inline-bold">Stage</span></h3>
-                        <p className="last-updated">Starts in <span className="inline-neon-pink inline-bold">{countdown}</span></p>
+                        <GroupStage
+                            data={playData.group_predictions}
+                            isOwner={isOwner}
+                            isEditable={isGroupEditable}
+                            isStageClosed={isGroupClosed}
+                            activeEditId={activeEditId}
+                            onEditingChange={handleEditingChange}
+                            groupPoints={playData.group_points}
+                            onUpdate={handleUpdateGroupOrder}
+                            onSave={handleSaveGroup}
+                        />
+                        <div className={`last-updated${isGroupEditing ? ' is-dimmed' : ''}`}>
+                            <p className="last-updated">Updated: {formatDate(playData.updated_at)}</p>
+                        </div>
+
                     </div>
-
-                    {/* Pass isOwner down so sub-components can toggle editability */}
-                    <GroupStagePredictions
-                        data={playData.group_predictions}
-                        isOwner={isOwner}
-                        onUpdate={handleUpdateGroupOrder}
-                        onSave={handleSaveGroup}
-                    />
-
-                    <div className="last-updated">
-                        <p className="last-updated"><span className="inline-teal inline-bold">Updated:</span> {formatDate(playData.updated_at)}</p>
-                    </div>
-
-                </div>
+                ) : (
+                    <></>
+                )}
 
 
             </section>
 
-            <section id="groups-predictions" className="play-prediction-container">
-                <div className="prediction-display-wrapper">
-                    <div className="stage-header">
-                        <h3>bracket<span className="inline-teal inline-bold">Stage</span></h3>
-                        <p className="last-updated">Starts in <span className="inline-neon-pink inline-bold">{countdown}</span></p>
+            {/* ── BRACKET STAGE ── */}
+            <section className={`play-prediction-container${activeEditId && !isBracketEditing ? ' is-dimmed' : ''}`}>
+
+
+                {BracketStage ? (
+
+                    <div id="brackets-predictions" className="prediction-display-wrapper">
+
+                        <div className={`stage-header${isBracketEditing ? ' is-dimmed' : ''}`}>
+                            <h3>bracket<span className="inline-teal inline-bold">Stage</span></h3>
+                            {/* Scenario 1 (not_ready): no status line */}
+                            {bracketStageConfigured && !isBracketOpen && (
+                                <p className="last-updated">
+                                    Starts <span className="inline-neon-pink inline-bold">{formatDate(playData.group_stage_close_date)}</span>
+                                </p>
+                            )}
+                            {isBracketOpen && (
+                                <p className="last-updated">
+                                    Closes in <span className="inline-neon-pink inline-bold">{bracketCountdown}</span>
+                                </p>
+                            )}
+                            {isBracketClosed && (
+                                <p className="last-updated">
+                                    <span className="inline-neon-pink inline-bold">Stage closed</span>
+                                    {' · '}<span className="inline-teal inline-bold">{playData.bracket_points} pts</span>
+                                </p>
+                            )}
+                        </div>
+                        <BracketStage
+                            data={playData.bracket_predictions}
+                            isOwner={isOwner}
+                            isEditable={isOwner && isBracketOpen}
+                            isStageClosed={isBracketClosed}
+                            activeEditId={activeEditId}
+                            onEditingChange={handleEditingChange}
+                        />
+                        <div className={`last-updated${isBracketEditing ? ' is-dimmed' : ''}`}>
+                            <p className="last-updated">Updated: {formatDate(playData.updated_at)}</p>
+                        </div>
                     </div>
-                </div>
-
-                <BracketStagePredictions
-                    data={playData.bracket_predictions}
-                    isOwner={isOwner}
-                />
-
-                <div className="last-updated">
-                    <p className="last-updated"><span className="inline-teal inline-bold">Updated:</span> {formatDate(playData.updated_at)}</p>
-                </div>
+                ) : (
+                    <></>
+                )}
 
             </section>
 

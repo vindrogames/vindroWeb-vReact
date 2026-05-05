@@ -34,6 +34,7 @@ const Brackets = () => {
                             route='/brackets/world-cup-2026'
                         />
 
+
                     </div>
                 </section>
             </main>

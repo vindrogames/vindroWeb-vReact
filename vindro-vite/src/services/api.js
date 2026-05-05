@@ -62,7 +62,11 @@ export async function apiRequest(endpoint, options = {}) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || `Request failed with status ${response.status}`);
+            // Backend may return { error: '...' } (string) or { errors: { field: '...' } } (object)
+            const message = data.error
+                || (data.errors && Object.values(data.errors)[0])
+                || `Request failed with status ${response.status}`;
+            throw new Error(message);
         }
 
         return data;

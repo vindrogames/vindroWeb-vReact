@@ -2,12 +2,13 @@
 
 @media(max-width: 960px) {
 
-    main.bracket-tournament-play {
-        .bracket-tournament-play-container {
+    main.bracket-tournament-play-pool {
+
+        section.play-prediction-container {
             width: 100%;
             padding: 42px 0;
 
-            .groups-stage {
+            .prediction-display-wrapper {
 
                 .gallery-container {
 
@@ -39,23 +40,11 @@
 
 @media(max-width: 678px) {
 
-    main.bracket-tournament-play {
+    main.bracket-tournament-play-pool {
 
-        .bracket-tournament-play-container {
-            width: 100%;
-            padding: 42px 0;
+        section.play-prediction-container {
 
-            .header-container {
-
-                .text-container {
-
-                    h1 {
-                        font-size: 2.8rem;
-                    }
-                }
-            }
-
-            .groups-stage {
+            .prediction-display-wrapper {
 
                 .stage-header {
                     margin-bottom: 0;
@@ -63,7 +52,6 @@
                         font-size: 2.8rem;
                     }
                 }
-
 
                 .gallery-container {
                     padding: 36px;
@@ -79,44 +67,12 @@
 
 @media(max-width: 450px) {
 
-    main.bracket-tournament-play {
+    main.bracket-tournament-play-pool {
 
-        padding: 90px 21px;
-
-        .bracket-tournament-play-container {
+        section.play-prediction-container {
             padding: 21px 0;
 
-            .header-container {
-
-                .text-container {
-
-                    h1 {
-                        font-size: 2.4rem;
-                    }
-
-                    .play-specs {
-                        gap: 7px;
-
-                        h2 {
-                            font-size: 1.8rem;
-                        }
-
-                        img {
-                            height: 28px;
-                            width: 28px;
-                        }
-                    }
-                }
-
-                .go-back-button-container {
-
-                    button {
-                        padding: 3px 14px;
-                    }
-                }
-            }
-
-            .groups-stage {
+            .prediction-display-wrapper {
 
                 .stage-header {
                     margin-bottom: 0;
@@ -198,6 +154,7 @@
                 .go-back-button-container {
 
                     button {
+                        width: 14px;
                     }
                 }
             }

@@ -28,6 +28,7 @@ main#user-profile {
         .user-stat-container {
             width: 100%;
             padding: 0px 21px;
+
             h2,
             h3 {
                 font-family: $vindro-Montserrat;
@@ -61,11 +62,12 @@ main#user-profile {
                         font-weight: 400;
                     }
                 }
-                
+
                 .user-icon {
                     position: relative;
                     flex-grow: 1;
                     display: flex;
+
                     img {
                         width: 256px;
                         height: 256px;
@@ -82,6 +84,7 @@ main#user-profile {
                         cursor: pointer;
                         transition: all 0.3s ease;
                         align-self: flex-end;
+
                         &:hover,
                         &.input-active {
                             background-color: $real-yellow;
@@ -137,53 +140,93 @@ main#user-profile {
             .editable-input-wrapper {
                 position: relative;
                 display: flex;
-                align-items: center;
-                gap: 10px;
+                flex-direction: column;
+                gap: 3px;
 
                 // 2. Bring the active input above the overlay
                 &.focused-mode {
                     z-index: 101;
                 }
 
-                input {
-                    width: 240px;
-                    background-color: $vindro-gray;
-                    border-radius: 3px;
-                    color: white;
-                    font-size: 1.6rem;
-                    font-weight: 500;
-                    padding: 7px;
-                    outline: none;
+                .input-button-container {
+                    display: flex;
+                    gap: 14px;
 
-                    &.input-frozen {
-                        border: 1px solid transparent;
-                        // THIS is what stops users from clicking it manually
-                        pointer-events: none;
-                        border-radius: 3px;
+                    .input-container {
+                        position: relative;
+                        display: inline-block;
+
+                        input {
+                            width: 240px;
+                            background-color: $vindro-gray;
+                            border-radius: 3px;
+                            color: white;
+                            font-size: 1.6rem;
+                            font-weight: 500;
+                            padding: 7px;
+                            outline: none;
+
+                            &.input-frozen {
+                                border: 1px solid transparent;
+                                // THIS is what stops users from clicking it manually
+                                pointer-events: none;
+                                border-radius: 3px;
+                            }
+
+                            &.input-active {
+                                border: 1px solid $real-yellow;
+                                background-color: $vindro-tan;
+                                color: $vindro-black;
+                                pointer-events: auto;
+                                padding-right: 38px; // room for char counter
+                            }
+                        }
+
+                        .char-count {
+                            position: absolute;
+                            right: 7px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            font-size: 1.0rem;
+                            color: rgba(0, 0, 0, 0.35);
+                            pointer-events: none;
+                            line-height: 1;
+
+                            &.at-limit {
+                                color: $error-red;
+                            }
+                        }
                     }
 
-                    &.input-active {
-                        border: 1px solid $real-yellow;
-                        background-color: $vindro-tan;
-                        color: $vindro-black;
-                        pointer-events: auto; // Re-enable clicking so they can move the cursor
+                    button.btn-edit {
+                        width: 63px;
+                        height: 28px;
+                        padding: 3px 14px;
+                        border-radius: 3px;
+                        font-size: 1.4rem;
+                        font-weight: 500;
+                        font-family: $vindro-Montserrat;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        align-self: flex-end;
+
+                        &:hover,
+                        &.input-active {
+                            background-color: $real-yellow;
+                        }
                     }
                 }
 
-                button.btn-edit {
-                    width: 63px;
-                    height: 28px;
-                    padding: 3px 14px;
-                    border-radius: 3px;
-                    font-size: 1.4rem;
-                    font-weight: 500;
-                    font-family: $vindro-Montserrat;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    align-self: flex-end;
-                    &:hover,
-                    &.input-active {
-                        background-color: $real-yellow;
+                .profile-error-container {
+                    padding: 7px;
+
+                    .profile-error {
+                        font-size: 1.2rem;
+                        color: $error-red;
+                        opacity: 0;
+                        transition: opacity 0.18s ease;
+
+                        &.visible { opacity: 1; }
                     }
                 }
             }

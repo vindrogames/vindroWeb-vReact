@@ -15,10 +15,11 @@ const MadridCalculator      = lazy(() => import('./features/madrid-calculator/Ma
 const Autominer             = lazy(() => import('./features/autominer/AutoMiner'));
 const TestApi               = lazy(() => import('./pages/TestApi'));
 const UserProfile           = lazy(() => import('./pages/UserProfile'));
-const WorldCupTournament_2026 = lazy(() => import('./features/brackets/tournaments/world-cup-2026/WorldCupTournament_2026'));
+const TournamentPage        = lazy(() => import('./features/brackets/pages/TournamentPage'));
 const PlayPage              = lazy(() => import('./features/brackets/pages/PlayPage'));
 const PoolPage              = lazy(() => import('./features/brackets/pages/PoolPage'));
 const NotFoundPage          = lazy(() => import('./pages/NotFoundPage'));
+const Logout                = lazy(() => import('./pages/Logout'));
 
 export const routes = createBrowserRouter([
     {
@@ -36,11 +37,12 @@ export const routes = createBrowserRouter([
             { path: 'games/madrid-calculator', element: <MadridCalculator /> },
             { path: 'test-api', element: <TestApi /> },
             { path: 'games/auto-miner', element: <Autominer /> },
-            { path: 'brackets/world-cup-2026', element: <WorldCupTournament_2026 /> },
-            { path: 'brackets/:tournament/:userId/:playName', element: <PlayPage />},
+            { path: 'brackets/:tournament', element: <TournamentPage /> },
+            { path: 'brackets/:tournament/:userId/:playName', element: <PlayPage /> },
             { path: 'brackets/:tournament/pool/:poolName', element: <PoolPage /> },
             { path: 'user/:userId', element: <UserProfile /> },
             { path: '*', element: <NotFoundPage /> },
+            { path: 'logout', element: <Logout />}
         ],
     },
 ]);

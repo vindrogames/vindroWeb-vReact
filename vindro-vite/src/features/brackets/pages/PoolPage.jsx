@@ -199,6 +199,13 @@ const PoolPage = () => {
     const showOverlay = !loading && (!user || (!isMember && !isOwner));
     const prizeTotal = (leaderboard.length * parseFloat(poolData?.cost_per_play || 0)).toFixed(2);
 
+    const cleanTournamentName = (tournament) => {
+        return tournament
+            .split("-")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+    };
+
     // --- Early returns ---
     if (user && !loading && !poolData) {
         return (
@@ -222,9 +229,9 @@ const PoolPage = () => {
             <section className="play-pool-intro hero-half bg-black">
                 <div className="play-pool-intro-wrapper">
                     <div className="text-container">
-                        <h1 className="profile-intro">{poolData?.tournament_name || tournament}</h1>
+                        <h1 className="profile-intro">{poolData?.tournament_name || cleanTournamentName(tournament)}</h1>
                         <div className="play-specs">
-                            <h2>{poolData?.name || '...'}</h2>
+                            <h2>{poolData?.name || ''}</h2>
                         </div>
                     </div>
                     <div className="go-back-button-container">
@@ -301,7 +308,7 @@ const PoolPage = () => {
                     <div className="auth-prompt-overlay">
                         {!user ? (
                             <div className="auth-prompt-message">
-                                <h5>To view this pool you must be logged in.</h5>
+                                <h5>This is a Private Pool. Start by logging in.</h5>
                                 <div className="prompt-links">
                                     <button className="btn btn-tan" onClick={() => setShowAuthModal(true)}>Log In</button>
                                 </div>
