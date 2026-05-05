@@ -21,7 +21,7 @@ export default function BracketHelmet() {
             <meta property="og:image:type" content="image/png" />
 
             <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico" />
-            <title>Vindrogames | Contact</title>
+            <title>Vindrogames | Brackets</title>
         </Helmet>
     )
 };

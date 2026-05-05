@@ -5,107 +5,120 @@ main#pool-page {
 
     .pool-main-content {
         background-color: $vindro-gray;
-        min-height: 50vh;
         width: 100%;
         display: flex;
         flex-direction: column;
         padding: 42px 7%;
-        gap: 42px;
         position: relative;
-    }
 
-    .pool-specs-share {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        align-items: center;
-        padding-bottom: 28px;
-        border-bottom: 1px solid $vindro-teal;
-    }
-
-    .pool-specs {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-
-        h3 {
-            font-size: 2.1rem;
-            font-weight: 400;
-        }
-
-        .pool-creator-info {
-            display: flex;
+        .pool-specs-share {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             align-items: center;
-            gap: 10px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid $vindro-teal;
 
-            button.avatar-wrapper {
-                background: transparent;
-                border: none;
-                cursor: pointer;
-                padding: 0;
-                transition: transform 0.2s;
+            .pool-specs {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
 
-                &:hover {
-                    transform: scale(1.1);
+                h3 {
+                    font-size: 2.1rem;
+                    font-weight: 400;
                 }
 
-                img.player-avatar {
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 50%;
-                    object-fit: cover;
+                .pool-creator-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+
+                    button.avatar-link-btn {
+                        background: transparent;
+                        border: none;
+                        cursor: pointer;
+                        padding: 3px;
+                        transition: transform 0.2s;
+
+                        &:hover {
+                            transform: scale(1.1);
+                        }
+
+                        img {
+                            width: 28px;
+                            height: 28px;
+                            object-fit: cover;
+                        }
+                    }
+                }
+
+                .pool-join-code,
+                .pool-member-count,
+                .pool-prize {
+                    font-size: 1.6rem;
+                    font-weight: 300;
+                }
+
+                .pool-prize-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+
+                    .prize-eye-btn {
+                        background: transparent;
+                        border: none;
+                        cursor: pointer;
+                        color: $vindro-teal;
+                        font-size: 1.6rem;
+                        display: flex;
+                        align-items: center;
+                        padding: 0;
+                        transition: opacity 0.2s;
+
+                        &:hover {
+                            opacity: 0.7;
+                        }
+                    }
+                }
+            }
+
+            .pool-actions {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                justify-content: flex-start;
+                gap: 14px;
+
+                button:disabled {
+                    opacity: 0.45;
+                    cursor: not-allowed;
                 }
             }
         }
-
-        .pool-join-code,
-        .pool-prize {
-            font-size: 1.6rem;
-            font-weight: 300;
-        }
-
-        .pool-prize-breakdown {
-            font-size: 1.4rem;
-            opacity: 0.55;
-        }
     }
 
-    .pool-share {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
-
-    .pool-leaderboard {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
+    .leaderboard-display-container {
 
         .leaderboard-header {
             position: relative;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
 
             h3 {
-                font-size: 2.4rem;
+                font-size: 4.2rem;
             }
 
-            .exit-edit-container {
+            .edit-pool-btn {
                 position: absolute;
                 right: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                display: flex;
-                gap: 7px;
+                bottom: 0;
             }
         }
     }
 
     .auth-prompt-overlay {
         position: absolute;
+        width: 100vw;
+        height: 100vh;
         top: 0;
         left: 0;
         right: 0;
@@ -130,7 +143,8 @@ main#pool-page {
                 font-weight: 500;
             }
 
-            h5 {
+
+            h5.last-line {
                 margin-bottom: 21px;
             }
 

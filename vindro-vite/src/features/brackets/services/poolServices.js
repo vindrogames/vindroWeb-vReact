@@ -38,9 +38,15 @@ const poolServices = {
         });
     },
 
-    getPoolDetail: async (poolId) => {
-        return await apiRequest(`/tournament/pools/${poolId}/`, { method: 'GET' });
+    // OPTION 2: fetch by pool name (shareable URL, auth optional)
+    getPoolDetailByName: async (poolName) => {
+        return await apiRequest(`/tournament/pools/name/${encodeURIComponent(poolName)}/`, { method: 'GET' });
     },
+
+    // [UUID detail — kept for reference, superseded by getPoolDetailByName]
+    // getPoolDetail: async (poolId) => {
+    //     return await apiRequest(`/tournament/pools/${poolId}/`, { method: 'GET' });
+    // },
 
     leavePool: async (poolId) => {
         return await apiRequest(`/tournament/pools/${poolId}/leave/`, { method: 'DELETE' });

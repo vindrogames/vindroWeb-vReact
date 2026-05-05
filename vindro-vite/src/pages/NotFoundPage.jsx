@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import NotFoundHelmet from '../page-helmets/NotFoundHelmet';
 
 const NotFoundPage = () => {
 
@@ -7,6 +8,7 @@ const NotFoundPage = () => {
 
     return (
         <main id="not-found-page" className="ux-confirm-hero bg-black">
+            <NotFoundHelmet />
             <section className="hero-full">
                 <div className="text-container">
                     <h1>vindro<span className="inline-teal inline-bold">404</span></h1>

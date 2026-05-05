@@ -18,12 +18,36 @@ main#user-profile {
         align-items: flex-start;
         gap: 42px;
 
-        h1 {
+        .profile-header {
+            position: relative;
             width: 100%;
-            font-size: 4.2rem;
-            padding-bottom: 14px;
-            border-bottom: 1px solid $vindro-teal;
+
+            h1 {
+                width: 100%;
+                font-size: 4.2rem;
+                padding-bottom: 14px;
+                border-bottom: 1px solid $vindro-teal;
+            }
+
+            .welcome-text {
+                margin-top: 14px;
+
+                h2 {
+                    margin-top: 7px;
+                    font-size: 1.6rem;
+                    font-family: $vindro-openSans;
+                    font-weight: 300;
+                }
+            }
+
+            button {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
         }
+
 
         .user-stat-container {
             width: 100%;
@@ -88,6 +112,12 @@ main#user-profile {
                         &:hover,
                         &.input-active {
                             background-color: $real-yellow;
+                        }
+
+                        @media (hover: none) and (pointer: coarse) {
+                            button.btn-edit:hover {
+                                background-color: $vindro-tan;
+                            }
                         }
                     }
 
@@ -214,6 +244,12 @@ main#user-profile {
                         &.input-active {
                             background-color: $real-yellow;
                         }
+
+                        @media (hover: none) and (pointer: coarse) {
+                            button.btn-edit:hover {
+                                background-color: $vindro-tan;
+                            }
+                        }
                     }
                 }
 
@@ -226,7 +262,9 @@ main#user-profile {
                         opacity: 0;
                         transition: opacity 0.18s ease;
 
-                        &.visible { opacity: 1; }
+                        &.visible {
+                            opacity: 1;
+                        }
                     }
                 }
             }
@@ -236,7 +274,7 @@ main#user-profile {
                 border: 1px solid $vindro-black;
                 border-radius: 7px;
                 background-color: $vindro-gray;
-                width: 360px;
+                max-width: 360px;
 
                 table {
                     width: 100%;

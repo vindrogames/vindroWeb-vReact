@@ -70,7 +70,7 @@ class TournamentPlay(models.Model):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    name = models.CharField(max_length=42)
+    name = models.CharField(max_length=28)
 
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='plays')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tournament_plays')
@@ -103,7 +103,7 @@ class TournamentPlay(models.Model):
 class TournamentPool(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='pools')
-    name = models.CharField(max_length=42)
+    name = models.CharField(max_length=28, unique=True)
 
     description = models.TextField(blank=True)
     created_by = models.ForeignKey(

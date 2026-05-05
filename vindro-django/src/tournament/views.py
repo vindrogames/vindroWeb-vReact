@@ -151,8 +151,8 @@ def create_new_play(request, tournament_id):
 
         if not name:
             return JsonResponse({'success': False, 'error': 'Name is required'}, status=400)
-        if len(name) > 42:
-            return JsonResponse({'success': False, 'error': 'Play name too long (max 42 characters)'}, status=400)
+        if len(name) > 28:
+            return JsonResponse({'success': False, 'error': 'Play name too long (max 28 characters)'}, status=400)
 
         # 3. Create record using the authenticated user from the session
         new_play = TournamentPlay.objects.create(
@@ -181,14 +181,29 @@ def create_new_play(request, tournament_id):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
-# 1. Public/Detail View
+# OPTION 2: Public detail view — fetch by tournament slug + user ID + play name (shareable URL)
 @csrf_exempt
 @require_http_methods(["GET"])
-def tournament_play_detail(request, play_id):
-    """Publicly view any bracket by ID"""
-    play, err = _get_or_404(TournamentPlay, id=play_id)
-    if err: return err
+def tournament_play_detail_by_name(request, tournament_slug, user_id, play_name):
+    """GET /api/tournament/plays/<tournament_slug>/<user_id>/<play_name>/"""
+    play = TournamentPlay.objects.filter(
+        tournament__slug=tournament_slug,
+        user__id=user_id,
+        name__iexact=play_name,
+    ).first()
+    if not play:
+        return JsonResponse({'success': False, 'error': 'Play not found'}, status=404)
     return JsonResponse({'success': True, 'data': serialize_play(play)})
+
+
+# [UUID detail — kept for reference, superseded by tournament_play_detail_by_name]
+# @csrf_exempt
+# @require_http_methods(["GET"])
+# def tournament_play_detail(request, play_id):
+#     """Publicly view any bracket by ID"""
+#     play, err = _get_or_404(TournamentPlay, id=play_id)
+#     if err: return err
+#     return JsonResponse({'success': True, 'data': serialize_play(play)})
 
 
 # 2. Reorder Groups (Owner Only)
@@ -322,7 +337,9 @@ def pool_join(request, tournament_id):
                 )
 
         return JsonResponse({
-            'success': True, 
+            'success': True,
+            'pool_name': pool.name,
+            'pool_is_public': pool.is_public,
             'added_count': added_count,
             'results': results_map,
             'message': f'Processed {len(valid_plays)} plays.'
@@ -368,8 +385,8 @@ def pool_create(request, tournament_id):
     name = body.get('name', '').strip()
     if not name:
         return JsonResponse({'success': False, 'error': 'name is required'}, status=400)
-    if len(name) > 42:
-        return JsonResponse({'success': False, 'error': 'Pool name too long (max 42 characters)'}, status=400)
+    if len(name) > 28:
+        return JsonResponse({'success': False, 'error': 'Pool name too long (max 28 characters)'}, status=400)
 
     is_money_pool = bool(body.get('is_money_pool', False))
     allow_multiple_plays_per_user = bool(body.get('allow_multiple_plays_per_user', True))
@@ -384,34 +401,32 @@ def pool_create(request, tournament_id):
             return JsonResponse({'success': False, 'error': 'Cost per play must be greater than 0.'}, status=400)
 
     plain_code = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
-    pool = TournamentPool.objects.create(
-        tournament=tournament,
-        name=name,
-        description=body.get('description', '').strip(),
-        created_by=request.user,
-        is_public=False,
-        code_hash=_hash_code(plain_code),
-        join_code=plain_code,
-        is_money_pool=is_money_pool,
-        cost_per_play=cost_per_play,
-        allow_multiple_plays_per_user=allow_multiple_plays_per_user,
-    )
+    try:
+        pool = TournamentPool.objects.create(
+            tournament=tournament,
+            name=name,
+            description=body.get('description', '').strip(),
+            created_by=request.user,
+            is_public=False,
+            code_hash=_hash_code(plain_code),
+            join_code=plain_code,
+            is_money_pool=is_money_pool,
+            cost_per_play=cost_per_play,
+            allow_multiple_plays_per_user=allow_multiple_plays_per_user,
+        )
+    except IntegrityError:
+        return JsonResponse({'success': False, 'error': f'A pool named "{name}" already exists.'}, status=400)
 
     return JsonResponse({'success': True, 'data': serialize_pool(pool)}, status=201)
 
 
+# OPTION 2: fetch by pool name — auth optional, leaderboard only revealed to members/owners
 @require_http_methods(["GET"])
-@login_required_api
-def pool_detail(request, pool_id):
-    """
-    GET /api/tournament/pools/<pool_id>/
-    Auth required. Frontend only calls this when user is logged in —
-    same pattern as user_tournament_plays. Overlay is handled by frontend.
-    Returns pool info, ordered leaderboard, and caller's membership context.
-    """
-    pool, err = _get_or_404(TournamentPool, id=pool_id)
-    if err:
-        return err
+def pool_detail_by_name(request, pool_name):
+    """GET /api/tournament/pools/name/<pool_name>/"""
+    pool = TournamentPool.objects.filter(name__iexact=pool_name).first()
+    if not pool:
+        return JsonResponse({'success': False, 'error': 'Pool not found'}, status=404)
 
     memberships = (
         PoolMembership.objects
@@ -420,18 +435,48 @@ def pool_detail(request, pool_id):
         .order_by('-play__bracket_points', '-play__group_points', 'joined_at')
     )
 
-    my_memberships = memberships.filter(play__user=request.user)
+    is_owner = False
+    is_member = False
+    my_plays = []
+    leaderboard_data = []
+
+    if request.user.is_authenticated:
+        my_memberships = memberships.filter(play__user=request.user)
+        is_owner = pool.created_by_id == request.user.id
+        is_member = my_memberships.exists()
+        my_plays = [serialize_pool_submission(m) for m in my_memberships]
+        if is_owner or is_member:
+            leaderboard_data = [serialize_leaderboard_entry(m) for m in memberships]
 
     return JsonResponse({
         'success': True,
         'data': {
             'pool': serialize_pool(pool),
-            'leaderboard': [serialize_leaderboard_entry(m) for m in memberships],
-            'is_owner': pool.created_by == request.user,
-            'is_member': my_memberships.exists(),
-            'my_plays': [serialize_pool_submission(m) for m in my_memberships],
+            'leaderboard': leaderboard_data,
+            'is_owner': is_owner,
+            'is_member': is_member,
+            'my_plays': my_plays,
         },
     })
+
+
+# [UUID detail — kept for reference, superseded by pool_detail_by_name]
+# @require_http_methods(["GET"])
+# @login_required_api
+# def pool_detail(request, pool_id):
+#     pool, err = _get_or_404(TournamentPool, id=pool_id)
+#     if err: return err
+#     memberships = (PoolMembership.objects.filter(pool=pool)
+#         .select_related('play', 'play__user')
+#         .order_by('-play__bracket_points', '-play__group_points', 'joined_at'))
+#     my_memberships = memberships.filter(play__user=request.user)
+#     return JsonResponse({'success': True, 'data': {
+#         'pool': serialize_pool(pool),
+#         'leaderboard': [serialize_leaderboard_entry(m) for m in memberships],
+#         'is_owner': pool.created_by == request.user,
+#         'is_member': my_memberships.exists(),
+#         'my_plays': [serialize_pool_submission(m) for m in my_memberships],
+#     }})
 
 
 @csrf_exempt

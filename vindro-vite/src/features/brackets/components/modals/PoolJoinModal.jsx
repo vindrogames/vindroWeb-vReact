@@ -7,6 +7,7 @@ const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, 
 
     const [submissionFlow, setSubmissionFlow] = useState({ isOpen: false, type: null });
     const [responseFlow, setResponseFlow] = useState({ isOpen: false, results: [] });
+    const [joinedPool, setJoinedPool] = useState(null);
 
     useEffect(() => {
         if (isOpen && initialCode) {
@@ -28,13 +29,16 @@ const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, 
                 name: p.name,
                 status: serverResults[String(p.id)] || 'success',
             }));
+        setJoinedPool({ name: responseData.pool_name, is_public: responseData.pool_is_public });
         setSubmissionFlow({ isOpen: false, type: null });
         setResponseFlow({ isOpen: true, results: report });
     };
 
     const handleFinalClose = () => {
+        const pool = joinedPool;
+        setJoinedPool(null);
         setResponseFlow({ isOpen: false, results: [] });
-        if (onSuccess) onSuccess();
+        if (onSuccess) onSuccess(pool);
         onCancel();
     };
 

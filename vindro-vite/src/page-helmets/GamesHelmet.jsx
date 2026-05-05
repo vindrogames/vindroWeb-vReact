@@ -20,7 +20,7 @@ export default function GamesHelmet() {
             <meta property="og:image:type" content="image/png" />
 
             <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico" />
-            <title>Vindrogames | Learning and Programming</title>
+            <title>Vindrogames | Games & Apps</title>
         </Helmet>
     )
 };

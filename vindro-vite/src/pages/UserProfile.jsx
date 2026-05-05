@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import DataTable from '../components/pages/users/DataTable';
 import SmartLink from '../components/ui/SmartLink';
 import { useAuth } from '../contexts/auth/AuthContext';
 import { authAPI } from '../contexts/auth/services/authService';
+import UserProfileHelmet from '../page-helmets/UserProfileHelmet';
 
 function getIconName(avatarUrl) {
     const match = avatarUrl?.match(/profile_icons\/(.+)\.webp/);
@@ -13,6 +14,7 @@ function getIconName(avatarUrl) {
 const UserProfile = () => {
 
     const { userId } = useParams();
+    const navigate = useNavigate();
     const { user, updateUser } = useAuth();
 
     const [profileUser, setProfileUser] = useState(null);
@@ -74,10 +76,6 @@ const UserProfile = () => {
         }
     }, [user?.username, user?.avatar]);
 
-    // Keep refs current every render so stale-closure effects always call the latest handler
-    saveUsernameRef.current = handleEditUserNameToggle;
-    saveIconRef.current = handleEditUserIconToggle;
-
     useEffect(() => {
         if (isEditingUserName && inputRef.current) {
             inputRef.current.focus();
@@ -116,7 +114,7 @@ const UserProfile = () => {
             setSelectedIcon(originalIcon);
             setIsEditingUserIcon(false);
         };
-        const onKey = (e) => { 
+        const onKey = (e) => {
             if (e.key === 'Escape') cancel();
             if (e.key === 'Enter') saveIconRef.current();
         };
@@ -161,6 +159,10 @@ const UserProfile = () => {
         setIsEditingUserIcon(!isEditingUserIcon);
     };
 
+    // Keep refs current every render so stale-closure effects always call the latest handler
+    saveUsernameRef.current = handleEditUserNameToggle;
+    saveIconRef.current = handleEditUserIconToggle;
+
     const providerMap = {
         'google': 'Google',
         'github': 'Git Hub',
@@ -201,6 +203,7 @@ const UserProfile = () => {
     if (profileLoading) {
         return (
             <main id="user-profile">
+                <UserProfileHelmet />
                 <div className="profile-container">
                     <p>Loading...</p>
                 </div>
@@ -211,6 +214,7 @@ const UserProfile = () => {
     if (profileNotFound) {
         return (
             <main id="user-profile">
+                <UserProfileHelmet />
                 <div className="profile-container">
                     <p>User not found.</p>
                 </div>
@@ -218,19 +222,44 @@ const UserProfile = () => {
         );
     }
 
-    const { login_count = 0, provider = 'local' } = user || {};
+    const handleWelcomeReturn = () => {
+        const origin = sessionStorage.getItem('login_origin');
+        sessionStorage.removeItem('login_origin');
+        navigate(origin || '/');
+    };
+
+    let { login_count = 0, provider = 'local' } = user || {};
+    login_count = 1;
+    console.log(login_count);
 
     return (
         <>
+            <UserProfileHelmet username={profileUser?.username} />
             <main id="user-profile">
 
                 <div className="profile-container">
 
-                    {isOwner ? (
-                        <h1 className="profile-intro">Hello Friend!</h1>
-                    ) : (
-                        <h1 className="profile-intro">Visiting vindroUser <span className='inline-green inline-bold'>{profileUser.id}</span></h1>
-                    )}
+                    <div className="profile-header">
+                        {!isOwner && (
+                            <h1 className="profile-intro">Visiting vindroUser nº <span className='inline-green inline-bold'>{profileUser.id}</span></h1>
+                        )}
+
+                        {isOwner && login_count == 1 && (
+                            <>
+                                <h1 className="profile-intro">Welcome vindroUser nº <span className='inline-green inline-bold'>{profileUser.id}</span>!</h1>
+                                <div className="welcome-text">
+                                    <h2>You can edit your userName and profile icon anytime you like!</h2>
+                                    <h2>For the meantime, we have assigned a randon generated userName and the simple-teal icon.</h2>
+                                </div>
+
+                                <button id="return-to-prev-page" className="btn btn-tan" onClick={handleWelcomeReturn}>Where you were</button>
+                            </>
+                        )}
+
+                        {isOwner && login_count > 1 && (
+                            <h1 className="profile-intro">Hello Friend!</h1>
+                        )}
+                    </div>
 
                     <section id="user-name-icon" className={`user-stat-container ${isEditingUserName ? 'focused-mode' : ''}`}>
 
@@ -323,14 +352,14 @@ const UserProfile = () => {
 
                     </section>
 
-                    <section id="user-top-scores" className="user-stat-container">
+                    <section id="user-top-scores" className="user-stat-container scores-container">
                         <h3>top<span className='inline-teal inline-bold'>Scores</span></h3>
                         <div className="table-container">
                             <DataTable data={scoreData} columns={scoreCols} />
                         </div>
                     </section>
 
-                    <section id="user-brackets" className="user-stat-container">
+                    <section id="user-brackets" className="user-stat-container scores-container">
                         <h3>brackets</h3>
                         <div className="table-container">
                             <DataTable data={bracketSummary} columns={bracketCols} tableType="brackets-table" />

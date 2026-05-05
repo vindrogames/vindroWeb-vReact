@@ -46,8 +46,8 @@ const usePlays = (tournamentId, user, tournamentSlug) => {
             setError("Please provide a name for your play.");
             return null;
         }
-        if (trimmedName.length > 42) {
-            setError("Play name cannot exceed 42 characters.");
+        if (trimmedName.length > 28) {
+            setError("Play name cannot exceed 28 characters.");
             return null;
         }
 

@@ -38,7 +38,7 @@ export const routes = createBrowserRouter([
             { path: 'test-api', element: <TestApi /> },
             { path: 'games/auto-miner', element: <Autominer /> },
             { path: 'brackets/:tournament', element: <TournamentPage /> },
-            { path: 'brackets/:tournament/:userId/:playName', element: <PlayPage /> },
+            { path: 'brackets/:tournament/play/:userId/:playName', element: <PlayPage /> },
             { path: 'brackets/:tournament/pool/:poolName', element: <PoolPage /> },
             { path: 'user/:userId', element: <UserProfile /> },
             { path: '*', element: <NotFoundPage /> },

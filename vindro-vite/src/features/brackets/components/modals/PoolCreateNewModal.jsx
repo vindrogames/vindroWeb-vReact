@@ -51,10 +51,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
             if (result.success) {
                 await hideLoader();
                 if (onCreated) onCreated(result.data);
-                const poolNameSlug = result.data.name.trim().toLowerCase().replace(/\s+/g, '-');
-                navigate(`/brackets/${tournamentSlug}/pool/${poolNameSlug}`, {
-                    state: { poolId: result.data.id }
-                });
+                navigate(`/brackets/${tournamentSlug}/pool/${encodeURIComponent(result.data.name)}`);
             } else {
                 await hideLoader();
                 setError(result.error || 'Failed to create pool.');
@@ -82,7 +79,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                         type="text"
                         className={`play-name-input ${error && !poolName.trim() ? 'error' : ''}`}
                         placeholder="Pool name"
-                        maxLength={42}
+                        maxLength={28}
                         value={poolName}
                         onChange={(e) => {
                             setPoolName(e.target.value);
@@ -94,7 +91,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                     />
 
                     <div className="char-count-container">
-                        <span className="character-count">{poolName.length} / 42</span>
+                        <span className="character-count">{poolName.length} / 28</span>
                     </div>
 
                     <div className="permit-multi-play">
@@ -143,7 +140,9 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                         </div>
                     </div>
 
-                    {error && <p className="error-message">{error}</p>}
+                    <p className={`error-message${error ? ' visible' : ''}`}>
+                        {error || ' '}
+                    </p>
 
                     <div className="submit-button-container">
                         <button

@@ -206,8 +206,12 @@
 
     .error-message {
         color: $error-red;
-        font-size: 0.8rem;
-        margin-top: 0.5rem;
+        font-size: 1.2rem;
+        min-height: 1.6rem;
+        opacity: 0;
+        transition: opacity 0.18s ease;
+
+        &.visible { opacity: 1; }
     }
 
     .submit-button-container {

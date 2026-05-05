@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import playServices from '../services/playServices';
 import { useAuth } from '../../../contexts/auth/AuthContext';
 import { useLoading } from '../../../contexts/LoadingContext';
 import formatDate from '../../../utils/dateFormatter';
 import ErrorDisplayModal from '../../../components/ui/ErrorDisplayModal';
+import PlayPageHelmet from '../../../page-helmets/PlayPageHelmet';
 import WorldCupGroupStage from '../tournaments/world-cup-2026/stages/WorldCupGroupStage';
 import WorldCupBracketStage from '../tournaments/world-cup-2026/stages/WorldCupBracketStage';
 
@@ -54,11 +55,9 @@ const startCountdown = (targetDateString, setTime) => {
 
 const PlayPage = () => {
 
-    const { tournament } = useParams();
+    const { tournament, userId, playName } = useParams();
     const navigate = useNavigate();
 
-    const location = useLocation();
-    const [searchParams] = useSearchParams();
     const { user } = useAuth();
     const { showLoader, hideLoader } = useLoading();
     const [playData, setPlayData] = useState(null);
@@ -69,8 +68,6 @@ const PlayPage = () => {
 
     // The "Master Switch": holds the ID of whatever is being edited
     const [activeEditId, setActiveEditId] = useState(null);
-
-    const playId = location.state?.playId || searchParams.get('pid');
 
     // ── STAGE GATES ─────────────────────────────────────────────────────────────
     // Three scenarios per stage: not_ready | open | closed
@@ -91,18 +88,17 @@ const PlayPage = () => {
 
     useEffect(() => {
         const fetchPlay = async () => {
-            if (!playId) {
-                setLoading(false);
-                return;
-            }
             try {
                 setLoading(true);
-                const result = await playServices.getPlayById(playId);
+                // OPTION 2: fetch by tournament slug + user ID + play name (shareable URL)
+                const result = await playServices.getPlayByUserAndName(tournament, userId, playName);
                 if (result && result.success) {
                     setPlayData(result.data);
                 } else {
-                    setPlayData(result);
+                    setPlayData(null);
                 }
+                // [UUID fetch — kept for reference, superseded by getPlayByUserAndName]
+                // const result = await playServices.getPlayById(playId);
             } catch (error) {
                 setErrorCode(toErrorCode(error));
             } finally {
@@ -110,7 +106,7 @@ const PlayPage = () => {
             }
         };
         fetchPlay();
-    }, [playId]);
+    }, [tournament, userId, playName]);
 
     // Group stage countdown — always running so the "Closed" signal fires automatically
     useEffect(() => {
@@ -143,23 +139,6 @@ const PlayPage = () => {
 
     if (loading) {
         return <div className="bracket-tournament-play page-loading">Loading...</div>;
-    }
-
-    if (!playId) {
-        return (
-            <main className="bracket-tournament-play">
-                <div className="not-found-container">
-                    <h2>direct<span className="inline-teal inline-bold">Link</span></h2>
-                    <div className="subtitle-container">
-                        <p>Direct links to plays aren't supported.</p>
-                        <p>Navigate to this play from the tournament page.</p>
-                    </div>
-                    <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>
-                        Go to tournament
-                    </button>
-                </div>
-            </main>
-        );
     }
 
     if (!playData) {
@@ -212,7 +191,7 @@ const PlayPage = () => {
     const handleSaveGroup = async () => {
         showLoader();
         try {
-            const result = await playServices.updateGroupPredictions(playId, playData.group_predictions);
+            const result = await playServices.updateGroupPredictions(playData.id, playData.group_predictions);
             if (result?.success) {
                 setPlayData(prev => ({ ...prev, updated_at: result.data.updated_at }));
             }
@@ -231,6 +210,8 @@ const PlayPage = () => {
     return (
         <main id="play-page" className={`bracket-tournament-play-pool ${activeEditId ? 'has-active-focus' : ''}`}>
 
+            <PlayPageHelmet playName={playData.name} tournamentName={playData.tournament_name || tournament} />
+
             <section className={`play-pool-intro hero-half bg-black${activeEditId ? ' is-dimmed' : ''}`}>
                 <div className="play-pool-intro-wrapper">
                     <div className="text-container">
@@ -239,6 +220,7 @@ const PlayPage = () => {
                             {!isOwner ? (
                                 <>
                                     <h2>
+                                        <span className='inline-teal'>play </span>
                                         <span className="inline-bold">{playData.name}</span>
                                         {' '}<span className="inline-teal">by</span>{' '}
                                         <span className="inline-bold">{playData.user_name}</span>

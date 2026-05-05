@@ -13,7 +13,7 @@ export default function ContactHelmet() {
             {/* OG Tags */}
             <meta property="og:type" content="website" />
             <meta property="og:url" content="https://www.vindrogames.com/contact" />
-            <meta property="og:title" content="Vindrogames Blog" />
+            <meta property="og:title" content="Vindrogames | Contact" />
             <meta property="og:description" content="Contact Vindrogames" />
             <meta property="og:image" content="https://www.vindrogames.com/img/vindro-og.png" />
             <meta property="og:image:width" content="850" />

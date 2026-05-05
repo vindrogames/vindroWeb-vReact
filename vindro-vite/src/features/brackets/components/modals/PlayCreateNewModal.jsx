@@ -66,14 +66,14 @@ const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
                             if (localError) setLocalError('');
                         }}
                         onKeyDown={handleKeyDown}
-                        maxLength={42}
+                        maxLength={28}
                         autoFocus
                         disabled={isLoading}
                     />
 
                     <div className="char-count-submit-container">
                         <div className="character-count">
-                            {playName.length} / 42
+                            {playName.length} / 28
                         </div>
 
                         <button
@@ -85,11 +85,9 @@ const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
                         </button>
                     </div>
 
-                    {activeError && (
-                        <p className="error-message" style={{ color: '#ff4d4d', fontSize: '0.85rem', marginTop: '10px' }}>
-                            {activeError}
-                        </p>
-                    )}
+                    <p className={`error-message${activeError ? ' visible' : ''}`}>
+                        {activeError || ' '}
+                    </p>
                 </ShowcaseSection>
 
                 <ShowcaseSection id="prediction-play-text" className="bottom-modal-gallery">

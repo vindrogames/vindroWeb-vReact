@@ -13,6 +13,7 @@ import { useLeaderboards } from '../hooks/useLeaderboard';
 import { usePlays } from '../hooks/usePlays';
 import { usePools } from '../hooks/usePools';
 import { EVENT_MAP } from '../tournaments/eventMap';
+import TournamentHelmet from '../../../page-helmets/TournamentHelmet';
 
 const TournamentPage = () => {
     const { tournament: tournamentSlug } = useParams();
@@ -61,10 +62,7 @@ const TournamentPage = () => {
                 setShowJoinModal(true);
                 return;
             }
-            const slugPlayName = encodeURIComponent(newPlay.name.trim().replace(/\s+/g, '-').toLowerCase());
-            navigate(`/brackets/${tournamentSlug}/${user.id}/${slugPlayName}?pid=${newPlay.id}`, {
-                state: { playId: newPlay.id },
-            });
+            navigate(`/brackets/${tournamentSlug}/play/${user.id}/${encodeURIComponent(newPlay.name)}`);
         }
     };
 
@@ -76,10 +74,7 @@ const TournamentPage = () => {
 
     const handleNavigateToPlay = (play) => {
         if (!user) return;
-        const playSlug = play.name.trim().toLowerCase().replace(/\s+/g, '-');
-        navigate(`/brackets/${tournamentSlug}/${user.id}/${playSlug}?pid=${play.id}`, {
-            state: { playId: play.id },
-        });
+        navigate(`/brackets/${tournamentSlug}/play/${user.id}/${encodeURIComponent(play.name)}`);
     };
 
     const getUpdateStatus = (play) => {
@@ -127,12 +122,11 @@ const TournamentPage = () => {
 
     const handleNavigateToPool = (pool) => {
         if (!user) return;
-        const poolId = pool.pool_id || pool.id;
-        const poolName = (pool.pool_name || pool.name || '').trim().toLowerCase().replace(/\s+/g, '-');
+        const name = pool.pool_name || pool.name || '';
         if (pool.is_public) {
             handleScrollToSection('tournament-leaderboard');
         } else {
-            navigate(`/brackets/${tournamentSlug}/pool/${poolName}?pool_id=${poolId}`, { state: { poolId } });
+            navigate(`/brackets/${tournamentSlug}/pool/${encodeURIComponent(name)}`);
         }
     };
 
@@ -147,14 +141,15 @@ const TournamentPage = () => {
     };
 
     const handleLeaderboardPlayClick = (item) => {
-        const playSlug = item.play_name.trim().toLowerCase().replace(/\s+/g, '-');
-        navigate(`/brackets/${tournamentSlug}/${item.user.id}/${playSlug}?pid=${item.play_id}`, {
-            state: { playId: item.play_id },
-        });
+        navigate(`/brackets/${tournamentSlug}/play/${item.user.id}/${encodeURIComponent(item.play_name)}`);
     };
 
     const leaderboardCols = [
-        { header: 'Pos.', width: '7%', narrow: true, render: (_, idx) => <strong>{idx + 1}</strong> },
+        { 
+            header: 'Pos.',
+            width: '7%',
+            narrow: true,
+            render: (_, idx) => <strong>{idx + 1}</strong> },
         {
             header: 'Player',
             width: '10%',
@@ -219,6 +214,8 @@ const TournamentPage = () => {
     // ── RENDER ────────────────────────────────────────────────────────────────
     return (
         <main id={pageId} className="bracket-tournament-page">
+
+            <TournamentHelmet tournamentName={tournamentData?.name || title.highlight} />
 
             <ShowcaseSection classes="hero-half bg-black brackets-hero">
                 <h1>{title.before}<span className="inline-bold inline-teal">{title.highlight}</span>{title.after}</h1>
@@ -365,11 +362,13 @@ const TournamentPage = () => {
             <EventDescription />
 
             <section id="tournament-leaderboard" className="leaderboard-display-container bg-black hero-half">
+                
                 <div className="leaderboard-header">
                     <div className="title">
                         <h3 className="main-title">vindro<span className="inline-teal inline-bold">Pool</span> Leaderboard</h3>
                     </div>
                 </div>
+
                 <Leaderboard
                     data={publicLeaderboard}
                     columns={leaderboardCols}
@@ -395,7 +394,16 @@ const TournamentPage = () => {
                 plays={userPlays}
                 initialCode={prefilledCode}
                 onCreatePlay={handleCreatePlayFromPool}
-                onSuccess={() => { refreshPools(); refreshPublic(); setShowJoinModal(false); }}
+                onSuccess={(pool) => {
+                    refreshPools();
+                    refreshPublic();
+                    setShowJoinModal(false);
+                    if (pool?.is_public) {
+                        handleScrollToSection('tournament-leaderboard');
+                    } else if (pool?.name) {
+                        navigate(`/brackets/${tournamentSlug}/pool/${encodeURIComponent(pool.name)}`);
+                    }
+                }}
             />
 
             <PoolCreateNewModal

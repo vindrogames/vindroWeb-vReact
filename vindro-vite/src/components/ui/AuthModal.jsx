@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getBackendUrl } from '../../services/api';
 import ShowcaseSection from "./ShowcaseSection";
-import LoginHelmet from '../../page-helmets/LoginHelmet';
 
 /**
  * AuthModal Component
@@ -31,7 +30,12 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
 
     const handleLogin = (provider) => {
         const backendUrl = getBackendUrl();
-        const finalRedirect = redirectTo || window.location.href;
+        // Ensure the redirect URL is always absolute so Django's ?next= points to
+        // the React frontend, not back to Django itself
+        const rawRedirect = redirectTo || window.location.href;
+        const finalRedirect = rawRedirect.startsWith('http')
+            ? rawRedirect
+            : `${window.location.origin}${rawRedirect}`;
 
         let oauthUrl = `${backendUrl}/accounts/${provider}/login/`;
         const encodedRedirect = encodeURIComponent(finalRedirect);
@@ -39,6 +43,8 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
 
         // Flag for checkAuth to show the loader when the user returns from OAuth
         sessionStorage.setItem('oauth_pending', '1');
+        // Record where the user was so the profile page welcome-back button can return them here
+        sessionStorage.setItem('login_origin', window.location.pathname);
         window.location.href = oauthUrl;
     };
 
@@ -52,7 +58,6 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <LoginHelmet />
 
             <div
                 className={`modal-content auth-modal-layout ${isFading ? 'is-fading' : ''}`}

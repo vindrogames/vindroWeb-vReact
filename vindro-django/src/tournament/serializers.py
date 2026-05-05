@@ -112,6 +112,7 @@ def serialize_pool(pool):
         'created_by_id': str(pool.created_by.id) if pool.created_by else None,
         'created_by_avatar': pool.created_by.avatar if pool.created_by else None,
         'join_code': pool.join_code,
+        'allow_multiple_plays_per_user': pool.allow_multiple_plays_per_user,
     }
 
 
