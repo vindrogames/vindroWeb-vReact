@@ -36,11 +36,12 @@ const Leaderboard = ({
                             <tr><td colSpan={columns.length}>Loading...</td></tr>
                         ) : data.length > 0 ? (
                             data.map((item, idx) => (
-                                <tr key={item.id || idx} onClick={() => onRowClick?.(item)} className={onRowClick ? "clickable-row" : ""}>
+                                <tr key={item.id || idx} className={onRowClick ? "clickable-row" : ""}>
                                     {columns.map((col, i) => (
                                         <td
                                             key={i}
                                             className={[col.className, col.truncate ? 'truncate-cell' : ''].filter(Boolean).join(' ')}
+                                            onClick={onRowClick && col.className?.includes('table-link') ? () => onRowClick(item) : undefined}
                                         >
                                             {col.render ? col.render(item, idx) : (item[col.key] ?? '-')}
                                         </td>

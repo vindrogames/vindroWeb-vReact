@@ -123,9 +123,13 @@ class TournamentPool(models.Model):
     # MONEY FEATURES
     is_money_pool = models.BooleanField(default=False)
     cost_per_play = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    currency = models.CharField(max_length=3, default='€', blank=True)
 
     # SETTINGS
     allow_multiple_plays_per_user = models.BooleanField(default=True)
+
+    # PAYOUTS  {position_str: integer_percent}  e.g. {"1": 60, "2": 30, "3": 10}
+    payout_config = models.JSONField(default=dict, blank=True)
 
     # ADDITION: The 'through' relationship for easier querying
     members = models.ManyToManyField(

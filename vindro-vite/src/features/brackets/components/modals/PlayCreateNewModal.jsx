@@ -2,7 +2,18 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 
-const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }) => {
+const PlayCreateNewModal = ({
+    isOpen,
+    onConfirm,
+    onCancel,
+    isLoading,
+    apiError,
+    preMessage = '',
+    title = null,
+    bottomHeading = 'Want to play?',
+    bottomBody = null,
+    cancelLabel = 'Maybe Later',
+}) => {
     const [playName, setPlayName] = useState('');
     const [localError, setLocalError] = useState('');
 
@@ -54,12 +65,13 @@ const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
                 </button>
 
                 <ShowcaseSection id="prediction-play-gallery" className="modal-gallery">
-                    <h2>prediction<span className='inline-teal inline-bold'>Play</span></h2>
+                    {title ?? <h2>prediction<span className='inline-teal inline-bold'>Play</span></h2>}
+                    {preMessage && <h4 className="pre-message">{preMessage}</h4>}
 
                     <input
                         type="text"
                         className={`play-name-input ${activeError ? 'error' : ''}`}
-                        placeholder="e.g., My Bold Predictions"
+                        placeholder="e.g., Gold Play"
                         value={playName}
                         onChange={(e) => {
                             setPlayName(e.target.value);
@@ -92,20 +104,24 @@ const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
 
                 <ShowcaseSection id="prediction-play-text" className="bottom-modal-gallery">
                     <div className="bottom-modal-header">
-                        <h3>Want to play?</h3>
+                        <h3>{bottomHeading}</h3>
                     </div>
 
                     <div className="bottom-modal-text">
-                        <p>A <em><span className='inline-green inline-bold'>Play</span></em> includes predictions for both Groups and Brackets.</p>
-                        <p>You can create multiple plays and enter different pools!</p>
+                        {bottomBody ?? (
+                            <>
+                                <p>A <em><span className='inline-green inline-bold'>Play</span></em> includes predictions for both Groups and Brackets.</p>
+                                <p>You can create multiple plays and enter different pools!</p>
+                            </>
+                        )}
                     </div>
 
-                    <button 
-                        className="btn btn-tan cancel-btn" 
+                    <button
+                        className="btn btn-tan cancel-btn"
                         onClick={onCancel}
                         disabled={isLoading}
                     >
-                        Maybe Later
+                        {cancelLabel}
                     </button>
                 </ShowcaseSection>
             </div>

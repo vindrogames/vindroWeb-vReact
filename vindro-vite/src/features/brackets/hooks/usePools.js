@@ -24,11 +24,11 @@ export const usePools = (tournamentId, user) => {
         } finally {
             setIsLoading(false);
         }
-    }, [tournamentId, user]);
+    }, [tournamentId, user?.id]);
 
     useEffect(() => {
         fetchUserPools();
-    }, [fetchUserPools]);
+    }, [user, fetchUserPools]);
 
     const handleJoinPool = async (playIds, poolType, poolCode = null) => {
 

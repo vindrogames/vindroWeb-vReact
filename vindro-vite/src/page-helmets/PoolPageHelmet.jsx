@@ -1,9 +1,11 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
-export default function PoolPageHelmet({ poolName = 'Pool', tournamentName = 'Tournament' }) {
+export default function PoolPageHelmet({ poolName = 'Pool', tournamentName = 'Tournament', joinCode = '' }) {
     const title = `${poolName} | ${tournamentName} Pool — Vindrogames`;
-    const description = `Join ${poolName} and compete in ${tournamentName} bracket predictions with your group on Vindrogames.`;
+    const description = joinCode
+        ? `Join the "${poolName}" ${tournamentName} bracket pool on Vindrogames. Use code ${joinCode} to submit your predictions.`
+        : `Join ${poolName} and compete in ${tournamentName} bracket predictions with your group on Vindrogames.`;
 
     return (
         <Helmet>

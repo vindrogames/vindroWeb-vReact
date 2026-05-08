@@ -14,7 +14,7 @@
     backdrop-filter: blur(8px);
     padding: 21px;
 
-    .modal-content.auth-modal-layout {
+    .modal-content {
         background: $vindro-black-transparent;
         width: 100%;
         max-width: 480px;
@@ -28,11 +28,6 @@
         transition: opacity 0.3s ease, transform 0.3s ease;
         opacity: 1;
         transform: translateY(0);
-
-        &.is-fading {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
 
         // Close Button
         .close-button {
@@ -76,10 +71,6 @@
                 color: white;
                 margin: 0;
                 font-size: 4.2rem;
-
-                .inline-teal {
-                    color: $vindro-teal;
-                }
             }
 
             .social-login {
@@ -183,5 +174,93 @@
                 font-weight: 400;
             }
         }
+
+        &.is-fading {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        #welcome-user-gallery {
+            min-height: 42vh;
+            background: $vindro-black;
+            padding: 21px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 21px;
+
+            h1 {
+                color: white;
+                margin: 0;
+                font-size: 3.6rem;
+            }
+
+            img {
+                width: 84px;
+                height: 84px;
+            }
+
+            h2 {
+                font-size: 2.1rem;
+                color: white;
+            }
+        }
+
+        #welcome-user-interaction {
+            width: 100%;
+            padding: 21px;
+            background: $vindro-gray;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            gap: 14px;
+
+            .welcome-text {
+                display: flex;
+                flex-direction: column;
+                gap: 7px;
+                padding-bottom: 14px;
+                border-bottom: 1px solid $vindro-green;
+
+                h4 {
+                    font-size: 1.8rem;
+                    color: white;
+                    font-weight: 400;
+                }
+            }
+
+            .welcome-buttons {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+            }
+        }
+
+        
+    }
+}
+
+.btn.btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(white, 0.2);
+    color: rgba(white, 0.5);
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: rgba(white, 0.5);
+        color: white;
+    }
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

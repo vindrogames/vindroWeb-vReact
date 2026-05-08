@@ -71,6 +71,7 @@ def serialize_play(play):
         ],
 
         'group_stage_close_date': play.tournament.start_date,
+        'bracket_open_date': play.tournament.groups_end_date.isoformat() if play.tournament.groups_end_date else None,
         'bracket_stage_close_date': play.tournament.bracket_start_date,
     }
 
@@ -93,7 +94,8 @@ def serialize_pool_submission(membership):
         'total_points': play.group_points + play.bracket_points,
         'is_public': pool.is_public,
         'is_money_pool': pool.is_money_pool,
-        'cost_per_play': str(pool.cost_per_play)
+        'cost_per_play': str(pool.cost_per_play),
+        'currency': pool.currency,
     }
 
 
@@ -113,6 +115,8 @@ def serialize_pool(pool):
         'created_by_avatar': pool.created_by.avatar if pool.created_by else None,
         'join_code': pool.join_code,
         'allow_multiple_plays_per_user': pool.allow_multiple_plays_per_user,
+        'payout_config': pool.payout_config,
+        'currency': pool.currency,
     }
 
 

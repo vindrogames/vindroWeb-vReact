@@ -13,6 +13,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
     const [poolName, setPoolName] = useState('');
     const [isMoneyPool, setIsMoneyPool] = useState(false);
     const [costPerPlay, setCostPerPlay] = useState('');
+    const [currency, setCurrency] = useState('€');
     const [allowMultiplePlays, setAllowMultiplePlays] = useState(true);
     const [error, setError] = useState('');
 
@@ -21,6 +22,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
             setPoolName('');
             setIsMoneyPool(false);
             setCostPerPlay('');
+            setCurrency('€');
             setAllowMultiplePlays(true);
             setError('');
         }
@@ -45,6 +47,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                 name: poolName.trim(),
                 is_money_pool: isMoneyPool,
                 cost_per_play: isMoneyPool ? parseFloat(costPerPlay) : 0,
+                currency: isMoneyPool ? currency : '€',
                 allow_multiple_plays_per_user: allowMultiplePlays,
             });
 
@@ -122,7 +125,18 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                         </label>
 
                         <div className={`cost-per-play-wrapper ${!isMoneyPool ? 'inactive' : ''}`}>
-                            <span className="currency-symbol">€</span>
+                            <select
+                                className="currency-select"
+                                value={currency}
+                                onChange={e => setCurrency(e.target.value)}
+                                disabled={!isMoneyPool || isSubmitting}
+                            >
+                                <option value="€">€</option>
+                                <option value="$">$</option>
+                                <option value="£">£</option>
+                                <option value="¥">¥</option>
+                                <option value="₹">₹</option>
+                            </select>
                             <input
                                 type="number"
                                 className={`cost-input ${error && isMoneyPool && !costPerPlay ? 'error' : ''}`}
@@ -160,7 +174,8 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                         <h3>Private Pool</h3>
                     </div>
                     <div className="bottom-modal-text">
-                        <p>Your pool will be <em>private</em>. Only players with your code can join.</p>
+                        <p>We will generate a pool<span className='inline-teal inline-bold'>Code</span></p>
+                        <p>It will be required to join.</p>
                     </div>
                     <button className="btn btn-tan cancel-btn" onClick={onCancel} disabled={isSubmitting}>
                         Cancel

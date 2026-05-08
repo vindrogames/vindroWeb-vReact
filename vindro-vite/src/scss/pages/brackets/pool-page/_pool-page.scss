@@ -3,6 +3,10 @@
 main#pool-page {
     min-height: 100vh;
 
+    .pool-main-content-wrapper {
+        position: relative;
+    }
+
     .pool-main-content {
         background-color: $vindro-gray;
         width: 100%;
@@ -81,6 +85,10 @@ main#pool-page {
                         }
                     }
                 }
+
+                button#invite-friends-modal-trigger {
+                    width: 128px;
+                }
             }
 
             .pool-actions {
@@ -90,7 +98,12 @@ main#pool-page {
                 justify-content: flex-start;
                 gap: 14px;
 
+                button {
+                    width: 128px;
+                }
+
                 button:disabled {
+                    
                     opacity: 0.45;
                     cursor: not-allowed;
                 }
@@ -111,58 +124,6 @@ main#pool-page {
                 position: absolute;
                 right: 0;
                 bottom: 0;
-            }
-        }
-    }
-
-    .auth-prompt-overlay {
-        position: absolute;
-        width: 100vw;
-        height: 100vh;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba($vindro-black, 0.84);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 100;
-
-        .auth-prompt-message {
-            padding: 42px;
-            background: rgba($vindro-black, 0.84);
-            border: 1px solid $real-yellow;
-            border-radius: 3px;
-            text-align: center;
-
-            h5,
-            p {
-                color: white;
-                font-size: 1.8rem;
-                font-weight: 500;
-            }
-
-
-            h5.last-line {
-                margin-bottom: 21px;
-            }
-
-            .prompt-links {
-                margin-top: 21px;
-                display: flex;
-                align-items: center;
-                justify-content: space-evenly;
-                gap: 14px;
-            }
-
-            .plays-select-list {
-                display: flex;
-                flex-direction: column;
-                gap: 7px;
-                margin: 14px 0;
-                max-height: 210px;
-                overflow-y: auto;
             }
         }
     }
@@ -254,3 +215,4 @@ main#pool-page {
         }
     }
 }
+

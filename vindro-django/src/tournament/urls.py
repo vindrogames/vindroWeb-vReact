@@ -29,6 +29,8 @@ urlpatterns = [
     # path('pools/<uuid:pool_id>/', views.pool_detail, name='pool_detail'),
     path('pools/<uuid:pool_id>/leave/', views.pool_leave, name='pool_leave'),
     path('pools/<uuid:pool_id>/plays/<uuid:play_id>/remove/', views.pool_remove_play, name='pool_remove_play'),
+    path('pools/<uuid:pool_id>/plays/<uuid:play_id>/paid/', views.toggle_paid, name='toggle_paid'),
+    path('pools/<uuid:pool_id>/payout/', views.pool_payout_config, name='pool_payout_config'),
 
     # Leaderboard — unified endpoint for any pool (public or private)
     path('pools/<uuid:pool_id>/leaderboard/', views.pool_leaderboard, name='pool_leaderboard'),

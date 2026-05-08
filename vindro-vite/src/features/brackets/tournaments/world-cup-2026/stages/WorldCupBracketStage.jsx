@@ -31,7 +31,7 @@ const ConnR = () => (
     </div>
 );
 
-const LeftCard = ({ r32, r16, qf, activeRound, isEditable, id, activeEditId, onEditingChange }) => {
+const LeftCard = ({ r32, r16, qf, activeRound, isEditable, isSwappable, id, activeEditId, onEditingChange }) => {
     const isFocused = activeEditId === id;
     const isDimmed = activeEditId && !isFocused;
 
@@ -40,10 +40,15 @@ const LeftCard = ({ r32, r16, qf, activeRound, isEditable, id, activeEditId, onE
             {isEditable && (
                 <button
                     id="bk-left"
-                    className={`btn btn-tan edit-toggle-btn ${isFocused ? 'active' : ''}`} 
+                    className={`btn btn-tan edit-toggle-btn ${isFocused ? 'active' : ''}`}
                     onClick={() => onEditingChange(id, !isFocused)}
                 >
                     {isFocused ? 'save' : 'edit'}
+                </button>
+            )}
+            {isSwappable && !isEditable && (
+                <button className="btn btn-tan edit-toggle-btn swap-btn" disabled>
+                    swap
                 </button>
             )}
             <div className="round-col round-1-col">
@@ -59,7 +64,7 @@ const LeftCard = ({ r32, r16, qf, activeRound, isEditable, id, activeEditId, onE
     );
 };
 
-const RightCard = ({ r32, r16, qf, activeRound, isEditable, id, activeEditId, onEditingChange }) => {
+const RightCard = ({ r32, r16, qf, activeRound, isEditable, isSwappable, id, activeEditId, onEditingChange }) => {
     const isFocused = activeEditId === id;
     const isDimmed = activeEditId && !isFocused;
 
@@ -68,10 +73,15 @@ const RightCard = ({ r32, r16, qf, activeRound, isEditable, id, activeEditId, on
             {isEditable && (
                 <button
                     id="bk-right"
-                    className={`btn btn-tan edit-toggle-btn ${isFocused ? 'active' : ''}`} 
+                    className={`btn btn-tan edit-toggle-btn ${isFocused ? 'active' : ''}`}
                     onClick={() => onEditingChange(id, !isFocused)}
                 >
                     {isFocused ? 'save' : 'edit'}
+                </button>
+            )}
+            {isSwappable && !isEditable && (
+                <button className="btn btn-tan edit-toggle-btn swap-btn" disabled>
+                    swap
                 </button>
             )}
             <div className="round-col round-4-col">{qf.map((m, i) => <TeamSlot key={i} team={m?.winner} />)}</div>
@@ -85,7 +95,7 @@ const RightCard = ({ r32, r16, qf, activeRound, isEditable, id, activeEditId, on
     );
 };
 
-const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable }) => {
+const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable, isSwappable }) => {
     const [activeRound, setActiveRound] = useState('R32');
     const [activeSection, setActiveSection] = useState('left');
 
@@ -120,14 +130,14 @@ const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable 
                             activeEditId={activeEditId}
                             onEditingChange={onEditingChange}
                             r32={r32.slice(0, 4)} r16={r16.slice(0, 2)} qf={qf.slice(0, 1)}
-                            activeRound={activeRound} isEditable={isEditable}
+                            activeRound={activeRound} isEditable={isEditable} isSwappable={isSwappable}
                         />
                         <LeftCard
                             id="bk-left-bottom"
                             activeEditId={activeEditId}
                             onEditingChange={onEditingChange}
                             r32={r32.slice(4, 8)} r16={r16.slice(2, 4)} qf={qf.slice(1, 2)}
-                            activeRound={activeRound} isEditable={isEditable}
+                            activeRound={activeRound} isEditable={isEditable} isSwappable={isSwappable}
                         />
                     </div>
 
@@ -142,6 +152,11 @@ const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable 
                                     onClick={() => onEditingChange('bk-finals', !isFinalsFocused)}
                                 >
                                     {isFinalsFocused ? 'save' : 'edit'}
+                                </button>
+                            )}
+                            {isSwappable && !isEditable && (
+                                <button className="btn btn-tan edit-toggle-btn swap-btn" disabled>
+                                    swap
                                 </button>
                             )}
                             <div className="teams-container">
@@ -172,14 +187,14 @@ const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable 
                             activeEditId={activeEditId}
                             onEditingChange={onEditingChange}
                             r32={r32.slice(8, 12)} r16={r16.slice(4, 6)} qf={qf.slice(2, 3)}
-                            activeRound={activeRound} isEditable={isEditable}
+                            activeRound={activeRound} isEditable={isEditable} isSwappable={isSwappable}
                         />
                         <RightCard
                             id="bk-right-bottom"
                             activeEditId={activeEditId}
                             onEditingChange={onEditingChange}
                             r32={r32.slice(12, 16)} r16={r16.slice(6, 8)} qf={qf.slice(3, 4)}
-                            activeRound={activeRound} isEditable={isEditable}
+                            activeRound={activeRound} isEditable={isEditable} isSwappable={isSwappable}
                         />
                     </div>
                 </div>

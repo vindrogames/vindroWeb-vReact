@@ -44,6 +44,7 @@ def serialize_user(user):
         'avatar': user.avatar,
         'provider': provider,
         'login_count': user.login_count,
+        'has_edited_username': user.has_edited_username,
         'is_authenticated': True,
         'joined': user.date_joined.isoformat() if user.date_joined else None,
     }
@@ -86,6 +87,7 @@ def current_user(request):
             errors['username'] = 'Username already taken'
         else:
             user.username = new_username
+            user.has_edited_username = True
 
     if 'avatar' in body:
         icon_name = body['avatar'].strip()

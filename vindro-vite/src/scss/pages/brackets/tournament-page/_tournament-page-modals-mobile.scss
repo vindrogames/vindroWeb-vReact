@@ -11,19 +11,33 @@
                 h2 {
                     font-size: 2.8rem;
                 }
+
+                p {
+                    font-size: 1.6rem;
+                }
             }
         }
     }
 
-    #prediction-play-gallery {
+    #prediction-play-gallery, #create-pool-gallery {
         .play-name-input {
             padding: 7px;
         }
+
+        .cost-per-play-wrapper {
+            padding-left: 7px;
+        }
+
+        .submit-button-container {
+            justify-content: center;
+        }
     }
 
-    #select-plays-gallery, #submission-results-gallery {
+    #select-plays-gallery,
+    #submission-results-gallery {
 
-        .select-table, .submit-results-table {
+        .select-table,
+        .submit-results-table {
             width: 100%;
 
             .table-container {
@@ -42,14 +56,27 @@
         }
     }
 
-    #submission-actions {
+    #submission-actions, #remove-plays-actions, #pool-invite-bottom {
 
         .submit-plays-buttons {
             width: 100%;
             padding: 21px 14px;
 
             .btn {
-                padding: 7px 14px;
+                padding: 7px;
+            }
+        }
+    }
+
+    #pool-invite-bottom {
+        .invite-reminder {
+
+            h3 {
+                font-size: 1.8rem;
+
+                &.code {
+                    font-size: 2.4rem;
+                }
             }
         }
     }
@@ -81,7 +108,7 @@
         }
     }
 
-    #prediction-play-gallery {
+    #prediction-play-gallery, #create-pool-gallery {
 
         .play-name-input {
             width: 100%;
@@ -101,6 +128,7 @@
 
                 table {
                     table-layout: auto;
+
                     th {
                         padding: 7px;
                     }

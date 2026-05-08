@@ -1,29 +1,61 @@
 @use '../config' as *;
 
 .inline {
-    &-teal { color: $vindro-teal; }
+    &-teal {
+        color: $vindro-teal;
+    }
 
-    &-green { color: $vindro-green; }
+    &-green {
+        color: $vindro-green;
+    }
 
-    &-gray { color: $vindro-gray; }
+    &-gray {
+        color: $vindro-gray;
+    }
 
-    &-real-yellow { color: $real-yellow; }
+    &-real-yellow {
+        color: $real-yellow;
+    }
 
-    &-real-red { color: $real-red; }
+    &-real-red {
+        color: $real-red;
+    }
 
-    &-bold { font-weight: 700; }
+    &-bold {
+        font-weight: 700;
+    }
 
-    &-light { font-weight: 300; }
+    &-light {
+        font-weight: 300;
+    }
 
-    &-neon-green { color: $vindro-neon-green; }
+    &-neon-green {
+        color: $vindro-neon-green;
+    }
 
-    &-neon-pink {color: $vindro-neon-pink; }
+    &-neon-pink {
+        color: $vindro-neon-pink;
+    }
 
-    &-neon-white { color: white; }
+    &-neon-white {
+        color: white;
+    }
 
-    &-neon-teal { color: $vindro-teal }
+    &-neon-teal {
+        color: $vindro-teal
+    }
 
-    &-neon-orange { color: $vindro-neon-orange; }
+    &-neon-orange {
+        color: $vindro-neon-orange;
+    }
 
-    &-neon-purple { color: $vindro-neon-purple; }
+    &-neon-purple {
+        color: $vindro-neon-purple;
+    }
+}
+
+.section-seperator {
+    width: 100%;
+    height: 1px;
+    background-color: $vindro-teal;
 }

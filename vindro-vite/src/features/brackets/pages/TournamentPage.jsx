@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ShowcaseSection from '../../../components/ui/ShowcaseSection';
+import DescriptionDropdown from '../../../components/ui/DescriptionDropdown';
 import AuthModal from '../../../components/ui/AuthModal';
 import Leaderboard from '../../../components/ui/Leaderboard';
 import PlayCreateNewModal from '../components/modals/PlayCreateNewModal';
 import JoinPoolModal from '../components/modals/PoolJoinModal';
 import PoolCreateNewModal from '../components/modals/PoolCreateNewModal';
-import PoolDetailModal from '../components/modals/PoolDetailModal';
 import { useAuth } from '../../../contexts/auth/AuthContext';
 import { useTournament } from '../hooks/useTournament';
 import { useLeaderboards } from '../hooks/useLeaderboard';
@@ -14,6 +14,22 @@ import { usePlays } from '../hooks/usePlays';
 import { usePools } from '../hooks/usePools';
 import { EVENT_MAP } from '../tournaments/eventMap';
 import TournamentHelmet from '../../../page-helmets/TournamentHelmet';
+
+const startCountdown = (targetDateString, setTime) => {
+    const target = new Date(targetDateString);
+    function tick() {
+        const diff = target - new Date();
+        if (diff <= 0) { setTime('Closed'); return; }
+        const s = Math.floor(diff / 1000);
+        const d = Math.floor(s / 86400);
+        const h = Math.floor((s % 86400) / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
+        setTime(`${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`);
+    }
+    tick();
+    return setInterval(tick, 1000);
+};
 
 const TournamentPage = () => {
     const { tournament: tournamentSlug } = useParams();
@@ -42,6 +58,16 @@ const TournamentPage = () => {
     } = usePools(tournamentData?.id, user);
 
     const { publicLeaderboard, isPublicLoading, refreshPublic } = useLeaderboards(tournamentData?.public_pool_id);
+
+    // ── TOURNAMENT START GATE ─────────────────────────────────────────────────
+    const tournamentStarted = !!(tournamentData?.start_date && new Date() > new Date(tournamentData.start_date));
+    const [heroCountdown, setHeroCountdown] = useState('');
+
+    useEffect(() => {
+        if (!tournamentData?.start_date || tournamentStarted) return;
+        const interval = startCountdown(tournamentData.start_date, setHeroCountdown);
+        return () => clearInterval(interval);
+    }, [tournamentData?.start_date, tournamentStarted]);
 
     // ── PLAY MODALS ───────────────────────────────────────────────────────────
     const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
@@ -88,26 +114,6 @@ const TournamentPage = () => {
     const [showJoinModal, setShowJoinModal] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [selectedPool, setSelectedPool] = useState(null);
-    const [prefilledCode, setPrefilledCode] = useState('');
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    useEffect(() => {
-        const code = searchParams.get('pool');
-        if (code) {
-            sessionStorage.setItem('pendingPoolCode', code);
-            setSearchParams({}, { replace: true });
-        }
-    }, []);
-
-    useEffect(() => {
-        if (!user) return;
-        const code = sessionStorage.getItem('pendingPoolCode');
-        if (code) {
-            sessionStorage.removeItem('pendingPoolCode');
-            setPrefilledCode(code);
-            setShowJoinModal(true);
-        }
-    }, [user]);
 
     const handleJoinPoolClick = () => {
         if (!user) { handleLoginClick(); return; }
@@ -145,11 +151,12 @@ const TournamentPage = () => {
     };
 
     const leaderboardCols = [
-        { 
+        {
             header: 'Pos.',
             width: '7%',
             narrow: true,
-            render: (_, idx) => <strong>{idx + 1}</strong> },
+            render: (_, idx) => <strong>{idx + 1}</strong>
+        },
         {
             header: 'Player',
             width: '10%',
@@ -219,22 +226,42 @@ const TournamentPage = () => {
 
             <ShowcaseSection classes="hero-half bg-black brackets-hero">
                 <h1>{title.before}<span className="inline-bold inline-teal">{title.highlight}</span>{title.after}</h1>
-                <h2>{subtitle}</h2>
+                <h2>Create a Play. Make your picks. Submit to a Pool</h2>
+                {tournamentStarted ? (
+                    <p className="hero-countdown under-way">Under <span className="tournament-countdown">Way!</span></p>
+                ) : heroCountdown ? (
+                    <p className="hero-countdown">Starts in <span className="tournament-countdown">{heroCountdown}</span></p>
+                ) : null}
                 <div className="brackets-hero-buttons-wrapper">
-                    <button className="btn btn-tan" onClick={() => handleScrollToSection('about-tournament')}>About</button>
-                    <button className="btn btn-tan" onClick={() => handleScrollToSection('tournament-leaderboard')}>Leaderboard</button>
+
                 </div>
             </ShowcaseSection>
 
             <ShowcaseSection id="user-picks-section" classes="hero-half bg-gray user-picks">
 
                 <div className="user-picks-container">
-                    <div className="title-container predictions">
+
+                    <div className="title-container-wrapper">
                         <h3>Your Plays</h3>
+                    </div>
+
+                    <div className="user-picks-description-wrapper">
+                        <DescriptionDropdown summary='A "Play" includes your predictions for a Tournament.'>
+                            <h4>This World Cup 2026 Tournament has 2 stages: <span className='inline-bold'>Groups</span> & the <span className='inline-bold'>Bracket</span></h4>
+                            <h4>Your plays are private until you submit them to a pool.</h4>
+                        </DescriptionDropdown>
                         <div className="buttons-container">
-                            <button className="btn btn-tan" onClick={handleNewPlay}>Create a Play</button>
+                            {tournamentStarted ? (
+                                <span className="disabled-btn-wrapper">
+                                    <button className="btn btn-tan" disabled>Create a Play</button>
+                                    <span className="disabled-tooltip">Tournament has started</span>
+                                </span>
+                            ) : (
+                                <button className="btn btn-tan" onClick={handleNewPlay}>Create a Play</button>
+                            )}
                         </div>
                     </div>
+
                     <div className="user-stats-container">
                         <div className="table-container bg-black backdrop-gray">
                             <table>
@@ -268,12 +295,23 @@ const TournamentPage = () => {
                 </div>
 
                 <div className="user-picks-container">
-                    <div className="title-container plays-in-pools">
-                        <h3>Your Plays in Pools</h3>
+
+                    <div className="title-container-wrapper">
+                        <h3>Plays in Pools</h3>
+                    </div>
+
+                    <div className="user-picks-description-wrapper">
+                        <DescriptionDropdown summary='To "compete", you submit your plays to Pools.'>
+                            <h4>We have a public vindro<span className='inline-bold'>Public</span> Pool for everybody to see.</h4>
+                            <h4>You can submit as many plays as you like to our public pool.</h4>
+                            <h4>Users can create "Private" Pools that require a code.</h4>
+                            <h4>Depending on the config, private pools can limit to 1 play per user and/or define money prizes.</h4>
+                        </DescriptionDropdown>
                         <div className="buttons-container">
-                            <button className="btn btn-tan" onClick={handleJoinPoolClick}>Join a Pool</button>
+                            <button className="btn btn-tan" onClick={handleJoinPoolClick}>Submit a Play</button>
                         </div>
                     </div>
+
                     <div className="user-stats-container">
                         <div className="table-container bg-black backdrop-gray">
                             <table>
@@ -307,12 +345,23 @@ const TournamentPage = () => {
                 </div>
 
                 <div className="user-picks-container">
-                    <div className="title-container your-pools">
+
+                    <div className="title-container-wrapper">
                         <h3>Your Pools</h3>
+                    </div>
+
+                    <div className="user-picks-description-wrapper">
+                        <DescriptionDropdown summary="Create a Private Pool for you and your people!">
+                            <h4>You can decide to allow multiple plays per user or limit to 1.</h4>
+                            <h4>You can configure the Pool as a "Money Pool" setting a cost per play.</h4>
+                            <h4>You can also set the prize payouts by standing.</h4>
+                            <h4>You will be able to eliminate any play from your Pool.</h4>
+                        </DescriptionDropdown>
                         <div className="buttons-container">
                             <button className="btn btn-tan" onClick={handleCreatePoolClick}>Create a Pool</button>
                         </div>
                     </div>
+
                     <div className="user-stats-container">
                         <div className="table-container bg-black backdrop-gray">
                             <table>
@@ -333,7 +382,7 @@ const TournamentPage = () => {
                                                 <td className="table-link pool-link">{pool.name}</td>
                                                 <td>{pool.current_member_count}</td>
                                                 <td>{pool.paid_count ?? '—'}</td>
-                                                <td>{pool.is_money_pool ? `€${pool.cost_per_play}` : '—'}</td>
+                                                <td>{pool.is_money_pool ? `${pool.currency || '€'}${pool.cost_per_play}` : '—'}</td>
                                             </tr>
                                         ))
                                     ) : (
@@ -348,11 +397,23 @@ const TournamentPage = () => {
                 {!user && (
                     <div className="auth-prompt-overlay">
                         <div className="auth-prompt-message">
-                            <h5>To participate you must be logged in.</h5>
-                            <div className="prompt-links">
-                                <button className="btn btn-tan" onClick={handleLoginClick}>Log In</button>
-                                <p>or</p>
-                                <button className="btn btn-tan" onClick={handleSignUpClick}>Sign Up</button>
+
+                            <div className="top-half auth-prompt-half">
+                                <h5>To participate you must be logged in.</h5>
+                                <div className="prompt-links">
+                                    <button className="btn btn-tan" onClick={handleLoginClick}>Log In</button>
+                                </div>
+                            </div>
+
+                            <div className="section-seperator"></div>
+
+                            <div className="bottom-half auth-prompt-half">
+                                <h5>Or Check it out before getting started.</h5>
+
+                                <div className="prompt-links">
+                                    <button className="btn btn-tan" onClick={() => handleScrollToSection('about-tournament')}>About</button>
+                                    <button className="btn btn-tan" onClick={() => handleScrollToSection('tournament-leaderboard')}>Leaderboard</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -362,7 +423,7 @@ const TournamentPage = () => {
             <EventDescription />
 
             <section id="tournament-leaderboard" className="leaderboard-display-container bg-black hero-half">
-                
+
                 <div className="leaderboard-header">
                     <div className="title">
                         <h3 className="main-title">vindro<span className="inline-teal inline-bold">Pool</span> Leaderboard</h3>
@@ -392,7 +453,6 @@ const TournamentPage = () => {
                 tournamentId={tournamentData?.id}
                 onCancel={() => setShowJoinModal(false)}
                 plays={userPlays}
-                initialCode={prefilledCode}
                 onCreatePlay={handleCreatePlayFromPool}
                 onSuccess={(pool) => {
                     refreshPools();
@@ -418,11 +478,6 @@ const TournamentPage = () => {
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
                 defaultMode={authModalMode}
-            />
-
-            <PoolDetailModal
-                pool={selectedPool}
-                onClose={() => setSelectedPool(null)}
             />
 
         </main>

@@ -4,17 +4,14 @@
 
     .modal-overlay {
 
-        .modal-content.auth-modal-layout {
+        .modal-content {
 
             #social-signup-gallery {
-                //padding: 14px;
 
                 .social-login {
                     
                     .btn-social {
                         width: 100%;
-                        //font-size: 1.6rem;
-                        //font-weight: 500;
 
                         svg {
                             width: 24px;
@@ -24,14 +21,21 @@
                 }
             }
 
-            .no-account-container {
-                padding: 0 14px;
+            #welcome-user-gallery {
+
+                h2 {
+                    font-size: 1.8rem;
+                }
+            }
+
+            .no-account-container, #welcome-user-interaction {
+                padding: 14px;
 
                 #sign-up-header h3 {
                      font-size: 2.1rem;
                 }
 
-                .auth-info {
+                .auth-info, .welcome-text {
 
                     h4, p {
                         font-size: 1.6rem;
@@ -50,7 +54,7 @@
 
     .modal-overlay {
 
-        .modal-content.auth-modal-layout {
+        .modal-content {
 
             #social-signup-gallery {
                 padding: 14px;
@@ -74,6 +78,21 @@
 
                 .modal-footer {
                     padding: 7px 0px 14px;
+                }
+            }
+
+            #welcome-user-gallery {
+                padding: 14px;
+            }
+
+            #welcome-user-interaction {
+
+                .welcome-buttons {
+                    justify-content: space-between;
+
+                    button {
+                        padding: 7px 14px;
+                    }
                 }
             }
         }

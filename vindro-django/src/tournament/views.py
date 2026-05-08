@@ -369,10 +369,20 @@ def pool_create(request, tournament_id):
             tournament=tournament,
             is_public=False,
             created_by=request.user,
+        ).annotate(
+            live_member_count=models.Count('pool_memberships'),
+            live_paid_count=models.Count('pool_memberships', filter=models.Q(pool_memberships__has_paid=True)),
         )
+
+        def _pool_with_live_counts(pool):
+            data = serialize_pool(pool)
+            data['current_member_count'] = pool.live_member_count
+            data['paid_count'] = pool.live_paid_count
+            return data
+
         data = {
             'public_pool': serialize_pool(public_pool) if public_pool else None,
-            'my_pools': [serialize_pool(p) for p in user_pools],
+            'my_pools': [_pool_with_live_counts(p) for p in user_pools],
         }
         return JsonResponse({'success': True, 'data': data})
 
@@ -390,6 +400,7 @@ def pool_create(request, tournament_id):
 
     is_money_pool = bool(body.get('is_money_pool', False))
     allow_multiple_plays_per_user = bool(body.get('allow_multiple_plays_per_user', True))
+    currency = str(body.get('currency', '€')).strip()[:3] or '€'
 
     cost_per_play = Decimal('0.00')
     if is_money_pool:
@@ -413,6 +424,7 @@ def pool_create(request, tournament_id):
             is_money_pool=is_money_pool,
             cost_per_play=cost_per_play,
             allow_multiple_plays_per_user=allow_multiple_plays_per_user,
+            currency=currency,
         )
     except IntegrityError:
         return JsonResponse({'success': False, 'error': f'A pool named "{name}" already exists.'}, status=400)
@@ -448,10 +460,14 @@ def pool_detail_by_name(request, pool_name):
         if is_owner or is_member:
             leaderboard_data = [serialize_leaderboard_entry(m) for m in memberships]
 
+    live_count = memberships.count()
+    pool_data = serialize_pool(pool)
+    pool_data['current_member_count'] = live_count
+
     return JsonResponse({
         'success': True,
         'data': {
-            'pool': serialize_pool(pool),
+            'pool': pool_data,
             'leaderboard': leaderboard_data,
             'is_owner': is_owner,
             'is_member': is_member,
@@ -512,17 +528,24 @@ def pool_leave(request, pool_id):
 def pool_remove_play(request, pool_id, play_id):
     """
     DELETE /api/tournament/pools/<pool_id>/plays/<play_id>/remove/
-    Owner only. Removes a PoolMembership — does not delete the play itself.
+    Pool owner can remove any play. Play owner can remove their own play.
     """
     pool, err = _get_or_404(TournamentPool, id=pool_id)
     if err:
         return err
 
-    if pool.created_by != request.user:
+    try:
+        membership = PoolMembership.objects.select_related('play__user').get(pool=pool, play_id=play_id)
+    except PoolMembership.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Play not in this pool'}, status=404)
+
+    is_pool_owner = pool.created_by == request.user
+    is_play_owner = membership.play.user == request.user
+
+    if not is_pool_owner and not is_play_owner:
         return JsonResponse({'success': False, 'error': 'Not authorized'}, status=403)
 
     try:
-        membership = PoolMembership.objects.get(pool=pool, play_id=play_id)
         membership.delete()
         TournamentPool.objects.filter(pk=pool.pk).update(
             current_member_count=models.F('current_member_count') - 1
@@ -530,6 +553,52 @@ def pool_remove_play(request, pool_id, play_id):
         return JsonResponse({'success': True})
     except PoolMembership.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Play not in this pool'}, status=404)
+
+
+@csrf_exempt
+@login_required_api
+@require_http_methods(["PATCH"])
+def toggle_paid(request, pool_id, play_id):
+    """PATCH /api/tournament/pools/<pool_id>/plays/<play_id>/paid/  — pool owner only"""
+    pool, err = _get_or_404(TournamentPool, id=pool_id)
+    if err:
+        return err
+    if pool.created_by != request.user:
+        return JsonResponse({'success': False, 'error': 'Not authorized'}, status=403)
+    try:
+        membership = PoolMembership.objects.get(pool=pool, play_id=play_id)
+        membership.has_paid = not membership.has_paid
+        membership.save()
+        return JsonResponse({'success': True, 'has_paid': membership.has_paid})
+    except PoolMembership.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Play not in this pool'}, status=404)
+
+
+@csrf_exempt
+@login_required_api
+@require_http_methods(["PATCH"])
+def pool_payout_config(request, pool_id):
+    """PATCH /api/tournament/pools/<pool_id>/payout/  — pool owner only"""
+    pool, err = _get_or_404(TournamentPool, id=pool_id)
+    if err:
+        return err
+    if pool.created_by != request.user:
+        return JsonResponse({'success': False, 'error': 'Not authorized'}, status=403)
+    try:
+        body = json.loads(request.body)
+        config = body.get('payout_config', {})
+        values = list(config.values())
+        if not all(isinstance(v, int) and v > 0 for v in values):
+            return JsonResponse({'success': False, 'error': 'Each percentage must be a positive integer'}, status=400)
+        if sum(values) != 100:
+            return JsonResponse({'success': False, 'error': f'Percentages must total 100 (got {sum(values)})'}, status=400)
+        pool.payout_config = config
+        pool.save()
+        return JsonResponse({'success': True, 'payout_config': pool.payout_config})
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 
 @require_http_methods(["GET"])

@@ -6,9 +6,49 @@
 
         .profile-container {
 
-            .user-stat-container#user-name-icon {
-                display: flex;
-                flex-direction: column;
+            .profile-header {
+
+                h1.visiting-user,
+                h1.welcome-new-user {
+                    font-size: 2.8rem;
+                }
+
+                button {
+                    position: absolute;
+                    top: -42px;
+                    right: 0;
+                }
+            }
+
+            .user-container {
+                grid-template-columns: 1fr;
+                gap: 21px;
+
+                h4 {
+                    text-align: left;
+                }
+
+                &#user-name-icon {
+
+                    .user-name-data {
+                        padding-left: 42px;
+                    }
+
+                    .user-icon {
+                        justify-content: flex-start;
+                        padding-left: 42px;
+
+                        .icon-gallery {
+                            left: 14%;
+                        }
+                    }
+                }
+
+                .scores-stats-container {
+                    padding-left: 42px;
+                    align-items: flex-start;
+
+                }
             }
         }
     }
@@ -21,28 +61,121 @@
         .profile-container {
             width: 100%;
 
-            .user-stat-container {
+            .profile-header {
 
-                #user-name-icon {
-                    display: flex;
-                    flex-direction: column;
+                h1.visiting-user,
+                h1.welcome-new-user {
+                    font-size: 2.4rem;
+                }
+
+                h1 {
+                    font-size: 2.8rem;
+                    text-align: center;
+                }
+
+                .welcome-text {
+                    h2 {
+                        text-align: center;
+                    }
+                }
+
+                button: {
+                    top: -21px;
+                }
+            }
+
+            .user-container {
+                grid-template-columns: 1fr;
+                gap: 21px;
+
+                h2 {
+                    margin-top: 0;
+                }
+
+                h4 {
+                    text-align: left;
+                }
+
+                &#user-name-icon {
+
+                    .user-name-data {
+                        padding: 0;
+                        justify-content: center;
+                        align-items: center;
+                    }
 
                     .user-icon {
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 0;
+                        gap: 7px;
+
+                        button.btn-edit {
+                            align-self: center;
+                        }
 
                         .icon-gallery {
-                            left: -28px;
-
-                            .gallery-item {
-
-                                width: 42px;
-                                height: 42px;
-                            }
+                            top: 298px;
+                            left: 50%;
+                            transform: translateX(-50%);
                         }
                     }
                 }
 
-                &.scores-container {
+                .editable-input-wrapper {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 3px;
+
+                    // 2. Bring the active input above the overlay
+                    &.focused-mode {
+                        z-index: 101;
+                    }
+
+                    .input-button-container {
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 7px;
+
+                        .input-container {
+                            position: relative;
+                            display: inline-block;
+
+                            input {
+                                text-align: center;
+                            }
+
+                            .char-count {
+                                top: 56px;
+                                color: $vindro-neon-pink;
+                            }
+                        }
+
+                        button.btn-edit {
+                            align-self: center;
+                        }
+                    }
+
+                    .profile-error-container {
+
+                        .profile-error {
+                            text-align: center;
+                        }
+                    }
+                }
+
+                .scores-stats-container {
                     padding: 0;
+                    align-items: center;
+                }
+
+                h4 {
+                    text-align: center;
+                }
+
+                &#user-top-scores {
+                    gap: 42px;
                 }
             }
         }
@@ -55,42 +188,10 @@
         padding: 90px 21px 21px;
 
         .profile-container {
-            width: 100%;
             padding: 21px 0;
             gap: 21px;
 
-            h1 {
-                font-size: 3.6rem;
-            }
-
-            .user-stat-container {
-
-                padding: 0 7px;
-
-                &#user-name-icon {
-
-
-                    .user-name-data {
-                        gap: 7px;
-                    }
-
-                    .user-icon {
-
-                        .icon-gallery {
-                            left: 0;
-                        }
-                    }
-                }
-
-                &.scores-container {
-                    margin-top: 14px;
-
-                    .table-container {
-                        width: 100%;
-                        max-width: none;
-                    }
-                }
-            }
+            .user-container {}
         }
     }
 }
@@ -101,67 +202,37 @@
         padding: 90px 14px 21px;
 
         .profile-container {
-            width: 100%;
 
-            h1 {
-                font-size: 3.6rem;
-            }
+            .profile-header {
+                h1 {
+                    font-size: 3.6rem;
 
-            .user-stat-container {
-
-                &#user-name-icon {
-                    display: flex;
-                    flex-direction: column;
-
-                    .editable-input-wrapper {
-                        flex-direction: column;
-
-                        input {
-                            width: 100%;
-                        }
-
-                        button.btn-edit {
-                            align-self: flex-start;
-                        }
-                    }
-
-                    .user-icon {
-                        flex-direction: column;
-                        align-items: center;
-                        gap: 3px;
-
-                        img {
-                            width: 192px;
-                            height: 192px;
-                        }
-
-                        button.btn-edit {
-                            align-self: center;
-                        }
-
-                        .icon-gallery {
-                            top: 230px;
-                            left: -7px;
-                            right: 0;
-                            width: fit-content;
-                            margin-left: auto;
-                            margin-right: auto;
-                            padding: 3px;
-                            gap: 3px;
-                            grid-template-columns: repeat(6, 1fr);
-                            grid-template-rows: repeat(7, auto);
-                            grid-auto-flow: column;
-                        }
+                    &.visiting-user,
+                    &.welcome-new-user {
+                        font-size: 2.1rem;
                     }
                 }
+            }
 
-                .table-container {
+            .user-container {
 
-                    table {
+                .scores-stats-container {
 
-                        th {
-                            font-size: 1.4rem;
-                            padding: 7px;
+                    .table-container {
+                        max-width: 100%;
+                        width: 100%;
+
+                        table {
+
+                            th {
+                                font-size: 1.2rem;
+                                padding: 4px;
+                            }
+
+                            td {
+                                font-size: 1.1rem;
+                                padding: 4px;
+                            }
                         }
                     }
                 }

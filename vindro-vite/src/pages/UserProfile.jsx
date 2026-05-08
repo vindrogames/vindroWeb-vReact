@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DataTable from '../components/pages/users/DataTable';
 import SmartLink from '../components/ui/SmartLink';
 import { useAuth } from '../contexts/auth/AuthContext';
@@ -15,6 +15,7 @@ const UserProfile = () => {
 
     const { userId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const { user, updateUser } = useAuth();
 
     const [profileUser, setProfileUser] = useState(null);
@@ -119,6 +120,7 @@ const UserProfile = () => {
             if (e.key === 'Enter') saveIconRef.current();
         };
         const onDown = (e) => {
+            if (e.target.closest?.('.btn-edit')) return;
             if (iconWrapperRef.current && !iconWrapperRef.current.contains(e.target)) cancel();
         };
         document.addEventListener('keydown', onKey);
@@ -228,9 +230,8 @@ const UserProfile = () => {
         navigate(origin || '/');
     };
 
-    let { login_count = 0, provider = 'local' } = user || {};
-    login_count = 1;
-    console.log(login_count);
+    const { login_count = 0, provider = 'local', has_edited_username = false } = user || {};
+    const fromWelcome = location.state?.fromWelcome === true;
 
     return (
         <>
@@ -241,27 +242,35 @@ const UserProfile = () => {
 
                     <div className="profile-header">
                         {!isOwner && (
-                            <h1 className="profile-intro">Visiting vindroUser nº <span className='inline-green inline-bold'>{profileUser.id}</span></h1>
+                            <h1 className="visiting-user">Visiting vindroUser nº <span className='inline-green inline-bold'>{profileUser.id}</span></h1>
                         )}
 
-                        {isOwner && login_count == 1 && (
+                        {isOwner && login_count === 1 && (
                             <>
-                                <h1 className="profile-intro">Welcome vindroUser nº <span className='inline-green inline-bold'>{profileUser.id}</span>!</h1>
+                                <h1 className="welcome-new-user">Welcome vindroUser nº <span className='inline-green inline-bold'>{profileUser.id}</span>!</h1>
                                 <div className="welcome-text">
                                     <h2>You can edit your userName and profile icon anytime you like!</h2>
-                                    <h2>For the meantime, we have assigned a randon generated userName and the simple-teal icon.</h2>
+                                    <h2>For the meantime, you have a random userName and the simple-teal icon.</h2>
                                 </div>
-
-                                <button id="return-to-prev-page" className="btn btn-tan" onClick={handleWelcomeReturn}>Where you were</button>
+                                {fromWelcome && (
+                                    <button id="return-to-prev-page" className="btn btn-tan" onClick={handleWelcomeReturn}>Where you were</button>
+                                )}
                             </>
                         )}
 
                         {isOwner && login_count > 1 && (
-                            <h1 className="profile-intro">Hello Friend!</h1>
+                            <>
+                                <h1 className="profile-intro">Hello Friend!</h1>
+                                {!has_edited_username && (
+                                    <div className="welcome-text">
+                                        <h2>Don't forget — you can change your userName and avatar right here!</h2>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
 
-                    <section id="user-name-icon" className={`user-stat-container ${isEditingUserName ? 'focused-mode' : ''}`}>
+                    <section id="user-name-icon" className={`user-container ${isEditingUserName ? 'focused-mode' : ''}`}>
 
                         <div className="user-name-data">
                             <h2>user<span className='inline-teal inline-bold'>Name</span></h2>
@@ -322,7 +331,7 @@ const UserProfile = () => {
 
                         </div>
 
-                        <div className="user-icon" ref={iconWrapperRef}>
+                        <div className="user-icon">
                             <img src={`/img/profile_icons/${selectedIcon}.webp`} alt="User Avatar" />
 
                             {isOwner && (
@@ -335,7 +344,7 @@ const UserProfile = () => {
                             )}
 
                             {isOwner && isEditingUserIcon && (
-                                <div className="icon-gallery">
+                                <div className="icon-gallery" ref={iconWrapperRef}>
                                     {allIcons.map((iconName) => (
                                         <button
                                             key={iconName}
@@ -352,20 +361,25 @@ const UserProfile = () => {
 
                     </section>
 
-                    <section id="user-top-scores" className="user-stat-container scores-container">
-                        <h3>top<span className='inline-teal inline-bold'>Scores</span></h3>
-                        <div className="table-container">
-                            <DataTable data={scoreData} columns={scoreCols} />
-                        </div>
-                    </section>
+                    <div className="section-seperator"></div>
 
-                    <section id="user-brackets" className="user-stat-container scores-container">
-                        <h3>brackets</h3>
-                        <div className="table-container">
-                            <DataTable data={bracketSummary} columns={bracketCols} tableType="brackets-table" />
-                        </div>
-                    </section>
+                    <section id="user-top-scores" className="user-container">
 
+                        <div className="scores-stats-container">
+                            <h4>top<span className='inline-teal inline-bold'>Scores</span></h4>
+                            <div className="table-container">
+                                <DataTable data={scoreData} columns={scoreCols} />
+                            </div>
+                        </div>
+
+                        <div className="scores-stats-container">
+                            <h4>brackets</h4>
+                            <div className="table-container">
+                                <DataTable data={bracketSummary} columns={bracketCols} tableType="brackets-table" emptyMessage="No bracket data." />
+                            </div>
+                        </div>
+
+                    </section>
                 </div>
             </main>
         </>

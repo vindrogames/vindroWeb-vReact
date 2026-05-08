@@ -63,7 +63,8 @@ const PlayPage = () => {
     const [playData, setPlayData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [countdown, setCountdown] = useState('');
-    const [bracketCountdown, setBracketCountdown] = useState('');
+    const [bracketOpenCountdown, setBracketOpenCountdown] = useState('');
+    const [bracketCloseCountdown, setBracketCloseCountdown] = useState('');
     const [errorCode, setErrorCode] = useState(null);
 
     // The "Master Switch": holds the ID of whatever is being edited
@@ -80,9 +81,12 @@ const PlayPage = () => {
     const isGroupOpen            = groupStageConfigured && new Date() < new Date(playData.group_stage_close_date);
     const isGroupClosed          = groupStageConfigured && !isGroupOpen;
 
-    const bracketStageConfigured = !!playData?.bracket_stage_close_date;
-    const isBracketOpen          = bracketStageConfigured && new Date() < new Date(playData.bracket_stage_close_date);
-    const isBracketClosed        = bracketStageConfigured && !isBracketOpen;
+    // Bracket: 3 scenarios based on bracket_open_date and bracket_stage_close_date
+    const bracketOpenDate   = playData?.bracket_open_date;
+    const bracketCloseDate  = playData?.bracket_stage_close_date;
+    const isBracketNotYet   = !!bracketOpenDate && new Date() < new Date(bracketOpenDate);
+    const isBracketOpen     = !!bracketOpenDate && !isBracketNotYet && !!bracketCloseDate && new Date() < new Date(bracketCloseDate);
+    const isBracketClosed   = !!bracketCloseDate && !isBracketNotYet && !isBracketOpen;
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -115,13 +119,19 @@ const PlayPage = () => {
         return () => clearInterval(interval);
     }, [playData?.group_stage_close_date]);
 
-    // Bracket countdown — only starts once group stage has closed
+    // Bracket scenario 1 — countdown to bracket opening
     useEffect(() => {
-        if (!playData?.bracket_stage_close_date) return;
-        if (new Date() < new Date(playData.group_stage_close_date)) return;
-        const interval = startCountdown(playData.bracket_stage_close_date, setBracketCountdown);
+        if (!isBracketNotYet || !bracketOpenDate) return;
+        const interval = startCountdown(bracketOpenDate, setBracketOpenCountdown);
         return () => clearInterval(interval);
-    }, [playData?.bracket_stage_close_date, playData?.group_stage_close_date]);
+    }, [isBracketNotYet, bracketOpenDate]);
+
+    // Bracket scenario 2 — countdown to bracket closing
+    useEffect(() => {
+        if (!isBracketOpen || !bracketCloseDate) return;
+        const interval = startCountdown(bracketCloseDate, setBracketCloseCountdown);
+        return () => clearInterval(interval);
+    }, [isBracketOpen, bracketCloseDate]);
 
     const isOwner =
         playData &&
@@ -258,12 +268,12 @@ const PlayPage = () => {
                             {/* Scenario 1 (not_ready): no status line */}
                             {isGroupOpen && (
                                 <p className="last-updated">
-                                    Closes in <span className="inline-neon-pink inline-bold">{countdown}</span>
+                                    Closes in <span className="tournament-countdown">{countdown}</span>
                                 </p>
                             )}
                             {isGroupClosed && (
                                 <p className="last-updated">
-                                    <span className="inline-neon-pink inline-bold">Stage closed</span>
+                                    <span className="tournament-countdown">Stage closed</span>
                                     {' · '}<span className="inline-teal inline-bold">{playData.group_points} pts</span>
                                 </p>
                             )}
@@ -302,20 +312,22 @@ const PlayPage = () => {
 
                         <div className={`stage-header${isBracketEditing ? ' is-dimmed' : ''}`}>
                             <h3>bracket<span className="inline-teal inline-bold">Stage</span></h3>
-                            {/* Scenario 1 (not_ready): no status line */}
-                            {bracketStageConfigured && !isBracketOpen && (
+                            {/* Scenario 1 — not yet open */}
+                            {isBracketNotYet && (
                                 <p className="last-updated">
-                                    Starts <span className="inline-neon-pink inline-bold">{formatDate(playData.group_stage_close_date)}</span>
+                                    Opens in <span className="tournament-countdown">{bracketOpenCountdown}</span>
                                 </p>
                             )}
+                            {/* Scenario 2 — open for predictions */}
                             {isBracketOpen && (
                                 <p className="last-updated">
-                                    Closes in <span className="inline-neon-pink inline-bold">{bracketCountdown}</span>
+                                    Closes in <span className="tournament-countdown">{bracketCloseCountdown}</span>
                                 </p>
                             )}
+                            {/* Scenario 3 — bracket under way */}
                             {isBracketClosed && (
                                 <p className="last-updated">
-                                    <span className="inline-neon-pink inline-bold">Stage closed</span>
+                                    Under <span className="inline-neon-pink inline-bold">Way!</span>
                                     {' · '}<span className="inline-teal inline-bold">{playData.bracket_points} pts</span>
                                 </p>
                             )}
@@ -324,6 +336,7 @@ const PlayPage = () => {
                             data={playData.bracket_predictions}
                             isOwner={isOwner}
                             isEditable={isOwner && isBracketOpen}
+                            isSwappable={isOwner && isBracketClosed}
                             isStageClosed={isBracketClosed}
                             activeEditId={activeEditId}
                             onEditingChange={handleEditingChange}

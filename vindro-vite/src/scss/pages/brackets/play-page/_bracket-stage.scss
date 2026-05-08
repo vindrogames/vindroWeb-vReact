@@ -45,6 +45,7 @@ main.bracket-tournament-play-pool {
 
 // ── CONTROL ROWS (visibility set in mobile scss) ──────────────────────────────
 .bk-half-toggle {
+    padding: 14px;
     display: none;
     gap: 7px;
     justify-content: center;
@@ -52,6 +53,7 @@ main.bracket-tournament-play-pool {
 }
 
 .bk-medium-tabs {
+    padding: 14px;
     display: none;
     gap: 7px;
     justify-content: center;

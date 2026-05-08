@@ -1,0 +1,82 @@
+@use '../../../config' as *;
+
+@media (max-width: 960px) {
+
+    main#pool-page {
+
+        .auth-prompt-overlay {
+
+            .auth-prompt-message {
+                width: 92%;
+
+                .auth-prompt-text {
+
+                    .auth-prompt-hook-questions {
+                        width: 100%;
+
+                        h5 {
+                            font-size: 2.1rem;
+                        }
+                    }
+
+                    h5 {
+                        font-size: 1.8rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 678px) {
+
+    main#pool-page {
+
+        .auth-prompt-overlay {
+            padding: 21px;
+
+            .auth-prompt-message {
+                padding: 21px;
+                width: 100%;
+
+                .auth-prompt-text {
+
+                    .auth-prompt-hook-questions {
+                        width: 100%;
+
+                        h5 {
+                            font-size: 1.8rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 450px) {
+
+    main#pool-page {
+
+        .auth-prompt-overlay {
+
+            .auth-prompt-message {
+
+                .auth-prompt-text {
+
+                    .auth-prompt-hook-questions {
+                        padding: 0;
+                        padding-bottom: 14px;
+                        h5 {
+                            font-weight: 500;
+                        }
+                    }
+
+                    h5 {
+                        font-size: 1.6rem;
+                    }
+                }
+            }
+        }
+    }
+}

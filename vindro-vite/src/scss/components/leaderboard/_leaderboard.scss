@@ -8,7 +8,7 @@
     &:hover::after {
         content: attr(data-tooltip);
         position: absolute;
-        bottom: 84%;
+        bottom: calc(100% + 6px);
         left: 50%;
         transform: translateX(-50%);
         background-color: $vindro-black;
@@ -18,19 +18,19 @@
         font-size: 1.2rem;
         white-space: nowrap;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        z-index: 84;
+        z-index: 200;
         pointer-events: none;
     }
 
     &:hover::before {
         content: '';
         position: absolute;
-        bottom: 110%;
+        bottom: 100%;
         left: 50%;
         transform: translateX(-50%);
         border: 6px solid transparent;
-        border-top-color: #333;
-        z-index: 84;
+        border-top-color: $vindro-black;
+        z-index: 200;
     }
 }
 
@@ -47,21 +47,17 @@
         .table-container {
             width: 84%;
             table {
-                table-layout: fixed;
                 width: 100%;
 
                 th {
                     white-space: normal;
-                    word-break: break-word;
-
-                    &.narrow-header {
-                        white-space: nowrap;
-                        overflow: hidden;
-                    }
+                    overflow: hidden;
+                    text-overflow: clip;
                 }
 
                 tr {
                     position: relative;
+                    overflow: visible;
 
                     &.clickable-row {
                         transition: background-color 0.2s ease;
@@ -78,6 +74,12 @@
 
                     td {
                         position: relative;
+                        overflow: visible;
+
+                        &.truncate-cell {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
 
                         img.player-avatar {
                             height: 24px;
@@ -100,7 +102,7 @@
                             &:hover::after {
                                 content: attr(data-tooltip);
                                 position: absolute;
-                                bottom: 84%;
+                                bottom: calc(100% + 6px);
                                 left: 50%;
                                 transform: translateX(-50%);
                                 background-color: $vindro-black;
@@ -110,19 +112,19 @@
                                 font-size: 1.2rem;
                                 white-space: nowrap;
                                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-                                z-index: 84;
+                                z-index: 200;
                                 pointer-events: none;
                             }
 
                             &:hover::before {
                                 content: '';
                                 position: absolute;
-                                bottom: 110%;
+                                bottom: 100%;
                                 left: 50%;
                                 transform: translateX(-50%);
                                 border: 6px solid transparent;
-                                border-top-color: #333;
-                                z-index: 84;
+                                border-top-color: $vindro-black;
+                                z-index: 200;
                             }
                         }
                     }

@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showWelcomeModal, setShowWelcomeModal] = useState(false);
     const { showLoader, hideLoader } = useLoading();
 
     /**
@@ -48,6 +49,9 @@ export function AuthProvider({ children }) {
             const data = await authAPI.getCurrentUser();
             setUser(data.user);
             setError(null);
+            if (returningFromOAuth && data.user?.login_count === 1) {
+                setShowWelcomeModal(true);
+            }
         } catch (err) {
             setUser(null);
         } finally {
@@ -146,6 +150,8 @@ export function AuthProvider({ children }) {
         loading,
         error,
         isAuthenticated: !!user,
+        showWelcomeModal,
+        dismissWelcomeModal: () => setShowWelcomeModal(false),
         login,
         register,
         logout,

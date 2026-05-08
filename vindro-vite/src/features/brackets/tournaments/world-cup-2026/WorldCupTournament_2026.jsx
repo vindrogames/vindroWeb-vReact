@@ -13,7 +13,6 @@ import PlayCreateNewModal from '../../components/modals/PlayCreateNewModal';
 // Modals
 import JoinPoolModal from '../../components/modals/PoolJoinModal';
 import PoolCreateNewModal from '../../components/modals/PoolCreateNewModal';
-import PoolDetailModal from '../../components/modals/PoolDetailModal';
 
 // Custom Hooks
 import { useAuth } from '../../../../contexts/auth/AuthContext';
@@ -380,7 +379,7 @@ const WorldCupTournament_2026 = () => {
                                                 <td className="table-link pool-link">{pool.name}</td>
                                                 <td>{pool.current_member_count}</td>
                                                 <td>{pool.paid_count ?? '—'}</td>
-                                                <td>{pool.is_money_pool ? `€${pool.cost_per_play}` : '—'}</td>
+                                                <td>{pool.is_money_pool ? `${pool.currency || '€'}${pool.cost_per_play}` : '—'}</td>
                                             </tr>
                                         ))
                                     ) : (
@@ -463,11 +462,6 @@ const WorldCupTournament_2026 = () => {
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
                 defaultMode={authModalMode}
-            />
-
-            <PoolDetailModal
-                pool={selectedPool}
-                onClose={() => setSelectedPool(null)}
             />
         </main>
     );

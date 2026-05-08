@@ -3,9 +3,76 @@
 main.bracket-tournament-page {
 
     .brackets-hero {
+
+        .hero-countdown {
+            font-size: 1.8rem;
+            font-family: $vindro-openSans;
+            font-weight: 400;
+            color: white;
+            margin-top: 7px;
+
+            &.under-way {
+                font-size: 2.4rem;
+                font-family: $vindro-Montserrat;
+                letter-spacing: 0.05em;
+            }
+        }
+
         .brackets-hero-buttons-wrapper {
+            width: 450px;
             display: flex;
-            gap: 84px;
+            justify-content: space-between;
+
+            button {
+                font-size: 1.6rem;
+            }
+        }
+    }
+
+    .disabled-btn-wrapper {
+        position: relative;
+        display: inline-block;
+
+        button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .disabled-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            background: $vindro-black;
+            color: $vindro-tan;
+            font-size: 1.2rem;
+            font-family: $vindro-openSans;
+            padding: 4px 10px;
+            border-radius: 3px;
+            border: 1px solid $vindro-tan;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        &:hover .disabled-tooltip {
+            display: block;
+        }
+    }
+
+    // Dim the page when any description dropdown is open
+    &:has(.description-panel) {
+        &::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba($vindro-black, 0.42);
+            z-index: 15;
+        }
+
+        .description-dropdown:has(.description-panel) {
+            z-index: 25;
         }
     }
 
@@ -22,16 +89,14 @@ main.bracket-tournament-page {
             width: 84%;
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 14px;
 
-            .title-container {
+            .title-container-wrapper {
                 width: 100%;
-                padding: 7px;
+                padding: 14px;
+                padding-left: 21px;
                 border-bottom: 1px solid $vindro-teal;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 42px;
 
                 h3 {
                     font-size: 4.2rem;
@@ -39,17 +104,79 @@ main.bracket-tournament-page {
                     color: white;
                     font-family: $vindro-Montserrat;
                 }
+            }
 
-                &.pools {
-                    margin-top: 21px;
+            .user-picks-description-wrapper {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 21px;
+                padding: 7px 0px 14px 21px;
+
+                .description-dropdown {
+                    flex: 1;
+                    position: relative;
+
+                    .description-toggle {
+                        width: 84%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 14px;
+                        padding: 14px;
+                        background-color: $vindro-gray;
+                        color: white;
+                        border-left: 2px solid transparent;
+                        border-radius: 3px;
+                        cursor: pointer;
+                        font-family: $vindro-openSans;
+                        font-size: 1.8rem;
+                        font-weight: 500;
+                        text-align: left;
+
+                        .toggle-arrow {
+                            flex-shrink: 0;
+                            font-size: 1.14rem;
+                            transition: transform 0.2s ease;
+
+                            &.open {
+                                transform: rotate(180deg);
+                                color: $vindro-neon-pink;
+                            }
+                        }
+
+                        &.open {
+                            border-left: 2px solid $vindro-neon-pink;
+                        }
+                    }
+
+                    .description-panel {
+                        position: absolute;
+                        top: calc(100% + 2px);
+                        left: 0;
+                        right: 0;
+                        z-index: 20;
+                        background-color: $vindro-gray;
+                        color: white;
+                        padding: 14px;
+                        border-radius: 3px;
+                        border-left: 2px solid $vindro-neon-pink;
+
+                        h4 {
+                            color: white;
+                            font-size: 1.8rem;
+                            font-family: $vindro-openSans;
+                            font-weight: 400;
+                            margin: 7px 0;
+                        }
+                    }
                 }
 
                 .buttons-container {
-                    height: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-end;
-                    align-items: flex-end;
+                    flex-shrink: 0;
+                    margin: auto 0;
 
                     button {
                         width: auto;
@@ -95,42 +222,6 @@ main.bracket-tournament-page {
 
                 &#pools-stats {
                     margin-bottom: 21px;
-                }
-            }
-
-        }
-
-        .auth-prompt-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba($vindro-black, 0.84);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-
-            .auth-prompt-message {
-                padding: 42px;
-                background: rgba($vindro-black, 0.84);
-                border: 1px solid $real-yellow;
-                border-radius: 3px;
-                text-align: center;
-
-                h5,
-                p {
-                    color: white;
-                    font-size: 1.8rem;
-                    font-weight: 500;
-                }
-
-                .prompt-links {
-                    margin-top: 21px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-evenly;
                 }
             }
         }

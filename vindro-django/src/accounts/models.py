@@ -45,6 +45,11 @@ class User(AbstractUser):
         help_text='Number of times user has logged in'
     )
 
+    has_edited_username = models.BooleanField(
+        default=False,
+        help_text='Whether the user has manually changed their username at least once'
+    )
+
     def __str__(self):
         return self.username
 

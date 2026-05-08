@@ -74,6 +74,18 @@
 
             p {
                 font-size: 1.8rem;
+
+                .big {
+                    font-size: 2.4rem;
+                }
+            }
+
+            &#pool-invite-gallery {
+                .pool-invite-specs-container {
+                    p {
+                        margin: 7px 0;
+                    }
+                }
             }
         }
 
@@ -110,7 +122,7 @@
                 gap: 14px;
 
                 p {
-                    width: 84%;
+                    width: 100%;
                     font-size: 1.8rem;
                     text-align: center;
                     color: white;
@@ -127,7 +139,8 @@
     }
 }
 
-#prediction-play-gallery, #create-pool-gallery {
+#prediction-play-gallery,
+#create-pool-gallery {
 
     .play-name-input {
         width: 84%;
@@ -211,7 +224,9 @@
         opacity: 0;
         transition: opacity 0.18s ease;
 
-        &.visible { opacity: 1; }
+        &.visible {
+            opacity: 1;
+        }
     }
 
     .submit-button-container {
@@ -265,17 +280,36 @@
         display: flex;
         align-items: center;
         gap: 7px;
-        padding-left: 30px;
+        padding-left: 28px;
         transition: opacity 0.2s ease;
 
         &.inactive {
-            opacity: 0.35;
+            opacity: 0.42;
             pointer-events: none;
         }
 
-        .currency-symbol {
-            font-size: 1.5rem;
-            color: $vindro-tan;
+        .currency-select {
+            appearance: none;
+            background-color: $vindro-tan;
+            color: $vindro-black;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            padding: 7px 8px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+
+            &:focus {
+                border-color: white;
+                background-color: lighten($vindro-tan, 21);
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
         }
 
         .cost-input {
@@ -304,6 +338,7 @@
                 -webkit-appearance: none;
                 margin: 0;
             }
+
             //-moz-appearance: textfield;
             //appearance: textfield;
         }
@@ -315,11 +350,13 @@
     }
 }
 
-
-#select-plays-gallery, #submission-results-gallery {
+#select-plays-gallery,
+#submission-results-gallery,
+#remove-plays-gallery {
     margin-top: 42px;
 
-    .select-table, .submit-results-table {
+    .select-table,
+    .submit-results-table {
         margin: 20px auto 0 auto;
         width: 84%;
 
@@ -448,11 +485,14 @@
     padding-top: 42px;
 }
 
-#submission-actions {
+#submission-actions,
+#remove-plays-actions,
+#pool-invite-bottom {
     background-color: $vindro-gray;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0;
 
     .private-code-wrapper {
         padding: 14px 0;
@@ -493,6 +533,25 @@
         }
     }
 
+    .invite-reminder {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+
+        h3 {
+            font-size: 2.1rem;
+            font-weight: 400;
+            text-align: center;
+
+            &.code {
+                font-size: 2.8rem;
+            }
+        }
+
+    }
+
     .submit-plays-buttons {
         width: 84%;
         padding: 21px 0px;
@@ -502,6 +561,7 @@
         &#awesome-button-container {
             justify-content: center;
         }
+
         .btn {
 
             &:disabled {
@@ -522,6 +582,30 @@
                     filter: none !important;
                     opacity: 0.5 !important;
                 }
+            }
+        }
+
+        &#pool-invite-buttons {
+
+            button.confirm-btn {
+                width: 140px;
+            }
+
+            .whatsapp-btn {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+
+                svg {
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    color: $vindro-green;
+                }
+            }
+
+            button.copied {
+                background-color: $vindro-green;
+                color: white;
             }
         }
     }

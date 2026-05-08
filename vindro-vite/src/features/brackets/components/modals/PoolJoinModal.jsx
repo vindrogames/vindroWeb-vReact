@@ -3,23 +3,36 @@ import ReactDOM from 'react-dom';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import SubmitPlayToPool from './PoolSubmitPlayModal';
 import PoolSubmitResponseModal from './PoolSubmitResponseModal';
-const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, initialCode = '', onCreatePlay }) => {
+
+const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, onCreatePlay, skipToPrivate = false }) => {
 
     const [submissionFlow, setSubmissionFlow] = useState({ isOpen: false, type: null });
     const [responseFlow, setResponseFlow] = useState({ isOpen: false, results: [] });
     const [joinedPool, setJoinedPool] = useState(null);
 
+    // When opening, jump straight to private submission if requested
     useEffect(() => {
-        if (isOpen && initialCode) {
-            setSubmissionFlow({ isOpen: true, type: 'private' });
+        if (isOpen) {
+            setSubmissionFlow(skipToPrivate
+                ? { isOpen: true, type: 'private' }
+                : { isOpen: false, type: null }
+            );
+            setResponseFlow({ isOpen: false, results: [] });
+            setJoinedPool(null);
         }
-    }, [isOpen, initialCode]);
+    }, [isOpen, skipToPrivate]);
 
     if (!isOpen) return null;
 
     // --- Join flow ---
     const handleJoinPool = (type) => setSubmissionFlow({ isOpen: true, type });
-    const closeSubmissionFlow = () => setSubmissionFlow({ isOpen: false, type: null });
+    const closeSubmissionFlow = () => {
+        if (skipToPrivate) {
+            onCancel();
+        } else {
+            setSubmissionFlow({ isOpen: false, type: null });
+        }
+    };
 
     const handleSubmissionSuccess = (selectedIds, code, responseData) => {
         const serverResults = responseData.results || {};
@@ -79,7 +92,7 @@ const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, 
                 plays={plays}
                 onConfirm={handleSubmissionSuccess}
                 onCancel={closeSubmissionFlow}
-                initialCode={submissionFlow.type === 'private' ? initialCode : ''}
+                initialCode=''
                 onCreatePlay={onCreatePlay}
             />
 
