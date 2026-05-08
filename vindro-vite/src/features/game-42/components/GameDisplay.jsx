@@ -1,10 +1,11 @@
 // src/game-42/components/GameDisplay.jsx
 import React, { useState, useEffect } from "react";
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/auth/AuthContext';
 
 export default function GameDisplay({
     gameStarted, numToPlace, points, startGame, playAgain,
     gameOver, endCause, prevPoints, todayBest,
+    elapsedSeconds, isNewBest,
     onOpenInstructions, isInstructionsOpen
 }) {
     const { isAuthenticated } = useAuth();
@@ -68,7 +69,13 @@ export default function GameDisplay({
                     <div id="game-points"><p>This Game</p><p>{points}</p></div>
                     <div id="prev-points"><p>Prev Game</p><p>{prevPoints ?? "-"}</p></div>
                     <div id="best"><p>Best Game</p><p>{todayBest ?? "-"}</p></div>
+                    {gameOver && (
+                        <div id="game-time"><p>Time</p><p>{elapsedSeconds}s</p></div>
+                    )}
                 </div>
+                {gameOver && isNewBest && (
+                    <p className="new-best-notice">New personal best!</p>
+                )}
             </div>
         </section>
     );

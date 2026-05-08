@@ -1,0 +1,62 @@
+@use '../config' as *;
+
+
+@media(max-width: 678px) {
+
+    footer {
+        padding: 14px 0;
+
+        .social {
+            gap: 21px;
+
+            a {
+
+                svg {
+                    width: 3.6rem;
+                    height: 3.6rem;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    footer {
+
+        a {
+            font-size: 1rem;
+        }
+
+        .contact-info {
+            font-size: 1.2rem;
+
+            a {
+                color: var(--teal-yellow-swap);
+                font-weight: 600;
+
+                &:hover {
+                    color: $vindro-green;
+                }
+            }
+        }
+
+        .social {
+            height: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            gap: 14px;
+
+            a {
+                padding: 3px;
+                color: white;
+                border-radius: 3px;
+
+                svg {
+                    width: 3rem;
+                    height: 3rem;
+                }
+            }
+        }
+    }
+}

@@ -18,7 +18,7 @@ export default function EscapeCloudHelmet() {
             <meta property="og:image" content="https://www.vindrogames.com/img/escapeTheCloud-og.png" />
             <meta property="og:image:width" content="850" />
             <meta property="og:image:height" content="450" />
-            <meta property="og:image:type" content="image/png /" />
+            <meta property="og:image:type" content="image/png" />
 
             <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico" />
             <title>Escape the Cloud | Digital Escape Room to learn how to use Google Tools</title>

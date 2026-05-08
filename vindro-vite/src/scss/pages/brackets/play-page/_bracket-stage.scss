@@ -1,0 +1,279 @@
+@use '../../../config' as *;
+
+// ── PAGE-LEVEL SECTION BLUR ───────────────────────────────────────────────────
+// Applied when any card (group or bracket) is being edited.
+// PlayPage adds .is-dimmed to sibling sections; active section stays clear.
+main.bracket-tournament-play-pool {
+
+    section.is-dimmed {
+        filter: blur(6px);
+        opacity: 0.4;
+        pointer-events: none;
+        transition: filter 0.22s, opacity 0.22s;
+    }
+
+    section.play-prediction-container {
+
+        .prediction-display-wrapper {
+
+            &#brackets-predictions {
+                width: 100%;
+
+                .stage-header {
+                    width: 100%;
+
+                    h3,
+                    p { width: 84%; }
+                }
+            }
+
+            .bk-stage {
+                width: 100%;
+
+                .bk-stage-container {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    overflow-x: auto;
+                    // top padding gives the focused-card border room to breathe
+                    padding: 4px 14px 28px;
+                }
+            }
+        }
+    }
+}
+
+// ── CONTROL ROWS (visibility set in mobile scss) ──────────────────────────────
+.bk-half-toggle {
+    padding: 14px;
+    display: none;
+    gap: 7px;
+    justify-content: center;
+    margin-bottom: 7px;
+}
+
+.bk-medium-tabs {
+    padding: 14px;
+    display: none;
+    gap: 7px;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+
+// ── BRACKET TREE ──────────────────────────────────────────────────────────────
+.bk-tree {
+    display: flex;
+    align-items: stretch;
+    height: 640px;
+}
+
+.bk-bracket-half {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+// position: relative so edit btn can be absolutely placed;
+// overflow: visible so the btn is not clipped (mobile scss restores hidden for strip view)
+.bk-quarter-card {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    background: $vindro-black;
+    border-radius: 7px;
+    padding: 0 4px;
+    overflow: visible;
+    border: 1px solid transparent;
+    transition: filter 0.22s, opacity 0.22s, border-color 0.22s;
+
+    &.is-dimmed {
+        filter: blur(4px);
+        opacity: 0.35;
+        pointer-events: none;
+    }
+
+    &.focused-edit {
+        border-color: $vindro-neon-pink;
+        box-shadow: 0 0 28px rgba(0, 0, 0, 0.7);
+    }
+}
+
+.bk-center {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    transition: filter 0.22s, opacity 0.22s;
+
+    &.is-dimmed {
+        filter: blur(4px);
+        opacity: 0.35;
+        pointer-events: none;
+    }
+}
+
+// Within-bracket-section elements that blur during bracket card editing
+.stage-header.is-dimmed,
+.last-updated.is-dimmed {
+    filter: blur(6px);
+    opacity: 0.4;
+    pointer-events: none;
+    transition: filter 0.22s, opacity 0.22s;
+}
+
+.bk-medium-tabs.is-dimmed {
+    filter: blur(2px);
+    opacity: 0.55;
+    pointer-events: none;
+    transition: filter 0.22s, opacity 0.22s;
+}
+
+// ── ROUND COLUMNS ─────────────────────────────────────────────────────────────
+.round-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+
+    &.round-col-finals {
+        position: relative;
+        background: $vindro-black;
+        border-radius: 7px;
+        padding: 14px 7px;
+        justify-content: space-evenly;
+        border: 1px solid transparent;
+        transition: filter 0.22s, opacity 0.22s, border-color 0.22s;
+
+        h6 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: $vindro-teal;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        &.is-dimmed {
+            filter: blur(4px);
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        &.focused-edit {
+            border-color: $vindro-neon-pink;
+            box-shadow: 0 0 28px rgba(0, 0, 0, 0.7);
+        }
+    }
+}
+
+
+
+// ── TEAMS ─────────────────────────────────────────────────────────────────────
+.teams-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+
+    .team-card {
+        background: white;
+        height: 24px;
+        width: 94%;
+        border-radius: 3px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        padding: 0 6px;
+        font-size: 1.0rem;
+        font-family: $vindro-Montserrat;
+        font-weight: 600;
+        color: $vindro-black;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &--empty {
+            background: rgba(white, 0.70);
+        }
+    }
+}
+
+// ── CONNECTORS ────────────────────────────────────────────────────────────────
+.connector-col {
+    width: 14px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.rounds-connect-container {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .two-lines {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 50%;
+        height: 100%;
+
+        .line {
+            width: calc(100% + 1px);
+            height: 1px;
+            background: $vindro-teal;
+        }
+    }
+
+    .center-vertical {
+        width: 1px;
+        background: $vindro-teal;
+        height: 50%;
+        align-self: center;
+    }
+
+    .one-line {
+        display: flex;
+        align-items: center;
+        width: 50%;
+        height: 100%;
+
+        .line {
+            width: 100%;
+            height: 1px;
+            background: $vindro-teal;
+        }
+    }
+}
+
+// ── TAB BUTTONS (shared) ──────────────────────────────────────────────────────
+.bk-tab {
+    background: $vindro-tan;
+    color: $vindro-black;
+    border-radius: 3px;
+    padding: 7px 14px;
+    font-size: 1.4rem;
+    font-family: $vindro-Montserrat;
+    cursor: pointer;
+    transition: all 0.18s;
+
+    &:hover {
+        border-color: $vindro-green;
+        color: white;
+    }
+
+    &--active {
+        background-color: $vindro-green;
+        color: white;
+        font-weight: 700;
+    }
+}
+
+.bk-mobile { display: none; }

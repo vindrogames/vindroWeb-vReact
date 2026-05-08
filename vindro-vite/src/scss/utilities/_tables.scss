@@ -1,0 +1,117 @@
+@use '../config' as *;
+
+.table-container {
+
+    border-radius: 7px;
+
+    table {
+        width: auto;
+        border-collapse: collapse;
+        overflow: hidden;
+    }
+
+    th {
+        font-size: 1.8rem;
+        font-weight: 600;
+        font-family: $vindro-Montserrat;
+        border: none;
+        padding: 7px 14px;
+        color: white;
+        text-align: center;
+    }
+
+    tr {
+        padding: 7px 14px;
+
+        &.clickable-row {
+            //cursor: pointer;
+            transition: background-color 0.2s ease;
+
+            &:hover {
+                background-color: rgba($vindro-tan, 0.42);
+            }
+        }
+    }
+
+    td {
+        font-size: 1.4rem;
+        font-weight: 300;
+        text-align: center;
+        padding: 7px 14px;
+        color: white;
+
+        span.table-link {
+            //color: $vindro-teal;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+
+    th,
+    td {
+        vertical-align: middle;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    th.narrow-header {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    td.truncate-cell {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 0;
+    }
+
+    &.bg-gray.backdrop-tan {
+        border: 1px solid $vindro-tan;
+        background-color: $vindro-gray;
+
+        table {
+
+            th {
+                border-bottom: 3px solid $vindro-tan;
+            }
+        }
+    }
+
+    &.bg-black.backdrop-gray {
+        border: 1px solid $vindro-gray;
+        background-color: $vindro-black-overlay;
+
+        table {
+
+            th {
+                border-bottom: 3px solid $vindro-gray;
+            }
+        }
+    }
+
+    &.bg-gray.backdrop-black {
+        border: 1px solid $vindro-black;
+        background-color: $vindro-gray;
+
+        table {
+            th {
+                border-bottom: 3px solid $vindro-black;
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    .table-container {
+
+        table {
+
+            td.left-text {
+                text-align: left;
+            }
+        }
+    }
+}

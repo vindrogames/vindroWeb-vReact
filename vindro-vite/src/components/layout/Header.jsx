@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBarLink from '../ui/NavBarLink';
 import SmartLink from '../ui/SmartLink';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 import AuthModal from '../ui/AuthModal';
 
 const routes = [
@@ -69,13 +69,13 @@ const NavBar = ({ isMadrid }) => {
             await logout();
             setUserDropdownOpen(false);
             setMenuOpen(false);
-            navigate('/');
+            navigate('/logout');
         } catch (err) {
             console.error('Logout failed:', err);
         }
     }
 
-    const logoSrc = isMadrid ? "/img/vindro-logo-real-yellow.png" : "/img/vindro_logo_1.png";
+    const logoSrc = isMadrid ? "/img/vindro-logo-real-yellow.webp" : "/img/vindro-logo-teal.webp";
     const inlineClass = isMadrid ? "inline-real-yellow" : "inline-teal";
 
     const LogoBlock = () => (
@@ -109,7 +109,7 @@ const NavBar = ({ isMadrid }) => {
                                     className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
                                     onClick={() => setUserDropdownOpen(prev => !prev)}
                                 >
-                                    <img src={user.avatar} alt="User Avatar" />
+                                    <img src={(user.avatar).replace(/\.(\w+)$/, `-${96}.$1`)} alt="User Avatar" />
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
@@ -120,23 +120,6 @@ const NavBar = ({ isMadrid }) => {
                                         >
                                             Profile
                                         </SmartLink>
-
-                                        {/* Possible Profile options
-                                        <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/brackets`}
-                                            className="dropdown-item"
-                                            onClick={() => { setUserDropdownOpen(false) }}
-                                        >
-                                            Top Scores
-                                        </SmartLink>
-                                        <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/topScores`}
-                                            className="dropdown-item"
-                                            onClick={() => { setUserDropdownOpen(false) }}
-                                        >
-                                            Brackets
-                                        </SmartLink>
-                                        */}
 
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
                                     </div>
@@ -180,7 +163,7 @@ const NavBar = ({ isMadrid }) => {
                                     className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
                                     onClick={() => setUserDropdownOpen(prev => !prev)}
                                 >
-                                    <img src={user.avatar} alt="User Avatar" />
+                                    <img src={(user.avatar).replace(/\.(\w+)$/, `-${96}.$1`)} alt="User Avatar" />
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
@@ -191,23 +174,7 @@ const NavBar = ({ isMadrid }) => {
                                         >
                                             Profile
                                         </SmartLink>
-
-                                        {/* Possible Profile options
-                                        <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/brackets`}
-                                            className="dropdown-item"
-                                            onClick={() => { setUserDropdownOpen(false) }}
-                                        >
-                                            Top Scores
-                                        </SmartLink>
-                                        <SmartLink
-                                            to={`/user/${encodeURIComponent(user?.username || user.id)}/topScores`}
-                                            className="dropdown-item"
-                                            onClick={() => { setUserDropdownOpen(false) }}
-                                        >
-                                            Brackets
-                                        </SmartLink>
-                                        */}
+                                        
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}

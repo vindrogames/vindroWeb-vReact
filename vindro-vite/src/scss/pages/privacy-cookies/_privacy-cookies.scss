@@ -1,0 +1,90 @@
+@use '../../config' as *;
+
+main#privacy-page-content {
+    width: 100%;
+    background-color: white;
+    color: $vindro-black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    //padding: 2rem;
+    text-align: justify;
+
+    section#privacy,
+    section#cookies,
+    section#terms {
+        width: 63%;
+        padding: 14px;
+
+        ul,
+        ol {
+            list-style: none; // Essential to hide default bullets
+
+            li {
+                position: relative; // Anchor for the pseudo-element
+                font-size: 1.8rem;
+                margin-left: 42px;
+                margin-bottom: 14px;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+
+                    // Your custom styling
+                    width: 7px;
+                    height: 7px;
+                    background-color: $vindro-green;
+                    border-radius: 50%; // Makes it a circle
+
+                    // Positioning
+                    left: -14px; // Moves it into the margin-left space
+                    top: 0.6em; // Aligns it vertically with your 1.8rem text
+                }
+            }
+        }
+
+        h2,
+        h3,
+        h4,
+        h5,
+        p {
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            text-align: left;
+            color: $vindro-green;
+            font-weight: 700;
+            font-size: 4.2rem;
+        }
+
+        h3 {
+            font-size: 2.1rem;
+        }
+
+        p.update {
+            font-size: 1.6rem;
+            font-weight: 500;
+        }
+
+        h5 {
+            font-weight: 600;
+        }
+
+        h5,
+        p {
+            font-size: 1.8rem;
+        }
+
+        a {
+            color: $vindro-green;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+
+            &:hover {
+                color: lighten($vindro-green, 14%);
+            }
+        }
+    }
+}

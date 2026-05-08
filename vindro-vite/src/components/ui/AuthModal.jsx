@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getBackendUrl } from '../../services/auth_api';
+import { getBackendUrl } from '../../services/api';
 import ShowcaseSection from "./ShowcaseSection";
-import LoginHelmet from '../../page-helmets/LoginHelmet';
 
 /**
  * AuthModal Component
@@ -31,17 +30,21 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
 
     const handleLogin = (provider) => {
         const backendUrl = getBackendUrl();
-
-        // Use the current page URL if no specific redirectTo was provided
-        // window.location.href captures the full URL including current route/params
-        const finalRedirect = redirectTo || window.location.href;
+        // Ensure the redirect URL is always absolute so Django's ?next= points to
+        // the React frontend, not back to Django itself
+        const rawRedirect = redirectTo || window.location.href;
+        const finalRedirect = rawRedirect.startsWith('http')
+            ? rawRedirect
+            : `${window.location.origin}${rawRedirect}`;
 
         let oauthUrl = `${backendUrl}/accounts/${provider}/login/`;
-
-        // Append the current location as the 'next' parameter
         const encodedRedirect = encodeURIComponent(finalRedirect);
         oauthUrl += `?next=${encodedRedirect}`;
 
+        // Flag for checkAuth to show the loader when the user returns from OAuth
+        sessionStorage.setItem('oauth_pending', '1');
+        // Record where the user was so the profile page welcome-back button can return them here
+        sessionStorage.setItem('login_origin', window.location.pathname);
         window.location.href = oauthUrl;
     };
 
@@ -55,7 +58,6 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <LoginHelmet />
 
             <div
                 className={`modal-content auth-modal-layout ${isFading ? 'is-fading' : ''}`}
@@ -93,7 +95,7 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
                 <div className="auth-footer-wrapper">
                     {isSignUp ? (
                         <ShowcaseSection className="no-account-container signup-view">
-                            <div className="auth-info-header">
+                            <div id="sign-up-header" className="auth-info-header">
                                 <h3>The full vindro<span className='inline-teal inline-bold'>Experience</span></h3>
                             </div>
 
@@ -118,7 +120,8 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
                             </div>
                             <div className="auth-info">
                                 <h4>Join us for the full vindro<span className='inline-teal inline-bold'>Experience</span></h4>
-                                <p>We make it easy, no password needed.</p>
+                                <p>We make it easy.</p>
+                                <p>No password needed</p>
                             </div>
 
                             <div className="modal-footer-toggle">

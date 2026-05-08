@@ -18,7 +18,7 @@ class TournamentAdmin(admin.ModelAdmin):
 
 @admin.register(TournamentPlay)
 class TournamentPlayAdmin(admin.ModelAdmin):
-    list_display = ['name', 'user', 'tournament', 'status', 'current_phase', 'score', 'created_at']
+    list_display = ['name', 'user', 'tournament', 'status', 'group_points', 'bracket_points', 'current_phase', 'created_at']
     list_filter = ['status', 'current_phase', 'tournament']
     search_fields = ['name', 'user__username']
     raw_id_fields = ['user', 'tournament']
@@ -26,12 +26,16 @@ class TournamentPlayAdmin(admin.ModelAdmin):
 
 @admin.register(TournamentPool)
 class TournamentPoolAdmin(admin.ModelAdmin):
-    list_display = ['name', 'tournament', 'is_public', 'current_member_count', 'created_by']
-    list_filter = ['is_public', 'tournament']
+    list_display = ['name', 'tournament', 'is_public', 'is_money_pool', 'cost_per_play', 'current_member_count', 'created_by']
+    list_filter = ['is_public', 'is_money_pool', 'tournament']
     search_fields = ['name']
 
 
 @admin.register(PoolMembership)
 class PoolMembershipAdmin(admin.ModelAdmin):
-    list_display = ['pool', 'play', 'joined_at']
+    # Added 'has_paid' so you can manage payments via Admin
+    list_display = ['pool', 'play', 'has_paid', 'joined_at']
+    list_filter = ['has_paid', 'pool__tournament']
     raw_id_fields = ['pool', 'play']
+    # This allows you to check the 'Paid' box directly from the list without clicking into the record
+    list_editable = ['has_paid']

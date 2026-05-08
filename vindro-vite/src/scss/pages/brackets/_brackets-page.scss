@@ -1,0 +1,167 @@
+@use '../../config' as *;
+
+main#brackets-page {
+
+    section#brackets-events-container {
+        width: 100%;
+        min-height: 50vh;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        padding: 14px 42px;
+        background: $vindro-tan;
+
+        #brackets-events-gallery {
+            max-width: 1600px;
+            width: 100%;
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 21px;
+
+            .bracket-event-card-container {
+                position: relative;
+                width: 100%;
+                padding: 14px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+
+                .bracket-event-card {
+                    position: relative;
+                    overflow: hidden;
+                    width: 100%;
+                    height: 100%;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding: 21px;
+                    border-radius: 3px;
+                    background-color: $vindro-gray;
+                    border: 3px solid $vindro-black;
+                    box-shadow: 1px 1px 14px $vindro-black;
+
+                    .rolling-football {
+                        display: block; // Force rendering
+                        position: absolute;
+                        bottom: 5px; // Slight offset from the very edge
+                        width: 42px;
+                        height: 42px;
+                        background-image: url('img/vindro-football.webp');
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        z-index: 10;
+                        pointer-events: none;
+                        opacity: 0; // Hidden by default
+
+                        &.roll-right {
+                            opacity: 1;
+                            animation: footy-move-right 3s linear forwards;
+                        }
+
+                        &.roll-left {
+                            opacity: 1;
+                            animation: footy-move-left 3s linear forwards;
+                        }
+                    }
+
+                    h4 {
+                        font-size: 2.4rem;
+                        color: white;
+                        margin-bottom: 14px;
+                        font-family: $vindro-Montserrat;
+                    }
+
+                    .phase-section {
+
+                        h5 {
+                            font-size: 1.8rem;
+                            font-weight: 400;
+                            margin-bottom: 3px;
+                        }
+
+                        ul.event-stages {
+                            list-style: none;
+                            margin-left: 14px;
+                            margin-bottom: 14px;
+
+                            li {
+                                font-size: 1.6rem;
+                                color: white;
+                                position: relative;
+                                padding-left: 21px;
+
+                                &::before {
+                                    content: "";
+                                    position: absolute;
+                                    left: 0;
+                                    top: 50%;
+                                    transform: translateY(-50%);
+
+                                    // The Dot Styling
+                                    height: 7px;
+                                    width: 7px;
+                                    background-color: $vindro-teal;
+                                    border-radius: 50%;
+                                    display: inline-block;
+                                }
+                            }
+                        }
+                    }
+
+                    .start-join {
+
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        h5 {
+                            font-size: 1.6rem;
+                            color: white;
+                            font-weight: 400;
+                        }
+
+                        .bracket-event-join-btn {
+                            font-size: 1.8rem;
+                            color: $vindro-black;
+                            background-color: $vindro-tan;
+                            padding: 7px 21px;
+                            border-radius: 3px;
+                            transition: all 0.3s ease;
+
+                            &:hover {
+                                color: white;
+                                background-color: $vindro-green;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes footy-move-right {
+    0% {
+        left: -40px;
+        transform: rotate(0deg);
+    }
+
+    100% {
+        left: 210%;
+        transform: rotate(1440deg);
+    }
+}
+
+@keyframes footy-move-left {
+    0% {
+        left: 110%;
+        transform: rotate(0deg);
+    }
+
+    100% {
+        left: -40px;
+        transform: rotate(-1440deg);
+    }
+}

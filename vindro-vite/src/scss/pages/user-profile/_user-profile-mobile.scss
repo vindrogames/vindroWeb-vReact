@@ -1,0 +1,242 @@
+@use '../../config' as *;
+
+@media(max-width: 960px) {
+
+    main#user-profile {
+
+        .profile-container {
+
+            .profile-header {
+
+                h1.visiting-user,
+                h1.welcome-new-user {
+                    font-size: 2.8rem;
+                }
+
+                button {
+                    position: absolute;
+                    top: -42px;
+                    right: 0;
+                }
+            }
+
+            .user-container {
+                grid-template-columns: 1fr;
+                gap: 21px;
+
+                h4 {
+                    text-align: left;
+                }
+
+                &#user-name-icon {
+
+                    .user-name-data {
+                        padding-left: 42px;
+                    }
+
+                    .user-icon {
+                        justify-content: flex-start;
+                        padding-left: 42px;
+
+                        .icon-gallery {
+                            left: 14%;
+                        }
+                    }
+                }
+
+                .scores-stats-container {
+                    padding-left: 42px;
+                    align-items: flex-start;
+
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main#user-profile {
+
+        .profile-container {
+            width: 100%;
+
+            .profile-header {
+
+                h1.visiting-user,
+                h1.welcome-new-user {
+                    font-size: 2.4rem;
+                }
+
+                h1 {
+                    font-size: 2.8rem;
+                    text-align: center;
+                }
+
+                .welcome-text {
+                    h2 {
+                        text-align: center;
+                    }
+                }
+
+                button: {
+                    top: -21px;
+                }
+            }
+
+            .user-container {
+                grid-template-columns: 1fr;
+                gap: 21px;
+
+                h2 {
+                    margin-top: 0;
+                }
+
+                h4 {
+                    text-align: left;
+                }
+
+                &#user-name-icon {
+
+                    .user-name-data {
+                        padding: 0;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    .user-icon {
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 0;
+                        gap: 7px;
+
+                        button.btn-edit {
+                            align-self: center;
+                        }
+
+                        .icon-gallery {
+                            top: 298px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                        }
+                    }
+                }
+
+                .editable-input-wrapper {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 3px;
+
+                    // 2. Bring the active input above the overlay
+                    &.focused-mode {
+                        z-index: 101;
+                    }
+
+                    .input-button-container {
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 7px;
+
+                        .input-container {
+                            position: relative;
+                            display: inline-block;
+
+                            input {
+                                text-align: center;
+                            }
+
+                            .char-count {
+                                top: 56px;
+                                color: $vindro-neon-pink;
+                            }
+                        }
+
+                        button.btn-edit {
+                            align-self: center;
+                        }
+                    }
+
+                    .profile-error-container {
+
+                        .profile-error {
+                            text-align: center;
+                        }
+                    }
+                }
+
+                .scores-stats-container {
+                    padding: 0;
+                    align-items: center;
+                }
+
+                h4 {
+                    text-align: center;
+                }
+
+                &#user-top-scores {
+                    gap: 42px;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    main#user-profile {
+        padding: 90px 21px 21px;
+
+        .profile-container {
+            padding: 21px 0;
+            gap: 21px;
+
+            .user-container {}
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    main#user-profile {
+        padding: 90px 14px 21px;
+
+        .profile-container {
+
+            .profile-header {
+                h1 {
+                    font-size: 3.6rem;
+
+                    &.visiting-user,
+                    &.welcome-new-user {
+                        font-size: 2.1rem;
+                    }
+                }
+            }
+
+            .user-container {
+
+                .scores-stats-container {
+
+                    .table-container {
+                        max-width: 100%;
+                        width: 100%;
+
+                        table {
+
+                            th {
+                                font-size: 1.2rem;
+                                padding: 4px;
+                            }
+
+                            td {
+                                font-size: 1.1rem;
+                                padding: 4px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

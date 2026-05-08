@@ -7,7 +7,7 @@ export default function AutominerHelmet() {
 
         <Helmet>
             {/* Meta Description and Key Words */}
-            <meta name="description" content="Autominer Idel Game by Vindrogames. Automate mining, leave your tab open, and max out!" />
+            <meta name="description" content="Autominer Idle Game by Vindrogames. Automate mining, leave your tab open, and max out!" />
             <meta name="keywords" content="React Idle Game, Vindrogames Autominer, Autominer Idle Game" />
 
             {/* OG Tags */}

@@ -1,27 +1,19 @@
 """
-Game configuration for validation and rate limiting
+Game configuration for score validation and rate limiting
 """
 
-# Score validation ranges per game
 GAME_CONFIGS = {
-    'snake': {
+    'game-42': {
         'min_score': 0,
-        'max_score': 10000,
-        'description': 'Classic Snake Game'
+        'max_score': 42,
+        'description': 'Game 42 — number placement puzzle',
     },
-    'tetris': {
+    'autominer': {
         'min_score': 0,
-        'max_score': 999999,
-        'description': 'Tetris'
+        'max_score': 99999,
+        'description': 'AutoMiner — idle clicker, score = silver collected',
     },
-    'pong': {
-        'min_score': 0,
-        'max_score': 21,
-        'description': 'Pong Game'
-    },
-    # Add more games here as needed
 }
 
-# Rate limiting configuration
-RATE_LIMIT_WINDOW_SECONDS = 60  # Time window for rate limiting
-RATE_LIMIT_MAX_SUBMISSIONS = 5  # Max submissions per window
+RATE_LIMIT_WINDOW_SECONDS = 60
+RATE_LIMIT_MAX_SUBMISSIONS = 10

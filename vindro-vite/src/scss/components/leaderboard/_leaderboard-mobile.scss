@@ -1,0 +1,73 @@
+@use '../../config' as *;
+
+@media(max-width: 960px) {
+
+    .leaderboard-display-container {
+
+        .leaderboard-container {
+            width: 100%;
+
+            .table-container {
+                width: 100%;
+                table {
+
+                    th {
+                        font-size: 1.6rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 678px) {
+
+    .leaderboard-display-container {
+
+        .leaderboard-container {
+            width: 100%;
+
+            .table-container {
+                width: 100%;
+                table {
+
+                    th {
+                        padding: 7px;
+                        font-size: 1.4rem;
+                    }
+                    td {
+                        padding: 7px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 450px) {
+
+    .leaderboard-display-container {
+
+        .leaderboard-container {
+            width: 100%;
+
+            .table-container {
+                width: 100%;
+                table {
+                    table-layout: auto;
+
+                    th {
+                        padding: 4px;
+                        font-size: 1.2rem;
+                        word-break: normal;
+                        overflow-wrap: normal;
+                    }
+                    td {
+                        font-size: 1.2rem;
+                        padding: 4px;
+                    }
+                }
+            }
+        }
+    }
+}

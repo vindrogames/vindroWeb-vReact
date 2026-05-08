@@ -1,0 +1,135 @@
+@use '../../config' as *;
+
+.avatar-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    &:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: $vindro-black;
+        color: #fff;
+        padding: 7px 14px;
+        border-radius: 3px;
+        font-size: 1.2rem;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        z-index: 200;
+        pointer-events: none;
+    }
+
+    &:hover::before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: $vindro-black;
+        z-index: 200;
+    }
+}
+
+.leaderboard-display-container {
+    justify-content: flex-start !important;
+
+    .leaderboard-container {
+        overflow-x: auto;
+        width: 84%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .table-container {
+            width: 84%;
+            table {
+                width: 100%;
+
+                th {
+                    white-space: normal;
+                    overflow: hidden;
+                    text-overflow: clip;
+                }
+
+                tr {
+                    position: relative;
+                    overflow: visible;
+
+                    &.clickable-row {
+                        transition: background-color 0.2s ease;
+
+                        &:hover {
+                            background-color: rgba($vindro-tan, 0.42);
+                            z-index: 42;
+                        }
+                    }
+
+                    td:first-child {
+                        font-weight: 600;
+                    }
+
+                    td {
+                        position: relative;
+                        overflow: visible;
+
+                        &.truncate-cell {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        img.player-avatar {
+                            height: 24px;
+                            width: 24px;
+                            object-fit: cover;
+                            cursor: help;
+                            position: relative;
+
+                            &:hover {
+                                transform: scale(1.1);
+                                z-index: 14;
+                            }
+                        }
+
+                        .avatar-wrapper {
+                            position: relative;
+                            display: inline-flex;
+                            align-items: center;
+
+                            &:hover::after {
+                                content: attr(data-tooltip);
+                                position: absolute;
+                                bottom: calc(100% + 6px);
+                                left: 50%;
+                                transform: translateX(-50%);
+                                background-color: $vindro-black;
+                                color: #fff;
+                                padding: 7px 14px;
+                                border-radius: 3px;
+                                font-size: 1.2rem;
+                                white-space: nowrap;
+                                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                                z-index: 200;
+                                pointer-events: none;
+                            }
+
+                            &:hover::before {
+                                content: '';
+                                position: absolute;
+                                bottom: 100%;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                border: 6px solid transparent;
+                                border-top-color: $vindro-black;
+                                z-index: 200;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

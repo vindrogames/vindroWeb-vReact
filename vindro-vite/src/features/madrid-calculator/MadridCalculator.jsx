@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import useCalculator from './hooks/useCalculator';
 import InteractionContainer from './components/InteractionContainer';
 import Calculator from './components/Calculator';
+import MadridCalculatorHelmet from '../../page-helmets/MadridCalculatorHelmet';
 
 const MadridCalculator = () => {
   const calcHooks = useCalculator();
@@ -19,6 +20,7 @@ const MadridCalculator = () => {
 
   return (
     <main id="madrid-calculator">
+      <MadridCalculatorHelmet />
       <InteractionContainer />
       <Calculator 
         calcHooks={calcHooks}

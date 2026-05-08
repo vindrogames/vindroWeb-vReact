@@ -1,0 +1,78 @@
+@use '../../config' as *;
+
+main#contact-page {
+
+    section#contact-page-content,
+    section#contact-page-emails {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 21px;
+
+        h3 {
+            width: 84%;
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 400;
+        }
+    }
+
+    section#contact-page-emails {
+        overflow: hidden;
+        width: 100%;
+
+        ul {
+            padding: 0 0 84px 0;
+
+            li {
+                list-style: none;
+                position: relative;
+                width: 6px;
+                margin: 0 auto;
+                padding-top: 84px;
+                background: $vindro-green;
+
+                div {
+                    position: relative;
+                    bottom: 0;
+                    width: 420px;
+
+                    h4 {
+                        color: $vindro-black;
+                        font-weight: 400;
+                        font-family: $vindro-Montserrat;
+                        font-size: 2.1rem;
+                        padding-bottom: 3px;
+                        border-bottom: 2px solid $vindro-green;
+                    }
+                }
+
+                /* Timeline Right Side */
+                &:nth-child(odd) div {
+                    left: 28px;
+                    /* transform: translate(200px, 0); */
+                }
+
+                /* Timeline Left Side */
+                &:nth-child(even) div {
+                    left: -442px;
+                    /* transform: translate(-200px, 0); */
+                }
+
+                /* Timeline Dots */
+                &:after {
+                    content: '';
+                    position: absolute;
+                    left: 50%;
+                    bottom: 0;
+                    width: 25px;
+                    height: 25px;
+                    background: inherit;
+                    transform: translateX(-50%);
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+}

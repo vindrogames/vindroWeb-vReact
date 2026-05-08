@@ -1,0 +1,429 @@
+@use '../../../config' as *;
+
+main#auto-miner {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 90px 90px 0 90px;
+    background-color: $vindro-black;
+
+    .auto-miner-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 42px;
+        display: flex;
+        flex-direction: column;
+        gap: 21px;
+
+        section#game-intro {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+
+            h1 {
+                font-size: 4.2rem;
+
+                span {
+                    font-family: $vindro-Montserrat;
+                }
+            }
+
+            .sub-header-text-instruct {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 21px;
+
+                h2 {
+                    font-size: 2.8rem;
+                }
+
+                button#how-to-play {
+                    width: 140px;
+                    border-radius: 3px;
+                    background-color: $vindro-tan;
+                    color: $vindro-black;
+                    font-size: 1.6rem;
+                    padding: 7px 14px;
+                    transition: all 0.3s ease;
+                    margin: 0 !important;
+
+                    &:hover,
+                    &.current {
+                        background-color: $vindro-green;
+                        color: white;
+                        margin: 0 !important;
+                    }
+
+                    &.current {
+                        cursor: default;
+                    }
+                }
+            }
+
+            #resource-bar {
+                position: fixed;
+                align-self: flex-end;
+                top: 120px;
+                right: 15%;
+                z-index: 10;
+
+                .resource-bar-container {
+                    width: auto;
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr);
+                    align-items: center;
+                    background-color: $vindro-gray;
+                    border: 2px solid $vindro-teal;
+                    border-radius: 3px;
+                    gap: 3px;
+
+                    .column {
+                        display: flex;
+                        padding: 7px;
+                        border-bottom: 1px solid $vindro-teal;
+                        // display: grid;
+                        // grid-template-columns: 1fr 1fr;
+
+                        img {
+                            width: 32px;
+                            height: 32px;
+                        }
+
+                        p {
+                            padding-left: 7px;
+                            font-size: 1.8rem;
+                            font-weight: 600;
+                            text-align: left;
+
+
+                            &#drill-count {
+                                margin-left: 0;
+                            }
+                        }
+
+                        &:last-child {
+                            border-bottom: none;
+                        }
+                    }
+                }
+            }
+        }
+
+        section.resource-section {
+            border-top: 1px solid $vindro-teal;
+            width: 100%;
+            padding: 42px 21px;
+            padding-bottom: 21px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            &:last-child {
+                border-bottom: 1px solid $vindro-teal;
+                padding-bottom: 42px;
+                margin-bottom: 21px;
+            }
+
+            .resource-section-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                width: 100%;
+
+                .grid-cell-container {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    .grid-cell-content {
+                        display: flex;
+                        flex-direction: column;
+
+                        .header-text,
+                        .total-resource-grid-display {
+                            display: flex;
+                            align-items: center;
+                            gap: 14px;
+                            margin-bottom: 14px;
+
+                            img {
+                                width: 42px;
+                                height: 42px;
+                            }
+
+                            h3,
+                            h4 {
+                                font-size: 2.1rem;
+                                font-weight: 600;
+                            }
+                        }
+
+                        .total-resource-grid-display {
+                            flex-direction: column;
+                            gap: 7px;
+
+                            .production-cost-heading {
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+
+                                img {
+                                    margin-left: 3px;
+                                    width: 28px;
+                                    height: 28px;
+                                }
+                            }
+                        }
+
+                        .cost-purchase-display,
+                        .purchase-summary-section {
+                            display: flex;
+                            gap: 7px;
+                            align-items: center;
+                            margin-bottom: 7px;
+
+                            p {
+                                font-size: 1.8rem;
+                                font-weight: 400;
+                            }
+
+                            &#sulfur-purchase-display,
+                            &#drills-purchase-display {
+                                margin-bottom: 14px;
+                            }
+                        }
+
+                        .purchase-summary-section {
+                            margin-bottom: 14px;
+                        }
+
+                        .purchase-section {
+                            display: flex;
+                            gap: 7px;
+                            align-items: center;
+                            margin-bottom: 7px;
+
+                            p {
+                                font-size: 1.8rem;
+                            }
+
+                            .plus-minus-purchase-display {
+                                display: flex;
+                                align-items: center;
+                                gap: 7px;
+
+                                .plus-minus-purchase-buttons {
+                                    display: flex;
+                                    flex-direction: column;
+
+                                    .minus-1-purchase-btn,
+                                    .plus-1-purchase-btn {
+                                        width: 28px;
+                                        height: 28px;
+                                        border-radius: 3px;
+                                        cursor: pointer;
+                                        transition: all 0.3s ease;
+                                        background-color: transparent;
+                                        border: none;
+                                        padding: 0;
+                                        overflow: hidden; // Ensures the SVG doesn't "leak" out of the 28px box
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+
+                                        svg {
+                                            color: $vindro-green;
+                                            width: 100%;
+                                            height: 100%;
+                                            display: block;
+                                        }
+                                    }
+
+                                    .plus-1-purchase-btn {
+                                        svg {
+                                            // Pushes the "Up" arrow render to the very top edge
+                                            transform: translateY(4px);
+                                        }
+
+                                        &:hover {
+                                            transform: translateY(-3px);
+                                        }
+                                    }
+
+                                    .minus-1-purchase-btn {
+                                        svg {
+                                            // Pushes the "Down" arrow render to the very bottom edge
+                                            transform: translateY(-4px);
+                                        }
+
+                                        &:hover {
+                                            transform: translateY(3px);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .inline-cost-display,
+                        .total-resource-display,
+                        .production-display {
+                            padding: 3px 7px;
+                            background-color: $vindro-gray;
+                            color: white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 1.8rem;
+                            font-weight: 500;
+                            border-radius: 3px;
+                        }
+
+                        .total-resource-display,
+                        .production-display {
+                            padding: 3px 7px;
+                            font-size: 2.1rem;
+                            font-weight: 500;
+                            border-radius: 3px;
+                        }
+
+                        label {
+                            display: flex;
+                            align-items: center;
+                            font-size: 2.1rem;
+                            cursor: pointer;
+
+                            input {
+                                margin-right: 7px;
+                                width: 21px;
+                                height: 21px;
+                                cursor: pointer;
+
+                                // Target the checkbox specifically when it's disabled
+                                &:disabled {
+                                    opacity: 0.4;
+                                    cursor: not-allowed;
+                                    filter: grayscale(1); // Desaturates the box in some browsers
+                                    accent-color: #666; // Colors the "check" if it were checked
+                                }
+                            }
+                        }
+
+                        #silver-purchase-display {
+                            img {
+                                width: 24px;
+                                height: 24px;
+                            }
+                        }
+
+                        .silver-progress-container {
+                            width: 100%;
+                            margin-top: 14px;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+
+                            progress {
+                                width: 96%;
+                            }
+
+                            .progress-end-nums {
+                                width: 100%;
+                                display: flex;
+                                justify-content: space-between;
+                                font-size: 1.6rem;
+                                color: white;
+                            }
+                        }
+                    }
+
+                    &:first-child {
+                        justify-content: flex-end;
+                        padding-right: 14%;
+                    }
+
+                    &:last-child {
+                        justify-content: flex-start;
+                        padding-left: 14%;
+
+                        .total-resource-grid-display {
+                            padding: 0 21px;
+
+                            .production-cost-heading {
+                                margin-bottom: 0;
+                                padding-top: 14px;
+                            }
+
+                            &.production-cost-display {
+                                border-top: 1px solid $vindro-green;
+
+                                &#sulfur-production-cost,
+                                &#drills-production-cost {
+                                    border-top: none;
+
+                                    .production-cost-heading {
+                                        padding-top: 0;
+                                        gap: 3px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &#iron-mining-section,
+                &#sulfur-buying-section,
+                &#drills-buying-section,
+                &#silver-mining-section {
+                    border-bottom: 1px solid $vindro-green;
+                    padding-bottom: 21px;
+                    margin-bottom: 21px;
+                }
+            }
+        }
+
+        .auto-miner-btn {
+            min-width: 240px;
+            padding: 7px 21px;
+            background-color: $vindro-tan;
+            color: $vindro-black;
+            font-size: 1.6rem;
+            border-radius: 3px;
+            font-weight: 500;
+            cursor: pointer;
+            align-self: center;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background-color: $vindro-green;
+                color: white;
+                transform: scale(1.04);
+                // box-shadow: 0 1px 7px rgba(255, 255, 255, 1); // Deeper shadow for depth
+            }
+
+            &:active {
+                transform: scale(1.04);
+                // box-shadow: 0 6px 20px rgba(255, 255, 255, 1);
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+                opacity: 0.6;
+                background-color: $real-red;
+                color: white;
+                border: 1px solid white;
+                transform: none;
+            }
+        }
+    }
+}
+

@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
 
@@ -13,6 +14,14 @@ class User(AbstractUser):
     - login_count: Number of times this user has logged in
     - date_joined (from AbstractUser)
     """
+    username = models.CharField(
+        max_length=21,
+        unique=True,
+        validators=[UnicodeUsernameValidator()],
+        error_messages={'unique': 'A user with that username already exists.'},
+        help_text='Required. 21 characters or fewer. Letters, digits and @/./+/-/_ only.',
+    )
+
     avatar = models.URLField(
         blank=True,
         default='/img/profile_icons/teal-simple.webp',
@@ -32,8 +41,13 @@ class User(AbstractUser):
     )
     
     login_count = models.IntegerField(
-        default=1,
+        default=0,
         help_text='Number of times user has logged in'
+    )
+
+    has_edited_username = models.BooleanField(
+        default=False,
+        help_text='Whether the user has manually changed their username at least once'
     )
 
     def __str__(self):

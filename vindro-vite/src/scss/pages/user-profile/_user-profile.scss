@@ -1,0 +1,324 @@
+@use '../../config' as *;
+
+main#user-profile {
+    width: 100%;
+    min-height: 100vh;
+    padding: 90px 21px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .profile-container {
+        max-width: 1100px;
+        width: 84%;
+        height: 84%;
+        padding: 42px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 42px;
+
+        .profile-header {
+            position: relative;
+            width: 100%;
+
+            h1 {
+                width: 100%;
+                font-size: 4.2rem;
+                padding-bottom: 14px;
+                border-bottom: 1px solid $vindro-teal;
+            }
+
+            .welcome-text {
+                margin-top: 14px;
+
+                h2 {
+                    margin-top: 7px;
+                    font-size: 1.6rem;
+                    font-family: $vindro-openSans;
+                    font-weight: 300;
+                }
+            }
+
+            button {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
+        }
+
+        .user-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+
+            h2,
+            h3,
+            h4 {
+                font-family: $vindro-Montserrat;
+                font-size: 2.4rem;
+                font-weight: 400;
+
+                span {
+                    font-family: $vindro-Montserrat;
+                    font-size: 2.4rem;
+                }
+            }
+
+            h2 {
+                margin-top: 21px;
+            }
+
+            h4 {
+                text-align: center;
+            }
+
+            &#user-name-icon {
+
+                .user-name-data {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 14px;
+
+                    h3 {
+                        font-size: 1.8rem;
+                        font-weight: 400;
+                    }
+                }
+
+                .user-icon {
+                    width: 100%;
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+
+                    img {
+                        width: 256px;
+                        height: 256px;
+                    }
+
+                    button.btn-edit {
+                        width: 63px;
+                        height: 28px;
+                        padding: 3px 14px;
+                        border-radius: 3px;
+                        font-size: 1.4rem;
+                        font-weight: 500;
+                        font-family: $vindro-Montserrat;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        align-self: flex-end;
+
+                        &:hover,
+                        &.input-active {
+                            background-color: $real-yellow;
+                        }
+
+                        @media (hover: none) and (pointer: coarse) {
+                            button.btn-edit:hover {
+                                background-color: $vindro-tan;
+                            }
+                        }
+                    }
+
+                    .icon-gallery {
+                        position: absolute;
+                        top: 264px;
+                        left: -42px;
+                        width: auto;
+                        display: grid;
+                        grid-template-columns: repeat(7, 1fr);
+                        gap: 7px;
+                        padding: 7px;
+                        background-color: $vindro-gray;
+                        border: 1px solid $real-yellow;
+                        border-radius: 3px;
+
+                        .gallery-item {
+                            width: 50px;
+                            height: 50px;
+                            padding: 0;
+                            border: 2px solid transparent;
+                            border-radius: 3px;
+                            background-color: transparent;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                            padding: 3px;
+
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                border-radius: 2px;
+                            }
+
+                            &:hover {
+                                border-color: $real-yellow;
+                                transform: scale(1.05);
+                            }
+
+                            &.selected {
+                                border-color: $real-yellow;
+                                //box-shadow: 0 0 8px $real-yellow;
+                                transform: scale(1.08);
+                            }
+                        }
+                    }
+                }
+            }
+
+            .editable-input-wrapper {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+
+                // 2. Bring the active input above the overlay
+                &.focused-mode {
+                    z-index: 101;
+                }
+
+                .input-button-container {
+                    display: flex;
+                    gap: 14px;
+
+                    .input-container {
+                        position: relative;
+                        display: inline-block;
+
+                        input {
+                            width: 240px;
+                            background-color: $vindro-gray;
+                            border-radius: 3px;
+                            color: white;
+                            font-size: 1.6rem;
+                            font-weight: 500;
+                            padding: 7px;
+                            outline: none;
+
+                            &.input-frozen {
+                                border: 1px solid transparent;
+                                // THIS is what stops users from clicking it manually
+                                pointer-events: none;
+                                border-radius: 3px;
+                            }
+
+                            &.input-active {
+                                border: 1px solid $real-yellow;
+                                background-color: $vindro-tan;
+                                color: $vindro-black;
+                                pointer-events: auto;
+                                padding-right: 38px; // room for char counter
+                            }
+                        }
+
+                        .char-count {
+                            position: absolute;
+                            right: 7px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            font-size: 1.0rem;
+                            color: rgba(0, 0, 0, 0.35);
+                            pointer-events: none;
+                            line-height: 1;
+
+                            &.at-limit {
+                                color: $error-red;
+                            }
+                        }
+                    }
+
+                    button.btn-edit {
+                        width: 63px;
+                        height: 28px;
+                        padding: 3px 14px;
+                        border-radius: 3px;
+                        font-size: 1.4rem;
+                        font-weight: 500;
+                        font-family: $vindro-Montserrat;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        align-self: flex-end;
+
+                        &:hover,
+                        &.input-active {
+                            background-color: $real-yellow;
+                        }
+
+                        @media (hover: none) and (pointer: coarse) {
+                            button.btn-edit:hover {
+                                background-color: $vindro-tan;
+                            }
+                        }
+                    }
+                }
+
+                .profile-error-container {
+                    padding: 7px;
+
+                    .profile-error {
+                        font-size: 1.2rem;
+                        color: $vindro-neon-pink;
+                        opacity: 0;
+                        transition: opacity 0.18s ease;
+
+                        &.visible {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+
+            .scores-stats-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+
+                .table-container {
+                    margin-top: 7px;
+                    border: 1px solid $vindro-black;
+                    border-radius: 7px;
+                    background-color: $vindro-gray;
+                    max-width: 360px;
+                    width: 100%;
+
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        overflow: hidden;
+
+
+                        th {
+                            font-size: 1.6rem;
+                            font-weight: 500;
+                            font-family: $vindro-Montserrat;
+                            border: none;
+                            border-bottom: 2px solid $vindro-black;
+                            padding: 7px 14px;
+                        }
+
+                        td {
+                            font-size: 1.2rem;
+                            font-weight: 300;
+                            text-align: center;
+                            padding: 7px 0;
+
+                            a {
+                                color: var(--teal-yellow-swap);
+                                font-size: 1.2rem;
+                                font-weight: 600;
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        }
+    }
+}

@@ -1,0 +1,105 @@
+@use '../../config' as *;
+
+main#home-page {
+
+    section.hero-full {
+        height: 100vh;
+
+        h1 {
+            // width: 63%;
+            text-align: center;
+            font-size: 6.3rem;
+            margin-bottom: 21px;
+
+            span {
+                font-family: $vindro-Montserrat;
+            }
+        }
+
+        h2 {
+            width: 63%;
+            text-align: center;
+            font-family: $vindro-openSans;
+            font-size: 2.8rem;
+            margin-bottom: 42px;
+        }
+
+        button {
+            font-size: 1.8rem;
+
+            &:hover {
+                background-color: $vindro-green;
+                color: white;
+            }
+        }
+    }
+
+    section#what-we-do {
+        h3 {
+            width: 84%;
+            text-align: center;
+            scroll-margin-top: 210px;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            width: 84%;
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 4.2rem;
+        }
+
+        a {
+            font-size: 1.8rem;
+
+            &:hover {
+                background-color: $vindro-green;
+                color: white;
+            }
+        }
+    }
+
+    section#home-about {
+        .team-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 42px;
+
+            .team-member {
+                width: 42%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 21px;
+
+                img {
+                    width: 180px;
+                    height: 180px;
+                    border-radius: 50%;
+                    border: 3px solid $vindro-gray;
+                    background-color: $vindro-teal;
+                    margin-bottom: 2rem;
+                }
+
+                >div h5 {
+                    color: $vindro-green;
+                    font-family: $vindro-Montserrat;
+                    font-size: 3rem;
+                    text-align: center;
+                    margin-bottom: 1rem;
+                }
+
+                >div p {
+                    font-size: 2.1rem;
+
+                }
+            }
+        }
+    }
+
+}

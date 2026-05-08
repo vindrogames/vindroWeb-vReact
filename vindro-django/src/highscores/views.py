@@ -1,5 +1,5 @@
 """
-Highscore API views (no DRF)
+Gamescore API views (no DRF)
 """
 import json
 from datetime import timedelta
@@ -9,283 +9,179 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from accounts.views import login_required_api
 from .models import Gamescore
-from .serializers import serialize_highscore, serialize_highscore_list
+from .serializers import serialize_gamescore, serialize_gamescore_list
 from .config import GAME_CONFIGS, RATE_LIMIT_WINDOW_SECONDS, RATE_LIMIT_MAX_SUBMISSIONS
 
 
 @require_http_methods(["POST"])
 @csrf_exempt
 @login_required_api
-def create_highscore(request):
+def create_gamescore(request):
     """
-    Submit a new highscore
+    Submit a new gamescore
     POST /api/highscores/create/
     Body: {
-        "game_name": "snake",
-        "game_score": 1500,
-        "game_time": "02:00",
-        "game_metadata": {"level": 5, "time_played": 120}  # optional
+        "game_name": "game-42",
+        "game_score": 30,
+        "game_time": "38",
+        "game_metadata": {"end_cause": "no-possible-moves"}
     }
     """
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse(
-            {'success': False, 'error': 'Invalid JSON'},
-            status=400
-        )
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
 
-    # Extract and validate fields
     game_name = data.get('game_name', '').strip().lower()
-    score = data.get('game_score')
+    raw_score = data.get('game_score')
+    game_time = str(data.get('game_time', '')).strip()
     game_metadata = data.get('game_metadata', {})
 
-    # Validation: Required fields
     if not game_name:
-        return JsonResponse(
-            {'success': False, 'error': 'game_name is required'},
-            status=400
-        )
+        return JsonResponse({'success': False, 'error': 'game_name is required'}, status=400)
 
-    if score is None:
-        return JsonResponse(
-            {'success': False, 'error': 'score is required'},
-            status=400
-        )
+    if raw_score is None:
+        return JsonResponse({'success': False, 'error': 'game_score is required'}, status=400)
 
-    # Validation: Score must be integer
     try:
-        game_score = int(game_score)
+        game_score = int(raw_score)
     except (ValueError, TypeError):
-        return JsonResponse(
-            {'success': False, 'error': 'score must be an integer'},
-            status=400
-        )
+        return JsonResponse({'success': False, 'error': 'game_score must be an integer'}, status=400)
 
-    # Validation: Game exists in config
     if game_name not in GAME_CONFIGS:
-        return JsonResponse(
-            {'success': False, 'error': f'Unknown game: {game_name}'},
-            status=400
-        )
+        return JsonResponse({'success': False, 'error': f'Unknown game: {game_name}'}, status=400)
 
-    # Validation: Score range
     game_config = GAME_CONFIGS[game_name]
-    if game_score < game_config['min_score'] or score > game_config['max_score']:
+    if game_score < game_config['min_score'] or game_score > game_config['max_score']:
         return JsonResponse(
-            {
-                'success': False,
-                'error': f"Score must be between {game_config['min_score']} and {game_config['max_score']}"
-            },
+            {'success': False, 'error': f"game_score must be between {game_config['min_score']} and {game_config['max_score']}"},
             status=400
         )
 
-    # Validation: game_metadata must be dict
     if not isinstance(game_metadata, dict):
-        return JsonResponse(
-            {'success': False, 'error': 'game_metadata must be an object'},
-            status=400
-        )
+        return JsonResponse({'success': False, 'error': 'game_metadata must be an object'}, status=400)
 
-    # Rate limiting check
-    rate_limit_window = timezone.now() - timedelta(seconds=RATE_LIMIT_WINDOW_SECONDS)
-    recent_submissions = Gamescore.objects.filter(
+    rate_limit_since = timezone.now() - timedelta(seconds=RATE_LIMIT_WINDOW_SECONDS)
+    recent_count = Gamescore.objects.filter(
         user=request.user,
-        created_at__gte=rate_limit_window
+        game_name=game_name,
+        created_at__gte=rate_limit_since,
     ).count()
 
-    if recent_submissions >= RATE_LIMIT_MAX_SUBMISSIONS:
+    if recent_count >= RATE_LIMIT_MAX_SUBMISSIONS:
         return JsonResponse(
-            {
-                'success': False,
-                'error': f'Rate limit exceeded. Maximum {RATE_LIMIT_MAX_SUBMISSIONS} submissions per {RATE_LIMIT_WINDOW_SECONDS} seconds'
-            },
+            {'success': False, 'error': f'Rate limit exceeded. Max {RATE_LIMIT_MAX_SUBMISSIONS} submissions per {RATE_LIMIT_WINDOW_SECONDS}s'},
             status=429
         )
 
-    # Create highscore
-    try:
-        highscore = Gamescore.objects.create(
-            user=request.user,
-            game_name=game_name,
-            game_score=game_score,
-            game_time=data.get('game_time', ''),
-            game_metadata=game_metadata
-        )
+    gamescore = Gamescore.objects.create(
+        user=request.user,
+        game_name=game_name,
+        game_score=game_score,
+        game_time=game_time,
+        game_metadata=game_metadata,
+    )
 
-        return JsonResponse({
-            'success': True,
-            'message': 'Highscore submitted successfully',
-            'data': serialize_highscore(highscore)
-        }, status=201)
-
-    except Exception as e:
-        return JsonResponse(
-            {'success': False, 'error': str(e)},
-            status=500
-        )
+    return JsonResponse({
+        'success': True,
+        'data': serialize_gamescore(gamescore),
+    }, status=201)
 
 
 @require_http_methods(["GET"])
-def list_highscores(request):
+def list_gamescores(request):
     """
-    List highscores / leaderboard (public or authenticated)
+    Public gamescore leaderboard
     GET /api/highscores/
-    Query params:
-        - game_name: Filter by game (optional)
-        - limit: Number of results (default 100, max 500)
-        - offset: Pagination offset (default 0)
+    Query params: game_name, limit (default 100, max 500), offset (default 0)
     """
-    # Get query parameters
     game_name = request.GET.get('game_name', '').strip().lower()
 
     try:
-        limit = int(request.GET.get('limit', 100))
-        offset = int(request.GET.get('offset', 0))
+        limit = max(1, min(int(request.GET.get('limit', 100)), 500))
+        offset = max(0, int(request.GET.get('offset', 0)))
     except (ValueError, TypeError):
-        return JsonResponse(
-            {'success': False, 'error': 'limit and offset must be integers'},
-            status=400
-        )
+        return JsonResponse({'success': False, 'error': 'limit and offset must be integers'}, status=400)
 
-    # Validate limit
-    if limit < 1 or limit > 500:
-        limit = 100
-
-    # Validate offset
-    if offset < 0:
-        offset = 0
-
-    # Build queryset
     queryset = Gamescore.objects.select_related('user').all()
 
-    # Filter by game if specified
     if game_name:
         if game_name not in GAME_CONFIGS:
-            return JsonResponse(
-                {'success': False, 'error': f'Unknown game: {game_name}'},
-                status=400
-            )
+            return JsonResponse({'success': False, 'error': f'Unknown game: {game_name}'}, status=400)
         queryset = queryset.filter(game_name=game_name)
 
-    # Get total count before pagination
-    total_count = queryset.count()
-
-    # Apply pagination
-    highscores = queryset[offset:offset + limit]
+    total = queryset.count()
+    gamescores = queryset[offset:offset + limit]
 
     return JsonResponse({
         'success': True,
         'data': {
-            'highscores': serialize_highscore_list(highscores),
+            'gamescores': serialize_gamescore_list(gamescores),
             'pagination': {
-                'total': total_count,
+                'total': total,
                 'limit': limit,
                 'offset': offset,
-                'has_more': (offset + limit) < total_count
-            }
-        }
+                'has_more': (offset + limit) < total,
+            },
+        },
     })
 
 
 @require_http_methods(["GET"])
 @login_required_api
-def my_highscores(request):
+def my_gamescores(request):
     """
-    Get current user's personal highscores
+    Current user's personal gamescores
     GET /api/highscores/me/
-    Query params:
-        - game_name: Filter by game (optional)
-        - limit: Number of results (default 100)
-        - offset: Pagination offset (default 0)
+    Query params: game_name, limit (default 100), offset (default 0)
     """
-    # Get query parameters
     game_name = request.GET.get('game_name', '').strip().lower()
 
     try:
-        limit = int(request.GET.get('limit', 100))
-        offset = int(request.GET.get('offset', 0))
+        limit = max(1, min(int(request.GET.get('limit', 100)), 500))
+        offset = max(0, int(request.GET.get('offset', 0)))
     except (ValueError, TypeError):
-        return JsonResponse(
-            {'success': False, 'error': 'limit and offset must be integers'},
-            status=400
-        )
+        return JsonResponse({'success': False, 'error': 'limit and offset must be integers'}, status=400)
 
-    # Validate limit and offset
-    if limit < 1 or limit > 500:
-        limit = 100
-    if offset < 0:
-        offset = 0
-
-    # Build queryset for current user
     queryset = Gamescore.objects.filter(user=request.user)
 
-    # Filter by game if specified
     if game_name:
         if game_name not in GAME_CONFIGS:
-            return JsonResponse(
-                {'success': False, 'error': f'Unknown game: {game_name}'},
-                status=400
-            )
+            return JsonResponse({'success': False, 'error': f'Unknown game: {game_name}'}, status=400)
         queryset = queryset.filter(game_name=game_name)
 
-    # Get total count
-    total_count = queryset.count()
-
-    # Apply pagination
-    highscores = queryset[offset:offset + limit]
+    total = queryset.count()
+    gamescores = queryset[offset:offset + limit]
 
     return JsonResponse({
         'success': True,
         'data': {
-            'highscores': serialize_highscore_list(highscores),
+            'gamescores': serialize_gamescore_list(gamescores),
             'pagination': {
-                'total': total_count,
+                'total': total,
                 'limit': limit,
                 'offset': offset,
-                'has_more': (offset + limit) < total_count
-            }
-        }
+                'has_more': (offset + limit) < total,
+            },
+        },
     })
 
 
 @require_http_methods(["DELETE"])
 @csrf_exempt
 @login_required_api
-def delete_highscore(request, highscore_id):
+def delete_gamescore(request, gamescore_id):
     """
-    Delete user's own highscore
-    DELETE /api/highscores/<id>/
+    Delete the current user's own gamescore
+    DELETE /api/highscores/<gamescore_id>/
     """
-    # Validate highscore_id
     try:
-        highscore_id = int(highscore_id)
-    except (ValueError, TypeError):
-        return JsonResponse(
-            {'success': False, 'error': 'Invalid highscore ID'},
-            status=400
-        )
-
-    # Get highscore
-    try:
-        highscore = Gamescore.objects.get(id=highscore_id)
+        gamescore = Gamescore.objects.get(id=gamescore_id)
     except Gamescore.DoesNotExist:
-        return JsonResponse(
-            {'success': False, 'error': 'Highscore not found'},
-            status=404
-        )
+        return JsonResponse({'success': False, 'error': 'Gamescore not found'}, status=404)
 
-    # Check ownership
-    if highscore.user != request.user:
-        return JsonResponse(
-            {'success': False, 'error': 'You can only delete your own highscores'},
-            status=403
-        )
+    if gamescore.user != request.user:
+        return JsonResponse({'success': False, 'error': 'You can only delete your own gamescores'}, status=403)
 
-    # Delete highscore
-    highscore.delete()
-
-    return JsonResponse({
-        'success': True,
-        'message': 'Highscore deleted successfully'
-    })
+    gamescore.delete()
+    return JsonResponse({'success': True})

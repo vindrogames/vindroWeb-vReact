@@ -1,0 +1,424 @@
+@use '../../../config' as *;
+
+@media(max-width: 960px) {
+
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+
+            .user-picks-container {
+                width: 100%;
+
+                .user-picks-description-wrapper {
+
+                    .description-dropdown {
+                        width: 100%;
+
+                        .description-toggle {
+                            font-size: 1.6rem;
+                        }
+
+                        .description-panel {
+
+                            h4 {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+                }
+
+                .user-stats-container {
+                    grid-template-columns: 1fr;
+                    gap: 14px;
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+
+                    .buttons-container {
+                        flex-direction: row;
+                        justify-content: center;
+                        gap: 42px;
+                    }
+                }
+            }
+        }
+
+        .about-tournament {
+
+            .about-tournament-container {
+                width: 100%;
+
+                .feature {
+                    grid-template-columns: 1fr;
+                    gap: 21px;
+
+                    .feature-table {
+                        width: 63%;
+                        align-self: center;
+                        justify-self: center;
+
+                        .table-container {
+                            table {
+
+                                th {
+                                    font-size: 1.6rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+            padding: 21px;
+
+            .user-picks-container {
+
+                .title-container-wrapper {
+
+                    .title-container-wrapper {}
+                }
+
+                .user-picks-description-wrapper {
+                    flex-direction: column;
+                    padding: 7px 0px 0px;
+                    gap: 14px;
+
+
+                    .description-dropdown {
+
+                        .description-toggle {
+                            width: 100%;
+                        }
+                    }
+
+                    .buttons-container {
+                        padding-left: 14px;
+                    }
+                }
+
+                .user-stats-container {
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.4rem;
+                                white-space: normal;
+                            }
+
+                            td {
+                                font-size: 1.2rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .about-tournament {
+            padding: 21px;
+
+            .about-tournament-container {
+
+                .feature {
+
+                    .feature-table {
+                        width: auto;
+
+                        .table-container {
+                            width: auto;
+
+                            table {
+                                width: auto;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        section.leaderboard-display-container {
+            padding: 21px;
+
+            .leaderboard-header {
+                width: 100%;
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    main.bracket-tournament-page {
+
+        .brackets-hero {
+            .brackets-hero-buttons-wrapper {
+                width: 100%;
+                justify-content: space-around;
+                gap: 7px;
+            }
+        }
+
+        .user-picks {
+
+            padding: 14px 14px 42px;
+
+            .user-picks-container {
+
+                .title-container-wrapper {
+
+                    h3 {
+                        font-size: 3.6rem;
+
+                        text-align: center;
+                    }
+                }
+
+                .user-picks-description-wrapper {
+                    gap: 7px;
+                    align-items: center;
+
+                    .description-dropdown {
+
+                        .description-toggle {
+                            padding: 14px 7px;
+                            text-align: center;
+                        }
+
+                        .description-panel {
+                            padding: 14px 7px;
+                            text-align: center;
+                        }
+                    }
+
+                    .buttons-container button {
+                        font-size: 1.4rem;
+                        padding: 7px;
+                    }
+                }
+
+
+                .user-stats-container {
+
+                    .table-container {
+
+                        table {
+
+                            th {
+                                font-size: 1.4rem;
+                                padding: 7px;
+                            }
+
+                            td {
+                                padding: 7px;
+                            }
+                        }
+
+
+                    }
+                }
+            }
+        }
+
+        .about-tournament {
+
+            .about-tournament-container {
+
+                .feature {
+
+                    .feature-text-container {
+
+                        .feature-explanation {
+                            p {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+
+                    .feature-table {
+
+                        .table-container {
+
+                            table {
+
+                                th {
+                                    font-size: 1.4rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    main.bracket-tournament-page {
+
+        .user-picks {
+
+            .user-picks-container {
+
+                .title-container-wrapper {
+
+                    h3 {
+                        font-size: 2.8rem;
+                    }
+                }
+
+                .user-picks-description-wrapper {
+                    .description-dropdown {
+
+                        .description-toggle,
+                        .description-panel h4 {
+                            font-size: 1.4rem;
+                        }
+                    }
+                }
+
+                .user-stats-container {
+
+                    .table-container {
+
+                        table {
+                            table-layout: fixed;
+                            width: 100%;
+
+                            th {
+                                font-size: 1.2rem;
+                                padding: 4px;
+                                white-space: normal;
+                            }
+
+                            td {
+                                padding: 7px 4px;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                            }
+                        }
+                    }
+
+                    .buttons-container {
+                        flex-direction: column;
+                        gap: 14px;
+
+                        button {
+                            font-size: 1.4rem;
+                        }
+                    }
+                }
+
+                // Your Plays: Play Name (flex) | Updated (flex) | Groups Pts (fixed) | Bracket Pts (fixed)
+                .title-container.predictions+.user-stats-container {
+                    .table-container table {
+                        th:nth-child(3) {
+                            width: 48px;
+                        }
+
+                        th:nth-child(4) {
+                            width: 48px;
+                        }
+                    }
+                }
+
+                // Your Plays in Pools: Play (flex) | Pool (flex) | Manager (flex) | Pos. (fixed)
+                .title-container.plays-in-pools+.user-stats-container {
+                    .table-container table {
+                        th:nth-child(4) {
+                            width: 28px;
+                        }
+                    }
+                }
+
+                // Your Pools: Pool (flex) | Members (fixed) | Paid (fixed) | Prizes (fixed)
+                .title-container.your-pools+.user-stats-container {
+                    .table-container table {
+                        th:nth-child(2) {
+                            width: 48px;
+                        }
+
+                        th:nth-child(3) {
+                            width: 36px;
+                        }
+
+                        th:nth-child(4) {
+                            width: 48px;
+                        }
+                    }
+                }
+
+
+            }
+
+        }
+
+        .about-tournament {
+            padding: 14px;
+
+            .about-tournament-container {
+
+                .feature {
+
+                    .feature-text-container {
+
+                        .feature-title {
+                            h4 {
+                                font-size: 2.4rem;
+                            }
+
+                            p {
+                                font-size: 1.8rem;
+                            }
+                        }
+
+                        .feature-explanation {
+
+                            p {
+                                font-size: 1.6rem;
+                            }
+                        }
+                    }
+
+                    .feature-table {
+
+                        .table-container {
+
+                            table {
+
+                                th {
+                                    padding: 7px;
+                                    font-size: 1.6rem;
+
+                                }
+
+                                td {
+                                    font-size: 1.1rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

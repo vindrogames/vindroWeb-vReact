@@ -1,0 +1,100 @@
+/**
+ * API Service Layer
+ * Centralized API communication with authentication support
+ */
+
+const LOCAL_FALLBACK = 'http://localhost:8000/api';
+const DEFAULT_BACKEND = 'https://backend.vindrogames.com/api';
+const VITE_API = typeof import.meta !== 'undefined' ? import.meta.env?.VITE_API_BASE_URL : undefined;
+
+function getApiBase() {
+    if (VITE_API) return VITE_API.replace(/\/$/, '');
+    if (typeof window !== 'undefined' && window.location && window.location.hostname) {
+        const host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') return LOCAL_FALLBACK;
+        if (host.endsWith('vindrogames.com') || host.endsWith('netlify.app')) return DEFAULT_BACKEND;
+        return `${window.location.origin.replace(/\/$/, '')}/api`;
+    }
+    return LOCAL_FALLBACK;
+}
+
+const API_BASE_URL = getApiBase();
+
+function buildUrl(endpoint) {
+    const trimmedBase = API_BASE_URL.replace(/\/$/, '');
+    const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    return `${trimmedBase}${path}`;
+}
+
+/**
+ * Get the backend base URL (without /api)
+ * Used for OAuth endpoints which are at /accounts/
+ */
+export function getBackendUrl() {
+    return API_BASE_URL.replace(/\/api\/?$/, '');
+}
+
+/**
+ * Read the Django CSRF token from cookies
+ */
+function getCsrfToken() {
+    const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
+}
+
+/**
+ * Fetch wrapper with credentials support for session-based auth
+ */
+export async function apiRequest(endpoint, options = {}) {
+    const isWriteMethod = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method);
+    const config = {
+        ...options,
+        credentials: 'include', // CRITICAL: Include cookies for session auth
+        headers: {
+            'Content-Type': 'application/json',
+            ...(isWriteMethod && { 'X-CSRFToken': getCsrfToken() }),
+            ...options.headers,
+        },
+    };
+
+    try {
+        const response = await fetch(buildUrl(endpoint), config);
+        const data = await response.json();
+
+        if (!response.ok) {
+            // Backend may return { error: '...' } (string) or { errors: { field: '...' } } (object)
+            const message = data.error
+                || (data.errors && Object.values(data.errors)[0])
+                || `Request failed with status ${response.status}`;
+            throw new Error(message);
+        }
+
+        return data;
+    } catch (error) {
+        // Re-throw with more context
+        if (error.message) {
+            throw error;
+        }
+        throw new Error('Network error occurred');
+    }
+}
+
+
+
+/**
+ * Generic API client for other endpoints
+
+export const auth_api = {
+    get: (endpoint) => apiRequest(endpoint, { method: 'GET' }),
+    post: (endpoint, data) => apiRequest(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    }),
+    put: (endpoint, data) => apiRequest(endpoint, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+    }),
+    delete: (endpoint) => apiRequest(endpoint, { method: 'DELETE' }),
+};
+
+ */

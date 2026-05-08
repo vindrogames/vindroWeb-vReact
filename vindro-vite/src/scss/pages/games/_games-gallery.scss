@@ -1,0 +1,84 @@
+@use '../../config' as *;
+
+main#games-showcase {
+    
+    section#games-gallery-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        padding: 14px 42px;
+
+        #games-gallery {
+            padding: 0 42px;
+            max-width: 1600px;
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 21px;
+
+            .game {
+                position: relative;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+                border-radius: 3px;
+                gap: 14px;
+
+                a {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    aspect-ratio: 1/1;
+
+                    img {
+                        width: 100%;
+                        height: auto;
+                        transition: all 0.42s ease;
+
+                        &:nth-child(1) {
+                            width: 100%;
+                            border-radius: 3px;
+                        }
+
+                        &:hover {
+                            transform: scale(1.042);
+                        }
+                    }
+                }
+
+                &-text {
+                    background-color: $vindro-black-overlay;
+                    border-radius: 3px;
+                    padding: 21px;
+                    flex-grow: 1;
+
+                    a {
+                        aspect-ratio: 0;
+                        justify-content: center;
+                        text-decoration: underline;
+                        color: $tm-yellow-solid;
+
+                        h3 {
+
+                            font-size: 2.1rem;
+                            margin-bottom: 1rem;
+
+                            &:hover {
+                                opacity: 0.84;
+                            }
+                        }
+                    }
+
+                    p {
+                        font-size: 1.6rem;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,131 @@
+@use '../../../config' as *;
+
+@media(max-width: 960px) {
+
+    main#madrid-calculator {
+
+        .intro {
+            padding: 14px 0;
+
+            h1 {
+                font-size: 3.6rem;
+            }
+        }
+
+        .calculator-body {
+            width: 84%;
+            padding: 21px 7px;
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main#madrid-calculator {
+        padding-top: 60px;
+
+        .intro {
+            width: 84%;
+            padding: 14px 21px;
+
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            h2 {
+                font-size: 2.1rem;
+            }
+        }
+
+        .calculator-body {
+            width: 84%;
+            justify-content: flex-start;
+
+            .calc-screen {
+                width: 84%;
+            }
+
+            .calc-grid {
+                width: 84%;
+                gap: 7px;
+                flex-grow: 0;
+
+                button {
+
+                    &.btn-champions {
+                        p {
+                            font-size: 1.6rem;
+                        }
+                    }
+                }
+            }
+
+            .audio-btn-container {
+                width: 84%;
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    main#madrid-calculator {
+
+        .intro {
+            width: 100%;
+        }
+
+        .calculator-body {
+            padding: 14px 21px;
+
+            .calc-screen {
+                width: 100%;
+            }
+
+            .calc-grid {
+                width: 100%;
+
+                button {
+                    font-size: 3.6rem;
+
+                    &.btn-util {
+                        font-size: 2.4rem;
+                    }
+
+                    &.btn-champions {
+                        p {
+                            font-size: 1.2rem;
+                        }
+                    }
+                }
+            }
+
+            .audio-btn-container {
+                width: 100%;
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    main#madrid-calculator {
+
+        .intro {
+            padding: 14px;
+
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .calculator-body {
+            width: 100%;
+            padding: 14px;
+
+            .calc-screen {}
+
+            .calc-grid {}
+        }
+    }
+}

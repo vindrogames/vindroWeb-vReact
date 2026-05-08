@@ -1,0 +1,218 @@
+@use '../../../config' as *;
+
+main#pool-page {
+    min-height: 100vh;
+
+    .pool-main-content-wrapper {
+        position: relative;
+    }
+
+    .pool-main-content {
+        background-color: $vindro-gray;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 42px 7%;
+        position: relative;
+
+        .pool-specs-share {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding-bottom: 28px;
+            border-bottom: 1px solid $vindro-teal;
+
+            .pool-specs {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                h3 {
+                    font-size: 2.1rem;
+                    font-weight: 400;
+                }
+
+                .pool-creator-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+
+                    button.avatar-link-btn {
+                        background: transparent;
+                        border: none;
+                        cursor: pointer;
+                        padding: 3px;
+                        transition: transform 0.2s;
+
+                        &:hover {
+                            transform: scale(1.1);
+                        }
+
+                        img {
+                            width: 28px;
+                            height: 28px;
+                            object-fit: cover;
+                        }
+                    }
+                }
+
+                .pool-join-code,
+                .pool-member-count,
+                .pool-prize {
+                    font-size: 1.6rem;
+                    font-weight: 300;
+                }
+
+                .pool-prize-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+
+                    .prize-eye-btn {
+                        background: transparent;
+                        border: none;
+                        cursor: pointer;
+                        color: $vindro-teal;
+                        font-size: 1.6rem;
+                        display: flex;
+                        align-items: center;
+                        padding: 0;
+                        transition: opacity 0.2s;
+
+                        &:hover {
+                            opacity: 0.7;
+                        }
+                    }
+                }
+
+                button#invite-friends-modal-trigger {
+                    width: 128px;
+                }
+            }
+
+            .pool-actions {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                justify-content: flex-start;
+                gap: 14px;
+
+                button {
+                    width: 128px;
+                }
+
+                button:disabled {
+                    
+                    opacity: 0.45;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    .leaderboard-display-container {
+
+        .leaderboard-header {
+            position: relative;
+
+            h3 {
+                font-size: 4.2rem;
+            }
+
+            .edit-pool-btn {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+            }
+        }
+    }
+}
+
+// EditPoolMembersModal
+#edit-pool-members-gallery {
+    min-width: 360px;
+
+    .no-members-msg {
+        font-size: 1.6rem;
+        opacity: 0.6;
+        padding: 14px 0;
+    }
+
+    .members-list {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        width: 100%;
+        max-height: 420px;
+        overflow-y: auto;
+    }
+
+    .member-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(white, 0.08);
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    .member-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    .member-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        object-fit: cover;
+    }
+
+    .member-details {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+    }
+
+    .member-username {
+        font-size: 1.5rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .member-play-name {
+        font-size: 1.2rem;
+        opacity: 0.6;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .member-actions {
+        display: flex;
+        gap: 7px;
+        flex-shrink: 0;
+
+        .paid-toggle {
+            font-size: 1.2rem;
+            padding: 4px 10px;
+        }
+
+        .remove-btn {
+            font-size: 1.2rem;
+            padding: 4px 10px;
+        }
+    }
+}
+

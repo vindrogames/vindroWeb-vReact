@@ -1,0 +1,330 @@
+@use '../../../config' as *;
+
+main#game-42 {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 90px 90px 0 90px;
+    background-color: $vindro-black;
+
+    #game-42-buttons {
+        width: 28%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+
+        button.pos-42 {
+            text-align: left;
+            cursor: pointer;
+            border: none;
+            border-radius: 42px;
+            height: calc((100vh - 90px) / 14.5); // Adjusted for spacing
+            font-size: 3vh;
+            padding: 3px 21px;
+            margin: 0.42rem 0.84rem;
+            transition: all 0.2s ease;
+
+            &.open {
+                background-color: transparent;
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            &.closed {
+                text-align: center;
+                cursor: default;
+                background-color: $vindro-teal;
+                color: $vindro-black;
+                font-weight: 600;
+
+                // Only turn red if it's NOT a victory
+                &.game-over:not(.victory) {
+                    background-color: $real-red;
+                    color: white;
+                }
+
+                &.victory {
+                    background-color: $vindro-teal;
+                    box-shadow: 0 0 15px $vindro-teal;
+                }
+            }
+
+            &:hover:not(.closed):not(.game-over) {
+                background-color: rgba($vindro-teal, 0.2);
+            }
+        }
+    }
+
+    #display-42 {
+        flex-grow: 1;
+        padding: 42px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 21px;
+
+        .instructions-42 {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            min-height: 60px;
+
+            h1 {
+                font-size: 6.3rem;
+                margin-bottom: 14px;
+            }
+
+            button {
+                width: auto;
+                z-index: 4;
+                font-size: 1.8rem;
+                padding: 7px 14px;
+                background-color: $vindro-tan;
+                border-radius: 3px;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: $vindro-green;
+                    color: white;
+                }
+            }
+        }
+
+        .showcase-42 {
+            display: flex;
+            flex-direction: column;
+            gap: 21px;
+
+            .game-42-play-container {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+
+                button#game-42-play-button,
+                .game-42-number-display {
+                    width: 63%;
+                    padding: 14px;
+                    font-size: 2.8rem;
+                    font-weight: 600;
+                    color: $vindro-teal;
+                    background-color: $vindro-black;
+                    border: 2px solid $vindro-teal;
+                    border-radius: 42px;
+                    text-align: center;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+
+                    &.game-over {
+                        background-color: $real-red;
+                        border: 2px solid $real-red;
+                        color: white;
+
+                        &:hover {
+                            background-color: $vindro-teal;
+                            color: $vindro-black;
+                            border: 2px solid $vindro-teal;
+                        }
+                    }
+                }
+
+                button#game-42-play-button:hover {
+                    background-color: $vindro-teal;
+                    color: $vindro-black;
+                }
+
+                .game-42-number-display {
+                    cursor: default;
+                }
+
+                .end-game-message {
+                    width: 63%;
+                    padding-top: 1rem;
+                    padding-bottom: 1rem;
+                    border-top: 1px solid rgba($real-red, 0.2);
+                    border-bottom: 1px solid rgba($real-red, 0.2);
+                    transition: opacity 0.4s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 10px;
+                    line-height: 2rem;
+
+                    .status-dot {
+                        margin-left: 21px;
+                        width: 14px;
+                        height: 14px;
+                        background: $real-red;
+                        border-radius: 50%;
+                        box-shadow: 0 0 3px $vindro-tan;
+                        animation: pulse 1.5s infinite;
+                    }
+
+                    code {
+                        margin-left: 14px;
+                        font-size: 1.8rem;
+                        color: white;
+                    }
+
+                    &.hidden {
+                        opacity: 0;
+                        pointer-events: none;
+                    }
+
+                    &.visible {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            .game-42-results-grid {
+                display: grid;
+                width: 84%;
+                // Desktop: 3 equal columns
+                grid-template-columns: repeat(3, 1fr);
+
+                div {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+
+                    &:nth-child(1) {
+                        border-left: 2px solid $real-yellow;
+                    }
+
+                    &:nth-child(2) {
+                        border-left: 2px solid $real-yellow;
+                        border-right: 2px solid $real-yellow;
+                    }
+
+                    &:nth-child(3) {
+                        border-right: 2px solid $real-yellow;
+                    }
+
+                    p {
+                        text-align: center;
+                        font-size: 2.1rem;
+                        margin-bottom: 7px;
+
+                        &:nth-child(2) {
+                            font-weight: 600;
+                            color: $vindro-teal;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.win-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.inactive {
+        opacity: 0;
+        pointer-events: none;
+        clip-path: circle(0% at 50% 50%);
+    }
+
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+        clip-path: circle(150% at 50% 50%);
+    }
+}
+
+.win-modal-content {
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 21px;
+    border-left: 2px solid $vindro-teal;
+    border-right: 2px solid $vindro-teal;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.6s ease-out;
+
+    &.reveal {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .victory-branding {
+        .alt-text {
+            color: #00f2ff;
+            letter-spacing: 0.8rem;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .big-42 {
+            font-size: 10rem;
+            margin: 1rem 0;
+            color: white;
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.6);
+            font-family: monospace;
+        }
+    }
+
+    .victory-details {
+        color: #a0a0a0;
+        margin-bottom: 2rem;
+
+        .win-dev-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+
+            .win-status-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: #00f2ff;
+                box-shadow: 0 0 10px #00f2ff;
+                animation: pulse 1s infinite alternate;
+            }
+
+            code {
+                color: #00f2ff;
+            }
+        }
+    }
+
+    .reinitialize-btn {
+        background: transparent;
+        border: 1px solid #00f2ff;
+        color: #00f2ff;
+        padding: 14px 21px;
+        font-size: 1.6rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        border-radius: 7px;
+
+        &:hover {
+            background: #00f2ff;
+            color: black;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+    }
+}

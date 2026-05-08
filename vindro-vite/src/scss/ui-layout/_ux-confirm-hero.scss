@@ -1,0 +1,37 @@
+@use '../config' as *;
+
+main.ux-confirm-hero {
+
+    section.hero-full {
+
+        .text-container {
+            width: 240px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 21px;
+
+            h1 {
+                font-size: 4.2rem;
+
+                span {
+                    font-family: $vindro-Montserrat;
+                }
+            }
+
+            h2 {
+                font-size: 2.1rem;
+                font-family: $vindro-openSans;
+            }
+
+            .subtext-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 7px;
+            }
+        }
+    }
+}

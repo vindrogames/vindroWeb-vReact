@@ -1,0 +1,404 @@
+@use '../../config' as *;
+
+.how-to-play-content {
+    position: fixed;
+    top: 0;
+    left: 0; // Changed from right:0 to center the holographic feel
+    width: 100vw;
+    height: 100dvh;
+    z-index: 1000;
+    background-color: rgba($vindro-gray, 0.85);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+
+    &.open {
+        visibility: visible;
+        pointer-events: auto;
+        // Steps(4) creates that jagged, digital "Dev Mode" appearance
+        animation: hologramIn 0.4s steps(4, end) forwards;
+    }
+
+    &.closed {
+        animation: hologramOut 0.3s ease-in forwards;
+    }
+
+    .instructions-inner {
+        width: 100%;
+        height: 100%;
+        max-width: 600px;
+        padding: 63px 21px 21px;
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+        transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        overflow-y: scroll;
+
+        &.vindro-teal-border {
+            border-right: 2px solid $vindro-teal;
+            border-left: 2px solid $vindro-teal;
+        }
+
+        &.vindro-tan-border {
+            border-right: 2px solid $vindro-tan;
+            border-left: 2px solid $vindro-tan;
+        }
+
+        &.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .main-instructions {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 21px;
+            border: none;
+
+            h2 {
+                font-size: 4.2rem;
+                font-weight: 500;
+                margin-bottom: 14px;
+                text-transform: uppercase;
+                color: $vindro-tan;
+
+                &.yellow-title {
+                    color: $real-yellow;
+                }
+
+                &.white-title {
+                    color: white
+                }
+            }
+
+            h3,
+            p,
+            li {
+                color: $vindro-tan;
+                font-size: 1.6rem; // Scaled down from 1.8rem for better readability
+                line-height: 1.6;
+
+                span {
+
+                    &.strong {
+                        font-weight: 700;
+                    }
+
+                    &.yellow {
+                        color: $real-yellow;
+                    }
+
+                    &.white {
+                        color: white;
+                    }
+                }
+            }
+
+            h3 {
+                margin-bottom: 14px;
+                color: $vindro-tan;
+
+                strong {
+                    color: white;
+                }
+
+                span {
+                    color: $real-yellow;
+                }
+            }
+
+            .ul-instruction-list {
+                list-style: none;
+                padding-left: 14px;
+                margin: 7px 0 21px 0;
+
+                li {
+                    position: relative;
+                    padding-left: 14px;
+                    margin-bottom: 3px;
+
+                    &::before {
+
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+
+                        // The Dot Styling
+                        height: 6px;
+                        width: 6px;
+                        background-color: $vindro-teal;
+                        border-radius: 50%;
+                        display: inline-block;
+                    }
+
+                    .operator {
+                        color: $real-yellow;
+                        font-family: monospace;
+                        background: rgba(0, 0, 0, 0.3);
+                        padding: 0 4px;
+                        border-radius: 3px;
+                    }
+                }
+            }
+
+            .ol-instruction-list {
+                counter-reset: item;
+                padding-left: 14px;
+                margin: 0 0 14px 0;
+
+                li {
+                    position: relative;
+                    padding-left: 22px;
+                    margin-bottom: 6px;
+                    list-style: none;
+                    counter-increment: item;
+
+                    &::before {
+                        content: counter(item) ".";
+                        position: absolute;
+                        left: 0;
+                        color: $vindro-teal;
+                        font-weight: 900;
+                    }
+
+                    .operator {
+                        color: $real-yellow;
+                        font-family: monospace;
+                        background: rgba(0, 0, 0, 0.3);
+                        padding: 0 4px;
+                        border-radius: 3px;
+                    }
+
+                    span {
+                        color: white;
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            .instruct-resources-container {
+                display: flex;
+                flex-direction: column;
+                gap: 7px;
+                margin-bottom: 14px;
+
+                .instruct-resource-inline {
+                    display: flex;
+                    gap: 7px;
+
+                    img {
+                        width: 28px;
+                        height: 28px;
+                    }
+
+                    p {
+                        font-size: 1.6rem;
+                        color: $vindro-tan;
+
+                        span {
+                            color: white;
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
+
+            .stand-out-container {
+                background: rgba(0, 0, 0, 0.2);
+                padding: 14px;
+                margin-bottom: 14px;
+
+                &.yellow-strip {
+                    border-left: 3px solid $real-yellow;
+                }
+
+                &.green-strip {
+                    border-left: 3px solid $vindro-green;
+                }
+
+                .you-lose {
+                    color: #ff4444;
+                    font-weight: bold;
+                }
+            }
+
+            .italics-note {
+                font-style: italic;
+                font-size: 1.6rem;
+                color: white;
+                margin-top: 7px;
+            }
+
+            button.close-overlay-btn {
+                width: 42%;
+                padding: 7px 14px;
+                border-radius: 3px;
+                font-size: 1.8rem;
+                font-weight: 600;
+                background-color: $vindro-black;
+                color: $vindro-teal;
+                border: 1px solid $vindro-teal;
+                font-family: $vindro-Montserrat;
+                align-self: center;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: $vindro-teal;
+                    color: $vindro-black;
+                }
+            }
+
+            // Dev Mode Footer
+            .dev-footer {
+                margin-top: 14px;
+                padding-top: 1rem;
+                border-top: 1px solid $vindro-teal;
+                border-left: 0;
+                border-right: 0;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 10px;
+                background-color: transparent;
+
+                .status-dot {
+                    width: 8px;
+                    height: 8px;
+                    background: $vindro-teal;
+                    border-radius: 50%;
+                    box-shadow: 0 0 8px $vindro-teal;
+                    animation: pulse 1.5s infinite;
+                }
+
+                code {
+                    font-size: 1rem;
+                    color: rgba($vindro-teal, 0.7);
+                    //animation: glow 1.5s infinite;
+                }
+
+                &.no-game {
+                    border-top: 1px solid $vindro-tan;
+
+                    .status-dot {
+                        background: $real-red;
+                        box-shadow: 0 0 8px $real-red;
+                        animation: no-game-pulse 1.5s infinite;
+                    }
+
+                    span,
+                    code {
+                        color: $real-red;
+                    }
+                }
+            }
+        }
+
+        .refs {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+
+            p,
+            a {
+                font-size: 1.6rem;
+                font-weight: 300;
+                color: white;
+                font-family: $vindro-openSans;
+            }
+
+            a {
+                text-decoration: underline;
+                color: $vindro-teal;
+
+                &:hover {
+                    color: $vindro-green;
+                }
+            }
+        }
+    }
+}
+
+@keyframes glow {
+    0% {
+        text-shadow: 0 0 7px #fff, 0 0 14px #00f2ff;
+    }
+
+    50% {
+        text-shadow: 0 0 14px #fff, 0 0 21px #00f2ff;
+    }
+
+    100% {
+        text-shadow: 0 0 7px #fff, 0 0 14px #00f2ff;
+    }
+}
+
+@keyframes hologramIn {
+    0% {
+        opacity: 0;
+        transform: scaleY(0.005) scaleX(0);
+        background-color: rgba($vindro-teal, 0.5);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scaleY(0.005) scaleX(1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleY(1) scaleX(1);
+    }
+}
+
+@keyframes hologramOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba($vindro-teal, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba($vindro-teal, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba($vindro-teal, 0);
+    }
+}
+
+@keyframes no-game-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba($real-red, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba($real-red, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba($real-red, 0);
+    }
+}

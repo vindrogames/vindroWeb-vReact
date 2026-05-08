@@ -1,0 +1,91 @@
+@use '../config' as *;
+
+section.hero-full,
+section.hero-half {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+section.hero-full {
+    min-height: 100vh;
+}
+
+section.hero-half {
+    min-height: 50vh;
+    gap: 21px;
+    padding: 42px;
+
+    h1 {
+        //width: 63%;
+        text-align: center;
+        font-size: 4.2rem;
+        margin-bottom: 14px;
+        margin-top: 42px;
+
+        span {
+            font-family: $vindro-Montserrat;
+        }
+    }
+
+    h2 {
+        width: 84%;
+        text-align: center;
+        font-family: $vindro-openSans;
+        font-size: 2.8rem;
+    }
+}
+
+@media(max-width: 960px) {
+
+    section.hero-half {
+
+        h2 {
+            font-size: 2.4rem;
+            width: 100%;
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+
+    section.hero-half {
+        h1 {
+            font-size: 3.6rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    section.hero-half {
+        padding: 14px;
+
+        h2 {
+            font-size: 1.8rem;
+        }
+    }
+}
+
+@media(max-width: 376px) {
+    
+
+    section.hero-half {
+
+        h1 {
+            font-size: 2.8rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+        }
+    }
+}

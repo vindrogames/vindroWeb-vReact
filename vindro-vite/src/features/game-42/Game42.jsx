@@ -20,6 +20,9 @@ export default function Game42() {
         gameStarted,
         prevPoints,
         todayBest,
+        elapsedSeconds,
+        myGamescores,
+        isNewBest,
         startGame,
         placeNum,
         playAgain,
@@ -46,9 +49,11 @@ export default function Game42() {
                     endCause={endCause}
                     prevPoints={prevPoints}
                     todayBest={todayBest}
+                    elapsedSeconds={elapsedSeconds}
+                    myGamescores={myGamescores}
+                    isNewBest={isNewBest}
                     startGame={startGame}
                     playAgain={playAgain}
-                    // Pass the state and the toggle function
                     isInstructionsOpen={isInstructionsOpen}
                     onOpenInstructions={() => setIsInstructionsOpen(true)}
                 />

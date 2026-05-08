@@ -1,0 +1,127 @@
+@use '../../config' as *;
+
+@media(max-width: 960px) {
+
+    main#stories {
+
+        section#stories-page-content {
+            width: 100%;
+            background-color: $vindro-gray;
+
+            #timeline ul {
+                width: 84%;
+                margin: 0 auto;
+
+                li {
+
+                    margin-left: 42px;
+
+                    div {
+                        width: 70vw;
+                    }
+
+                    &:nth-child(even) div {
+                        left: 40px;
+                    }
+
+                    &:nth-child(even) div:before {
+                        left: -15px;
+                        border-width: 8px 16px 8px 0;
+                        border-color: transparent #FFFFFF transparent transparent;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main#stories {
+
+        section#stories-page-content {
+
+            #timeline ul {
+
+                li {
+
+                    margin-left: 21px;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    main#stories {
+
+        section#stories-page-content {
+
+            #timeline ul {
+                padding: 21px 0 42px 0;
+
+                li {
+
+                    margin-left: 3px;
+
+                    div {
+
+                        h3 {
+                            font-size: 1.8rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    main#stories {
+        section#stories-page-content {
+            width: 100%;
+            background-color: $vindro-gray;
+
+            #timeline ul {
+                width: 100%;
+
+                li {
+                    width: 3px;
+                    margin-left: 28px;
+
+                    div {
+                        width: 73vw;
+                        bottom: -3px;
+                    }
+
+                    &:nth-child(even) div {
+                        left: 28px;
+                    }
+
+                    &:nth-child(odd) div {
+                        left: 28px;
+                    }
+
+                    &:nth-child(even) div:before {
+                        left: -15px;
+                        border-width: 8px 16px 8px 0;
+                        border-color: transparent #FFFFFF transparent transparent;
+                    }
+
+                    /* Timeline Dots */
+                    &:after {
+                        width: 14px;
+                        height: 14px;
+                    }
+
+                    /* Timeline Arrows Base */
+                    div:before {
+                        bottom: 3px;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,100 @@
+@use '../config' as *;
+
+button {
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn {
+    cursor: pointer;
+    display: inline-block;
+    padding: 7px 21px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.btn-tan,
+.bg-tan {
+    background-color: $vindro-tan;
+    color: $vindro-gray;
+    &:visited { color: $vindro-gray; }
+}
+
+.btn-gray,
+.bg-gray {
+    background-color: $vindro-gray;
+    color: white;
+    &:visited { color: white; }
+}
+
+.btn-black {
+    background-color: $vindro-black;
+    color: $vindro-teal;
+    &:visited { color: $vindro-teal; }
+}
+
+.bg-black {
+    background-color: $vindro-black;
+    color: white;
+    &:visited { color: white; }
+}
+
+.btn-teal,
+.bg-teal {
+    background-color: $vindro-teal;
+    color: $vindro-black;
+    &:visited { color: $vindro-black; }
+}
+
+.btn-teal:hover,
+.btn-tan:hover {
+    background-color: $vindro-green;
+    color: white;
+}
+
+/* Global button fixes */
+button,
+.btn {
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus:not(:focus-visible),
+    &:active {
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+    color: inherit;
+}
+
+@media (hover: none) and (pointer: coarse) {
+
+    .btn-tan:hover {
+        background-color: $vindro-tan;
+        color: $vindro-gray;
+    }
+
+    .btn-teal:hover {
+        background-color: $vindro-teal;
+        color: $vindro-black;
+    }
+
+    .btn-gray:hover {
+        background-color: $vindro-gray;
+        color: white;
+    }
+
+    .btn-black:hover {
+        background-color: $vindro-black;
+        color: $vindro-teal;
+    }
+
+    .btn:active,
+    a:active {
+        opacity: 0.85;
+    }
+}
