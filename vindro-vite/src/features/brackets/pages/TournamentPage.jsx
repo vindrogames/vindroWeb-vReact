@@ -117,7 +117,6 @@ const TournamentPage = () => {
 
     const handleJoinPoolClick = () => {
         if (!user) { handleLoginClick(); return; }
-        setPrefilledCode('');
         setShowJoinModal(true);
     };
 

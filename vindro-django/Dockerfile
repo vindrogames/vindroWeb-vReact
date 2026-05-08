@@ -23,6 +23,9 @@ COPY pyproject.toml uv.lock ./
 # Install Python dependencies using uv sync
 RUN uv sync --frozen --no-dev
 
+# Create persistent data directory for the SQLite database
+RUN mkdir -p /app/data
+
 # Copy the Django project
 COPY src/ ./src/
 
