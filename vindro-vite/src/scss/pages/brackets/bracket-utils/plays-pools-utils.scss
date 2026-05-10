@@ -1,8 +1,133 @@
 @use '../../../config' as *;
 
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DISABLED BUTTON WRAPPER  —  universal across all bracket pages
+// Wrap any disabled button in .disabled-btn-wrapper to get opacity + tooltip.
+// Form/modal disabled states live in _tournament-page-modals.scss (different UX).
+// Card-internal controls (e.g. move-btn) define their own opacity inline.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+.disabled-btn-wrapper {
+    position: relative;
+    display: inline-block;
+
+    button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .disabled-tooltip {
+        display: none;
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        background: $vindro-black;
+        color: $vindro-tan;
+        font-size: 1.2rem;
+        font-family: $vindro-openSans;
+        padding: 4px 10px;
+        border-radius: 3px;
+        border: 1px solid $vindro-tan;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    &:hover .disabled-tooltip {
+        display: block;
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DROPDOWN DIM  —  Level 1 (soft)
+//
+// Triggered when a description dropdown is open on either page.
+// TournamentPage: CSS-native :has() adds a dark overlay, dropdown floats above.
+// PlayPage:       class-based; hero + title containers blur surgically.
+//
+// Both blocks intentionally sit above the Level 2 rules so that Level 2
+// always wins via cascade order (same specificity, later declaration wins).
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── TournamentPage dropdown dim ───────────────────────────────────────────────
+
+main.bracket-tournament-page {
+
+    &:has(.description-panel) {
+        &::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba($vindro-black, 0.42);
+            z-index: 15;
+        }
+
+        .description-dropdown:has(.description-panel) {
+            z-index: 25;
+        }
+    }
+}
+
+// ── PlayPage dropdown dim  ────────────────────────────────────────────────────
+
+main.bracket-tournament-play-pool {
+
+    // Any dropdown open → hero intro + title bars soft-blur
+    &.dropdown-active {
+
+        section.play-pool-intro {
+            filter: blur(3px);
+            opacity: 0.5;
+            pointer-events: none;
+            transition: filter 0.2s, opacity 0.2s;
+        }
+
+        .prediction-display-wrapper {
+
+            .title-container-wrapper {
+                filter: blur(3px);
+                opacity: 0.5;
+                pointer-events: none;
+                transition: filter 0.2s, opacity 0.2s;
+            }
+
+            // Everything inside the wrapper except the intro (which holds the dropdown)
+            & > *:not(.prediction-display-intro) {
+                filter: blur(3px);
+                opacity: 0.5;
+                pointer-events: none;
+                transition: filter 0.2s, opacity 0.2s;
+            }
+        }
+    }
+}
+
+// Peer-section blur: the section whose dropdown is NOT open blurs
+// when the other section's dropdown IS open (group ↔ bracket toggle)
+section.play-prediction-container.peer-dropdown-active {
+    filter: blur(3px);
+    opacity: 0.5;
+    pointer-events: none;
+    transition: filter 0.2s, opacity 0.2s;
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CARD EDITING DIM  —  Level 2 (strong)
+//
+// Triggered when a group or bracket card enters edit mode.
+// Comes AFTER Level 1 in the file → same specificity, later wins → always
+// overrides the soft dropdown dim without needing !important.
+// Individual focused cards use filter: none !important in group/bracket scss.
+// ═══════════════════════════════════════════════════════════════════════════════
+
 main.bracket-tournament-play-pool {
 
     &.has-active-focus {
+
         section.play-pool-intro {
             filter: blur(4px);
             opacity: 0.5;
@@ -10,6 +135,14 @@ main.bracket-tournament-play-pool {
             transition: all 0.3s ease;
         }
     }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PLAY / POOL PAGE LAYOUT
+// ═══════════════════════════════════════════════════════════════════════════════
+
+main.bracket-tournament-play-pool {
 
     section.play-pool-intro {
         min-height: 42vh;
@@ -47,17 +180,21 @@ main.bracket-tournament-play-pool {
                         background-color: transparent;
                         cursor: pointer;
 
-                        &:hover {
-                            transform: scale(1.1)
-                        }
+                        &:hover { transform: scale(1.1); }
 
                         img {
                             height: 28px;
                             width: 28px;
                         }
                     }
-
                 }
+            }
+
+            .play-pool-submit-container {
+                margin-top: 14px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
             }
 
             .go-back-button-container {
@@ -72,7 +209,7 @@ main.bracket-tournament-play-pool {
     section.play-prediction-container {
         background-color: $vindro-gray;
         width: 100%;
-        padding: 42px 0px;
+        padding: 42px 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -94,27 +231,12 @@ main.bracket-tournament-play-pool {
             width: 84%;
             position: relative;
 
-            .stage-header {
-                margin-bottom: 21px;
+            .prediction-display-intro {
+                width: 100%;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                gap: 14px;
-
-                h3 {
-                    width: 100%;
-                    font-size: 3.6rem;
-                    font-weight: 400;
-                    text-align: center;
-                    padding-bottom: 14px;
-                    border-bottom: 1px solid $vindro-teal;
-                }
-
-                p {
-                    font-size: 1.4rem;
-                    text-align: center;
-                }
             }
 
             .edit-toggle-btn {
@@ -129,58 +251,40 @@ main.bracket-tournament-play-pool {
                 padding: 3px 14px;
                 transition: all 0.2s ease;
 
-                &#bk-left {
-                    right: 7px;
-                }
+                &#bk-left   { right: 7px; }
+                &#bk-right  { left: 7px; }
+                &#bk-finals { left: calc(50% - 21px); }
 
-                &#bk-right {
-                    left: 7px;
-                }
-
-                &#bk-finals {
-                    left: calc(50% - 21px);
-                }
-
-                // 2. THE STUCK HOVER FIX
-                // Only apply hover color changes if the device actually has a mouse
                 @media (hover: hover) {
                     &:hover:not(:disabled) {
                         background-color: $vindro-neon-pink;
                         color: white;
                     }
 
-                    // On Desktop, if the class .active is present, make it pink
                     &.active {
                         background-color: $vindro-neon-pink;
                         color: white;
                     }
                 }
 
-                // 3. TOUCH/MOBILE LOGIC
                 @media (hover: none) {
-
-                    // If it has the .active class on mobile, it's pink
                     &.active {
                         background-color: $vindro-neon-pink;
                         color: white;
                     }
 
-                    // When NOT active on mobile, force it back to default 
-                    // to prevent the "stuck pink hover"
                     &:not(.active) {
                         background-color: $vindro-tan;
                         color: $vindro-black;
                     }
                 }
 
-                // 4. PHYSICAL PRESS FEEDBACK (The Moment of Clicking)
                 &:active:not(:disabled) {
                     background-color: darken($vindro-neon-pink, 10%);
                     transform: scale(0.95);
                 }
             }
 
-            // The specific classes you added to GroupCards and BracketCards
             .group-card,
             .bk-quarter-card,
             .round-col-finals {
@@ -207,13 +311,130 @@ main.bracket-tournament-play-pool {
             }
         }
 
-        // Apply blur to everything else in the container when something is focused
         &:has(.focused-edit) {
             .stage-header {
                 filter: blur(4px);
                 opacity: 0.5;
             }
         }
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SHARED BRACKET PAGE COMPONENTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+.title-container-wrapper {
+    width: 84%;
+    padding: 14px 28px;
+    border-bottom: 1px solid $vindro-teal;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 7px;
+
+    &.full-width { width: 100%; }
+
+    h3 {
+        font-size: 4.2rem;
+        font-weight: 400;
+        color: white;
+        font-family: $vindro-Montserrat;
+    }
+
+    h4 {
+        font-size: 2.4rem;
+        font-weight: 400;
+    }
+}
+
+.description-container {
+    width: 84%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 21px;
+    padding: 7px 0 14px 21px;
+
+    &.full-width { width: 100%; }
+
+    .description-dropdown {
+        flex: 1;
+        position: relative;
+
+        .description-toggle {
+            width: 84%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px;
+            background-color: #313a45;
+            color: white;
+            border-left: 2px solid transparent;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: $vindro-openSans;
+            font-size: 1.8rem;
+            font-weight: 500;
+            text-align: left;
+
+            .toggle-arrow {
+                flex-shrink: 0;
+                font-size: 1.14rem;
+                transition: transform 0.2s ease;
+
+                &.open {
+                    transform: rotate(180deg);
+                    color: $vindro-neon-pink;
+                }
+            }
+
+            &.open { border-left: 2px solid $vindro-neon-pink; }
+        }
+
+        .description-panel {
+            position: absolute;
+            top: calc(100% + 2px);
+            left: 0;
+            right: 0;
+            z-index: 20;
+            background-color: #313a45;
+            color: white;
+            padding: 14px;
+            border-radius: 3px;
+            border-left: 2px solid $vindro-neon-pink;
+
+            h4 {
+                color: white;
+                font-size: 1.8rem;
+                font-family: $vindro-openSans;
+                font-weight: 400;
+                margin: 7px 0;
+            }
+        }
+    }
+
+    .right-container {
+        flex-shrink: 0;
+        margin: auto 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+
+        button {
+            width: auto;
+            font-family: $vindro-Montserrat;
+            font-size: 1.6rem;
+            font-weight: 500;
+            padding: 7px 14px;
+        }
+
+        p { font-size: 2.1rem; }
     }
 }
 
@@ -236,9 +457,7 @@ main.bracket-tournament-play-pool {
         min-height: 63%;
         width: 84%;
         padding: 42px;
-        background: rgba($vindro-black, 0.84);
         background-color: $vindro-gray;
-        border: 3px solid $real-yellow;
         border: 3px solid $vindro-green;
         border-radius: 3px;
         text-align: center;
@@ -259,11 +478,9 @@ main.bracket-tournament-play-pool {
             flex-direction: column;
             gap: 14px;
 
-            .double-text {
-                p {
-                    font-size: 1.8rem;
-                    font-family: $vindro-openSans;
-                }
+            .double-text p {
+                font-size: 1.8rem;
+                font-family: $vindro-openSans;
             }
 
             .prompt-links {
@@ -272,14 +489,11 @@ main.bracket-tournament-play-pool {
                 align-items: center;
                 gap: 21px;
 
-                p {
-                    font-size: 2.1rem;
-                }
+                p { font-size: 2.1rem; }
             }
         }
     }
 }
-
 
 .tournament-countdown {
     color: $real-yellow;

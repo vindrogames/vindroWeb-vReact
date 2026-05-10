@@ -183,10 +183,7 @@ const UserProfile = () => {
         { header: 'Rank', key: 'rank' },
     ];
 
-    const scoreData = [
-        { id: 1, slug: 'escape-the-cloud', game: 'Escape The Cloud', score: 1250, rank: '#4' },
-        { id: 2, slug: 'game-42', game: 'Game 42', score: 42, rank: '#1' }
-    ];
+    const scoreData = [];
 
     const bracketCols = [
         {
@@ -368,7 +365,7 @@ const UserProfile = () => {
                         <div className="scores-stats-container">
                             <h4>top<span className='inline-teal inline-bold'>Scores</span></h4>
                             <div className="table-container">
-                                <DataTable data={scoreData} columns={scoreCols} />
+                                <DataTable data={scoreData} columns={scoreCols} emptyMessage="Coming Soon" />
                             </div>
                         </div>
 

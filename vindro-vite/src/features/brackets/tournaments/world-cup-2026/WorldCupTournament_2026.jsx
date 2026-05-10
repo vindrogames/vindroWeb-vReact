@@ -126,7 +126,6 @@ const WorldCupTournament_2026 = () => {
     const [showJoinModal, setShowJoinModal] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [selectedPool, setSelectedPool] = useState(null);
-    const [prefilledCode, setPrefilledCode] = useState('');
     const [searchParams, setSearchParams] = useSearchParams();
 
     // On mount: capture ?pool= param and store it so it survives OAuth redirects
@@ -144,14 +143,12 @@ const WorldCupTournament_2026 = () => {
         const code = sessionStorage.getItem('pendingPoolCode');
         if (code) {
             sessionStorage.removeItem('pendingPoolCode');
-            setPrefilledCode(code);
             setShowJoinModal(true);
         }
     }, [user]);
 
     const handleJoinPoolClick = () => {
         if (!user) { handleLoginClick(); return; }
-        setPrefilledCode('');
         setShowJoinModal(true);
     };
 

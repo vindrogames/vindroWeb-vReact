@@ -18,7 +18,7 @@ class TournamentAdmin(admin.ModelAdmin):
 
 @admin.register(TournamentPlay)
 class TournamentPlayAdmin(admin.ModelAdmin):
-    list_display = ['name', 'user', 'tournament', 'status', 'group_points', 'bracket_points', 'current_phase', 'created_at']
+    list_display = ['name', 'user', 'tournament', 'status', 'group_points', 'group_points_spent', 'bracket_points', 'current_phase', 'created_at']
     list_filter = ['status', 'current_phase', 'tournament']
     search_fields = ['name', 'user__username']
     raw_id_fields = ['user', 'tournament']
@@ -26,7 +26,7 @@ class TournamentPlayAdmin(admin.ModelAdmin):
 
 @admin.register(TournamentPool)
 class TournamentPoolAdmin(admin.ModelAdmin):
-    list_display = ['name', 'tournament', 'is_public', 'is_money_pool', 'cost_per_play', 'current_member_count', 'created_by']
+    list_display = ['name', 'tournament', 'is_public', 'is_money_pool', 'cost_per_play', 'created_by']
     list_filter = ['is_public', 'is_money_pool', 'tournament']
     search_fields = ['name']
 

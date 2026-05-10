@@ -8,6 +8,8 @@ import ErrorDisplayModal from '../../../components/ui/ErrorDisplayModal';
 import PlayPageHelmet from '../../../page-helmets/PlayPageHelmet';
 import WorldCupGroupStage from '../tournaments/world-cup-2026/stages/WorldCupGroupStage';
 import WorldCupBracketStage from '../tournaments/world-cup-2026/stages/WorldCupBracketStage';
+import DescriptionDropdown from '../components/DescriptionDropdown';
+import JoinPoolModal from '../components/modals/PoolJoinModal';
 
 const STAGE_MAP = {
     'world-cup-2026': {
@@ -67,8 +69,14 @@ const PlayPage = () => {
     const [bracketCloseCountdown, setBracketCloseCountdown] = useState('');
     const [errorCode, setErrorCode] = useState(null);
 
+    const [showJoinPoolModal, setShowJoinPoolModal] = useState(false);
+    const [myPlays, setMyPlays] = useState([]);
+
     // The "Master Switch": holds the ID of whatever is being edited
     const [activeEditId, setActiveEditId] = useState(null);
+    const [groupDropdownOpen, setGroupDropdownOpen] = useState(false);
+    const [bracketDropdownOpen, setBracketDropdownOpen] = useState(false);
+    const dropdownOpen = groupDropdownOpen || bracketDropdownOpen;
 
     // ── STAGE GATES ─────────────────────────────────────────────────────────────
     // Three scenarios per stage: not_ready | open | closed
@@ -77,16 +85,16 @@ const PlayPage = () => {
     //   not_ready → const isGroupOpen = false; const isGroupClosed = false;
     //   open      → const isGroupOpen = true;  const isGroupClosed = false;
     //   closed    → const isGroupOpen = false; const isGroupClosed = true;
-    const groupStageConfigured   = !!playData?.group_stage_close_date;
-    const isGroupOpen            = groupStageConfigured && new Date() < new Date(playData.group_stage_close_date);
-    const isGroupClosed          = groupStageConfigured && !isGroupOpen;
+    const groupStageConfigured = !!playData?.group_stage_close_date;
+    const isGroupOpen = groupStageConfigured && new Date() < new Date(playData.group_stage_close_date);
+    const isGroupClosed = groupStageConfigured && !isGroupOpen;
 
     // Bracket: 3 scenarios based on bracket_open_date and bracket_stage_close_date
-    const bracketOpenDate   = playData?.bracket_open_date;
-    const bracketCloseDate  = playData?.bracket_stage_close_date;
-    const isBracketNotYet   = !!bracketOpenDate && new Date() < new Date(bracketOpenDate);
-    const isBracketOpen     = !!bracketOpenDate && !isBracketNotYet && !!bracketCloseDate && new Date() < new Date(bracketCloseDate);
-    const isBracketClosed   = !!bracketCloseDate && !isBracketNotYet && !isBracketOpen;
+    const bracketOpenDate = playData?.bracket_open_date;
+    const bracketCloseDate = playData?.bracket_stage_close_date;
+    const isBracketNotYet = !!bracketOpenDate && new Date() < new Date(bracketOpenDate);
+    const isBracketOpen = !!bracketOpenDate && !isBracketNotYet && !!bracketCloseDate && new Date() < new Date(bracketCloseDate);
+    const isBracketClosed = !!bracketCloseDate && !isBracketNotYet && !isBracketOpen;
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -111,6 +119,14 @@ const PlayPage = () => {
         };
         fetchPlay();
     }, [tournament, userId, playName]);
+
+    // Fetch the logged-in user's plays so they can submit one to a pool from this page
+    useEffect(() => {
+        if (!user || !playData?.tournament_id) return;
+        playServices.getUserPlays(playData.tournament_id)
+            .then(res => setMyPlays(res?.data || []))
+            .catch(() => setMyPlays([]));
+    }, [user, playData?.tournament_id]);
 
     // Group stage countdown — always running so the "Closed" signal fires automatically
     useEffect(() => {
@@ -142,7 +158,7 @@ const PlayPage = () => {
     const isGroupEditable = isOwner && isGroupOpen;
 
     const isBracketEditing = activeEditId?.startsWith('bk-');
-    const isGroupEditing   = !!activeEditId && !isBracketEditing;
+    const isGroupEditing = !!activeEditId && !isBracketEditing;
 
     const stages = STAGE_MAP[tournament] ?? {};
     const { GroupStage, BracketStage } = stages;
@@ -218,7 +234,7 @@ const PlayPage = () => {
     };
 
     return (
-        <main id="play-page" className={`bracket-tournament-play-pool ${activeEditId ? 'has-active-focus' : ''}`}>
+        <main id="play-page" className={`bracket-tournament-play-pool ${activeEditId ? 'has-active-focus' : ''}${dropdownOpen ? ' dropdown-active' : ''}`}>
 
             <PlayPageHelmet playName={playData.name} tournamentName={playData.tournament_name || tournament} />
 
@@ -250,6 +266,17 @@ const PlayPage = () => {
                                 </h2>
                             )}
                         </div>
+
+                        {user && isOwner && (
+                            <div className="play-pool-submit-container">
+                                <button
+                                    className="btn btn-tan"
+                                    onClick={() => setShowJoinPoolModal(true)}
+                                >
+                                    Submit to Pool
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="go-back-button-container">
@@ -259,24 +286,52 @@ const PlayPage = () => {
             </section>
 
             {/* ── GROUP STAGE ── */}
-            <section id="groups-predictions" className={`play-prediction-container${isBracketEditing ? ' is-dimmed' : ''}`}>
+            <section id="groups-predictions" className={`play-prediction-container${isBracketEditing ? ' is-dimmed' : ''}${bracketDropdownOpen ? ' peer-dropdown-active' : ''}`}>
 
                 {GroupStage ? (
                     <div className="prediction-display-wrapper">
-                        <div className={`stage-header${isGroupEditing ? ' is-dimmed' : ''}`}>
-                            <h3>group<span className="inline-teal inline-bold">Stage</span></h3>
-                            {/* Scenario 1 (not_ready): no status line */}
-                            {isGroupOpen && (
-                                <p className="last-updated">
-                                    Closes in <span className="tournament-countdown">{countdown}</span>
-                                </p>
-                            )}
-                            {isGroupClosed && (
-                                <p className="last-updated">
-                                    <span className="tournament-countdown">Stage closed</span>
-                                    {' · '}<span className="inline-teal inline-bold">{playData.group_points} pts</span>
-                                </p>
-                            )}
+
+                        <div className="prediction-display-intro">
+
+                            <div className={`title-container-wrapper full-width ${isGroupEditing ? ' is-dimmed' : ''}`}>
+                                <h3>group<span className="inline-teal inline-bold">Stage</span></h3>
+                                <h4>pts: {playData?.group_points || '-'}</h4>
+                            </div>
+
+                            <div id="play-description" className="description-container full-width">
+                                <DescriptionDropdown summary="Predict how each team will finish in their group!" onOpenChange={setGroupDropdownOpen}>
+                                    <h4>You recieve 1 point for each correct prediction.</h4>
+                                    <h4>If you correctly predict every team in every group, you will earn an extra 2 points!</h4>
+                                    <h4>You will be able to use these points to swap out wrong predictions in the Bracket Stage.</h4>
+                                    <h4>However, if you use these points to make a swap, you "spend" them, and have less remaining points.</h4>
+                                    <h4>These also decide ties. If two Brackets have 78 points, then however many points in this stage you have remaining will count for a tie break.</h4>
+                                </DescriptionDropdown>
+
+                                <div className="right-container">
+                                    {/* Scenario 1 (not_ready): no status line */}
+                                    {isGroupOpen && (
+                                        <>
+                                            <p><span className="inline-teal">Open</span> for Predictions
+                                            </p>
+                                            <p className="last-updated">
+                                                Closes in <span className="tournament-countdown">{countdown}</span>
+                                            </p>
+                                        </>
+
+                                    )}
+                                    {isGroupClosed && (
+                                        <>
+                                            <p>
+                                                <span className="inline-neon-pink">Closed</span> for Predictions
+                                            </p>
+                                            <p>
+                                                <span className="inline-neon-pink">Closed</span> for Predictions
+                                            </p>
+                                        </>
+
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
                         <GroupStage
@@ -303,35 +358,62 @@ const PlayPage = () => {
             </section>
 
             {/* ── BRACKET STAGE ── */}
-            <section className={`play-prediction-container${activeEditId && !isBracketEditing ? ' is-dimmed' : ''}`}>
+            <section className={`play-prediction-container${activeEditId && !isBracketEditing ? ' is-dimmed' : ''}${groupDropdownOpen ? ' peer-dropdown-active' : ''}`}>
 
 
                 {BracketStage ? (
 
                     <div id="brackets-predictions" className="prediction-display-wrapper">
 
-                        <div className={`stage-header${isBracketEditing ? ' is-dimmed' : ''}`}>
-                            <h3>bracket<span className="inline-teal inline-bold">Stage</span></h3>
-                            {/* Scenario 1 — not yet open */}
-                            {isBracketNotYet && (
-                                <p className="last-updated">
-                                    Opens in <span className="tournament-countdown">{bracketOpenCountdown}</span>
-                                </p>
-                            )}
-                            {/* Scenario 2 — open for predictions */}
-                            {isBracketOpen && (
-                                <p className="last-updated">
-                                    Closes in <span className="tournament-countdown">{bracketCloseCountdown}</span>
-                                </p>
-                            )}
-                            {/* Scenario 3 — bracket under way */}
-                            {isBracketClosed && (
-                                <p className="last-updated">
-                                    Under <span className="inline-neon-pink inline-bold">Way!</span>
-                                    {' · '}<span className="inline-teal inline-bold">{playData.bracket_points} pts</span>
-                                </p>
-                            )}
+                        <div className="prediction-display-intro full-width">
+                            <div className={`title-container-wrapper ${isGroupEditing ? ' is-dimmed' : ''}`}>
+                                <h3>bracket<span className="inline-teal inline-bold">Stage</span></h3>
+                                <h4>pts: {playData?.bracket_points || '-'}</h4>
+                            </div>
+
+                            <div id="pool-description" className="description-container">
+                                <DescriptionDropdown summary="Complete your bracket with predictions for the Tournament!" onOpenChange={setBracketDropdownOpen}>
+                                    <h4>This Bracket Stage opens once all 32 teams have been decided.</h4>
+                                    <h4>You will have only a short window of time to fill out your predictions.</h4>
+                                    <h4>You get a fresh Bracket, regardless of your Groups Stage predictions.</h4>
+                                    <h4>Group Stage Points and Bracket Points are seperate.</h4>
+                                    <h4>Bracket Stage points are what decide the winners of pools.</h4>
+                                    <h4>If one of your predictions loses, you can swap it out using your Group Stage Points.</h4>
+                                    <h4>But use them wisely!</h4>
+                                </DescriptionDropdown>
+
+                                <div className="right-container">
+                                    {/* Scenario 1 — not yet open */}
+                                    {isBracketNotYet && (
+                                        <>
+                                            <p><span className="inline-neon-pink">Closed</span> for Predictions
+                                            </p>
+                                            <p className="last-updated">
+                                                Opens in <span className="tournament-countdown">{bracketOpenCountdown}</span>
+                                            </p>
+                                        </>
+                                    )}
+                                    {/* Scenario 2 — open for predictions */}
+                                    {isBracketOpen && (
+                                        <>
+                                            <p><span className="inline-neon-pink">Open</span> for Predictions
+                                            </p>
+                                            <p className="last-updated">
+                                                Closes in <span className="tournament-countdown">{bracketCloseCountdown}</span>
+                                            </p>
+                                        </>
+                                    )}
+                                    {/* Scenario 3 — bracket under way */}
+                                    {isBracketClosed && (
+                                        <p className="last-updated">
+                                            Under <span className="inline-neon-pink inline-bold">Way!</span>
+                                            {' · '}<span className="inline-teal inline-bold">{playData.bracket_points} pts</span>
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
+
                         <BracketStage
                             data={playData.bracket_predictions}
                             isOwner={isOwner}
@@ -351,6 +433,13 @@ const PlayPage = () => {
 
             </section>
 
+            <JoinPoolModal
+                isOpen={showJoinPoolModal}
+                tournamentId={playData?.tournament_id}
+                plays={myPlays}
+                onCancel={() => setShowJoinPoolModal(false)}
+                onSuccess={() => setShowJoinPoolModal(false)}
+            />
             <ErrorDisplayModal
                 isOpen={!!errorCode}
                 code={errorCode}

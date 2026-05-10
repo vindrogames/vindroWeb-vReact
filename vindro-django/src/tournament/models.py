@@ -78,10 +78,13 @@ class TournamentPlay(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in_progress')
     current_phase = models.CharField(max_length=20, choices=PHASE_CHOICES, default='groups')
 
+    slug = models.CharField(max_length=28, blank=True, default='')
+
     group_predictions = models.JSONField(default=dict)
     bracket_predictions = models.JSONField(default=dict)
 
     group_points = models.IntegerField(default=0)
+    group_points_spent = models.IntegerField(default=0)
     bracket_points = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -91,9 +94,13 @@ class TournamentPlay(models.Model):
         ordering = ['-created_at']
         constraints = [
             UniqueConstraint(
-                fields=['user', 'tournament', 'name'], 
+                fields=['user', 'tournament', 'name'],
                 name='unique_play_name_per_user_per_tournament'
-            )
+            ),
+            UniqueConstraint(
+                fields=['user', 'tournament', 'slug'],
+                name='unique_play_slug_per_user_per_tournament'
+            ),
         ]
 
     def __str__(self):
@@ -117,7 +124,6 @@ class TournamentPool(models.Model):
     is_public = models.BooleanField(default=False)
     code_hash = models.CharField(max_length=255, unique=True, null=True, blank=True)
     join_code = models.CharField(max_length=16, null=True, blank=True)
-    current_member_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     # MONEY FEATURES
@@ -130,6 +136,8 @@ class TournamentPool(models.Model):
 
     # PAYOUTS  {position_str: integer_percent}  e.g. {"1": 60, "2": 30, "3": 10}
     payout_config = models.JSONField(default=dict, blank=True)
+
+    slug = models.SlugField(max_length=28, unique=True, blank=True, default='')
 
     # ADDITION: The 'through' relationship for easier querying
     members = models.ManyToManyField(

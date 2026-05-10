@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 
-const DescriptionDropdown = ({ summary, children }) => {
+const DescriptionDropdown = ({ summary, children, onOpenChange }) => {
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef(null);
 
+    const setOpen = (val) => {
+        const next = typeof val === 'function' ? val(isOpen) : val;
+        setIsOpen(next);
+        onOpenChange?.(next);
+    };
+
     useEffect(() => {
         if (!isOpen) return;
-        const onMouse = (e) => { if (!ref.current?.contains(e.target)) setIsOpen(false); };
-        const onKey = (e) => { if (e.key === 'Escape') setIsOpen(false); };
+        const onMouse = (e) => { if (!ref.current?.contains(e.target)) setOpen(false); };
+        const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
         document.addEventListener('mousedown', onMouse);
         document.addEventListener('keydown', onKey);
         return () => {
@@ -19,7 +25,7 @@ const DescriptionDropdown = ({ summary, children }) => {
 
     return (
         <div className="description-dropdown" ref={ref}>
-            <button className={`description-toggle ${isOpen ? 'open' : 'closed'}`} onClick={() => setIsOpen(v => !v)}>
+            <button className={`description-toggle ${isOpen ? 'open' : 'closed'}`} onClick={() => setOpen(v => !v)}>
                 <span>{summary}</span>
                 <FaChevronDown className={`toggle-arrow${isOpen ? ' open' : ''}`} />
             </button>

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ShowcaseSection from '../../../components/ui/ShowcaseSection';
-import DescriptionDropdown from '../../../components/ui/DescriptionDropdown';
+import DescriptionDropdown from '../components/DescriptionDropdown';
 import AuthModal from '../../../components/ui/AuthModal';
 import Leaderboard from '../../../components/ui/Leaderboard';
 import PlayCreateNewModal from '../components/modals/PlayCreateNewModal';
 import JoinPoolModal from '../components/modals/PoolJoinModal';
 import PoolCreateNewModal from '../components/modals/PoolCreateNewModal';
 import { useAuth } from '../../../contexts/auth/AuthContext';
+import { toUrlSlug } from '../../../utils/urlUtils';
 import { useTournament } from '../hooks/useTournament';
 import { useLeaderboards } from '../hooks/useLeaderboard';
 import { usePlays } from '../hooks/usePlays';
@@ -88,7 +89,7 @@ const TournamentPage = () => {
                 setShowJoinModal(true);
                 return;
             }
-            navigate(`/brackets/${tournamentSlug}/play/${user.id}/${encodeURIComponent(newPlay.name)}`);
+            navigate(`/brackets/${tournamentSlug}/play/${user.id}/${toUrlSlug(newPlay.name)}`);
         }
     };
 
@@ -100,7 +101,7 @@ const TournamentPage = () => {
 
     const handleNavigateToPlay = (play) => {
         if (!user) return;
-        navigate(`/brackets/${tournamentSlug}/play/${user.id}/${encodeURIComponent(play.name)}`);
+        navigate(`/brackets/${tournamentSlug}/play/${user.id}/${toUrlSlug(play.name)}`);
     };
 
     const getUpdateStatus = (play) => {
@@ -117,7 +118,6 @@ const TournamentPage = () => {
 
     const handleJoinPoolClick = () => {
         if (!user) { handleLoginClick(); return; }
-        setPrefilledCode('');
         setShowJoinModal(true);
     };
 
@@ -132,7 +132,7 @@ const TournamentPage = () => {
         if (pool.is_public) {
             handleScrollToSection('tournament-leaderboard');
         } else {
-            navigate(`/brackets/${tournamentSlug}/pool/${encodeURIComponent(name)}`);
+            navigate(`/brackets/${tournamentSlug}/pool/${toUrlSlug(name)}`);
         }
     };
 
@@ -147,7 +147,7 @@ const TournamentPage = () => {
     };
 
     const handleLeaderboardPlayClick = (item) => {
-        navigate(`/brackets/${tournamentSlug}/play/${item.user.id}/${encodeURIComponent(item.play_name)}`);
+        navigate(`/brackets/${tournamentSlug}/play/${item.user.id}/${toUrlSlug(item.play_name)}`);
     };
 
     const leaderboardCols = [
@@ -241,16 +241,16 @@ const TournamentPage = () => {
 
                 <div className="user-picks-container">
 
-                    <div className="title-container-wrapper">
+                    <div className="title-container-wrapper full-width">
                         <h3>Your Plays</h3>
                     </div>
 
-                    <div className="user-picks-description-wrapper">
+                    <div className="description-container full-width">
                         <DescriptionDropdown summary='A "Play" includes your predictions for a Tournament.'>
                             <h4>This World Cup 2026 Tournament has 2 stages: <span className='inline-bold'>Groups</span> & the <span className='inline-bold'>Bracket</span></h4>
                             <h4>Your plays are private until you submit them to a pool.</h4>
                         </DescriptionDropdown>
-                        <div className="buttons-container">
+                        <div className="right-container">
                             {tournamentStarted ? (
                                 <span className="disabled-btn-wrapper">
                                     <button className="btn btn-tan" disabled>Create a Play</button>
@@ -296,18 +296,18 @@ const TournamentPage = () => {
 
                 <div className="user-picks-container">
 
-                    <div className="title-container-wrapper">
+                    <div className="title-container-wrapper full-width">
                         <h3>Plays in Pools</h3>
                     </div>
 
-                    <div className="user-picks-description-wrapper">
+                    <div className="description-container full-width">
                         <DescriptionDropdown summary='To "compete", you submit your plays to Pools.'>
                             <h4>We have a public vindro<span className='inline-bold'>Public</span> Pool for everybody to see.</h4>
                             <h4>You can submit as many plays as you like to our public pool.</h4>
                             <h4>Users can create "Private" Pools that require a code.</h4>
                             <h4>Depending on the config, private pools can limit to 1 play per user and/or define money prizes.</h4>
                         </DescriptionDropdown>
-                        <div className="buttons-container">
+                        <div className="right-container">
                             <button className="btn btn-tan" onClick={handleJoinPoolClick}>Submit a Play</button>
                         </div>
                     </div>
@@ -346,18 +346,18 @@ const TournamentPage = () => {
 
                 <div className="user-picks-container">
 
-                    <div className="title-container-wrapper">
+                    <div className="title-container-wrapper full-width">
                         <h3>Your Pools</h3>
                     </div>
 
-                    <div className="user-picks-description-wrapper">
+                    <div className="description-container full-width">
                         <DescriptionDropdown summary="Create a Private Pool for you and your people!">
                             <h4>You can decide to allow multiple plays per user or limit to 1.</h4>
                             <h4>You can configure the Pool as a "Money Pool" setting a cost per play.</h4>
                             <h4>You can also set the prize payouts by standing.</h4>
                             <h4>You will be able to eliminate any play from your Pool.</h4>
                         </DescriptionDropdown>
-                        <div className="buttons-container">
+                        <div className="right-container">
                             <button className="btn btn-tan" onClick={handleCreatePoolClick}>Create a Pool</button>
                         </div>
                     </div>
@@ -461,7 +461,7 @@ const TournamentPage = () => {
                     if (pool?.is_public) {
                         handleScrollToSection('tournament-leaderboard');
                     } else if (pool?.name) {
-                        navigate(`/brackets/${tournamentSlug}/pool/${encodeURIComponent(pool.name)}`);
+                        navigate(`/brackets/${tournamentSlug}/pool/${toUrlSlug(pool.name)}`);
                     }
                 }}
             />

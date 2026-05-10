@@ -3,9 +3,12 @@
 main.bracket-tournament-play-pool {
 
     section.play-prediction-container {
-        
+        &#groups-predictions {
+            padding: 21px 42px 42px;
+        }
         .prediction-display-wrapper {
-
+            width: 100%;
+            
             .gallery-container {
                 position: relative;
                 width: 100%;
