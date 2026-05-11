@@ -1,46 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import BracketHelmet from '../page-helmets/BracketHelmet';
 import ShowcaseSection from '../components/ui/ShowcaseSection';
-import BracketEventCard from '../components/pages/brackets/BracketEventCard';
+import BracketEventCardLive from '../components/pages/brackets/BracketEventCardLive';
+import tournamentServices from '../features/brackets/services/tournamentServices';
 
 const Brackets = () => {
+    const { t } = useTranslation('brackets');
+    const [tournaments, setTournaments] = useState([]);
+
+    useEffect(() => {
+        tournamentServices.getAllTournaments()
+            .then(res => { if (res?.data) setTournaments(res.data); })
+            .catch(() => {});
+    }, []);
 
     return (
-
         <>
             <BracketHelmet />
 
             <main id="brackets-page">
 
-                <ShowcaseSection
-                    classes="hero-half bg-black"
-                >
+                <ShowcaseSection classes="hero-half bg-black">
                     <h1>vindro<span className="inline-bold inline-teal">Brackets</span></h1>
-                    <h2>Join an event, complete a bracket and enter a pool. Easy</h2>
+                    <h2>{t('hero.tagline')}</h2>
                 </ShowcaseSection>
 
                 <section id="brackets-events-container">
-
                     <div id="brackets-events-gallery">
-
-                        <BracketEventCard
-                            key="bracket-event-1"
-                            eventTitle="World Cup 2026"
-                            phases={{
-                                groupPhases: ["48 Teams", "Points for Correct Picks", "Reset Bracket"],
-                                bracketPhases: ["Round of 32", "Round of 16", "Quarter-finals", "Semi-finals", "Finals"]
-                            }}
-                            startDate="Start: Jun 11, 2026"
-                            route='/brackets/world-cup-2026'
-                        />
-
-
+                        {tournaments.map(tournament => (
+                            <BracketEventCardLive
+                                key={tournament.id}
+                                tournament={tournament}
+                            />
+                        ))}
                     </div>
                 </section>
             </main>
         </>
-
-    )
-}
+    );
+};
 
 export default Brackets;

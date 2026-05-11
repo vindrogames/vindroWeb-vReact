@@ -1,0 +1,15 @@
+{
+    "hero": {
+        "tagline": "Who knows what could happen"
+    },
+    "contactContent": {
+        "firstLine": "We are passionate about programming, games, learning and data.",
+        "secondLine": "We offer web design, game development, DevOps, security and data analysis services to individuals and institutions."
+    },
+    "meta": {
+        "title": "Vindrogames | Contact",
+        "description": "Contact Vindrogames for collaborations or services",
+        "ogTitle": "Vindrogames | Contact",
+        "ogDescription": "Get in touch with Vindrogames"
+    }
+}

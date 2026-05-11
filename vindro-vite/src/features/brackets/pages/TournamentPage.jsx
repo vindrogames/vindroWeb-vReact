@@ -403,9 +403,10 @@ const TournamentPage = () => {
                                 <div className="prompt-links">
                                     <button className="btn btn-tan" onClick={handleLoginClick}>Log In</button>
                                 </div>
+                                <p>*If you don't have an account, signing up is easy!</p>
                             </div>
 
-                            <div className="section-seperator"></div>
+                            <div className="section-seperator sep-pink"></div>
 
                             <div className="bottom-half auth-prompt-half">
                                 <h5>Or Check it out before getting started.</h5>

@@ -1,16 +1,18 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const InfoModal = ({ isOpen, onClose }) => {
+    const { t } = useTranslation('madrid-calculator');
+
     if (!isOpen) return null;
 
     return (
         <div className="fixed-modal-overlay">
             <div className="modal-card">
                 <div className="info-container">
-                    <h1>Calculadora Madridista</h1>
-                    <p>Built for the fans of the greatest club on earth.
-                        The 15 button adds the weight of our European history to your math.</p>
-                    <button className="close-modal-btn" onClick={onClose}>Close</button>
+                    <h1 translate="no">Calculadora Madridista</h1>
+                    <p>{t('infoModal.description')}</p>
+                    <button className="close-modal-btn" onClick={onClose}>{t('infoModal.close')}</button>
                 </div>
             </div>
         </div>

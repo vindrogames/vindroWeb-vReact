@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import NavBarLink from '../ui/NavBarLink';
 import SmartLink from '../ui/SmartLink';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import AuthModal from '../ui/AuthModal';
+import LangToggle from '../ui/LangToggle';
 
 const routes = [
-    { text: 'home', route: '/' },
-    { text: 'story', route: '/story' },
-    { text: 'games', route: '/games' },
-    { text: 'brackets', route: '/brackets' },
-    { text: 'contact', route: '/contact' },
+    { key: 'home', route: '/' },
+    { key: 'story', route: '/story' },
+    { key: 'games', route: '/games' },
+    { key: 'brackets', route: '/brackets' },
+    { key: 'contact', route: '/contact' },
 ];
 
 const NavBar = ({ isMadrid }) => {
@@ -28,6 +30,7 @@ const NavBar = ({ isMadrid }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { user, logout } = useAuth();
+    const { t } = useTranslation('common');
     const navigate = useNavigate();
 
     useEffect(() => { menuOpenRef.current = menuOpen; }, [menuOpen]);
@@ -98,7 +101,7 @@ const NavBar = ({ isMadrid }) => {
                 <nav>
                     <ul>
                         {routes.map((r) => (
-                            <NavBarLink key={r.route} text={r.text} route={r.route} />
+                            <NavBarLink key={r.route} text={t(`nav.${r.key}`)} route={r.route} />
                         ))}
                     </ul>
 
@@ -118,16 +121,17 @@ const NavBar = ({ isMadrid }) => {
                                             className="dropdown-item"
                                             onClick={() => setUserDropdownOpen(false)}
                                         >
-                                            Profile
+                                            {t('header.profile')}
                                         </SmartLink>
 
-                                        <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
+                                        <button className="dropdown-item logout-btn" onClick={handleLogout}>{t('header.logout')}</button>
+                                        <LangToggle />
                                     </div>
                                 )}
                             </div>
                         ) : (
                             <ul>
-                                <button className='btn-login' onClick={() => setIsModalOpen(true)}>Login</button>
+                                <button className='btn-login' onClick={() => setIsModalOpen(true)}>{t('header.login')}</button>
                             </ul>
                         )}
                     </div>
@@ -150,7 +154,7 @@ const NavBar = ({ isMadrid }) => {
                     <div id="hamburger-menu" ref={hamburgerMenuRef} className={menuOpen ? 'open' : ''}>
                         <ul>
                             {routes.map((r) => (
-                                <NavBarLink key={r.route} text={r.text} route={r.route} onClick={() => setMenuOpen(false)} />
+                                <NavBarLink key={r.route} text={t(`nav.${r.key}`)} route={r.route} onClick={() => setMenuOpen(false)} />
                             ))}
                         </ul>
                     </div>
@@ -172,16 +176,17 @@ const NavBar = ({ isMadrid }) => {
                                             className="dropdown-item"
                                             onClick={() => setUserDropdownOpen(false)}
                                         >
-                                            Profile
+                                            {t('header.profile')}
                                         </SmartLink>
-                                        
-                                        <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
+
+                                        <button className="dropdown-item logout-btn" onClick={handleLogout}>{t('header.logout')}</button>
+                                        <LangToggle />
                                     </div>
                                 )}
                             </div>
                         ) : (
                             <ul>
-                                <button className='btn-login' onClick={() => setIsModalOpen(true)}>Login</button>
+                                <button className='btn-login' onClick={() => setIsModalOpen(true)}>{t('header.login')}</button>
                             </ul>
                         )}
                     </div>

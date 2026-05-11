@@ -1,5 +1,6 @@
 // src/game-42/components/GameDisplay.jsx
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from '../../../contexts/auth/AuthContext';
 
 export default function GameDisplay({
@@ -8,6 +9,7 @@ export default function GameDisplay({
     elapsedSeconds, isNewBest,
     onOpenInstructions, isInstructionsOpen
 }) {
+    const { t } = useTranslation('game-42');
     const { isAuthenticated } = useAuth();
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 678);
 
@@ -23,10 +25,10 @@ export default function GameDisplay({
     };
 
     const renderEndText = () => {
-        if (endCause === "42") return "🎉 42! Perfect Score!";
-        if (endCause === "bad-placement") return "Fatal: Bad Order";
+        if (endCause === "42") return t('game.perfectScore');
+        if (endCause === "bad-placement") return t('game.badOrder');
         if (endCause === "no-possible-moves") return (
-            <>Err: Can't place <span className="error-num">{numToPlace}</span></>
+            <>{t('game.cantPlace')} <span className="error-num">{numToPlace}</span></>
         );
         return "-";
     };
@@ -35,10 +37,10 @@ export default function GameDisplay({
         <section id="display-42">
             <div className="instructions-42">
                 <h1 className="title-42">
-                    <span className="inline-teal inline-bold">42</span> the game
+                    <span className="inline-teal inline-bold">42</span> {t('title')}
                 </h1>
                 <button type="button" className="how-to-play-toggle" onClick={onOpenInstructions}>
-                    <span className="toggle-label">How to Play</span>
+                    <span className="toggle-label">{t('howToPlay')}</span>
                 </button>
             </div>
 
@@ -50,7 +52,7 @@ export default function GameDisplay({
                             onClick={() => handleAction(gameOver ? playAgain : startGame)}
                             className={`btn ${gameOver ? "game-over" : ""}`}
                         >
-                            {gameOver ? "Play again" : "Start"}
+                            {gameOver ? t('playAgain') : t('start')}
                         </button>
                     ) : (
                         <div className="game-42-number-display">
@@ -66,15 +68,15 @@ export default function GameDisplay({
                 </div>
 
                 <div className="game-42-results-grid">
-                    <div id="game-points"><p>This Game</p><p>{points}</p></div>
-                    <div id="prev-points"><p>Prev Game</p><p>{prevPoints ?? "-"}</p></div>
-                    <div id="best"><p>Best Game</p><p>{todayBest ?? "-"}</p></div>
+                    <div id="game-points"><p>{t('results.thisGame')}</p><p>{points}</p></div>
+                    <div id="prev-points"><p>{t('results.prevGame')}</p><p>{prevPoints ?? "-"}</p></div>
+                    <div id="best"><p>{t('results.bestGame')}</p><p>{todayBest ?? "-"}</p></div>
                     {gameOver && (
-                        <div id="game-time"><p>Time</p><p>{elapsedSeconds}s</p></div>
+                        <div id="game-time"><p>{t('results.time')}</p><p>{elapsedSeconds}s</p></div>
                     )}
                 </div>
                 {gameOver && isNewBest && (
-                    <p className="new-best-notice">New personal best!</p>
+                    <p className="new-best-notice">{t('results.newBest')}</p>
                 )}
             </div>
         </section>

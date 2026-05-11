@@ -2,8 +2,6 @@
 
 @media(max-width: 960px) {
 
-
-
     .description-container {
         padding: 7px 0 14px 14px;
 
@@ -45,6 +43,16 @@
             }
         }
     }
+
+    .auth-prompt-overlay {
+
+        .auth-prompt-message {
+
+            h5 {
+                font-size: 2.4rem;
+            }
+        }
+    }
 }
 
 @media(max-width: 678px) {
@@ -79,6 +87,21 @@
         .right-container {
             width: 100%;
             align-items: flex-start;
+        }
+    }
+
+    .auth-prompt-overlay {
+
+        .auth-prompt-message {
+            padding: 21px;
+
+            h5 {
+                font-size: 1.8rem;
+            }
+
+            p {
+                font-size: 1.2rem;
+            }
         }
     }
 }
@@ -117,6 +140,33 @@
 
             button {
                 font-size: 1.4rem;
+            }
+        }
+    }
+
+    .auth-prompt-overlay {
+        padding: 21px;
+
+        .auth-prompt-message {
+            width: 100%;
+            padding: 14px;
+
+            .section-seperator {
+                width: 84%;
+            }
+            p {
+                font-size: 1.2rem;
+            }
+
+            .auth-prompt-half {
+
+                .prompt-links {
+                    flex-direction: column;
+                    button {
+                        font-size: 1.2rem;
+                        padding: 7px 14px;
+                    }
+                }
             }
         }
     }

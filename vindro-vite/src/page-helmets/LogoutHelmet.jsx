@@ -1,11 +1,13 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 
 export default function LogoutHelmet() {
+    const { t } = useTranslation('logout');
     return (
         <Helmet>
-            <title>Logged Out | Vindrogames</title>
-            <meta name="description" content="You have been logged out of Vindrogames." />
+            <title>{t('meta.title')}</title>
+            <meta name="description" content={t('meta.description')} />
             <meta name="robots" content="noindex, nofollow" />
             <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico" />
         </Helmet>

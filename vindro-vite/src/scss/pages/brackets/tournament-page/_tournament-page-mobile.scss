@@ -420,5 +420,17 @@
                 }
             }
         }
+        
+        section.leaderboard-display-container {
+            padding: 21px;
+
+            .leaderboard-header {
+                width: 100%;
+
+                h3 {
+                    font-size: 2.8rem;
+                }
+            }
+        }
     }
 }

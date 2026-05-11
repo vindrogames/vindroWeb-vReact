@@ -1,0 +1,15 @@
+{
+    "hero": {
+        "tagline": "Quien sabe lo que podría pasar"
+    },
+    "contactContent": {
+        "firstLine": "Somos apasionados de la programación y de los datos, del juego y del aprendizaje.",
+        "secondLine": "Ofrecemos servicios de diseño web, desarollo de juegos, DevOps, de seguridad y de analisis de datos para individuales e instituciones."
+    },
+    "meta": {
+        "title": "Vindrogames | Contacto",
+        "description": "Contacta con Vindrogames para colaboraciones o servicios",
+        "ogTitle": "Vindrogames | Contacto",
+        "ogDescription": "Ponte en contacto con Vindrogames"
+    }
+}

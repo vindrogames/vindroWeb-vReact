@@ -1,0 +1,34 @@
+{
+    "hero": {
+        "tagline": "Ad-free games and apps which provide a context for developing language, critical thinking and attention. Or simply just fun."
+    },
+    "cards": {
+        "autominer": {
+            "description": "An idle game. Start mining, automate production and leave your tab open."
+        },
+        "game42": {
+            "description": "Inspired by The Mind boardgame, our 42 game will test your reasoning, intuition and luck!"
+        },
+        "breakout": {
+            "description": "Inspired by Escape Rooms, this game teaches players tricks and functionalities of Google tools."
+        },
+        "brainGame": {
+            "description": "A RPG type game designed to teach people about the human brain and how we process visual information."
+        },
+        "set": {
+            "description": "A great boardgame we have recreated to play on screen. Simple but mentally exhausting, how many sets can you find?"
+        },
+        "greekTale": {
+            "description": "A short game inspired by Troy with a digital spin. Can you send your Trojan Horses through all the firewalls?"
+        },
+        "calculator": {
+            "description": "Calc as always or by the number of Champions Leagues Real Madrid has won"
+        }
+    },
+    "meta": {
+        "title": "Vindrogames | Games & Apps",
+        "description": "Ad-free games and apps for learning and entertainment",
+        "ogTitle": "Vindrogames Games & Apps",
+        "ogDescription": "Play around with our different games and apps developed at Vindrogames"
+    }
+}

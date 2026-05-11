@@ -1,46 +1,48 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function AutominerInstructions({ gameStarted, isOpen, onClose }) {
 
+    const { t } = useTranslation('autominer');
     const [showText, setShowText] = useState(false);
-        const dialogRef = useRef(null);
-        const closeBtnRef = useRef(null);
-        const previouslyFocusedElement = useRef(null);
-    
-        // Fade animation logic
-        useEffect(() => {
-            let timer;
-            if (isOpen) {
-                timer = setTimeout(() => setShowText(true), 200);
-            } else {
-                setShowText(false);
+    const dialogRef = useRef(null);
+    const closeBtnRef = useRef(null);
+    const previouslyFocusedElement = useRef(null);
+
+    // Fade animation logic
+    useEffect(() => {
+        let timer;
+        if (isOpen) {
+            timer = setTimeout(() => setShowText(true), 200);
+        } else {
+            setShowText(false);
+        }
+        return () => clearTimeout(timer);
+    }, [isOpen]);
+
+    // Accessibility + focus management
+    useEffect(() => {
+        if (!isOpen) return;
+
+        previouslyFocusedElement.current = document.activeElement;
+
+        closeBtnRef.current?.focus();
+
+        const handleEsc = (e) => {
+            if (e.key === "Escape") {
+                onClose();
             }
-            return () => clearTimeout(timer);
-        }, [isOpen]);
-    
-        // Accessibility + focus management
-        useEffect(() => {
-            if (!isOpen) return;
-    
-            previouslyFocusedElement.current = document.activeElement;
-    
-            closeBtnRef.current?.focus();
-    
-            const handleEsc = (e) => {
-                if (e.key === "Escape") {
-                    onClose();
-                }
-            };
-    
-            document.addEventListener("keydown", handleEsc);
-    
-            return () => {
-                document.removeEventListener("keydown", handleEsc);
-                previouslyFocusedElement.current?.focus();
-            };
-        }, [isOpen, onClose]);
-    
-        if (!isOpen) return null;
+        };
+
+        document.addEventListener("keydown", handleEsc);
+
+        return () => {
+            document.removeEventListener("keydown", handleEsc);
+            previouslyFocusedElement.current?.focus();
+        };
+    }, [isOpen, onClose]);
+
+    if (!isOpen) return null;
 
     return (
         <div
@@ -58,39 +60,43 @@ export default function AutominerInstructions({ gameStarted, isOpen, onClose }) 
             >
                 <main className="main-instructions">
                     <div id="how-to-play-desc" className="instructions-modal-text">
-                        <h2 id="how-to-play-title" className="yellow-title">How to Play</h2>
-                        <h3>Build an automated mining empire to maximize <span className="strong white">Silver</span> production!</h3>
+                        <h2 id="how-to-play-title" className="yellow-title">{t('instructions.title')}</h2>
+                        <h3>{t('instructions.subtitle')}</h3>
 
                         <ol className="ol-instruction-list">
-                            <li><span className="strong white">Click to Mine Iron</span> - Start by manually clicking the iron mining button</li>
-                            <li><span className="strong white">Buy Iron Miners</span> - Automate iron production (cost increases every 10 miners)</li>
-                            <li><span className="strong white">Gather Resources</span> - Use iron to buy sulfur and drills</li>
-                            <li><span className="strong white">Mine Silver</span> - 1 Silver requires 10 sulfur + 1 drill</li>
-                            <li><span className="strong white">Scale Up</span> - Automate Silver production to max out! (cost increases every 10 miners)</li>
+                            <li><span className="strong white">{t('instructions.step1Bold')}</span> - {t('instructions.step1Text')}</li>
+                            <li><span className="strong white">{t('instructions.step2Bold')}</span> - {t('instructions.step2Text')}</li>
+                            <li><span className="strong white">{t('instructions.step3Bold')}</span> - {t('instructions.step3Text')}</li>
+                            <li><span className="strong white">{t('instructions.step4Bold')}</span> - {t('instructions.step4Text')}</li>
+                            <li><span className="strong white">{t('instructions.step5Bold')}</span> - {t('instructions.step5Text')}</li>
                         </ol>
 
-                        <p className="stand-out-container yellow-strip"><span className="strong white"><em>Miners</em></span> and <span className="strong white"><em>Automated buying</em></span> stay active while tab remains open.</p>
+                        <p className="stand-out-container yellow-strip">
+                            <span className="strong white"><em>{t('instructions.tip1a')}</em></span> {t('instructions.tip1b')} <span className="strong white"><em>{t('instructions.tip1c')}</em></span> {t('instructions.tip1d')}
+                        </p>
 
                         <div className="instruct-resources-container">
                             <div className="instruct-resource-inline">
                                 <img src="/img/beam.webp" alt="" />
-                                <p><span>Iron</span> is the basic resource, mined manually or with miners</p>
+                                <p><span>Iron</span> {t('instructions.ironDesc')}</p>
                             </div>
                             <div className="instruct-resource-inline">
                                 <img src="/img/sulfur.webp" alt="" />
-                                <p><span>Sulfur</span> costs 50 iron, consumed when mining silver</p>
+                                <p><span>Sulfur</span> {t('instructions.sulfurDesc')}</p>
                             </div>
                             <div className="instruct-resource-inline">
                                 <img src="/img/drill.webp" alt="" />
-                                <p><span>Drills</span>  cost 500 iron, consumed when mining silver</p>
+                                <p><span>Drills</span> {t('instructions.drillsDesc')}</p>
                             </div>
                             <div className="instruct-resource-inline">
                                 <img src="/img/silver.webp" alt="" />
-                                <p><span>Silver</span> is the premium resource, used to buy silver miners</p>
+                                <p><span>Silver</span> {t('instructions.silverDesc')}</p>
                             </div>
                         </div>
 
-                        <p className="stand-out-container yellow-strip"><span className="strong white"><em>Buttons</em></span> will appear <span className="strong white"><em>Deactivated</em></span> if you do not have the resources to buy or automate.</p>
+                        <p className="stand-out-container yellow-strip">
+                            <span className="strong white"><em>{t('instructions.tip2a')}</em></span> {t('instructions.tip2b')} <span className="strong white"><em>{t('instructions.tip2c')}</em></span> {t('instructions.tip2d')}
+                        </p>
                     </div>
 
                     <button className="close-overlay-btn" onClick={onClose}>

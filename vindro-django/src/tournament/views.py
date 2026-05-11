@@ -65,6 +65,14 @@ def tournament_list(request):
     qs = Tournament.objects.all()
     if status_filter:
         qs = qs.filter(status=status_filter)
+
+    annotations = {'total_plays': models.Count('plays')}
+    if request.user.is_authenticated:
+        annotations['user_play_count'] = models.Count(
+            'plays', filter=models.Q(plays__user=request.user)
+        )
+    qs = qs.annotate(**annotations)
+
     return JsonResponse({
         'success': True,
         'data': [serialize_tournament(t) for t in qs],

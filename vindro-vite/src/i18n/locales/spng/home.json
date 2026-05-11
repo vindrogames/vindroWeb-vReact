@@ -1,0 +1,27 @@
+{
+    "hero": {
+        "tagline": "Un proyecto de juegos indie ubicados en Madrid",
+        "cta": "Juguemos"
+    },
+    "whatWeDo": {
+        "heading": "Aprendemos a programar desarrollando Juegos y Apps.",
+        "subheading": "Diseñados para potenciar el razonamiento, fomentar el aprendizaje y el crecimiento mental.",
+        "cta": "Empezar"
+    },
+    "about": {
+        "fer": {
+            "alt": "Fernando Giménez Cacho is a Software engineer specialized in cloud security",
+            "bio": "es un Ingeniero Informático trabajando principalmente en cloud services y security."
+        },
+        "mike": {
+            "alt": "Michael Thomas Bennett is a creative teacher gone programmer",
+            "bio": "es un maestro creativo convertido en programador, especializando en Data & Software engineering."
+        }
+    },
+    "meta": {
+        "title": "Vindrogames | Aprender y Programar",
+        "description": "Un proyecto de juegos indie ubicado en Madrid",
+        "ogTitle": "Vindrogames",
+        "ogDescription": "Un pequeño estudio de juegos indie ubicado in Madrid, España"
+    }
+}

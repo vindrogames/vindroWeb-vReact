@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function WinModal({ isOpen, onDone }) {
+    const { t } = useTranslation('game-42');
     const [showText, setShowText] = useState(false);
 
     useEffect(() => {
@@ -28,7 +30,7 @@ export default function WinModal({ isOpen, onDone }) {
                 </div>
 
                 <button className="reinitialize-btn" onClick={onDone}>
-                    Play Again
+                    {t('winModal.playAgain')}
                 </button>
             </div>
         </div>

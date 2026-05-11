@@ -1,0 +1,19 @@
+{
+    "nav": {
+        "home": "home",
+        "story": "stories",
+        "games": "games",
+        "brackets": "brackets",
+        "contact": "contact"
+    },
+    "header": {
+        "profile": "profile",
+        "logout": "logout",
+        "login": "login"
+    },
+    "footer": {
+        "allRightsReserved": "All Rights Reserved",
+        "inCollabWith": "in collaboration with",
+        "privacyPolicy": "Cookies & Privacy Policy"
+    }
+}

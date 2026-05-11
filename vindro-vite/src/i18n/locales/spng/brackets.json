@@ -1,0 +1,27 @@
+{
+    "hero": {
+        "tagline": "Crea una play, haz tus predicciones y únete a una porra. Fácil"
+    },
+    "liveCard": {
+        "status": {
+            "upcoming": "Próximamente",
+            "open": "Abierto",
+            "in_play": "En Juego",
+            "closed": "Cerrado"
+        },
+        "subtitle": "Evento de Dos Fases",
+        "groupStageLabel": "Fase de Grupos",
+        "bracketStageLabel": "Fase de Eliminación",
+        "teams": "equipos",
+        "ptsMax": "pts máx",
+        "startsLabel": "Empieza:",
+        "playersActive": "{{count}} jugadores activos",
+        "checkItOut": "Apúntate"
+    },
+    "meta": {
+        "title": "Vindrogames | Brackets",
+        "description": "Brackets fáciles y chulos para disfrutar con tus amigos.",
+        "ogTitle": "Vindro Brackets",
+        "ogDescription": "Brackets fáciles y chulos para disfrutar con tus amigos."
+    }
+}

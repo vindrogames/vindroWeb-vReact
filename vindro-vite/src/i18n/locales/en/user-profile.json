@@ -1,0 +1,47 @@
+{
+    "loading": "Loading...",
+    "notFound": "User not found.",
+    "visiting": "Visiting vindroUser nº",
+    "welcome": {
+        "new": "Welcome vindroUser nº",
+        "editHint": "You can edit your userName and profile icon anytime you like!",
+        "defaultsHint": "For the meantime, you have a random userName and the simple-teal icon.",
+        "whereBefore": "Where you were"
+    },
+    "returning": {
+        "greeting": "Hello Friend!",
+        "editReminder": "Don't forget — you can change your userName and avatar right here!"
+    },
+    "lang": {
+        "label": "preferred",
+        "labelHighlight": "Language",
+        "en": "English",
+        "spng": "Spanglish"
+    },
+    "provider": "Joined with",
+    "joined": "Joined",
+    "joinedToday": "today",
+    "logins": "Logged in {{count}} time",
+    "loginsPlural": "Logged in {{count}} times",
+    "avatarAlt": "User Avatar",
+    "scores": {
+        "titleHighlight": "Scores",
+        "empty": "Coming Soon"
+    },
+    "brackets": {
+        "empty": "No bracket data."
+    },
+    "table": {
+        "game": "Game",
+        "score": "Score",
+        "rank": "Rank",
+        "tournament": "Tournament",
+        "pools": "Pools",
+        "plays": "Plays",
+        "topPos": "Top Pos."
+    },
+    "meta": {
+        "title": "{{username}} | Vindrogames Profile",
+        "description": "View {{username}}'s bracket predictions, scores and activity on Vindrogames."
+    }
+}

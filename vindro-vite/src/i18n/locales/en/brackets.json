@@ -1,0 +1,27 @@
+{
+    "hero": {
+        "tagline": "Creat a Play, Make predictions and Enter a pool. Easy"
+    },
+    "liveCard": {
+        "status": {
+            "upcoming": "Coming Soon",
+            "open": "Open",
+            "in_play": "In Play",
+            "closed": "Closed"
+        },
+        "subtitle": "Two Stage Event",
+        "groupStageLabel": "Group Stage",
+        "bracketStageLabel": "Bracket Stage",
+        "teams": "teams",
+        "ptsMax": "pts max",
+        "startsLabel": "Starts:",
+        "playersActive": "{{count}} players active",
+        "checkItOut": "Check it Out"
+    },
+    "meta": {
+        "title": "Vindrogames | Brackets",
+        "description": "Easy, fun and stylish brackets for you and your friends.",
+        "ogTitle": "Vindro Brackets",
+        "ogDescription": "Easy, fun and stylish brackets for you and your friends."
+    }
+}
