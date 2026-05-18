@@ -1,3 +1,4 @@
+import re
 import random
 import string
 import hashlib
@@ -25,6 +26,19 @@ from .logic import initialize_user_play;
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+_NAME_RE = re.compile(r"^[a-zA-Z0-9\s\-]+$")
+
+
+def _to_slug(name):
+    return re.sub(r'\s+', '-', name.strip().lower())
+
+
+def _validate_name(name, label='Name'):
+    if not _NAME_RE.match(name):
+        return f"{label} may only contain letters, numbers, spaces, hyphens, and apostrophes."
+    return None
+
+
 def _hash_code(plain_code):
     return hashlib.sha256(plain_code.encode()).hexdigest()
 
@@ -51,6 +65,14 @@ def tournament_list(request):
     qs = Tournament.objects.all()
     if status_filter:
         qs = qs.filter(status=status_filter)
+
+    annotations = {'total_plays': models.Count('plays')}
+    if request.user.is_authenticated:
+        annotations['user_play_count'] = models.Count(
+            'plays', filter=models.Q(plays__user=request.user)
+        )
+    qs = qs.annotate(**annotations)
+
     return JsonResponse({
         'success': True,
         'data': [serialize_tournament(t) for t in qs],
@@ -153,12 +175,18 @@ def create_new_play(request, tournament_id):
             return JsonResponse({'success': False, 'error': 'Name is required'}, status=400)
         if len(name) > 28:
             return JsonResponse({'success': False, 'error': 'Play name too long (max 28 characters)'}, status=400)
+        name_err = _validate_name(name, 'Play name')
+        if name_err:
+            return JsonResponse({'success': False, 'error': name_err}, status=400)
+
+        slug = _to_slug(name)
 
         # 3. Create record using the authenticated user from the session
         new_play = TournamentPlay.objects.create(
             tournament=tournament,
             user=request.user,
             name=name,
+            slug=slug,
             status='draft'
         )
         
@@ -189,7 +217,7 @@ def tournament_play_detail_by_name(request, tournament_slug, user_id, play_name)
     play = TournamentPlay.objects.filter(
         tournament__slug=tournament_slug,
         user__id=user_id,
-        name__iexact=play_name,
+        slug=play_name,
     ).first()
     if not play:
         return JsonResponse({'success': False, 'error': 'Play not found'}, status=404)
@@ -331,11 +359,6 @@ def pool_join(request, tournament_id):
                 PoolMembership.objects.bulk_create(new_memberships)
                 added_count = len(new_memberships)
 
-            if added_count > 0:
-                TournamentPool.objects.filter(pk=pool.pk).update(
-                    current_member_count=models.F('current_member_count') + added_count
-                )
-
         return JsonResponse({
             'success': True,
             'pool_name': pool.name,
@@ -370,19 +393,17 @@ def pool_create(request, tournament_id):
             is_public=False,
             created_by=request.user,
         ).annotate(
-            live_member_count=models.Count('pool_memberships'),
             live_paid_count=models.Count('pool_memberships', filter=models.Q(pool_memberships__has_paid=True)),
-        )
+        ).prefetch_related('pool_memberships')
 
-        def _pool_with_live_counts(pool):
+        def _pool_data(pool):
             data = serialize_pool(pool)
-            data['current_member_count'] = pool.live_member_count
             data['paid_count'] = pool.live_paid_count
             return data
 
         data = {
             'public_pool': serialize_pool(public_pool) if public_pool else None,
-            'my_pools': [_pool_with_live_counts(p) for p in user_pools],
+            'my_pools': [_pool_data(p) for p in user_pools],
         }
         return JsonResponse({'success': True, 'data': data})
 
@@ -397,6 +418,11 @@ def pool_create(request, tournament_id):
         return JsonResponse({'success': False, 'error': 'name is required'}, status=400)
     if len(name) > 28:
         return JsonResponse({'success': False, 'error': 'Pool name too long (max 28 characters)'}, status=400)
+    name_err = _validate_name(name, 'Pool name')
+    if name_err:
+        return JsonResponse({'success': False, 'error': name_err}, status=400)
+
+    slug = _to_slug(name)
 
     is_money_pool = bool(body.get('is_money_pool', False))
     allow_multiple_plays_per_user = bool(body.get('allow_multiple_plays_per_user', True))
@@ -416,6 +442,7 @@ def pool_create(request, tournament_id):
         pool = TournamentPool.objects.create(
             tournament=tournament,
             name=name,
+            slug=slug,
             description=body.get('description', '').strip(),
             created_by=request.user,
             is_public=False,
@@ -436,7 +463,7 @@ def pool_create(request, tournament_id):
 @require_http_methods(["GET"])
 def pool_detail_by_name(request, pool_name):
     """GET /api/tournament/pools/name/<pool_name>/"""
-    pool = TournamentPool.objects.filter(name__iexact=pool_name).first()
+    pool = TournamentPool.objects.filter(slug=pool_name).first()
     if not pool:
         return JsonResponse({'success': False, 'error': 'Pool not found'}, status=404)
 
@@ -460,9 +487,7 @@ def pool_detail_by_name(request, pool_name):
         if is_owner or is_member:
             leaderboard_data = [serialize_leaderboard_entry(m) for m in memberships]
 
-    live_count = memberships.count()
     pool_data = serialize_pool(pool)
-    pool_data['current_member_count'] = live_count
 
     return JsonResponse({
         'success': True,
@@ -515,10 +540,6 @@ def pool_leave(request, pool_id):
     if deleted_count == 0:
         return JsonResponse({'success': False, 'error': 'You are not a member of this pool'}, status=400)
 
-    TournamentPool.objects.filter(pk=pool.pk).update(
-        current_member_count=models.F('current_member_count') - deleted_count
-    )
-
     return JsonResponse({'success': True, 'removed': deleted_count})
 
 
@@ -545,14 +566,8 @@ def pool_remove_play(request, pool_id, play_id):
     if not is_pool_owner and not is_play_owner:
         return JsonResponse({'success': False, 'error': 'Not authorized'}, status=403)
 
-    try:
-        membership.delete()
-        TournamentPool.objects.filter(pk=pool.pk).update(
-            current_member_count=models.F('current_member_count') - 1
-        )
-        return JsonResponse({'success': True})
-    except PoolMembership.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Play not in this pool'}, status=404)
+    membership.delete()
+    return JsonResponse({'success': True})
 
 
 @csrf_exempt

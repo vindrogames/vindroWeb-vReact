@@ -1,0 +1,34 @@
+{
+    "hero": {
+        "tagline": "Games y apps sin anuncios para desarrollar el lenguaje, el pensamiento crítico y la atención. O simplemente para pasarlo bien."
+    },
+    "cards": {
+        "autominer": {
+            "description": "Un idle game. Empieza a minar, automatiza la producción y deja el tab abierto."
+        },
+        "game42": {
+            "description": "Inspirado en el juego de mesa The Mind, nuestro juego del 42 pondrá a prueba tu razonamiento, intuición y suerte."
+        },
+        "breakout": {
+            "description": "Inspirado en los Escape Rooms, este juego enseña trucos y funcionalidades de las herramientas de Google."
+        },
+        "brainGame": {
+            "description": "Un juego tipo RPG para aprender sobre el cerebro humano y cómo procesamos la información visual."
+        },
+        "set": {
+            "description": "Un gran juego de mesa que hemos recreado en pantalla. Simple pero mentalmente agotador, ¿cuántos sets puedes encontrar?"
+        },
+        "greekTale": {
+            "description": "Un juego corto inspirado en Troya con un giro digital. ¿Puedes mandar tus caballos de Troya a través de todos los firewalls?"
+        },
+        "calculator": {
+            "description": "Calcula como siempre o por el número de Champions que tiene el Real Madrid"
+        }
+    },
+    "meta": {
+        "title": "Vindrogames | Juegos y Apps",
+        "description": "Games y apps sin anuncios para aprender y entretenerse",
+        "ogTitle": "Vindrogames Games y Apps",
+        "ogDescription": "Juega con nuestros diferentes juegos y apps desarrollados en Vindrogames"
+    }
+}

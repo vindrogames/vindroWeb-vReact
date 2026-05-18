@@ -1,0 +1,55 @@
+{
+    "hero": {
+        "pre": "nuestra",
+        "highlight": "Historia",
+        "tagline": "Un timeline de nuestros aprendizajes y proyectos"
+    },
+    "cards": {
+        "1": {
+            "title": "2016: Primer Game Jam",
+            "text": "Llevábamos tiempo dando vueltas a muchas ideas, pero ninguna cuajaba. Zeneke se enteró de un Game Jam y nos lanzamos. Así nació \"A Greek Tale\". No es gran cosa, ¡pero fue un hito para nosotros! Creamos nuestro primer juego desde cero."
+        },
+        "2": {
+            "title": "2018: RPG Maker",
+            "text": "Mikelele conoce profesores por España que usan este software para crear juegos tipo RPG Zelda. Tuvimos que probarlo y creamos nuestro juego sobre el cerebro humano. ¡Todavía sin buen nombre! Habrá más juegos RPG por venir..."
+        },
+        "3": {
+            "title": "2019: GoDot",
+            "text": "Zeneke empezó a jugar con GoDot y usamos el juego de mesa \"SET\" para darle un buen uso. Lo intentamos con otros lenguajes antes, pero con GoDot lo conseguimos. ¡Probablemente nuestro logro más completo hasta ahora!"
+        },
+        "4": {
+            "title": "2020: Google Apps Script",
+            "text": "Mikelele quiso llevar su uso de Google Workspace al siguiente nivel y empezó con Spreadsheets y luego Google Apps Script. Más allá de automatizar procesos, ¡podemos crear juegos, o actividades tipo juego, para hacer con alumnos!"
+        },
+        "5": {
+            "title": "2020: Cloud Security",
+            "text": "Zeneke se sumerge en el mundo del Cloud, especializándose en Cloud Security en Siemens, automatizando deployments con scripts y dev-ops, lo que le da una gran base para crecer como developer con Python y Dot.Net."
+        },
+        "6": {
+            "title": "2021: 42 Madrid",
+            "text": "Mikelele participó en la \"piscine\" de la escuela de programación 42 Madrid y fue aceptado, donde aprendió mucho sobre programación en general, trabajando con C y Unix. No hemos hecho proyectos directamente con C, pero ha reforzado enormemente nuestros conocimientos."
+        },
+        "7": {
+            "title": "2022: Vindrogames 2.0",
+            "text": "Mikelele empieza cursos Full-Stack centrados en HTML, CSS puro con SASS y Javascript para renovar esta web. Está construida con SASS, JQUERY y deployed con Netlify desde nuestro Github. ¡Sin saber que has sido Netlificado!"
+        },
+        "8": {
+            "title": "2023: Logic and Games",
+            "text": "Zeneke & Mikelele empiezan a explorar diferentes algoritmos \"digitalizando\" juegos de mesa, principalmente juegos de cartas en versión solitario. Si te gustan los juegos de mesa, tienes que ver \"SET!\" en nuestra games page. ¡Y estate atento, hay muchos más por venir!"
+        },
+        "9": {
+            "title": "2024: Backend",
+            "text": "Las cosas avanzan y, a medida que Mikelele gana confianza, Zeneke empuja a Vindrogames hacia el backend. Empezamos con una Calculadora Madridista con algunos endpoints sencillos y vamos avanzando hacia perfiles de jugador para nuestros games y apps."
+        },
+        "10": {
+            "title": "2024: React",
+            "text": "Mikelele actualiza la web con React usando Vite e incorporamos highscores, un leaderboard y estamos trabajando en una bracket app para torneos deportivos."
+        }
+    },
+    "meta": {
+        "title": "Vindrogames | Historias",
+        "description": "Un timeline de nuestros aprendizajes y proyectos con diferentes lenguajes de programación y juegos",
+        "ogTitle": "Vindrogames Historias",
+        "ogDescription": "Un timeline de nuestras producciones y aprendizajes con diferentes lenguajes de programación"
+    }
+}

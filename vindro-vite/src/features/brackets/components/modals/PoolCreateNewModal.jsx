@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import usePools from '../../hooks/usePools';
 import { useLoading } from '../../../../contexts/LoadingContext';
+import { toUrlSlug, NAME_PATTERN, NAME_ERROR } from '../../../../utils/urlUtils';
 
 const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, onCancel }) => {
     const { handleCreatePool, isSubmitting } = usePools(tournamentId);
@@ -35,6 +36,10 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
             setError('Pool name is required.');
             return;
         }
+        if (!NAME_PATTERN.test(poolName.trim())) {
+            setError(NAME_ERROR);
+            return;
+        }
         if (isMoneyPool && (!costPerPlay || parseFloat(costPerPlay) <= 0)) {
             setError('Enter a valid cost per play greater than 0.');
             return;
@@ -54,7 +59,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
             if (result.success) {
                 await hideLoader();
                 if (onCreated) onCreated(result.data);
-                navigate(`/brackets/${tournamentSlug}/pool/${encodeURIComponent(result.data.name)}`);
+                navigate(`/brackets/${tournamentSlug}/pool/${toUrlSlug(result.data.name)}`);
             } else {
                 await hideLoader();
                 setError(result.error || 'Failed to create pool.');

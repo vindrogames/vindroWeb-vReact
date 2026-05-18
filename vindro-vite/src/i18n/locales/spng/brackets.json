@@ -1,0 +1,35 @@
+{
+    "hero": {
+        "tagline": "Crea una play, haz tus predicciones y únete a una porra. Fácil"
+    },
+    "liveCard": {
+        "status": {
+            "upcoming": "Prox.",
+            "open": "Abierto",
+            "in_play": "En Juego",
+            "closed": "Cerrado"
+        },
+        "subtitle": "Evento de Dos Fases",
+        "groupStageLabel": "Group Stage",
+        "bracketStageLabel": "Bracket Stage",
+        "teams": "equipos",
+        "ptsMax": "pts máx",
+        "startsLabel": "Empieza:",
+        "playersActive": "{{count}} jugadores activos",
+        "checkItOut": "Apúntate"
+    },
+    "world-cup-2026": {
+        "groupStage": {
+            "description": "48 partidos en 12 estadios de USA, Canadá y México"
+        },
+        "bracketStage": {
+            "description": "Desde los dieciseisavos hasta la Final en el MetLife Stadium, New Jersey"
+        }
+    },
+    "meta": {
+        "title": "Vindrogames | Brackets",
+        "description": "Brackets fáciles y chulos para disfrutar con tus amigos.",
+        "ogTitle": "Vindro Brackets",
+        "ogDescription": "Brackets fáciles y chulos para disfrutar con tus amigos."
+    }
+}

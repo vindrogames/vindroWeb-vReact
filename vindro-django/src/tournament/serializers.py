@@ -8,9 +8,15 @@ def serialize_tournament(tournament):
         'description': tournament.description,
         'image_url': tournament.image_url,
         'start_date': tournament.start_date.isoformat(),
+        'entries_close': tournament.entries_close.isoformat() if tournament.entries_close else None,
         'end_date': tournament.end_date.isoformat(),
         'groups_end_date': tournament.groups_end_date.isoformat(),
         'bracket_start_date': tournament.bracket_start_date.isoformat(),
+        'card_info': tournament.card_info,
+        'group_stage_status': tournament.group_stage_status,
+        'bracket_stage_status': tournament.bracket_stage_status,
+        'total_plays': getattr(tournament, 'total_plays', 0),
+        'user_play_count': getattr(tournament, 'user_play_count', None),
     }
 
 
@@ -47,8 +53,9 @@ def serialize_play(play):
         'status': play.status,
         'current_phase': play.current_phase,
         'group_points': play.group_points,
+        'group_points_spent': play.group_points_spent,
         'bracket_points': play.bracket_points,
-        
+
         # Pull the descriptive names for the UI
         'tournament_name': play.tournament.name, 
         'user_name': play.user.username,
@@ -90,6 +97,7 @@ def serialize_pool_submission(membership):
         'manager': 'vindroGames' if pool.is_public else (pool.created_by.username if pool.created_by else "Manager"),
         'has_paid': membership.has_paid,
         'group_points': play.group_points,
+        'group_points_spent': play.group_points_spent,
         'bracket_points': play.bracket_points,
         'total_points': play.group_points + play.bracket_points,
         'is_public': pool.is_public,
@@ -109,7 +117,7 @@ def serialize_pool(pool):
         'is_public': pool.is_public,
         'is_money_pool': pool.is_money_pool,
         'cost_per_play': str(pool.cost_per_play),
-        'current_member_count': pool.current_member_count,
+        'current_member_count': pool.pool_memberships.count(),
         'created_by': pool.created_by.username if pool.created_by else None,
         'created_by_id': str(pool.created_by.id) if pool.created_by else None,
         'created_by_avatar': pool.created_by.avatar if pool.created_by else None,
@@ -131,6 +139,7 @@ def serialize_leaderboard_entry(membership):
             'avatar': play.user.avatar,
         },
         'group_points': play.group_points,
+        'group_points_spent': play.group_points_spent,
         'bracket_points': play.bracket_points,
         'total_points': play.group_points + play.bracket_points,
         'has_paid': membership.has_paid

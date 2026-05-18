@@ -1,9 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaGithub, FaTwitter, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 import SmartLink from '../ui/SmartLink';
+import LangToggle from '../ui/LangToggle';
 
 const Footer = ({ isMadrid }) => {
-
+    const { t } = useTranslation('common');
     const inlineClass = isMadrid ? "inline-real-yellow" : "inline-teal";
 
     return (
@@ -26,17 +28,18 @@ const Footer = ({ isMadrid }) => {
                 </SmartLink>
             </div>
             <div className="contact-info">
-                <p>&copy;<span className={`inline-bold ${inlineClass}`} translate="no">VindroGames</span> <span className={`inline-bold ${inlineClass}`}>|</span> <span>All Rights Reserved</span></p>
+                <p>&copy;<span className={`inline-bold ${inlineClass}`} translate="no">VindroGames</span> <span className={`inline-bold ${inlineClass}`}>|</span> <span>{t('footer.allRightsReserved')}</span></p>
                 <p>
-                    <span className={`inline-bold ${inlineClass}`}>&</span> in collaboration with{" "}
+                    <span className={`inline-bold ${inlineClass}`}>&</span> {t('footer.inCollabWith')}{" "}
                     <SmartLink to="https://ludotecaenlanube.com/" translate="no">
                         Ludoteca en la Nube
                     </SmartLink>
                 </p>
             </div>
             <SmartLink to={"/privacy-cookies"}>
-                Cookies & Privacy Policy
+                {t('footer.privacyPolicy')}
             </SmartLink>
+            <LangToggle />
         </footer>
     );
 }

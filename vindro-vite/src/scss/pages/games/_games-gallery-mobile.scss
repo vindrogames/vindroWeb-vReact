@@ -14,6 +14,7 @@
         section#games-gallery-container {
 
             #games-gallery {
+                padding: 0 21px;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 21px;
             }

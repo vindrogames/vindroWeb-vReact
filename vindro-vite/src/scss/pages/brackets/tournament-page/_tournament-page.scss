@@ -29,201 +29,28 @@ main.bracket-tournament-page {
         }
     }
 
-    .disabled-btn-wrapper {
-        position: relative;
-        display: inline-block;
-
-        button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .disabled-tooltip {
-            display: none;
-            position: absolute;
-            bottom: calc(100% + 6px);
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-            background: $vindro-black;
-            color: $vindro-tan;
-            font-size: 1.2rem;
-            font-family: $vindro-openSans;
-            padding: 4px 10px;
-            border-radius: 3px;
-            border: 1px solid $vindro-tan;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        &:hover .disabled-tooltip {
-            display: block;
-        }
-    }
-
-    // Dim the page when any description dropdown is open
-    &:has(.description-panel) {
-        &::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: rgba($vindro-black, 0.42);
-            z-index: 15;
-        }
-
-        .description-dropdown:has(.description-panel) {
-            z-index: 25;
-        }
-    }
-
     .user-picks {
         width: 100%;
         position: relative;
         padding: 21px 42px 42px;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 42px;
 
-        .user-picks-container {
-            width: 84%;
+        .user-picks-sections-wrapper {
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 42px;
 
-            .title-container-wrapper {
-                width: 100%;
-                padding: 14px;
-                padding-left: 21px;
-                border-bottom: 1px solid $vindro-teal;
-
-                h3 {
-                    font-size: 4.2rem;
-                    font-weight: 400;
-                    color: white;
-                    font-family: $vindro-Montserrat;
-                }
+            .description-container {
+                margin-top: 14px;
             }
+        }
 
-            .user-picks-description-wrapper {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                gap: 21px;
-                padding: 7px 0px 14px 21px;
-
-                .description-dropdown {
-                    flex: 1;
-                    position: relative;
-
-                    .description-toggle {
-                        width: 84%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        gap: 14px;
-                        padding: 14px;
-                        background-color: $vindro-gray;
-                        color: white;
-                        border-left: 2px solid transparent;
-                        border-radius: 3px;
-                        cursor: pointer;
-                        font-family: $vindro-openSans;
-                        font-size: 1.8rem;
-                        font-weight: 500;
-                        text-align: left;
-
-                        .toggle-arrow {
-                            flex-shrink: 0;
-                            font-size: 1.14rem;
-                            transition: transform 0.2s ease;
-
-                            &.open {
-                                transform: rotate(180deg);
-                                color: $vindro-neon-pink;
-                            }
-                        }
-
-                        &.open {
-                            border-left: 2px solid $vindro-neon-pink;
-                        }
-                    }
-
-                    .description-panel {
-                        position: absolute;
-                        top: calc(100% + 2px);
-                        left: 0;
-                        right: 0;
-                        z-index: 20;
-                        background-color: $vindro-gray;
-                        color: white;
-                        padding: 14px;
-                        border-radius: 3px;
-                        border-left: 2px solid $vindro-neon-pink;
-
-                        h4 {
-                            color: white;
-                            font-size: 1.8rem;
-                            font-family: $vindro-openSans;
-                            font-weight: 400;
-                            margin: 7px 0;
-                        }
-                    }
-                }
-
-                .buttons-container {
-                    flex-shrink: 0;
-                    margin: auto 0;
-
-                    button {
-                        width: auto;
-                        font-family: $vindro-Montserrat;
-                        font-size: 1.6rem;
-                        font-weight: 500;
-                        padding: 7px 14px;
-                    }
-                }
-            }
-
-            .user-stats-container {
-
-                .table-container {
-                    overflow-x: auto;
-
-                    table {
-                        width: 100%;
-                        table-layout: fixed;
-
-                        th {
-                            width: 25%;
-                        }
-
-                        td.table-link {
-
-                            &.play-link,
-                            &.pool-link {
-                                color: $vindro-teal;
-                                font-weight: 400;
-                                text-decoration: underline;
-                                cursor: pointer;
-                                transition: all 0.2s ease;
-
-                                &:hover {
-                                    color: lighten($vindro-teal, 14);
-
-                                }
-                            }
-                        }
-                    }
-                }
-
-                &#pools-stats {
-                    margin-bottom: 21px;
-                }
-            }
+        .user-stats-container#pools-stats {
+            margin-bottom: 21px;
         }
     }
 
@@ -284,45 +111,8 @@ main.bracket-tournament-page {
                     }
                 }
 
-                .feature-table {
-
-                    .table-container {
-
-                        table {
-                            width: 100%;
-
-                            tr {
-                                td:first-child {
-                                    text-align: left;
-                                    padding-left: 7px;
-                                }
-
-                                &:last-child {
-                                    td {
-                                        font-weight: 600;
-                                    }
-                                }
-                            }
-
-                            &#swap-table {
-
-                                tr:last-child {
-
-                                    td {
-                                        font-weight: 300;
-                                    }
-                                }
-                            }
-
-                            td {
-                                font-size: 1.2rem;
-                                font-weight: 300;
-                                text-align: center;
-                                padding: 7px 0;
-                            }
-                        }
-                    }
-                }
+                // Table styling in _tables.scss
+                
             }
         }
     }
@@ -331,10 +121,11 @@ main.bracket-tournament-page {
         justify-content: flex-start;
 
         .leaderboard-header {
-            padding: 14px;
+            padding: 7px 14px;
             //border-bottom: 1px solid $vindro-green;
 
             h3 {
+                margin-top: 7px;
                 width: 100%;
                 text-align: center;
                 font-size: 3.6rem;

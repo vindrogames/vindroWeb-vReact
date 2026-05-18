@@ -1,0 +1,35 @@
+{
+    "hero": {
+        "tagline": "Creat a Play, Make predictions and Enter a pool. Easy"
+    },
+    "liveCard": {
+        "status": {
+            "upcoming": "Soon",
+            "open": "Open",
+            "in_play": "In Play",
+            "closed": "Closed"
+        },
+        "subtitle": "Two Stage Event",
+        "groupStageLabel": "Group Stage",
+        "bracketStageLabel": "Bracket Stage",
+        "teams": "teams",
+        "ptsMax": "pts max",
+        "startsLabel": "Starts:",
+        "playersActive": "{{count}} players active",
+        "checkItOut": "Check it Out"
+    },
+    "world-cup-2026": {
+        "groupStage": {
+            "description": "48 matches across 12 stadiums in the USA, Canada and Mexico"
+        },
+        "bracketStage": {
+            "description": "Round of 32 through to the Final at MetLife Stadium, New Jersey"
+        }
+    },
+    "meta": {
+        "title": "Vindrogames | Brackets",
+        "description": "Easy, fun and stylish brackets for you and your friends.",
+        "ogTitle": "Vindro Brackets",
+        "ogDescription": "Easy, fun and stylish brackets for you and your friends."
+    }
+}

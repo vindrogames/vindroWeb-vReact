@@ -41,6 +41,7 @@ export const routes = createBrowserRouter([
             { path: 'brackets/:tournament/play/:userId/:playName', element: <PlayPage /> },
             { path: 'brackets/:tournament/pool/:poolName', element: <PoolPage /> },
             { path: 'user/:userId', element: <UserProfile /> },
+            { path: '404', element: <NotFoundPage /> },
             { path: '*', element: <NotFoundPage /> },
             { path: 'logout', element: <Logout />}
         ],

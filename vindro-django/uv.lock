@@ -345,7 +345,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "django", specifier = ">=6.0.0" },
+    { name = "django", specifier = ">=6.0.5" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=0.63.0" },
     { name = "django-cors-headers", specifier = ">=4.9.0" },
 ]

@@ -5,7 +5,7 @@ from tournament.logic import seed_master_format
 
 
 class Command(BaseCommand):
-    help = 'Create and seed a tournament from its scheme file'
+    help = 'Create or update a tournament from its preset, then seed its format'
 
     def add_arguments(self, parser):
         parser.add_argument('slug', type=str, help='Tournament slug, e.g. world-cup-2026')
@@ -17,33 +17,50 @@ class Command(BaseCommand):
             'world-cup-2026': {
                 'name': 'World Cup 2026',
                 'tournament_type': 'world_cup',
-                'description': 'FIFA World Cup 2026',
-                'start_date': datetime(2026, 6, 11, tzinfo=dt_timezone.utc),
-                'end_date': datetime(2026, 7, 19, tzinfo=dt_timezone.utc),
-                'groups_end_date': datetime(2026, 7, 2, tzinfo=dt_timezone.utc),
-                'bracket_start_date': datetime(2026, 7, 4, tzinfo=dt_timezone.utc),
+                'status': 'open',
+                'description': 'FIFA World Cup 2026 — United States, Canada & Mexico',
+                'image_url': '',
+                # Tournament window
+                'start_date':          datetime(2026, 6, 11, 21, 0, tzinfo=dt_timezone.utc),
+                'entries_close':       datetime(2026, 6, 10, 21, 0, tzinfo=dt_timezone.utc),
+                'groups_end_date':     datetime(2026, 6, 27,  6, 0, tzinfo=dt_timezone.utc),
+                'bracket_start_date':  datetime(2026, 6, 28, 21, 0, tzinfo=dt_timezone.utc),
+                'end_date':            datetime(2026, 7, 19,  6, 0, tzinfo=dt_timezone.utc),
+                # Card display info
+                'card_info': {
+                    'subtitle': 'Two Stage Event',
+                    'group_stage': {
+                        'teams': 48,
+                        'max_points': 50,
+                        'description': 'Predict the placement of each team within their 4-team group',
+                    },
+                    'bracket_stage': {
+                        'teams': 32,
+                        'opening_round': 'Round of 32',
+                        'description': 'Predict how teams advance through the knockout bracket',
+                    },
+                },
             },
         }
 
         if slug not in PRESETS:
-            self.stderr.write(self.style.ERROR(f'No preset found for "{slug}". Available: {list(PRESETS.keys())}'))
+            self.stderr.write(self.style.ERROR(
+                f'No preset for "{slug}". Available: {list(PRESETS.keys())}'
+            ))
             return
 
-        tournament, created = Tournament.objects.get_or_create(
+        preset = PRESETS[slug]
+        tournament, created = Tournament.objects.update_or_create(
             slug=slug,
-            defaults=PRESETS[slug],
+            defaults=preset,
         )
 
-        if created:
-            self.stdout.write(self.style.SUCCESS(f'Tournament "{tournament.name}" created.'))
-        else:
-            self.stdout.write(f'Tournament "{tournament.name}" already exists, re-seeding format.')
+        action = 'Created' if created else 'Updated'
+        self.stdout.write(f'{action} tournament: {tournament.name}')
 
-        fmt, _ = TournamentFormat.objects.get_or_create(tournament=tournament)
+        TournamentFormat.objects.get_or_create(tournament=tournament)
         seed_master_format(tournament)
-        fmt.refresh_from_db()
-        fmt.is_seeded = True
-        fmt.save()
+        TournamentFormat.objects.filter(tournament=tournament).update(is_seeded=True)
 
         public_pool, pool_created = TournamentPool.objects.get_or_create(
             tournament=tournament,

@@ -102,11 +102,7 @@ main#pool-page {
                     width: 128px;
                 }
 
-                button:disabled {
-                    
-                    opacity: 0.45;
-                    cursor: not-allowed;
-                }
+                // disabled state handled by .disabled-btn-wrapper in plays-pools-utils
             }
         }
     }
@@ -215,4 +211,3 @@ main#pool-page {
         }
     }
 }
-

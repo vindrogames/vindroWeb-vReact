@@ -3,15 +3,14 @@ import ReactDOM from 'react-dom';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import poolServices from '../../services/poolServices';
 
-const PoolRemovePlayModal = ({ isOpen, poolId, leaderboard = [], currentUserId, isOwner, onCancel, onSuccess }) => {
+const PoolRemovePlayModal = ({ isOpen, poolId, leaderboard = [], currentUserId, onCancel, onSuccess }) => {
     const [selectedPlayIds, setSelectedPlayIds] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
-    // Owner sees all plays; member sees only their own
-    const removablePlays = isOwner
-        ? leaderboard
-        : leaderboard.filter(entry => String(entry.user?.id) === String(currentUserId));
+    const removablePlays = leaderboard.filter(
+        entry => String(entry.user?.id) === String(currentUserId)
+    );
 
     useEffect(() => {
         if (!isOpen) {
@@ -51,17 +50,16 @@ const PoolRemovePlayModal = ({ isOpen, poolId, leaderboard = [], currentUserId, 
                 <button className="close-button" onClick={onCancel} disabled={isSubmitting}>&times;</button>
 
                 <ShowcaseSection id="remove-plays-gallery" className="modal-gallery">
-                    <h2>remove<span className="inline-neon-pink inline-bold">Plays</span></h2>
+                    <h2>remove<span className="inline-neon-pink inline-bold">Play</span></h2>
 
                     {removablePlays.length === 0 ? (
-                        <p>No plays to remove.</p>
+                        <p>You have no plays to remove.</p>
                     ) : (
                         <div className="select-table">
                             <div className="table-container">
                                 <table>
                                     <thead>
                                         <tr>
-                                            {isOwner && <th>Player</th>}
                                             <th>Play Name</th>
                                             <th style={{ width: '84px' }}>Remove</th>
                                         </tr>
@@ -73,18 +71,6 @@ const PoolRemovePlayModal = ({ isOpen, poolId, leaderboard = [], currentUserId, 
                                                 className={selectedPlayIds.includes(entry.play_id) ? 'selected-row' : ''}
                                                 onClick={() => toggleSelection(entry.play_id)}
                                             >
-                                                {isOwner && (
-                                                    <td className="play-info-name">
-                                                        <div className="member-info">
-                                                            <img
-                                                                src={entry.user?.avatar || '/img/profile_icons/gray-simple.webp'}
-                                                                alt={entry.user?.username}
-                                                                className="member-avatar"
-                                                            />
-                                                            <span>{entry.user?.username}</span>
-                                                        </div>
-                                                    </td>
-                                                )}
                                                 <td className="play-info-name">{entry.play_name}</td>
                                                 <td>
                                                     <div className="checkbox-container">
@@ -115,7 +101,7 @@ const PoolRemovePlayModal = ({ isOpen, poolId, leaderboard = [], currentUserId, 
                         >
                             {isSubmitting
                                 ? 'Removing...'
-                                : `Remove ${selectedPlayIds.length} Play${selectedPlayIds.length !== 1 ? 's' : ''}`}
+                                : `Remove ${selectedPlayIds.length || ''} Play${selectedPlayIds.length !== 1 ? 's' : ''}`}
                         </button>
                     </div>
                 </ShowcaseSection>

@@ -265,18 +265,9 @@
             justify-content: center;
             width: 42px;
             height: 42px;
-            // border-radius: 3px;
-            // border: 1px solid var(--teal-yellow-swap);
-            background-color: $vindro-black;
-            //color: white;
+            background-color: transparent;
             cursor: pointer;
             padding: 0;
-
-            /* Always apply open state
-            &.open {
-                background-color: var(--teal-yellow-swap);
-                color: $vindro-black;
-            } */
         }
 
         .user-dropdown-menu {

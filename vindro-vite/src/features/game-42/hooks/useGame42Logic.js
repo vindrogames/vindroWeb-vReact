@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useAuth } from '../../../contexts/auth/AuthContext';
 import { gamescoreService } from '../../../services/gamescoreService';
 
@@ -31,7 +31,10 @@ export default function useGame42Logic() {
     const [gameStarted, setGameStarted] = useState(false);
 
     const [prevPoints, setPrevPoints] = useState(null);
-    const [todayBest, setTodayBest] = useState(0);
+    const [prevTime, setPrevTime] = useState(null);
+
+    const [todayBestPoints, setTodayBestPoints] = useState(null);
+    const [todayBestTime, setTodayBestTime] = useState(null);
 
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
     const gameStartTimeRef = useRef(null);
@@ -40,14 +43,32 @@ export default function useGame42Logic() {
     const [myGamescores, setMyGamescores] = useState([]);
     const [isNewBest, setIsNewBest] = useState(false);
 
+
+    // Live elapsed time ticker during active game
+    useEffect(() => {
+        if (!gameStarted || gameOver) return;
+        const interval = setInterval(() => {
+            if (gameStartTimeRef.current) {
+                setElapsedSeconds(Math.floor((Date.now() - gameStartTimeRef.current) / 1000));
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [gameStarted, gameOver]);
+
     // Restore session values on mount
     useEffect(() => {
         try {
-            const p = sessionStorage.getItem("game42_prevPoints");
-            const b = sessionStorage.getItem("game42_todayBest");
-            if (p !== null) setPrevPoints(Number(p));
-            if (b !== null) setTodayBest(Number(b));
-        } catch (e) {}
+            const prevP = sessionStorage.getItem("game42_prevPoints");
+            const prevT = sessionStorage.getItem("game42_prevTime");
+            const bestP = sessionStorage.getItem("game42_todayBestPoints");
+            const bestT = sessionStorage.getItem("game42_todayBestTime");
+
+            if (prevP !== null) setPrevPoints(Number(prevP));
+            if (prevT !== null) setPrevTime(Number(prevT));
+
+            if (bestP !== null) setTodayBestPoints(Number(bestP));
+            if (bestT !== null) setTodayBestTime(Number(bestT));
+        } catch (e) { }
     }, []);
 
     // Fetch this user's game-42 scores on mount (or when auth changes)
@@ -58,7 +79,7 @@ export default function useGame42Logic() {
         }
         gamescoreService.getMyGamescores('game-42')
             .then(res => setMyGamescores(res.data?.gamescores || []))
-            .catch(() => {});
+            .catch(() => { });
     }, [user?.id]);
 
     /** -------- Game Logic Helpers -------- */
@@ -127,7 +148,9 @@ export default function useGame42Logic() {
 
     const startGame = () => {
         const lastScore = sessionStorage.getItem("game42_prevPoints");
+        const lastTime = sessionStorage.getItem("game42_prevTime");
         if (lastScore !== null) setPrevPoints(Number(lastScore));
+        if (lastTime !== null) setPrevTime(Number(lastTime));
 
         const newNums = generateGameNums();
         console.log("WINNING SEQUENCE:", [...newNums].sort((a, b) => a - b));
@@ -189,6 +212,7 @@ export default function useGame42Logic() {
         const secs = gameStartTimeRef.current
             ? Math.floor((Date.now() - gameStartTimeRef.current) / 1000)
             : 0;
+
         setElapsedSeconds(secs);
         gameStartTimeRef.current = null;
 
@@ -196,9 +220,16 @@ export default function useGame42Logic() {
         setEndCause(cause);
 
         sessionStorage.setItem("game42_prevPoints", String(currentPoints));
-        if (currentPoints > todayBest) {
-            setTodayBest(currentPoints);
-            sessionStorage.setItem("game42_todayBest", String(currentPoints));
+        sessionStorage.setItem("game42_prevTime", String(secs));
+
+        if (todayBestPoints === null || currentPoints > todayBestPoints) {
+            setTodayBestPoints(currentPoints);
+            setTodayBestTime(secs);
+            sessionStorage.setItem("game42_todayBestPoints", String(currentPoints));
+            sessionStorage.setItem("game42_todayBestTime", String(secs));
+        } else if (currentPoints === todayBestPoints && (todayBestTime === null || secs < todayBestTime)) {
+            setTodayBestTime(secs);
+            sessionStorage.setItem("game42_todayBestTime", String(secs));
         }
 
         if (user) {
@@ -206,10 +237,28 @@ export default function useGame42Logic() {
         }
     };
 
+    // Derive personal best from DB scores for logged-in users
+    const dbBest = useMemo(() => {
+        if (myGamescores.length === 0) return { points: null, time: null };
+        const topScore = Math.max(...myGamescores.map(g => g.game_score));
+        const fastestAtTop = Math.min(
+            ...myGamescores
+                .filter(g => g.game_score === topScore)
+                .map(g => parseInt(g.game_time) || Infinity)
+        );
+        return { points: topScore, time: fastestAtTop === Infinity ? null : fastestAtTop };
+    }, [myGamescores]);
+
+    const bestPoints = user ? dbBest.points : todayBestPoints;
+    const bestTime = user ? dbBest.time : todayBestTime;
+
+    const clearNewBest = () => setIsNewBest(false);
+
     return {
         numsPlaced, numToPlace, points, gameOver, endCause,
-        gameStarted, prevPoints, todayBest, elapsedSeconds,
-        myGamescores, isNewBest,
+        gameStarted, prevPoints, prevTime,
+        bestPoints, bestTime, elapsedSeconds,
+        myGamescores, isNewBest, clearNewBest,
         startGame, placeNum, playAgain: startGame,
     };
 }

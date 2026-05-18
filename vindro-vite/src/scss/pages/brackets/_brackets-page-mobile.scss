@@ -5,9 +5,11 @@
     main#brackets-page {
 
         section#brackets-events-container {
+            padding: 14px;
 
             #brackets-events-gallery {
                 grid-template-columns: repeat(2, 1fr);
+
             }
         }
     }
@@ -26,13 +28,29 @@
                 grid-template-columns: repeat(1, 1fr);
                 gap: 7px;
 
-                .bracket-event-card {
-                    width: 63%;
-                    margin: auto;
+                .bracket-event-card-container {
 
+                    .bracket-event-card {
+                        max-width: 420px;
+                        width: 100%;
+                        margin: auto;
+
+                        &.bracket-event-card-live {
+
+                            .live-card-footer {
+
+                                .footer-bottom {
+
+                                    .bracket-event-join-btn {
+                                        font-size: 1.4rem;
+                                        padding: 7px 14px;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
-
