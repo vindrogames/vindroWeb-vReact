@@ -28,6 +28,10 @@ fi
 echo "🔨 Building Docker image..."
 docker build -t vindro-django:latest .
 
+# Ensure the persistent DB volume exists (no-op if already present)
+echo "💾 Ensuring persistent DB volume exists..."
+docker volume create vindro-db-data 2>/dev/null || true
+
 # Stop and remove old container
 echo "🛑 Stopping old container..."
 docker stop vindro-django 2>/dev/null || true
@@ -39,6 +43,8 @@ docker run -d \
   --name vindro-django \
   -p 8000:8000 \
   --env-file .env.prod \
+  -e DATABASE_PATH=/app/data/db.sqlite3 \
+  -v vindro-db-data:/app/data \
   --restart unless-stopped \
   vindro-django:latest
 
