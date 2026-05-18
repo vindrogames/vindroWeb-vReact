@@ -1,0 +1,113 @@
+{
+    "helmet": {
+        "title": "{{name}} | Vindro Brackets",
+        "description": "Haz tus predicciones para {{name}} en Vindrogames. Crea plays, únete a porras y compite con amigos.",
+        "keywords": "brackets, predicciones, porras, vindrogames"
+    },
+    "hero": {
+        "tagline": "Crea una Play. Haz tus predicciones. Juégala en una Porra.",
+        "startsIn": "Empieza en",
+        "underwayPrefix": "¡En",
+        "underwayHighlight": "Marcha!",
+        "closed": "Cerrado"
+    },
+    "buttons": {
+        "createPlay": "Crear una Play",
+        "submitPlay": "Jugar una Play",
+        "createPool": "Crear uan Porra"
+    },
+    "plays": {
+        "title": "Tus Plays",
+        "dropdownSummary": "Una \"Play\" incluye tus predicciones para un torneo.",
+        "playsPrivate": "Tus plays son privadas hasta que las jueges en una porra.",
+        "disabledTooltip": "El torneo ha comenzado",
+        "colName": "Play",
+        "colUpdated": "Actualizado",
+        "colGroupsPts": "Pts. Grupos",
+        "colBracketPts": "Pts. Bracket",
+        "loading": "Cargando plays...",
+        "empty": "No se encontraron plays."
+    },
+    "inPools": {
+        "title": "Plays en Porras",
+        "dropdownSummary": "Para competir, juega tus plays en diferentes Porras.",
+        "hint1": "Tenemos una porra pública vindro<vindro>Public</vindro> para que todo el mundo participe.",
+        "hint2": "Puedes subir tantas plays como quieras a nuestra porra pública.",
+        "hint3": "Los usuarios pueden crear Porras Privadas que requieren un código.",
+        "hint4": "Las porras privadas pueden limitar plays por usuario y/o establecer premios en dinero.",
+        "colPlay": "Play",
+        "colPool": "Porra",
+        "colManager": "Manager",
+        "colPos": "Pos.",
+        "loading": "Cargando porras...",
+        "empty": "Aún no te has unido a ninguna porra."
+    },
+    "yourPools": {
+        "title": "Tus Porras",
+        "dropdownSummary": "¡Crea una Porra Privada para ti y los tuyos!",
+        "hint1": "Puedes permitir múltiples plays por usuario o limitarlo a 1.",
+        "hint2": "Puedes configurar la porra como una <money>Porra con Bote</money>, estableciendo un coste por play.",
+        "hint3": "También puedes configurar los premios por clasificación.",
+        "hint4": "Podrás eliminar cualquier play de tu porra.",
+        "colPool": "Porra",
+        "colMembers": "Miembros",
+        "colPaid": "Pagado",
+        "colPrizes": "Premios",
+        "loading": "Cargando porras...",
+        "empty": "Aún no has creado ninguna porra."
+    },
+    "auth": {
+        "mustLogin": "Para participar debes estar logueado.",
+        "noAccountHint": "*Si no tienes cuenta, ¡registrarte es fácil!",
+        "checkItOut": "O échale un vistazo antes de empezar."
+    },
+    "leaderboard": {
+        "title": "Leaderboard",
+        "colPos": "Pos.",
+        "colPlayer": "Jugador",
+        "colPlay": "Play",
+        "colGroupsPts": "Pts. Grupos",
+        "colBracketPts": "Pts. Bracket",
+        "empty": "No hay entradas."
+    },
+    "world-cup-2026": {
+        "subtitle": "Haz tus predicciones. Juégalas en una porra. ¡A ver cómo te va!",
+        "playsHint": "Este World Cup 2026 tiene 2 fases: <bold>Groups</bold> y el <bold>Bracket</bold>",
+        "about": {
+            "groupsTitle": "Groups Stage",
+            "groupsP1": "Predice el ranking final exacto (1º–4º) de los 48 equipos en sus respectivos grupos. Ganas 1 punto por cada posición acertada.",
+            "groupsP2": "Un récord perfecto de 48/48 te otorga un bonus de +2 puntos, con un máximo posible de 50 puntos.",
+            "groupsP3": "Los puntos acumulados aquí son una moneda estratégica para futuros swaps durante el Bracket Stage.",
+            "groupsColPrediction": "Predicción",
+            "groupsRowPlacement": "Posición Correcta",
+            "groupsRowTotal": "Posiciones Totales (12 Grupos x 4)",
+            "groupsRowBonus": "Bonus Grupos Perfectos",
+            "groupsRowMax": "Máximo de Puntos Acumulables",
+            "bracketTitle": "Bracket Stage",
+            "bracketP1": "Tras el Group Stage, recibes un bracket limpio para predecir a todos los ganadores desde los dieciseisavos hasta el Campeón.",
+            "bracketP2": "Es eliminación estándar, pero con un giro único. Según tus resultados en la fase de grupos, ¡podrás corregir el rumbo cuando lo necesites!",
+            "bracketP3": "Los puntos aumentan de valor cada ronda: 2 – 4 – 8 – 16 – 32, garantizando un final dramático y competido.",
+            "bracketColRound": "Ronda",
+            "bracketColGames": "Partidos",
+            "bracketRound32": "Dieciseisavos",
+            "bracketRound16": "Octavos",
+            "bracketQF": "Cuartos de Final",
+            "bracketSF": "Semifinales",
+            "bracketFinal": "Final",
+            "bracketTotal": "Potencial Total Bracket",
+            "swapTitle": "Swapping",
+            "swapP1": "Si una de tus predicciones es eliminada, puedes canjear tus puntos acumulados del Group Stage para modificar el camino que tenía proyectado.",
+            "swapP2": "Cómo funciona: no estás corrigiendo el pasado (dieciseisavos u octavos); estás comprando una predicción de reemplazo para los partidos futuros de ese equipo (cuartos en adelante).",
+            "swapP3": "Los swaps solo corrigen el camino hacia adelante. No otorgan puntos retroactivamente.",
+            "swapP4": "El coste de cada swap aumenta en secuencia Fibonacci, haciendo cada corrección exponencialmente más cara: 3, 5, 8, 13, 21.",
+            "swapColNº": "Swap nº",
+            "swapColCost": "Coste",
+            "swapColSpent": "Puntos Gastados",
+            "swap1": "1º Swap",
+            "swap2": "2º Swap",
+            "swap3": "3º Swap",
+            "swap4": "4º Swap",
+            "swap5": "5º Swap"
+        }
+    }
+}

@@ -1,15 +1,17 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 
 export default function TournamentHelmet({ tournamentName = 'Tournament' }) {
-    const title = `${tournamentName} | Vindro Brackets`;
-    const description = `Make your predictions for ${tournamentName} on Vindrogames. Create plays, join pools and compete with friends.`;
+    const { t } = useTranslation('tournament');
+    const title = t('helmet.title', { name: tournamentName });
+    const description = t('helmet.description', { name: tournamentName });
 
     return (
         <Helmet>
             <title>{title}</title>
             <meta name="description" content={description} />
-            <meta name="keywords" content={`${tournamentName}, brackets, predictions, pools, vindrogames`} />
+            <meta name="keywords" content={`${tournamentName}, ${t('helmet.keywords')}`} />
 
             <meta property="og:type" content="website" />
             <meta property="og:title" content={title} />

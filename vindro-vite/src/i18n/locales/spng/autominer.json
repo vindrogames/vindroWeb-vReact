@@ -1,0 +1,71 @@
+{
+    "tagline": "Un Idle Game",
+    "shared": {
+        "minerCosts": "🤖 1 Minero cuesta",
+        "autoBuyQty": "Nº de AutoCompra:",
+        "totalCost": "Coste total:",
+        "production": "Producción",
+        "autoBuy": "AutoCompra",
+        "cost": "Coste"
+    },
+    "iron": {
+        "miningTitle": "Minar Hierro",
+        "automateTitle": "Automatizar Minería de Hierro",
+        "totalLabel": "Total Hierro",
+        "minersLabel": "Mineros de Hierro",
+        "resourceName": "Hierro"
+    },
+    "sulfur": {
+        "stationTitle": "Estación de Azufre",
+        "totalLabel": "Total Azufre",
+        "costs": "1 Azufre cuesta",
+        "autoBuyLabel": "AutoComprar Azufre",
+        "resourceName": "Hierro"
+    },
+    "drills": {
+        "stationTitle": "Estación de Drills",
+        "totalLabel": "Drills Totales",
+        "costs": "1 Drill cuesta",
+        "autoBuyLabel": "AutoComprar Drills",
+        "resourceName": "Hierro"
+    },
+    "silver": {
+        "miningTitle": "Minar Plata",
+        "automateTitle": "Automatizar Minería de Plata",
+        "totalLabel": "Total Plata",
+        "minersLabel": "Mineros de Plata",
+        "requires": "Requiere",
+        "and": "y",
+        "resourceName": "Silver"
+    },
+    "instructions": {
+        "title": "Cómo Jugar",
+        "subtitle": "¡Construye un imperio minero automatizado para maximizar la producción de Plata!",
+        "step1Bold": "Clic para Minar Hierro",
+        "step1Text": "Empieza haciendo click en el botón de minería de hierro",
+        "step2Bold": "Comprar mineros de hierro",
+        "step2Text": "Automatiza la producción de hierro (el coste sube cada 10 mineros)",
+        "step3Bold": "Recolectar Recursos",
+        "step3Text": "Usa el hierro para comprar azufre y drills",
+        "step4Bold": "Minar Plata",
+        "step4Text": "1 Plata requiere 10 azufre + 1 drill",
+        "step5Bold": "Escalar",
+        "step5Text": "¡Automatiza la producción de Plata para llegar al máximo! (el coste sube cada 10 mineros)",
+        "tip1a": "Los Miners",
+        "tip1b": "y el",
+        "tip1c": "Compra automatizada",
+        "tip1d": "se mantienen activos mientras la pestaña esté abierta.",
+        "ironDesc": "es el recurso básico, minado manualmente o con mineros",
+        "sulfurDesc": "cuesta 50 hierro, se consume al minar plata",
+        "drillsDesc": "cuestan 500 iron, se consumen al minar plata",
+        "silverDesc": "es el recurso premium, usado para comprar mineros de plata",
+        "tip2a": "Los Botones",
+        "tip2b": "aparecerán",
+        "tip2c": "Desactivados",
+        "tip2d": "si no tienes los recursos para comprar o automatizar."
+    },
+    "meta": {
+        "title": "Autominer | Vindrogames",
+        "description": "Autominer Idle Game de Vindrogames. Automatiza la minería, deja la pestaña abierta y ¡llega al máximo!"
+    }
+}

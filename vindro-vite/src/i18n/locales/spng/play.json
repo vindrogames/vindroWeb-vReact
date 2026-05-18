@@ -1,0 +1,57 @@
+{
+    "helmet": {
+        "title": "{{playName}} | {{tournamentName}} — Vindro Brackets",
+        "description": "Ve las predicciones de {{playName}} para {{tournamentName}} en Vindrogames.",
+        "keywords": "brackets, predicciones, vindrogames"
+    },
+    "loading": "Cargando...",
+    "notFound": {
+        "message": "Esta play no existe o ha sido eliminada."
+    },
+    "intro": {
+        "playLabel": "play",
+        "byLabel": "de"
+    },
+    "groupStage": {
+        "dropdownSummary": "¡Predice cómo quedará cada equipo en su grupo!",
+        "hint1": "Recibes 1 punto por cada predicción correcta.",
+        "hint2": "Si predices correctamente todos los equipos en todos los grupos, ¡ganas 2 puntos extra!",
+        "hint3": "Podrás usar estos puntos para hacer swaps en el Bracket Stage.",
+        "hint4": "Si usas estos puntos para un swap, los \"gastas\" y te quedarán menos.",
+        "hint5": "También desempatan. Si dos Brackets tienen los mismos puntos, tus puntos restantes del Group Stage deciden.",
+        "openLabel": "Abierto",
+        "closedLabel": "Cerrado",
+        "forPredictions": "para predicciones",
+        "closesIn": "Cierra en"
+    },
+    "bracketStage": {
+        "dropdownSummary": "¡Completa tus predicciones del Bracket para el torneo!",
+        "hint1": "El Bracket Stage abre cuando los 32 equipos están decididos.",
+        "hint2": "Tendrás solo un breve tiempo para completar tus predicciones.",
+        "hint3": "Recibes un Bracket nuevo, independientemente de tus predicciones del Group Stage.",
+        "hint4": "Los puntos del Group Stage y del Bracket Stage son independientes.",
+        "hint5": "Los puntos del Bracket Stage deciden quién gana los pools.",
+        "hint6": "Si una de tus predicciones pierde, puedes cambiarla usando tus puntos del Group Stage.",
+        "hint7": "¡Pero úsalos con cabeza!",
+        "closedLabel": "Cerrado",
+        "openLabel": "Abierto",
+        "forPredictions": "para predicciones",
+        "closesIn": "Cierra en",
+        "opensIn": "Abre en",
+        "underwayPrefix": "En",
+        "underwayHighlight": "Juego!"
+    },
+    "lastUpdated": "Actualizado:",
+    "tabs": {
+        "play": "Play",
+        "inPools": "En Porras"
+    },
+    "poolsTab": {
+        "colPool": "Porra",
+        "colOwner": "Owner",
+        "colMembers": "Miembros",
+        "colPos": "Pos.",
+        "loading": "Cargando porras...",
+        "empty": "Esta play aún no está en ninguna porra."
+    }
+}

@@ -1,0 +1,327 @@
+@use '../../../config' as *;
+
+@media(max-width: 960px) {
+
+    main.play-pool {
+        .play-stages-wrapper {
+
+            section.play-prediction-container {
+
+                .prediction-display-intro {
+                    width: 100%;
+                    padding: 0 42px;
+
+                    .title-container-wrapper {
+                        width: 100%;
+                    }
+
+                    .description-container {
+                        width: 100%;
+
+                        .right-container {
+                            flex-direction: row;
+
+                            .tournament-status-spacer {
+                                display: block;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .description-container {
+        padding: 7px 0 14px 14px;
+        flex-direction: column;
+        .description-dropdown {
+            width: 100%;
+            .description-toggle {
+                font-size: 1.6rem;
+            }
+
+            .description-panel h4 {
+                font-size: 1.6rem;
+            }
+        }
+
+        .right-container {
+
+            p {
+                font-size: 1.8rem;
+            }
+        }
+    }
+
+    .auth-prompt-overlay {
+
+        .auth-prompt-message {
+
+            h5 {
+                font-size: 2.4rem;
+            }
+        }
+    }
+}
+
+@media(max-width: 678px) {
+
+    main.play-pool {
+
+        .play-stages-wrapper {
+
+            section.play-prediction-container {
+                gap: 7px;
+
+                .prediction-display-intro {
+                    padding: 0 21px;
+
+                    .title-container-wrapper {
+                        padding: 14px 21px;
+                    }
+
+                    .description-container {
+
+                        .description-dropdown {
+
+                            .description-toggle {
+                                width: 100%;
+                            }
+                        }
+
+                        .right-container {
+                            //flex-direction: column;
+                            //align-items: center;
+
+                            p {
+                                font-size: 1.6rem;
+                            }
+
+                            .tournament-status-spacer {
+                                //display: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .play-tab-nav {
+
+            .buttons-container button {
+                padding: 14px;
+                font-size: 1.4rem;
+                font-weight: 500;
+            }
+        }
+    }
+
+    .title-container-wrapper {
+        padding: 14px;
+
+        h3 {
+            font-size: 3.6rem;
+        }
+    }
+
+    .description-container {
+        padding: 7px 14px;
+        flex-direction: column;
+        gap: 14px;
+
+        .description-dropdown {
+            width: 100%;
+
+            .description-toggle {
+                width: 100%;
+                font-size: 1.6rem;
+                padding: 7px 14px;
+            }
+
+            .description-panel h4 {
+                font-size: 1.6rem;
+            }
+        }
+
+        .right-container {
+            width: 100%;
+            align-items: flex-start;
+        }
+    }
+
+    .auth-prompt-overlay {
+
+        .auth-prompt-message {
+            padding: 21px;
+
+            h5 {
+                font-size: 1.8rem;
+            }
+
+            p {
+                font-size: 1.2rem;
+            }
+        }
+    }
+}
+
+
+@media(max-width: 450px) {
+
+    main.play-pool {
+        .play-stages-wrapper {
+
+            section.play-prediction-container {
+
+                .prediction-display-intro {
+                    gap: 7px;
+
+                    .title-container-wrapper {
+
+                        h3 {
+                            width: auto;
+                            text-align: center;
+                            font-size: 3.2rem;
+                        }
+
+                        h4 {
+                            font-size: 2.1rem;
+                        }
+                    }
+
+                    .description-container {
+
+                        .description-dropdown {
+
+                            .description-toggle {
+                                width: 100%;
+                            }
+                        }
+
+                        .right-container {
+                            flex-direction: column;
+                            align-items: center;
+
+                            .tournament-status-spacer {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .title-container-wrapper {
+        padding: 14px 0;
+
+        h3 {
+            width: 100%;
+            text-align: center;
+            font-size: 3.2rem;
+        }
+    }
+
+    .description-container {
+        padding: 7px 0;
+        align-content: center;
+
+        .description-dropdown {
+            width: 100%;
+
+            .description-toggle {
+                text-align: center;
+            }
+
+            .description-panel h4 {
+                text-align: center;
+            }
+        }
+
+        .right-container {
+            align-items: center;
+
+            button {
+                font-size: 1.4rem;
+            }
+        }
+    }
+
+    .auth-prompt-overlay {
+        padding: 21px;
+
+        .auth-prompt-message {
+            width: 100%;
+            padding: 14px;
+
+            .section-seperator {
+                width: 84%;
+            }
+
+            p {
+                font-size: 1.2rem;
+            }
+
+            .auth-prompt-half {
+
+                .prompt-links {
+                    flex-direction: column;
+
+                    button {
+                        font-size: 1.2rem;
+                        padding: 7px 14px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media(max-width: 376px) {
+
+    main.play-pool {
+        .play-stages-wrapper {
+
+            section.play-prediction-container {
+
+                .prediction-display-intro {
+                    padding: 0 14px;
+
+                    .title-container-wrapper {
+                        padding: 7px 14px;
+
+                        h3 {
+                            width: auto;
+                            text-align: center;
+                            font-size: 2.4rem;
+                        }
+
+                        h4 {
+                            font-size: 1.6rem;
+                        }
+                    }
+                }
+
+                .prediction-display-content-wrapper {
+                    width: 96%;
+                }
+            }
+        }
+    }
+
+    .description-container {
+
+        .description-dropdown {
+
+            .description-toggle {
+                padding: 7px;
+                gap: 7px;
+            }
+
+            .description-panel {
+                padding: 7px;
+            }
+        }
+    }
+}

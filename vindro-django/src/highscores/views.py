@@ -167,6 +167,48 @@ def my_gamescores(request):
     })
 
 
+@require_http_methods(["GET"])
+def user_best_scores(request, user_id):
+    """
+    Public: best score per game for any user.
+    GET /api/highscores/user/<user_id>/best/
+    Returns one entry per game — highest score, fastest time at that score.
+    """
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'User not found'}, status=404)
+
+    gamescores = Gamescore.objects.filter(user=user).order_by('game_name', '-game_score')
+
+    best_by_game = {}
+    for gs in gamescores:
+        gn = gs.game_name
+        score = gs.game_score
+        try:
+            time_val = int(gs.game_time)
+        except (ValueError, TypeError):
+            time_val = None
+
+        if gn not in best_by_game:
+            best_by_game[gn] = {'game_name': gn, 'best_score': score, 'best_time': time_val}
+        else:
+            current = best_by_game[gn]
+            if score > current['best_score']:
+                best_by_game[gn] = {'game_name': gn, 'best_score': score, 'best_time': time_val}
+            elif score == current['best_score']:
+                if time_val is not None and (current['best_time'] is None or time_val < current['best_time']):
+                    best_by_game[gn]['best_time'] = time_val
+
+    return JsonResponse({
+        'success': True,
+        'data': {'best_scores': list(best_by_game.values())},
+    })
+
+
 @require_http_methods(["DELETE"])
 @csrf_exempt
 @login_required_api

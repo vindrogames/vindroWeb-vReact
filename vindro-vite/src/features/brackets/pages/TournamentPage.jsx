@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation, Trans } from 'react-i18next';
 import ShowcaseSection from '../../../components/ui/ShowcaseSection';
-import DescriptionDropdown from '../../../components/ui/DescriptionDropdown';
+import DescriptionDropdown from '../components/DescriptionDropdown';
 import AuthModal from '../../../components/ui/AuthModal';
 import Leaderboard from '../../../components/ui/Leaderboard';
 import PlayCreateNewModal from '../components/modals/PlayCreateNewModal';
 import JoinPoolModal from '../components/modals/PoolJoinModal';
 import PoolCreateNewModal from '../components/modals/PoolCreateNewModal';
 import { useAuth } from '../../../contexts/auth/AuthContext';
+import { toUrlSlug } from '../../../utils/urlUtils';
 import { useTournament } from '../hooks/useTournament';
 import { useLeaderboards } from '../hooks/useLeaderboard';
 import { usePlays } from '../hooks/usePlays';
 import { usePools } from '../hooks/usePools';
 import { EVENT_MAP } from '../tournaments/eventMap';
 import TournamentHelmet from '../../../page-helmets/TournamentHelmet';
+import NotFoundPage from '../../../pages/NotFoundPage';
 
-const startCountdown = (targetDateString, setTime) => {
+const startCountdown = (targetDateString, setTime, closedLabel = 'Closed') => {
     const target = new Date(targetDateString);
     function tick() {
         const diff = target - new Date();
-        if (diff <= 0) { setTime('Closed'); return; }
+        if (diff <= 0) { setTime(closedLabel); return; }
         const s = Math.floor(diff / 1000);
         const d = Math.floor(s / 86400);
         const h = Math.floor((s % 86400) / 3600);
@@ -35,6 +38,13 @@ const TournamentPage = () => {
     const { tournament: tournamentSlug } = useParams();
     const { user } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation('tournament');
+
+    const [playsDropdownOpen, setPlaysDropdownOpen] = useState(false);
+    const [playsInPoolsDropdownOpen, setPlaysInPoolsDropdownOpen] = useState(false);
+    const [userPoolsDropdownOpen, setUserPoolsDropdownOpen] = useState(false);
+
+    const dropdownOpen = playsDropdownOpen || playsInPoolsDropdownOpen || userPoolsDropdownOpen;
 
     const config = EVENT_MAP[tournamentSlug];
 
@@ -65,7 +75,7 @@ const TournamentPage = () => {
 
     useEffect(() => {
         if (!tournamentData?.start_date || tournamentStarted) return;
-        const interval = startCountdown(tournamentData.start_date, setHeroCountdown);
+        const interval = startCountdown(tournamentData.start_date, setHeroCountdown, t('hero.closed'));
         return () => clearInterval(interval);
     }, [tournamentData?.start_date, tournamentStarted]);
 
@@ -88,7 +98,7 @@ const TournamentPage = () => {
                 setShowJoinModal(true);
                 return;
             }
-            navigate(`/brackets/${tournamentSlug}/play/${user.id}/${encodeURIComponent(newPlay.name)}`);
+            navigate(`/brackets/${tournamentSlug}/play/${user.id}/${toUrlSlug(newPlay.name)}`);
         }
     };
 
@@ -100,7 +110,7 @@ const TournamentPage = () => {
 
     const handleNavigateToPlay = (play) => {
         if (!user) return;
-        navigate(`/brackets/${tournamentSlug}/play/${user.id}/${encodeURIComponent(play.name)}`);
+        navigate(`/brackets/${tournamentSlug}/play/${user.id}/${toUrlSlug(play.name)}`);
     };
 
     const getUpdateStatus = (play) => {
@@ -131,7 +141,7 @@ const TournamentPage = () => {
         if (pool.is_public) {
             handleScrollToSection('tournament-leaderboard');
         } else {
-            navigate(`/brackets/${tournamentSlug}/pool/${encodeURIComponent(name)}`);
+            navigate(`/brackets/${tournamentSlug}/pool/${toUrlSlug(name)}`);
         }
     };
 
@@ -146,18 +156,18 @@ const TournamentPage = () => {
     };
 
     const handleLeaderboardPlayClick = (item) => {
-        navigate(`/brackets/${tournamentSlug}/play/${item.user.id}/${encodeURIComponent(item.play_name)}`);
+        navigate(`/brackets/${tournamentSlug}/play/${item.user.id}/${toUrlSlug(item.play_name)}`);
     };
 
     const leaderboardCols = [
         {
-            header: 'Pos.',
+            header: t('leaderboard.colPos'),
             width: '7%',
             narrow: true,
             render: (_, idx) => <strong>{idx + 1}</strong>
         },
         {
-            header: 'Player',
+            header: t('leaderboard.colPlayer'),
             width: '10%',
             narrow: true,
             render: (item) => {
@@ -170,7 +180,7 @@ const TournamentPage = () => {
             },
         },
         {
-            header: 'Play',
+            header: t('leaderboard.colPlay'),
             width: config?.hasGroupStage ? '42%' : '63%',
             truncate: true,
             className: 'table-link',
@@ -180,9 +190,9 @@ const TournamentPage = () => {
             },
         },
         ...(config?.hasGroupStage
-            ? [{ header: 'Groups Pts', width: '20.5%', render: (item) => (item.group_points ?? 0).toString() }]
+            ? [{ header: t('leaderboard.colGroupsPts'), width: '20.5%', render: (item) => (item.group_points ?? 0).toString() }]
             : []),
-        { header: 'Bracket Pts', width: '20.5%', render: (item) => (item.bracket_points ?? 0).toString() },
+        { header: t('leaderboard.colBracketPts'), width: '20.5%', render: (item) => (item.bracket_points ?? 0).toString() },
     ];
 
     // ── AUTH HELPERS ──────────────────────────────────────────────────────────
@@ -203,33 +213,23 @@ const TournamentPage = () => {
         if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
     };
 
-    // ── UNKNOWN TOURNAMENT ────────────────────────────────────────────────────
-    if (!config) {
-        return (
-            <main className="bracket-tournament-page">
-                <div className="not-found-container">
-                    <h2>tournament<span className="inline-teal inline-bold">NotFound</span></h2>
-                    <button className="btn btn-tan" onClick={() => navigate('/brackets')}>Back to Brackets</button>
-                </div>
-            </main>
-        );
-    }
+    if (!config) return <NotFoundPage />;
 
-    const { title, subtitle, EventDescription, hasGroupStage, pageId } = config;
+    const { title, EventDescription, hasGroupStage, pageId } = config;
 
     // ── RENDER ────────────────────────────────────────────────────────────────
     return (
-        <main id={pageId} className="bracket-tournament-page">
+        <main id={pageId} className={`bracket-tournament-page ${dropdownOpen ? ' dropdown-active' : ''}`}>
 
-            <TournamentHelmet tournamentName={tournamentData?.name || title.highlight} />
+            <TournamentHelmet tournamentName={tournamentData?.name || title.highlight} tournamentSlug={tournamentSlug} />
 
-            <ShowcaseSection classes="hero-half bg-black brackets-hero">
+            <ShowcaseSection id="tournament-intro" classes="hero-half bg-black brackets-hero">
                 <h1>{title.before}<span className="inline-bold inline-teal">{title.highlight}</span>{title.after}</h1>
-                <h2>Create a Play. Make your picks. Submit to a Pool</h2>
+                <h2>{t('hero.tagline')}</h2>
                 {tournamentStarted ? (
-                    <p className="hero-countdown under-way">Under <span className="tournament-countdown">Way!</span></p>
+                    <p className="tournament-status-line">{t('hero.underwayPrefix')} <span className="inline-real-yellow inline-bold">{t('hero.underwayHighlight')}</span></p>
                 ) : heroCountdown ? (
-                    <p className="hero-countdown">Starts in <span className="tournament-countdown">{heroCountdown}</span></p>
+                    <p className="tournament-status-line">{t('hero.startsIn')} <span className="inline-real-yellow inline-bold">{heroCountdown}</span></p>
                 ) : null}
                 <div className="brackets-hero-buttons-wrapper">
 
@@ -238,26 +238,38 @@ const TournamentPage = () => {
 
             <ShowcaseSection id="user-picks-section" classes="hero-half bg-gray user-picks">
 
-                <div className="user-picks-container">
+                <div className="user-picks-sections-wrapper">
 
-                    <div className="title-container-wrapper">
-                        <h3>Your Plays</h3>
-                    </div>
+                <section id="plays-picks" className={`user-picks-container ${(playsInPoolsDropdownOpen || userPoolsDropdownOpen) ? ' peer-dropdown-active' : ''}`}>
 
-                    <div className="user-picks-description-wrapper">
-                        <DescriptionDropdown summary='A "Play" includes your predictions for a Tournament.'>
-                            <h4>This World Cup 2026 Tournament has 2 stages: <span className='inline-bold'>Groups</span> & the <span className='inline-bold'>Bracket</span></h4>
-                            <h4>Your plays are private until you submit them to a pool.</h4>
-                        </DescriptionDropdown>
-                        <div className="buttons-container">
-                            {tournamentStarted ? (
-                                <span className="disabled-btn-wrapper">
-                                    <button className="btn btn-tan" disabled>Create a Play</button>
-                                    <span className="disabled-tooltip">Tournament has started</span>
-                                </span>
-                            ) : (
-                                <button className="btn btn-tan" onClick={handleNewPlay}>Create a Play</button>
-                            )}
+                    <div className="user-picks-intro">
+                        <div className="title-container-wrapper">
+                            <h3>{t('plays.title')}</h3>
+                        </div>
+
+                        <div className="description-container">
+                            <DescriptionDropdown summary={t('plays.dropdownSummary')} onOpenChange={setPlaysDropdownOpen}>
+                                {t(`${tournamentSlug}.playsHint`, { defaultValue: '' }) && (
+                                    <h4>
+                                        <Trans
+                                            i18nKey={`${tournamentSlug}.playsHint`}
+                                            ns="tournament"
+                                            components={{ bold: <span className="inline-bold" /> }}
+                                        />
+                                    </h4>
+                                )}
+                                <h4>{t('plays.playsPrivate')}</h4>
+                            </DescriptionDropdown>
+                            <div className="right-container">
+                                {tournamentStarted ? (
+                                    <span className="disabled-btn-wrapper">
+                                        <button className="btn btn-tan" disabled>{t('buttons.createPlay')}</button>
+                                        <span className="disabled-tooltip">{t('plays.disabledTooltip')}</span>
+                                    </span>
+                                ) : (
+                                    <button className="btn btn-tan" onClick={handleNewPlay}>{t('buttons.createPlay')}</button>
+                                )}
+                            </div>
                         </div>
                     </div>
 
@@ -266,15 +278,15 @@ const TournamentPage = () => {
                             <table>
                                 <thead>
                                     <tr>
-                                        <th className="centered-text">Play Name</th>
-                                        <th className="centered-text">Updated</th>
-                                        {hasGroupStage && <th className="centered-text">Groups Pts.</th>}
-                                        <th className="centered-text">Bracket Pts.</th>
+                                        <th className="centered-text">{t('plays.colName')}</th>
+                                        <th className="centered-text">{t('plays.colUpdated')}</th>
+                                        {hasGroupStage && <th className="centered-text">{t('plays.colGroupsPts')}</th>}
+                                        <th className="centered-text">{t('plays.colBracketPts')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {isLoadingPlays ? (
-                                        <tr><td colSpan={hasGroupStage ? 4 : 3}>Loading plays...</td></tr>
+                                        <tr><td colSpan={hasGroupStage ? 4 : 3}>{t('plays.loading')}</td></tr>
                                     ) : userPlays?.length > 0 ? (
                                         userPlays.map((play) => (
                                             <tr key={play.id} onClick={() => handleNavigateToPlay(play)} className="clickable-row">
@@ -285,29 +297,31 @@ const TournamentPage = () => {
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr className="no-plays"><td colSpan={hasGroupStage ? 4 : 3}>No plays found.</td></tr>
+                                        <tr className="no-plays"><td colSpan={hasGroupStage ? 4 : 3}>{t('plays.empty')}</td></tr>
                                     )}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div className="user-picks-container">
+                <section id="in-pools-picks" className={`user-picks-container ${(playsDropdownOpen || userPoolsDropdownOpen) ? ' peer-dropdown-active' : ''}`}>
 
-                    <div className="title-container-wrapper">
-                        <h3>Plays in Pools</h3>
-                    </div>
+                    <div className="user-picks-intro">
+                        <div className="title-container-wrapper">
+                            <h3>{t('inPools.title')}</h3>
+                        </div>
 
-                    <div className="user-picks-description-wrapper">
-                        <DescriptionDropdown summary='To "compete", you submit your plays to Pools.'>
-                            <h4>We have a public vindro<span className='inline-bold'>Public</span> Pool for everybody to see.</h4>
-                            <h4>You can submit as many plays as you like to our public pool.</h4>
-                            <h4>Users can create "Private" Pools that require a code.</h4>
-                            <h4>Depending on the config, private pools can limit to 1 play per user and/or define money prizes.</h4>
-                        </DescriptionDropdown>
-                        <div className="buttons-container">
-                            <button className="btn btn-tan" onClick={handleJoinPoolClick}>Submit a Play</button>
+                        <div className="description-container">
+                            <DescriptionDropdown summary={t('inPools.dropdownSummary')} onOpenChange={setPlaysInPoolsDropdownOpen}>
+                                <h4><Trans i18nKey="inPools.hint1" ns="tournament" components={{ vindro: <span className="inline-teal inline-bold" /> }} /></h4>
+                                <h4>{t('inPools.hint2')}</h4>
+                                <h4>{t('inPools.hint3')}</h4>
+                                <h4>{t('inPools.hint4')}</h4>
+                            </DescriptionDropdown>
+                            <div className="right-container">
+                                <button className="btn btn-tan" onClick={handleJoinPoolClick}>{t('buttons.submitPlay')}</button>
+                            </div>
                         </div>
                     </div>
 
@@ -316,15 +330,15 @@ const TournamentPage = () => {
                             <table>
                                 <thead>
                                     <tr>
-                                        <th className="centered-text">Play</th>
-                                        <th className="centered-text">Pool</th>
-                                        <th className="centered-text">Manager</th>
-                                        <th className="centered-text">Pos.</th>
+                                        <th className="centered-text">{t('inPools.colPlay')}</th>
+                                        <th className="centered-text">{t('inPools.colPool')}</th>
+                                        <th className="centered-text">{t('inPools.colManager')}</th>
+                                        <th className="centered-text">{t('inPools.colPos')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {isLoadingPools ? (
-                                        <tr><td colSpan="4">Loading pools...</td></tr>
+                                        <tr><td colSpan="4">{t('inPools.loading')}</td></tr>
                                     ) : userPools?.length > 0 ? (
                                         userPools.map(pool => (
                                             <tr key={pool.id} className="clickable-row" onClick={() => handleNavigateToPool(pool)}>
@@ -335,29 +349,31 @@ const TournamentPage = () => {
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="4">You haven't joined any pools yet.</td></tr>
+                                        <tr><td colSpan="4">{t('inPools.empty')}</td></tr>
                                     )}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div className="user-picks-container">
+                <section id="your-pools-picks" className={`user-picks-container ${(playsDropdownOpen || playsInPoolsDropdownOpen) ? ' peer-dropdown-active' : ''}`}>
 
-                    <div className="title-container-wrapper">
-                        <h3>Your Pools</h3>
-                    </div>
+                    <div className="user-picks-intro">
+                        <div className="title-container-wrapper">
+                            <h3>{t('yourPools.title')}</h3>
+                        </div>
 
-                    <div className="user-picks-description-wrapper">
-                        <DescriptionDropdown summary="Create a Private Pool for you and your people!">
-                            <h4>You can decide to allow multiple plays per user or limit to 1.</h4>
-                            <h4>You can configure the Pool as a "Money Pool" setting a cost per play.</h4>
-                            <h4>You can also set the prize payouts by standing.</h4>
-                            <h4>You will be able to eliminate any play from your Pool.</h4>
-                        </DescriptionDropdown>
-                        <div className="buttons-container">
-                            <button className="btn btn-tan" onClick={handleCreatePoolClick}>Create a Pool</button>
+                        <div className="description-container">
+                            <DescriptionDropdown summary={t('yourPools.dropdownSummary')} onOpenChange={setUserPoolsDropdownOpen}>
+                                <h4>{t('yourPools.hint1')}</h4>
+                                <h4><Trans i18nKey="yourPools.hint2" ns="tournament" components={{ money: <span className="inline-teal inline-bold" /> }} /></h4>
+                                <h4>{t('yourPools.hint3')}</h4>
+                                <h4>{t('yourPools.hint4')}</h4>
+                            </DescriptionDropdown>
+                            <div className="right-container">
+                                <button className="btn btn-tan" onClick={handleCreatePoolClick}>{t('buttons.createPool')}</button>
+                            </div>
                         </div>
                     </div>
 
@@ -366,15 +382,15 @@ const TournamentPage = () => {
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Pool</th>
-                                        <th>Members</th>
-                                        <th>Paid</th>
-                                        <th>Prizes</th>
+                                        <th>{t('yourPools.colPool')}</th>
+                                        <th>{t('yourPools.colMembers')}</th>
+                                        <th>{t('yourPools.colPaid')}</th>
+                                        <th>{t('yourPools.colPrizes')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {isLoadingPools ? (
-                                        <tr><td colSpan="4">Loading pools...</td></tr>
+                                        <tr><td colSpan="4">{t('yourPools.loading')}</td></tr>
                                     ) : myCreatedPools?.length > 0 ? (
                                         myCreatedPools.map(pool => (
                                             <tr key={pool.id} className="clickable-row" onClick={() => handleNavigateToPool(pool)}>
@@ -385,29 +401,32 @@ const TournamentPage = () => {
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="4">You haven't created any pools yet.</td></tr>
+                                        <tr><td colSpan="4">{t('yourPools.empty')}</td></tr>
                                     )}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
+                </section>
+
+                </div>{/* end user-picks-sections-wrapper */}
 
                 {!user && (
                     <div className="auth-prompt-overlay">
                         <div className="auth-prompt-message">
 
                             <div className="top-half auth-prompt-half">
-                                <h5>To participate you must be logged in.</h5>
+                                <h5>{t('auth.mustLogin')}</h5>
                                 <div className="prompt-links">
                                     <button className="btn btn-tan" onClick={handleLoginClick}>Log In</button>
                                 </div>
+                                <p>{t('auth.noAccountHint')}</p>
                             </div>
 
-                            <div className="section-seperator"></div>
+                            <div className="section-seperator sep-pink"></div>
 
                             <div className="bottom-half auth-prompt-half">
-                                <h5>Or Check it out before getting started.</h5>
+                                <h5>{t('auth.checkItOut')}</h5>
 
                                 <div className="prompt-links">
                                     <button className="btn btn-tan" onClick={() => handleScrollToSection('about-tournament')}>About</button>
@@ -425,7 +444,7 @@ const TournamentPage = () => {
 
                 <div className="leaderboard-header">
                     <div className="title">
-                        <h3 className="main-title">vindro<span className="inline-teal inline-bold">Pool</span> Leaderboard</h3>
+                        <h3 className="main-title">vindro<span className="inline-teal inline-bold">Pool</span> {t('leaderboard.title')}</h3>
                     </div>
                 </div>
 
@@ -434,7 +453,7 @@ const TournamentPage = () => {
                     columns={leaderboardCols}
                     isLoading={isPublicLoading}
                     onRowClick={handleLeaderboardPlayClick}
-                    emptyMessage="No entries found."
+                    emptyMessage={t('leaderboard.empty')}
                     tableContainerClasses="table-container bg-gray backdrop-black"
                 />
             </section>
@@ -460,7 +479,7 @@ const TournamentPage = () => {
                     if (pool?.is_public) {
                         handleScrollToSection('tournament-leaderboard');
                     } else if (pool?.name) {
-                        navigate(`/brackets/${tournamentSlug}/pool/${encodeURIComponent(pool.name)}`);
+                        navigate(`/brackets/${tournamentSlug}/pool/${toUrlSlug(pool.name)}`);
                     }
                 }}
             />

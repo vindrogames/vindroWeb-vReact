@@ -8,9 +8,10 @@ User = get_user_model()
 
 class Tournament(models.Model):
     STATUS_CHOICES = [
-        ('upcoming', 'Upcoming'),
-        ('active', 'Active'),
-        ('completed', 'Completed'),
+        ('upcoming', 'Upcoming'),   # announced, not yet open for picks
+        ('open', 'Open'),           # accepting predictions
+        ('in_play', 'In Play'),     # games being played, no predictions
+        ('closed', 'Closed'),       # tournament is over
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -20,8 +21,10 @@ class Tournament(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
     description = models.TextField(blank=True)
     image_url = models.URLField(blank=True)
+    card_info = models.JSONField(default=dict, blank=True)
 
     start_date = models.DateTimeField()
+    entries_close = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField()
     groups_end_date = models.DateTimeField()
     bracket_start_date = models.DateTimeField()
@@ -34,6 +37,32 @@ class Tournament(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def group_stage_status(self):
+        from django.utils import timezone
+        if self.status in ('upcoming', 'closed'):
+            return self.status
+        now = timezone.now()
+        if now < self.start_date:
+            return 'open'
+        if now < self.groups_end_date:
+            return 'in_play'
+        return 'closed'
+
+    @property
+    def bracket_stage_status(self):
+        from django.utils import timezone
+        if self.status in ('upcoming', 'closed'):
+            return self.status
+        now = timezone.now()
+        if now < self.groups_end_date:
+            return 'upcoming'
+        if now < self.bracket_start_date:
+            return 'open'
+        if now < self.end_date:
+            return 'in_play'
+        return 'closed'
 
 
 class TournamentFormat(models.Model):
@@ -78,10 +107,13 @@ class TournamentPlay(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in_progress')
     current_phase = models.CharField(max_length=20, choices=PHASE_CHOICES, default='groups')
 
+    slug = models.CharField(max_length=28, blank=True, default='')
+
     group_predictions = models.JSONField(default=dict)
     bracket_predictions = models.JSONField(default=dict)
 
     group_points = models.IntegerField(default=0)
+    group_points_spent = models.IntegerField(default=0)
     bracket_points = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -91,9 +123,13 @@ class TournamentPlay(models.Model):
         ordering = ['-created_at']
         constraints = [
             UniqueConstraint(
-                fields=['user', 'tournament', 'name'], 
+                fields=['user', 'tournament', 'name'],
                 name='unique_play_name_per_user_per_tournament'
-            )
+            ),
+            UniqueConstraint(
+                fields=['user', 'tournament', 'slug'],
+                name='unique_play_slug_per_user_per_tournament'
+            ),
         ]
 
     def __str__(self):
@@ -117,7 +153,6 @@ class TournamentPool(models.Model):
     is_public = models.BooleanField(default=False)
     code_hash = models.CharField(max_length=255, unique=True, null=True, blank=True)
     join_code = models.CharField(max_length=16, null=True, blank=True)
-    current_member_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     # MONEY FEATURES
@@ -130,6 +165,8 @@ class TournamentPool(models.Model):
 
     # PAYOUTS  {position_str: integer_percent}  e.g. {"1": 60, "2": 30, "3": 10}
     payout_config = models.JSONField(default=dict, blank=True)
+
+    slug = models.SlugField(max_length=28, unique=True, blank=True, default='')
 
     # ADDITION: The 'through' relationship for easier querying
     members = models.ManyToManyField(

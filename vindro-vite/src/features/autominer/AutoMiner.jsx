@@ -1,5 +1,6 @@
 // /features/autominer/Autominer.jsx
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import AutominerHelmet from '../../page-helmets/AutominerHelmet'
 import useAutominer from './hooks/useAutominer'
 import ResourceBar from './components/ResourceBar';
@@ -8,6 +9,8 @@ import { FaCaretUp, FaCaretDown } from "react-icons/fa";
 
 
 const Autominer = () => {
+
+    const { t } = useTranslation('autominer');
 
     // 1. UI State for Modals
     const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
@@ -93,8 +96,7 @@ const Autominer = () => {
 
                     <div className="sub-header-text-instruct">
 
-                        <h2>An idle game</h2>
-                        {/* <h2>Automate the mining, leave tab open and reach the maximum</h2> */}
+                        <h2>{t('tagline')}</h2>
 
                         <button
                             type="button"
@@ -118,7 +120,7 @@ const Autominer = () => {
 
                                 <div className="header-text">
                                     <img src="/img/beam.webp" alt="Iron Beam Vindrogames Autominer"></img>
-                                    <h3>Iron Mining</h3>
+                                    <h3>{t('iron.miningTitle')}</h3>
                                 </div>
 
                                 <button
@@ -136,7 +138,7 @@ const Autominer = () => {
                         <div id="total-iron-grid-display" className="grid-cell-container">
                             <div className="grid-cell-content total-grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Iron </h4>
+                                    <h4>{t('iron.totalLabel')}</h4>
                                     <div className="total-resource-display">{formatResource(game.resources.iron)}</div>
                                 </div>
                             </div>
@@ -148,17 +150,18 @@ const Autominer = () => {
                             <div id="iron-automation" className="grid-cell-content">
 
                                 <div className="header-text">
-                                    <h3>🤖 Automate Iron Mining</h3>
+                                    <h3>{t('iron.automateTitle')}</h3>
                                 </div>
 
                                 <div className="cost-purchase-display">
-                                    <p>1 Miner costs</p>
+                                    <p>{t('shared.minerCosts')}</p>
                                     <div id="iron-miner-inline-cost" className="inline-cost-display">{game.getIronWorkerCost(1)}</div>
+                                    <p>{t('iron.resourceName')}</p>
                                 </div>
 
                                 <div className="purchase-section">
 
-                                    <p>Nº to AutoBuy: </p>
+                                    <p>{t('shared.autoBuyQty')}</p>
                                     <div className="plus-minus-purchase-display">
 
                                         <div id="num-iron-miners-purchase-display" className='inline-cost-display'>{buyQtys.ironMiners}</div>
@@ -186,9 +189,9 @@ const Autominer = () => {
                                 </div>
 
                                 <div className="purchase-summary-section">
-                                    <p>Total cost:</p>
+                                    <p>{t('shared.totalCost')}</p>
                                     <div id="iron-miner-inline-cost" className="inline-cost-display">{displayTotalIronWorkerCost}</div>
-                                    <p>Iron</p>
+                                    <p>{t('iron.resourceName')}</p>
                                 </div>
                                 <button
                                     type="button"
@@ -205,12 +208,12 @@ const Autominer = () => {
                         <div className="grid-cell-container">
                             <div className="grid-cell-content total-grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Iron Miners</h4>
+                                    <h4>{t('iron.minersLabel')}</h4>
                                     <div id="total-iron-grid-display" className="total-resource-display">{game.workers.iron}</div>
                                 </div>
                                 <div className="total-resource-grid-display production-cost-display">
                                     <div className="production-cost-heading">
-                                        <h4>Production</h4>
+                                        <h4>{t('shared.production')}</h4>
                                         <img src="/img/beam.webp" alt="Iron Beam icon Vindrogames Autominer" />
                                         <h4>/s</h4>
                                     </div>
@@ -229,13 +232,13 @@ const Autominer = () => {
 
                                 <div className="header-text">
                                     <img src="/img/sulfur.webp" alt="Sulfer icon Vindrogames Autominer game"></img>
-                                    <h3>Sulfur Buying Station</h3>
+                                    <h3>{t('sulfur.stationTitle')}</h3>
                                 </div>
 
                                 <div id="sulfur-purchase-display" className="cost-purchase-display">
-                                    <p>1 Sulfur costs</p>
+                                    <p>{t('sulfur.costs')}</p>
                                     <div id="sulfur-buy-inline-cost" className="inline-cost-display">50</div>
-                                    <p>Iron</p>
+                                    <p>{t('sulfur.resourceName')}</p>
                                 </div>
 
                                 <button
@@ -256,7 +259,7 @@ const Autominer = () => {
                         <div className="grid-cell-container">
                             <div className="grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Sulfur</h4>
+                                    <h4>{t('sulfur.totalLabel')}</h4>
                                     <div id="total-sulfur-grid-display" className="total-resource-display">{formatResource(game.resources.sulfur)}</div>
                                 </div>
                             </div>
@@ -270,17 +273,16 @@ const Autominer = () => {
                                 <label>
                                     <input
                                         type="checkbox"
-                                        // Same logic: disable ONLY if they can't afford it AND it's not already on
                                         disabled={game.resources.iron < (buyQtys.sulfur * 50) && !game.autoBuyActive.sulfur}
                                         checked={game.autoBuyActive.sulfur}
                                         onChange={(e) => game.setAutoBuyActive(prev => ({ ...prev, sulfur: e.target.checked }))}
                                     />
-                                    AutoBuy Sulfur
+                                    {t('sulfur.autoBuyLabel')}
                                 </label>
 
                                 <div className="purchase-section">
 
-                                    <p>Nº to AutoBuy: </p>
+                                    <p>{t('shared.autoBuyQty')}</p>
                                     <div className="plus-minus-purchase-display">
 
                                         <div id="num-sulfur-purchase-display" className='inline-cost-display'>{buyQtys.sulfur}</div>
@@ -312,9 +314,9 @@ const Autominer = () => {
                             <div className="grid-cell-content">
                                 <div id="sulfur-production-cost" className="total-resource-grid-display production-cost-display">
                                     <div className="production-cost-heading">
-                                        <h4>AutoBuy</h4>
+                                        <h4>{t('shared.autoBuy')}</h4>
                                         <img src="/img/sulfur.webp" alt="Iron Beam icon Vindrogames Autominer" />
-                                        <h4>Cost</h4>
+                                        <h4>{t('shared.cost')}</h4>
                                     </div>
                                     <div id="sulfur-production-grid-display" className="production-display">{buyQtys.sulfur * 50}</div>
                                 </div>
@@ -330,13 +332,13 @@ const Autominer = () => {
 
                                 <div className="header-text">
                                     <img src="/img/drill.webp" alt="Drill icon Vindrogames Autominer game"></img>
-                                    <h3>Drill Buying Station</h3>
+                                    <h3>{t('drills.stationTitle')}</h3>
                                 </div>
 
                                 <div id="drills-purchase-display" className="cost-purchase-display">
-                                    <p>1 Drill costs</p>
+                                    <p>{t('drills.costs')}</p>
                                     <div id="drills-inline-cost" className="inline-cost-display">500</div>
-                                    <p>Iron</p>
+                                    <p>{t('drills.resourceName')}</p>
                                 </div>
 
                                 <button
@@ -357,7 +359,7 @@ const Autominer = () => {
                         <div className="grid-cell-container">
                             <div className="grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Drills</h4>
+                                    <h4>{t('drills.totalLabel')}</h4>
                                     <div id="total-drills-grid-display" className="total-resource-display">{game.resources.drills}</div>
                                 </div>
                             </div>
@@ -371,17 +373,16 @@ const Autominer = () => {
                                 <label>
                                     <input
                                         type="checkbox"
-                                        // Same logic: disable ONLY if they can't afford it AND it's not already on
                                         disabled={game.resources.iron < (buyQtys.drills * 500) && !game.autoBuyActive.drills}
                                         checked={game.autoBuyActive.drills}
                                         onChange={(e) => game.setAutoBuyActive(prev => ({ ...prev, drills: e.target.checked }))}
                                     />
-                                    AutoBuy Drills
+                                    {t('drills.autoBuyLabel')}
                                 </label>
 
                                 <div className="purchase-section">
 
-                                    <p>Nº to AutoBuy: </p>
+                                    <p>{t('shared.autoBuyQty')}</p>
                                     <div className="plus-minus-purchase-display">
 
                                         <div id="num-drills-purchase-display" className='inline-cost-display'>{buyQtys.drills}</div>
@@ -391,7 +392,7 @@ const Autominer = () => {
                                                 type="button"
                                                 className="plus-1-purchase-btn"
                                                 onClick={() => handleAdjust('drills', 1)}
-                                                aria-label="Increase sulfur quantity"
+                                                aria-label="Increase drills quantity"
                                             >
                                                 <FaCaretUp />
                                             </button>
@@ -399,7 +400,7 @@ const Autominer = () => {
                                                 type="button"
                                                 className="minus-1-purchase-btn"
                                                 onClick={() => handleAdjust('drills', -1)}
-                                                aria-label="Decrease sulfur quantity"
+                                                aria-label="Decrease drills quantity"
                                             >
                                                 <FaCaretDown />
                                             </button>
@@ -413,9 +414,9 @@ const Autominer = () => {
                             <div className="grid-cell-content">
                                 <div id="drills-production-cost" className="total-resource-grid-display production-cost-display">
                                     <div className="production-cost-heading">
-                                        <h4>AutoBuy</h4>
+                                        <h4>{t('shared.autoBuy')}</h4>
                                         <img src="/img/drill.webp" alt="Iron Beam icon Vindrogames Autominer" />
-                                        <h4>Cost</h4>
+                                        <h4>{t('shared.cost')}</h4>
                                     </div>
                                     <div id="drills-production-grid-display" className="production-display">{buyQtys.drills * 500}</div>
                                 </div>
@@ -432,14 +433,14 @@ const Autominer = () => {
 
                                 <div className="header-text">
                                     <img src="/img/silver.webp" alt="ISilver icon Vindrogames Autominer"></img>
-                                    <h3>Silver Mining</h3>
+                                    <h3>{t('silver.miningTitle')}</h3>
                                 </div>
 
                                 <div id="silver-purchase-display" className="cost-purchase-display">
-                                    <p>Requires</p>
+                                    <p>{t('silver.requires')}</p>
                                     <div id="silver-sulfur-buy-inline-cost" className="inline-cost-display">10</div>
                                     <img src="/img/sulfur.webp" alt="" />
-                                    <p>and</p>
+                                    <p>{t('silver.and')}</p>
                                     <div id="silver-drill-buy-inline-cost" className="inline-cost-display">1</div>
                                     <img src="/img/drill.webp" alt="" />
                                 </div>
@@ -448,7 +449,6 @@ const Autominer = () => {
                                     type="button"
                                     id="buy-silver-btn"
                                     className="auto-miner-btn"
-                                    // Explicitly disable based on the current step's needs
                                     disabled={
                                         game.resources.sulfur < 2 ||
                                         (game.silverClickProgress === 4 && game.resources.drills < 1)
@@ -462,7 +462,6 @@ const Autominer = () => {
                                     <progress
                                         id="silver-progress"
                                         className="progress is-small"
-                                        // Use the local visual state here
                                         value={visualProgress}
                                         max="5"
                                     >
@@ -481,7 +480,7 @@ const Autominer = () => {
                         <div className="grid-cell-container">
                             <div className="grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Total Silver</h4>
+                                    <h4>{t('silver.totalLabel')}</h4>
                                     <div id="total-silver-grid-display" className="total-resource-display">{game.resources.silver}</div>
                                 </div>
                             </div>
@@ -493,18 +492,18 @@ const Autominer = () => {
                             <div id="silver-automation" className="grid-cell-content">
 
                                 <div className="header-text">
-                                    <h3>🤖 Automate Silver Mining</h3>
+                                    <h3>{t('silver.automateTitle')}</h3>
                                 </div>
 
                                 <div className="cost-purchase-display">
-                                    <p>1 Miner costs</p>
+                                    <p>{t('shared.minerCosts')}</p>
                                     <div id="silver-miner-inline-cost" className="inline-cost-display">{game.getSilverWorkerCost(1)}</div>
-                                    <p>Silver</p>
+                                    <p>{t('silver.resourceName')}</p>
                                 </div>
 
                                 <div className="purchase-section">
 
-                                    <p>Nº to AutoBuy: </p>
+                                    <p>{t('shared.autoBuyQty')}</p>
                                     <div className="plus-minus-purchase-display">
 
                                         <div id="num-silver-miners-purchase-display" className='inline-cost-display'>{buyQtys.silverMiners}</div>
@@ -532,9 +531,9 @@ const Autominer = () => {
                                 </div>
 
                                 <div className="purchase-summary-section">
-                                    <p>Total cost:</p>
+                                    <p>{t('shared.totalCost')}</p>
                                     <div id="silver-miner-inline-cost" className="inline-cost-display">{displayTotalSilverWorkerCost}</div>
-                                    <p>Silver</p>
+                                    <p>{t('silver.resourceName')}</p>
                                 </div>
                                 <button
                                     type="button"
@@ -551,12 +550,12 @@ const Autominer = () => {
                         <div className="grid-cell-container">
                             <div className="grid-cell-content total-grid-cell-content">
                                 <div className="total-resource-grid-display">
-                                    <h4>Silver Miners</h4>
+                                    <h4>{t('silver.minersLabel')}</h4>
                                     <div id="total-silver-grid-display" className="total-resource-display">{game.workers.silver}</div>
                                 </div>
                                 <div className="total-resource-grid-display production-cost-display">
                                     <div className="production-cost-heading">
-                                        <h4>Production</h4>
+                                        <h4>{t('shared.production')}</h4>
                                         <img src="/img/silver.webp" alt="Iron Beam icon Vindrogames Autominer" />
                                         <h4>/s</h4>
                                     </div>

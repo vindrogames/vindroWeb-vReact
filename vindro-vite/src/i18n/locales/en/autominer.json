@@ -1,0 +1,71 @@
+{
+    "tagline": "An Idle Game",
+    "shared": {
+        "minerCosts": "🤖 1 Miner costs",
+        "autoBuyQty": "Nº to AutoBuy:",
+        "totalCost": "Total cost:",
+        "production": "Production",
+        "autoBuy": "AutoBuy",
+        "cost": "Cost"
+    },
+    "iron": {
+        "miningTitle": "Iron Mining",
+        "automateTitle": "Automate Iron Mining",
+        "totalLabel": "Total Iron",
+        "minersLabel": "Iron Miners",
+        "resourceName": "Iron"
+    },
+    "sulfur": {
+        "stationTitle": "Sulfur Buying Station",
+        "totalLabel": "Total Sulfur",
+        "costs": "1 Sulfur costs",
+        "autoBuyLabel": "AutoBuy Sulfur",
+        "resourceName": "Iron"
+    },
+    "drills": {
+        "stationTitle": "Drill Buying Station",
+        "totalLabel": "Total Drills",
+        "costs": "1 Drill costs",
+        "autoBuyLabel": "AutoBuy Drills",
+        "resourceName": "Iron"
+    },
+    "silver": {
+        "miningTitle": "Silver Mining",
+        "automateTitle": "Automate Silver Mining",
+        "totalLabel": "Total Silver",
+        "minersLabel": "Silver Miners",
+        "requires": "Requires",
+        "and": "and",
+        "resourceName": "Silver"
+    },
+    "instructions": {
+        "title": "How to Play",
+        "subtitle": "Build an automated mining empire to maximize Silver production!",
+        "step1Bold": "Click to Mine Iron",
+        "step1Text": "Start by manually clicking the iron mining button",
+        "step2Bold": "Buy Iron Miners",
+        "step2Text": "Automate iron production (cost increases every 10 miners)",
+        "step3Bold": "Gather Resources",
+        "step3Text": "Use iron to buy sulfur and drills",
+        "step4Bold": "Mine Silver",
+        "step4Text": "1 Silver requires 10 sulfur + 1 drill",
+        "step5Bold": "Scale Up",
+        "step5Text": "Automate Silver production to max out! (cost increases every 10 miners)",
+        "tip1a": "Miners",
+        "tip1b": "and",
+        "tip1c": "Automated buying",
+        "tip1d": "stay active while tab remains open.",
+        "ironDesc": "is the basic resource, mined manually or with miners",
+        "sulfurDesc": "costs 50 iron, consumed when mining silver",
+        "drillsDesc": "cost 500 iron, consumed when mining silver",
+        "silverDesc": "is the premium resource, used to buy silver miners",
+        "tip2a": "Buttons",
+        "tip2b": "will appear",
+        "tip2c": "Deactivated",
+        "tip2d": "if you do not have the resources to buy or automate."
+    },
+    "meta": {
+        "title": "Autominer | Vindrogames",
+        "description": "Autominer Idle Game by Vindrogames. Automate mining, leave your tab open, and max out!"
+    }
+}

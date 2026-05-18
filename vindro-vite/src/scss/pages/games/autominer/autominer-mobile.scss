@@ -34,11 +34,11 @@
                         }
 
                         &:first-child {
-                            padding-right: 7%;
+                            padding-right: 14px;
                         }
 
                         &:last-child {
-                            padding-left: 7%;
+                            padding-left: 14px;
                         }
                     }
                 }
@@ -84,7 +84,7 @@
             }
 
             section.resource-section {
-                padding: 21px 14px 14px;
+                padding: 21px 7px 14px;
 
                 .resource-section-grid {
                     grid-template-columns: 1.3fr 1fr;
@@ -92,6 +92,7 @@
                     .grid-cell-container {
 
                         .grid-cell-content {
+                            width: 100%;
 
                             .header-text,
                             .total-resource-grid-display {
@@ -188,7 +189,7 @@
 
             .auto-miner-btn {
                 min-width: 0;
-                width: 100%;
+                width: 210px;
                 padding: 7px 14px;
                 font-size: 1.4rem;
             }
@@ -219,7 +220,7 @@
                     button#how-to-play {
                         width: 100%;
                         font-size: 1.4rem;
-                        padding: 3px 7px;
+                        padding: 7px 14px;
                     }
                 }
 
@@ -238,16 +239,13 @@
             }
 
             section.resource-section {
-                padding: 21px 14px 14px;
-
+                
                 .resource-section-grid {
                     grid-template-columns: 1fr;
 
                     .grid-cell-container {
-
+                        padding: 0 !important;
                         .grid-cell-content {
-
-                            justify-content: center;
 
                             .header-text,
                             .total-resource-grid-display {
@@ -336,12 +334,10 @@
 
                         &:first-child {
                             justify-content: flex-start;
-                            padding-left: 14px;
                         }
 
                         &:last-child {
                             justify-content: flex-start;
-                            padding-left: 14px;
                             margin-top: 14px;
 
                             .total-resource-grid-display {
@@ -358,7 +354,6 @@
 
             .auto-miner-btn {
                 min-width: 0;
-                width: 100%;
                 padding: 7px 14px;
                 font-size: 1.4rem;
             }
@@ -383,6 +378,13 @@
 
             section.resource-section {
                 padding: 21px 0 0 0;
+                
+                .resource-section-grid {
+
+                    .grid-cell-container {
+                        
+                    }
+                }
             }
         }
     }

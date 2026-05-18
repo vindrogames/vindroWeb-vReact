@@ -1,9 +1,11 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 
 export default function UserProfileHelmet({ username = 'Player' }) {
-    const title = `${username} | Vindrogames Profile`;
-    const description = `View ${username}'s bracket predictions, scores and activity on Vindrogames.`;
+    const { t } = useTranslation('user-profile');
+    const title = t('meta.title', { username });
+    const description = t('meta.description', { username });
 
     return (
         <Helmet>

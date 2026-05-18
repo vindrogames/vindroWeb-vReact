@@ -6,6 +6,7 @@ import GameDisplay from "./components/GameDisplay";
 import Instructions42 from "./components/Instructions42";
 import useGame42Logic from "./hooks/useGame42Logic";
 import WinModal from "./components/End42";
+import NewBestModal from "../../components/ui/NewBestModal";
 
 export default function Game42() {
     // 1. Manage the visibility state here at the top level
@@ -19,10 +20,13 @@ export default function Game42() {
         endCause,
         gameStarted,
         prevPoints,
-        todayBest,
+        prevTime,
+        bestPoints,
+        bestTime,
         elapsedSeconds,
         myGamescores,
         isNewBest,
+        clearNewBest,
         startGame,
         placeNum,
         playAgain,
@@ -31,32 +35,39 @@ export default function Game42() {
     return (
         <>
             <Game42Helmet />
-            <main id="game-42">
-                {/* The Game Board */}
-                <Board
-                    numsPlaced={numsPlaced}
-                    placeNum={placeNum}
-                    gameOver={gameOver}
-                    endCause={endCause}
-                />
 
-                {/* The Control Panel/Display */}
-                <GameDisplay
-                    gameStarted={gameStarted}
-                    numToPlace={numToPlace}
-                    points={points}
-                    gameOver={gameOver}
-                    endCause={endCause}
-                    prevPoints={prevPoints}
-                    todayBest={todayBest}
-                    elapsedSeconds={elapsedSeconds}
-                    myGamescores={myGamescores}
-                    isNewBest={isNewBest}
-                    startGame={startGame}
-                    playAgain={playAgain}
-                    isInstructionsOpen={isInstructionsOpen}
-                    onOpenInstructions={() => setIsInstructionsOpen(true)}
-                />
+            <main id="game-42">
+
+                <div className="game-container">
+                    <Board
+                        numsPlaced={numsPlaced}
+                        placeNum={placeNum}
+                        gameOver={gameOver}
+                        endCause={endCause}
+                    />
+
+                    {/* The Control Panel/Display */}
+                    <GameDisplay
+                        gameStarted={gameStarted}
+                        numToPlace={numToPlace}
+                        points={points}
+                        gameOver={gameOver}
+                        endCause={endCause}
+                        prevPoints={prevPoints}
+                        prevTime={prevTime}
+                        bestPoints={bestPoints}
+                        bestTime={bestTime}
+                        elapsedSeconds={elapsedSeconds}
+                        myGamescores={myGamescores}
+                        isNewBest={isNewBest}
+                        startGame={startGame}
+                        playAgain={playAgain}
+                        isInstructionsOpen={isInstructionsOpen}
+                        onOpenInstructions={() => setIsInstructionsOpen(true)}
+                    />
+                </div>
+                {/* The Game Board */}
+
 
                 {/* The Full-Screen Instructions Modal */}
                 <Instructions42
@@ -69,6 +80,13 @@ export default function Game42() {
                 <WinModal
                     isOpen={endCause === "42"}
                     onDone={playAgain}
+                />
+
+                <NewBestModal
+                    isOpen={isNewBest && gameOver && endCause !== "42"}
+                    score={points}
+                    time={elapsedSeconds}
+                    onClose={clearNewBest}
                 />
             </main>
         </>

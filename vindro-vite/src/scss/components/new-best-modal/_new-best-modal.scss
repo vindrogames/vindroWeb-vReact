@@ -1,0 +1,200 @@
+@use '../../config' as *;
+
+// ── Overlay ──────────────────────────────────────────────────────────────────
+// Fixed so it covers 100vw × 100vh regardless of the parent game layout.
+// Clip-path reveal matches win-modal-overlay — same design language.
+
+.new-best-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba($vindro-black, 0.88);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.inactive {
+        opacity: 0;
+        pointer-events: none;
+        clip-path: circle(0% at 50% 50%);
+    }
+
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+        clip-path: circle(150% at 50% 50%);
+    }
+}
+
+// ── Panel ────────────────────────────────────────────────────────────────────
+// Narrow centered card. Left/right teal border = game-42 / instructions feel.
+// WelcomeUserModal uses max-width 480px + border on .modal-content — same here.
+
+.new-best-panel {
+    width: 100%;
+    max-width: 440px;
+    padding: 28px 21px 21px;
+    border-left: 2px solid $vindro-teal;
+    border-right: 2px solid $vindro-teal;
+    background: $vindro-black;
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+
+    // Slide-up reveal — matches instructions-inner and win-modal-content
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.4s ease-out, transform 0.45s cubic-bezier(0.2, 1, 0.3, 1);
+
+    &.reveal {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// ── Dev header ────────────────────────────────────────────────────────────────
+// Terminal status line at the top — mirrors .dev-footer from how-to-play but
+// sits at the top of the panel and uses a teal bottom border instead.
+
+.new-best-dev-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba($vindro-teal, 0.3);
+}
+
+// ── Body ─────────────────────────────────────────────────────────────────────
+
+.new-best-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 21px;
+    padding: 7px 0;
+
+    .new-best-title {
+        font-size: 2.8rem;
+        font-weight: 600;
+        color: $vindro-teal;
+        text-align: center;
+        letter-spacing: 0.04em;
+    }
+}
+
+.new-best-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+}
+
+.new-best-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+
+    .nb-stat-label {
+        font-size: 1rem;
+        color: rgba($vindro-teal, 0.6);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .nb-stat-value {
+        font-size: 4.2rem;
+        font-weight: 700;
+        color: white;
+        font-family: monospace;
+        line-height: 1;
+    }
+}
+
+.new-best-stat-divider {
+    width: 1px;
+    height: 56px;
+    background: rgba($vindro-teal, 0.25);
+    flex-shrink: 0;
+}
+
+// ── Status dot (shared between header and footer) ─────────────────────────────
+
+.nb-status-dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    background: $vindro-teal;
+    border-radius: 50%;
+    box-shadow: 0 0 8px $vindro-teal;
+    animation: nb-pulse 1.5s infinite;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+
+.new-best-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+.nb-btn {
+    padding: 10px 21px;
+    font-size: 1.6rem;
+    font-family: $vindro-Montserrat;
+    font-weight: 600;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    &.nb-btn-primary {
+        background: transparent;
+        border: 1px solid $vindro-teal;
+        color: $vindro-teal;
+
+        &:hover {
+            background: $vindro-teal;
+            color: $vindro-black;
+            box-shadow: 0 0 16px rgba($vindro-teal, 0.35);
+        }
+    }
+
+    &.nb-btn-secondary {
+        background: transparent;
+        border: 1px solid rgba(white, 0.2);
+        color: rgba(white, 0.55);
+
+        &:hover {
+            border-color: rgba(white, 0.5);
+            color: white;
+        }
+    }
+}
+
+// ── Dev footer ─────────────────────────────────────────────────────────────────
+// Matches .dev-footer in how-to-play.scss exactly.
+
+.new-best-dev-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 14px;
+    border-top: 1px solid rgba($vindro-teal, 0.3);
+
+    code {
+        font-size: 1rem;
+        color: rgba($vindro-teal, 0.6);
+    }
+}
+
+@keyframes nb-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba($vindro-teal, 0.7); }
+    70%  { box-shadow: 0 0 0 8px rgba($vindro-teal, 0); }
+    100% { box-shadow: 0 0 0 0 rgba($vindro-teal, 0); }
+}

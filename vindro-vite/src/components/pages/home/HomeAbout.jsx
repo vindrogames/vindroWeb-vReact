@@ -1,25 +1,26 @@
+import { useTranslation } from 'react-i18next';
 import TeamMember from "./TeamMember";
 
 const HomeAbout = () => {
+    const { t } = useTranslation('home');
 
     return (
 
         <section id="home-about" className="hero-half bg-tan">
             <div className="team-container">
-                <TeamMember 
+                <TeamMember
                     imgSource="img/fer-vindro-good.webp"
-                    imgAltText="Fernando Giménez Cacho is a Software engineer specialized in cloud security"
+                    imgAltText={t('about.fer.alt')}
                     memberName="Zeneke"
-                    
                 >
-                    <span translate="no">Fernando Giménez</span> is a Computer Engineer working primarily in cloud services and security.
+                    <span translate="no">Fernando Giménez</span> {t('about.fer.bio')}
                 </TeamMember>
-                <TeamMember 
+                <TeamMember
                     imgSource="img/mike-vindro-good.webp"
-                    imgAltText="Michael Thomas Bennett is a creative teacher gone programmer"
+                    imgAltText={t('about.mike.alt')}
                     memberName="Mikelele"
                 >
-                    <span translate="no">Michael Bennett</span> works in education as a University teacher, Teacher trainer and Education Innovation consultant.
+                    <span translate="no">Michael Bennett</span> {t('about.mike.bio')}
                 </TeamMember>
             </div>
         </section>

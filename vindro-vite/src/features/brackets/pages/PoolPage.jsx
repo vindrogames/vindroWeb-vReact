@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
 import { useAuth } from '../../../contexts/auth/AuthContext';
+import { toUrlSlug } from '../../../utils/urlUtils';
 import { useLoading } from '../../../contexts/LoadingContext';
 import AuthModal from '../../../components/ui/AuthModal';
 import ErrorDisplayModal from '../../../components/ui/ErrorDisplayModal';
-import EditPoolMembersModal from '../components/modals/EditPoolMembersModal';
 import JoinPoolModal from '../components/modals/PoolJoinModal';
 import PlayCreateNewModal from '../components/modals/PlayCreateNewModal';
 import PoolRemovePlayModal from '../components/modals/PoolRemovePlayModal';
 import PoolMoniesModal from '../components/modals/PoolMoniesModal';
 import PoolInviteModal from '../components/modals/PoolInviteModal';
 import PoolAdminModal from '../components/modals/PoolAdminModal';
+import NewUserTutorialModal from '../components/modals/new-user-tutorial';
 import Leaderboard from '../../../components/ui/Leaderboard';
 import poolServices from '../services/poolServices';
 import playServices from '../services/playServices';
@@ -75,15 +76,13 @@ const PoolPage = () => {
 
     // --- UI state ---
     const [showAuthModal, setShowAuthModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
     const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [showMoniesModal, setShowMoniesModal] = useState(false);
     const [showInviteModal, setShowInviteModal] = useState(false);
     const [showAdminModal, setShowAdminModal] = useState(false);
     const [showJoinPoolModal, setShowJoinPoolModal] = useState(false);
-    // null = closed  |  'auto' = auto-fired (no plays)  |  'manual' = user clicked "Submit a Play" with no plays
-    const [createPlayVariant, setCreatePlayVariant] = useState(null);
-    const showCreatePlayModal = createPlayVariant !== null;
+    const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
+    const [showTutorialModal, setShowTutorialModal] = useState(false);
     const [opErrorCode, setOpErrorCode] = useState(null); // operational errors only
 
     // --- All user plays for this tournament (fetched inline with pool data — no separate loading state) ---
@@ -129,14 +128,10 @@ const PoolPage = () => {
 
     useEffect(() => {
         if (autoModalFired.current) return;
-        if (loading || showWelcomeModal || !user || isMember || isOwner || notFound || fetchFailed || !poolData) return;
+        if (loading || showWelcomeModal || !user || isMember || isOwner || !poolData) return;
         autoModalFired.current = true;
-        if (myPlays.length === 0) {
-            setCreatePlayVariant('auto');
-        } else {
-            setShowJoinPoolModal(true);
-        }
-    }, [loading, showWelcomeModal, user, isMember, isOwner, notFound, fetchFailed, poolData, myPlays.length]);
+        setShowTutorialModal(true);
+    }, [loading, showWelcomeModal, user, isMember, isOwner, poolData, myPlays.length]);
 
     // --- Data fetching ---
     const fetchPoolDetail = useCallback(async () => {
@@ -182,7 +177,7 @@ const PoolPage = () => {
 
     // --- Handlers ---
     const handleLeaderboardClick = (item) => {
-        navigate(`/brackets/${tournament}/play/${item.user.id}/${encodeURIComponent(item.play_name)}`);
+        navigate(`/brackets/${tournament}/play/${item.user.id}/${toUrlSlug(item.play_name)}`);
     };
 
 
@@ -226,16 +221,17 @@ const PoolPage = () => {
         { header: "Bracket Pts", width: "20.5%", render: (item) => (item.bracket_points ?? 0).toString() },
     ];
 
+    if (!loading && (notFound || fetchFailed)) return <Navigate to="/404" replace />;
+
     // --- Overlay logic ---
-    // Only blocks for unauthenticated users and error states — members see the pool directly
-    const showOverlay = loading || notFound || fetchFailed || !user;
+    // Only blocks for unauthenticated users — members see the pool directly
+    const showOverlay = loading || !user;
 
     // Shown after both auto-fire modals are dismissed without the user joining the pool
     const showPrivatePrompt =
-        !loading && !!user && !isMember && !isOwner &&
-        !notFound && !fetchFailed && !!poolData &&
+        !loading && !!user && !isMember && !isOwner && !!poolData &&
         autoModalFired.current &&
-        !showCreatePlayModal && !showJoinPoolModal;
+        !showTutorialModal && !showCreatePlayModal && !showJoinPoolModal;
 
     const memberCount = poolData?.current_member_count ?? leaderboard.length;
     const prizeTotal = (memberCount * parseFloat(poolData?.cost_per_play || 0)).toFixed(2);
@@ -320,7 +316,7 @@ const PoolPage = () => {
                             <div className="pool-actions">
                                 <button
                                     className="btn btn-tan"
-                                    onClick={() => myPlays.length === 0 ? setCreatePlayVariant('manual') : setShowJoinPoolModal(true)}
+                                    onClick={() => myPlays.length === 0 ? setShowCreatePlayModal(true) : setShowJoinPoolModal(true)}
                                     disabled={user && !poolData.allow_multiple_plays_per_user && myPlaysInPool.length >= 1}
                                     title={user && !poolData.allow_multiple_plays_per_user && myPlaysInPool.length >= 1
                                         ? 'This pool only allows one play per member'
@@ -363,42 +359,29 @@ const PoolPage = () => {
                 <div>
                     {showOverlay && !loading && (
                         <div className="auth-prompt-overlay">
-                            {notFound || fetchFailed ? (
-                                <div className="auth-prompt-message">
-                                    <h5>{notFound ? 'This pool does not exist.' : 'Could not load pool.'}</h5>
+                            <div className="auth-prompt-message">
+
+                                <div className="top-half auth-prompt-half">
+                                    <h5>To see this Pool you must be logged in.</h5>
+                                    <div className="prompt-links">
+                                        <button className="btn btn-tan" onClick={() => setShowAuthModal(true)}>Log In</button>
+                                    </div>
+                                </div>
+
+                                <div className="section-seperator"></div>
+
+                                <div className="bottom-half auth-prompt-half">
+                                    <div className="double-text">
+                                        <h5>First Time?</h5>
+                                        <p>Check out how it works and come back later.</p>
+                                    </div>
                                     <div className="prompt-links">
                                         <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>
-                                            Back to Tournament
+                                            About the Tournament
                                         </button>
                                     </div>
                                 </div>
-                            ) : (
-                                <div className="auth-prompt-overlay">
-                                    <div className="auth-prompt-message">
-
-                                        <div className="top-half auth-prompt-half">
-                                            <h5>To see this Pool you must be logged in.</h5>
-                                            <div className="prompt-links">
-                                                <button className="btn btn-tan" onClick={() => setShowAuthModal(true)}>Log In</button>
-                                            </div>
-                                        </div>
-
-                                        <div className="section-seperator"></div>
-
-                                        <div className="bottom-half auth-prompt-half">
-                                            <div className="double-text">
-                                                <h5>First Time?</h5>
-                                                <p>Check out how it works and come back later.</p>
-                                            </div>
-                                            <div className="prompt-links">
-                                                <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>
-                                                    About the Tournament
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                            </div>
                         </div>
                     )}
 
@@ -414,7 +397,7 @@ const PoolPage = () => {
                                     <div className="prompt-links">
                                         <button
                                             className="btn btn-tan"
-                                            onClick={() => myPlays.length === 0 ? setCreatePlayVariant('manual') : setShowJoinPoolModal(true)}
+                                            onClick={() => myPlays.length === 0 ? setShowCreatePlayModal(true) : setShowJoinPoolModal(true)}
                                         >
                                             Submit a Play
                                         </button>
@@ -440,40 +423,31 @@ const PoolPage = () => {
                 </div>
             </div>
 
+            <NewUserTutorialModal
+                isOpen={showTutorialModal}
+                onComplete={() => {
+                    setShowTutorialModal(false);
+                    if (myPlays.length === 0) {
+                        setShowCreatePlayModal(true);
+                    } else {
+                        setShowJoinPoolModal(true);
+                    }
+                }}
+                onSkip={() => setShowTutorialModal(false)}
+            />
             <PlayCreateNewModal
                 isOpen={showCreatePlayModal}
                 onConfirm={async (playName) => {
                     const newPlay = await handleCreatePlayForPool(playName);
                     if (newPlay) {
                         await refreshMyPlays();
-                        setCreatePlayVariant(null);
+                        setShowCreatePlayModal(false);
                         setShowJoinPoolModal(true);
                     }
                 }}
-                onCancel={() => setCreatePlayVariant(null)}
+                onCancel={() => setShowCreatePlayModal(false)}
                 isLoading={isCreatingPlay}
                 apiError={createPlayError}
-                {...(createPlayVariant === 'auto' ? {
-                    preMessage: "You need a Play to join this Pool.",
-                    bottomHeading: "What is a Play?",
-                    bottomBody: (
-                        <>
-                            <p>A <em><span className='inline-green inline-bold'>Play</span></em> is your set of predictions for the tournament.</p>
-                            <p>Create one now and you'll be taken straight to the submission step.</p>
-                        </>
-                    ),
-                    cancelLabel: "Maybe Later",
-                } : {
-                    preMessage: "Create a new Play to submit to this Pool.",
-                    bottomHeading: "Want a fresh set of picks?",
-                    bottomBody: (
-                        <>
-                            <p>Each <em><span className='inline-green inline-bold'>Play</span></em> is an independent set of predictions.</p>
-                            <p>You can submit different plays to different pools.</p>
-                        </>
-                    ),
-                    cancelLabel: "Cancel",
-                })}
             />
             <JoinPoolModal
                 isOpen={showJoinPoolModal}
@@ -493,7 +467,6 @@ const PoolPage = () => {
                 poolId={poolData?.id}
                 leaderboard={leaderboard}
                 currentUserId={user?.id}
-                isOwner={isOwner}
                 onCancel={() => setShowRemoveModal(false)}
                 onSuccess={fetchPoolDetail}
             />
@@ -515,14 +488,6 @@ const PoolPage = () => {
                 poolData={poolData}
                 inviteUrl={`${window.location.origin}/brackets/${tournament}/pool/${poolName}`}
                 onClose={() => setShowInviteModal(false)}
-            />
-            <EditPoolMembersModal
-                isOpen={showEditModal}
-                poolId={poolData?.id}
-                isMoneyPool={poolData?.is_money_pool}
-                leaderboard={leaderboard}
-                onClose={() => setShowEditModal(false)}
-                onUpdate={fetchPoolDetail}
             />
             <ErrorDisplayModal
                 isOpen={!!opErrorCode}

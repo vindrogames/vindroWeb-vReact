@@ -57,5 +57,16 @@
 .section-seperator {
     width: 100%;
     height: 1px;
-    background-color: $vindro-teal;
+
+    &.sep-teal {
+        background-color: $vindro-teal;
+    }
+
+    &.sep-pink {
+        background-color: $vindro-neon-pink;
+    }
+
+    &.sep-yellow {
+        background-color: $real-yellow;
+    }
 }
