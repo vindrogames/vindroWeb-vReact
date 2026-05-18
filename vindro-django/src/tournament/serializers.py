@@ -8,9 +8,15 @@ def serialize_tournament(tournament):
         'description': tournament.description,
         'image_url': tournament.image_url,
         'start_date': tournament.start_date.isoformat(),
+        'entries_close': tournament.entries_close.isoformat() if tournament.entries_close else None,
         'end_date': tournament.end_date.isoformat(),
         'groups_end_date': tournament.groups_end_date.isoformat(),
         'bracket_start_date': tournament.bracket_start_date.isoformat(),
+        'card_info': tournament.card_info,
+        'group_stage_status': tournament.group_stage_status,
+        'bracket_stage_status': tournament.bracket_stage_status,
+        'total_plays': getattr(tournament, 'total_plays', 0),
+        'user_play_count': getattr(tournament, 'user_play_count', None),
     }
 
 

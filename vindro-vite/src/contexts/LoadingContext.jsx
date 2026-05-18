@@ -12,6 +12,7 @@ export const LoadingProvider = ({ children }) => {
     const showLoader = () => {
         if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
         startTimeRef.current = Date.now();
+        document.body.style.overflow = 'hidden';
         setIsLoading(true);
     };
 
@@ -21,6 +22,7 @@ export const LoadingProvider = ({ children }) => {
         return new Promise(resolve => {
             hideTimerRef.current = setTimeout(() => {
                 setIsLoading(false);
+                document.body.style.overflow = '';
                 resolve();
             }, remaining);
         });
@@ -35,16 +37,10 @@ export const LoadingProvider = ({ children }) => {
 };
 
 const GlobalLoaderPortal = () => {
-    // Safety check: Ensure we are in the browser
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        // Prevent scrolling when loader is active
-        document.body.style.overflow = 'hidden';
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
     }, []);
 
     if (!mounted) return null;

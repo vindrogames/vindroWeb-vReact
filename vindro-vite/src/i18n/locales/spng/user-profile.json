@@ -1,0 +1,47 @@
+{
+    "loading": "Cargando...",
+    "notFound": "Usuario no encontrado.",
+    "visiting": "Visitando vindroUser nº",
+    "welcome": {
+        "new": "Bienvenido vindroUser nº",
+        "editHint": "¡Puedes editar tu userName e icono de perfil cuando quieras!",
+        "defaultsHint": "De momento, tienes un userName aleatorio y el icono simple-teal.",
+        "whereBefore": "Donde estabas"
+    },
+    "returning": {
+        "greeting": "¡Hola, amigo!",
+        "editReminder": "Recuerda — puedes cambiar tu userName y avatar aquí mismo."
+    },
+    "lang": {
+        "label": "idioma",
+        "labelHighlight": "Preferido",
+        "en": "English",
+        "spng": "Spanglish"
+    },
+    "provider": "Registrado con",
+    "joined": "Miembro desde",
+    "joinedToday": "hoy",
+    "logins": "Has iniciado sesión {{count}} vez",
+    "loginsPlural": "Has iniciado sesión {{count}} veces",
+    "avatarAlt": "Avatar de Usuario",
+    "scores": {
+        "titleHighlight": "Scores",
+        "empty": "Aún no has jugado."
+    },
+    "brackets": {
+        "empty": "Sin datos de brackets."
+    },
+    "table": {
+        "game": "Juego",
+        "score": "Puntos",
+        "time": "Tiempo",
+        "tournament": "Tournament",
+        "pools": "Porras",
+        "plays": "Plays",
+        "topPos": "Mejor Pos."
+    },
+    "meta": {
+        "title": "{{username}} | Perfil Vindrogames",
+        "description": "Ve las predicciones, puntuaciones y actividad de {{username}} en Vindrogames."
+    }
+}

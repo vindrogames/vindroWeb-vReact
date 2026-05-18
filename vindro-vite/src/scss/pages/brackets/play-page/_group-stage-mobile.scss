@@ -2,34 +2,23 @@
 
 @media(max-width: 960px) {
 
-    main.bracket-tournament-play-pool {
+    .gallery-container {
 
-        section.play-prediction-container {
-            width: 100%;
-            padding: 42px 0;
+        .viewport {
 
-            .prediction-display-wrapper {
+            .group-card {
 
-                .gallery-container {
+                .team-list {
 
-                    .viewport {
+                    .team-row {
 
-                        .group-card {
+                        .rank-num,
+                        .team-name {
+                            font-size: 1.4rem;
+                        }
 
-                            .team-list {
-
-                                .team-row {
-
-                                    .rank-num,
-                                    .team-name {
-                                        font-size: 1.4rem;
-                                    }
-
-                                    .fi {
-                                        font-size: 1.8rem;
-                                    }
-                                }
-                            }
+                        .fi {
+                            font-size: 1.8rem;
                         }
                     }
                 }
@@ -40,84 +29,49 @@
 
 @media(max-width: 678px) {
 
-    main.bracket-tournament-play-pool {
+    .gallery-container {
+        padding: 0px 36px;
 
-        section.play-prediction-container {
-
-            .prediction-display-wrapper {
-
-                .stage-header {
-                    margin-bottom: 0;
-                    h3 {
-                        font-size: 2.8rem;
-                    }
-                }
-
-                .gallery-container {
-                    padding: 7px 36px;
-
-                    .nav-arrow {
-                        height: 56px;
-                    }
-                }
-            }
+        .nav-arrow {
+            height: 56px;
         }
     }
 }
 
 @media(max-width: 450px) {
 
-    main.bracket-tournament-play-pool {
+    .gallery-container {
+        padding: 0px 28px;
 
-        section.play-prediction-container {
-            padding: 21px 0;
+        .nav-arrow {
+            height: 36px;
+            width: 24px;
+        }
 
-            .prediction-display-wrapper {
+        .viewport {
 
-                .stage-header {
-                    margin-bottom: 0;
+            padding: 8px;
 
-                    h3 {
-                        font-size: 2.8rem;
-                    }
-                }
+            .group-card {
 
+                .group-header {}
 
-                .gallery-container {
-                    padding: 28px;
+                .team-list {
 
-                    .nav-arrow {
-                        height: 36px;
-                        width: 24px;
-                    }
+                    .team-row {
 
-                    .viewport {
-
-                        padding: 8px;
-
-                        .group-card {
-
-                            .group-header {}
-
-                            .team-list {
-
-                                .team-row {
-
-                                    .rank-num,
-                                    .team-name {
-                                        font-size: 1.4rem;
-                                    }
-
-                                    .fi {
-                                        font-size: 1.8rem;
-                                    }
-                                }
-                            }
+                        .rank-num,
+                        .team-name {
+                            font-size: 1.4rem;
                         }
 
+                        .fi {
+                            font-size: 1.8rem;
+                        }
                     }
                 }
             }
+
         }
     }
 }
@@ -135,8 +89,7 @@
 
                 .text-container {
 
-                    h1 {
-                    }
+                    h1 {}
 
                     .play-specs {
 
@@ -159,5 +112,10 @@
                 }
             }
         }
+    }
+
+    .gallery-container {
+        width: 100%;
+        padding: 0px 28px;
     }
 }

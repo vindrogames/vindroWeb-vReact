@@ -74,6 +74,7 @@
                 }
 
                 .welcome-text {
+                    
                     h2 {
                         text-align: center;
                     }
@@ -160,6 +161,15 @@
                     .profile-error-container {
 
                         .profile-error {
+                            text-align: center;
+                        }
+                    }
+                }
+
+                &#user-preferred-lang {
+
+                    .user-name-data {
+                        h2 {
                             text-align: center;
                         }
                     }

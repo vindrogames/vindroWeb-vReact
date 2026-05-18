@@ -189,7 +189,8 @@ main#user-profile {
                         position: relative;
                         display: inline-block;
 
-                        input {
+                        input,
+                        select {
                             width: 240px;
                             background-color: $vindro-gray;
                             border-radius: 3px;
@@ -198,10 +199,12 @@ main#user-profile {
                             font-weight: 500;
                             padding: 7px;
                             outline: none;
+                            font-family: $vindro-openSans;
+                        }
 
+                        input {
                             &.input-frozen {
                                 border: 1px solid transparent;
-                                // THIS is what stops users from clicking it manually
                                 pointer-events: none;
                                 border-radius: 3px;
                             }
@@ -211,7 +214,19 @@ main#user-profile {
                                 background-color: $vindro-tan;
                                 color: $vindro-black;
                                 pointer-events: auto;
-                                padding-right: 38px; // room for char counter
+                                padding-right: 38px;
+                            }
+                        }
+
+                        select.input-active {
+                            border: 1px solid $real-yellow;
+                            background-color: $vindro-tan;
+                            color: $vindro-black;
+                            cursor: pointer;
+
+                            option {
+                                background-color: $vindro-gray;
+                                color: white;
                             }
                         }
 
@@ -272,6 +287,16 @@ main#user-profile {
                 }
             }
 
+            &#user-preferred-lang {
+                grid-template-columns: 1fr;
+
+                .user-name-data {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 14px;
+                }
+            }
+
             .scores-stats-container {
                 display: flex;
                 flex-direction: column;
@@ -317,8 +342,6 @@ main#user-profile {
                     }
                 }
             }
-
-
         }
     }
 }

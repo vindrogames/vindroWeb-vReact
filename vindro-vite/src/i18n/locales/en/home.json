@@ -1,0 +1,27 @@
+{
+    "hero": {
+        "tagline": "An independent gaming project based in Madrid",
+        "cta": "Let's Play"
+    },
+    "whatWeDo": {
+        "heading": "We learn to code by developing Games and Apps.",
+        "subheading": "They are designed to boost thinking, promote learning and enhance mental growth.",
+        "cta": "Start"
+    },
+    "about": {
+        "fer": {
+            "alt": "Fernando Giménez Cacho is a Software engineer specialized in cloud security",
+            "bio": "is a Computer Engineer working primarily in cloud services and security."
+        },
+        "mike": {
+            "alt": "Michael Thomas Bennett is a creative teacher gone programmer",
+            "bio": "is a creative teacher gone Programmer, specializing in Data & Software Engineering."
+        }
+    },
+    "meta": {
+        "title": "Vindrogames | Learning and Programming",
+        "description": "Independent gaming project based in Madrid",
+        "ogTitle": "Vindrogames",
+        "ogDescription": "Small independent game studio based in Madrid, Spain"
+    }
+}

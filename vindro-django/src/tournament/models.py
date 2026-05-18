@@ -8,9 +8,10 @@ User = get_user_model()
 
 class Tournament(models.Model):
     STATUS_CHOICES = [
-        ('upcoming', 'Upcoming'),
-        ('active', 'Active'),
-        ('completed', 'Completed'),
+        ('upcoming', 'Upcoming'),   # announced, not yet open for picks
+        ('open', 'Open'),           # accepting predictions
+        ('in_play', 'In Play'),     # games being played, no predictions
+        ('closed', 'Closed'),       # tournament is over
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -20,8 +21,10 @@ class Tournament(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
     description = models.TextField(blank=True)
     image_url = models.URLField(blank=True)
+    card_info = models.JSONField(default=dict, blank=True)
 
     start_date = models.DateTimeField()
+    entries_close = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField()
     groups_end_date = models.DateTimeField()
     bracket_start_date = models.DateTimeField()
@@ -34,6 +37,32 @@ class Tournament(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def group_stage_status(self):
+        from django.utils import timezone
+        if self.status in ('upcoming', 'closed'):
+            return self.status
+        now = timezone.now()
+        if now < self.start_date:
+            return 'open'
+        if now < self.groups_end_date:
+            return 'in_play'
+        return 'closed'
+
+    @property
+    def bracket_stage_status(self):
+        from django.utils import timezone
+        if self.status in ('upcoming', 'closed'):
+            return self.status
+        now = timezone.now()
+        if now < self.groups_end_date:
+            return 'upcoming'
+        if now < self.bracket_start_date:
+            return 'open'
+        if now < self.end_date:
+            return 'in_play'
+        return 'closed'
 
 
 class TournamentFormat(models.Model):

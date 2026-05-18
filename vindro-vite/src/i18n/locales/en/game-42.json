@@ -1,0 +1,57 @@
+{
+    "title": "the game",
+    "howToPlay": "How to Play",
+    "start": "Start",
+    "playAgain": "Play again",
+    "game": {
+        "perfectScore": "🎉 42! Perfect Score!",
+        "badOrder": "Fatal: Bad Order",
+        "cantPlace": "Err: Can't place"
+    },
+    "results": {
+        "thisGame": "This Game",
+        "prevGame": "Prev Game",
+        "bestGame": "Best Game",
+        "time": "Time",
+        "newBest": "New personal best!"
+    },
+    "instructions": {
+        "title": "How to Play",
+        "placeNumbersPre": "Try to place",
+        "placeNumbersMid": "in ascending order.",
+        "rules": [
+            "The numbers are drawn one by one.",
+            "You can place a number in any open position.",
+            "Once placed, numbers cannot be moved.",
+            "Position 1 is for the lowest, 14 for the highest.",
+            "Each correctly placed number += 3 points."
+        ],
+        "gameOver": "If a number breaks the ascending order, or no valid slots remain:",
+        "secret": "Place all 14 numbers and you may discover the meaning of life, the universe, and everything.",
+        "videoLabel": "Video",
+        "videoLinkText": "How to play",
+        "inspiredBy": "Inspired by",
+        "close": "Got it"
+    },
+    "table": {
+        "gameScoresHeader": "Games",
+        "gamePointsHeader": "Points",
+        "gameTimeHeader": "Time",
+        "currentRowHeader": "Current",
+        "prevRowHeader": "Previous",
+        "bestRowHeader": "Best"
+    },
+    "winModal": {
+        "playAgain": "Play Again"
+    },
+    "scoreIndicator": {
+        "saving": "Scores saved to your account",
+        "notSaving": "Log in to save your scores"
+    },
+    "meta": {
+        "title": "42 The Game | Vindrogames",
+        "description": "42 the game. A game of Probability, Luck and Cunning. Reach the meaning of life, the universe and everything.",
+        "ogTitle": "42 the Game",
+        "ogDescription": "A game of Probability and Luck"
+    }
+}

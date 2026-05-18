@@ -1,15 +1,41 @@
 // src/game-42/components/GameDisplay.jsx
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from '../../../contexts/auth/AuthContext';
+import PointsTable from "./PointsTable";
 
 export default function GameDisplay({
     gameStarted, numToPlace, points, startGame, playAgain,
-    gameOver, endCause, prevPoints, todayBest,
-    elapsedSeconds, isNewBest,
+    gameOver, endCause, prevPoints, prevTime,
+    bestPoints, bestTime,
+    elapsedSeconds,
     onOpenInstructions, isInstructionsOpen
 }) {
-    const { isAuthenticated } = useAuth();
+    const { t } = useTranslation('game-42');
+    const { user } = useAuth();
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 678);
+
+    
+    const game42Cols = [
+        {
+            header: t('table.gameScoresHeader'),
+            currentRow: t('table.currentRowHeader'),
+            prevRow: t('table.prevRowHeader'),
+            bestRow: t('table.bestRowHeader')
+        },
+        {
+            header: t('table.gamePointsHeader'),
+            currentRow: points,
+            prevRow: prevPoints !== null ? prevPoints : '-',
+            bestRow: bestPoints !== null ? bestPoints : '-',
+        },
+        {
+            header: t('table.gameTimeHeader'),
+            currentRow: gameStarted ? `${elapsedSeconds}s` : '-',
+            prevRow: prevTime !== null ? `${prevTime}s` : '-',
+            bestRow: bestTime !== null ? `${bestTime}s` : '-',
+        }
+    ];
 
     useEffect(() => {
         const handleResize = () => setIsSmallScreen(window.innerWidth < 678);
@@ -23,10 +49,10 @@ export default function GameDisplay({
     };
 
     const renderEndText = () => {
-        if (endCause === "42") return "🎉 42! Perfect Score!";
-        if (endCause === "bad-placement") return "Fatal: Bad Order";
+        if (endCause === "42") return t('game.perfectScore');
+        if (endCause === "bad-placement") return t('game.badOrder');
         if (endCause === "no-possible-moves") return (
-            <>Err: Can't place <span className="error-num">{numToPlace}</span></>
+            <>{t('game.cantPlace')} <span className="error-num">{numToPlace}</span></>
         );
         return "-";
     };
@@ -35,10 +61,10 @@ export default function GameDisplay({
         <section id="display-42">
             <div className="instructions-42">
                 <h1 className="title-42">
-                    <span className="inline-teal inline-bold">42</span> the game
+                    <span className="inline-teal inline-bold">42</span> {t('title')}
                 </h1>
-                <button type="button" className="how-to-play-toggle" onClick={onOpenInstructions}>
-                    <span className="toggle-label">How to Play</span>
+                <button type="button" className="how-to-play-toggle btn btn-tan" onClick={onOpenInstructions}>
+                    <span className="toggle-label">{t('howToPlay')}</span>
                 </button>
             </div>
 
@@ -50,7 +76,7 @@ export default function GameDisplay({
                             onClick={() => handleAction(gameOver ? playAgain : startGame)}
                             className={`btn ${gameOver ? "game-over" : ""}`}
                         >
-                            {gameOver ? "Play again" : "Start"}
+                            {gameOver ? t('playAgain') : t('start')}
                         </button>
                     ) : (
                         <div className="game-42-number-display">
@@ -65,17 +91,14 @@ export default function GameDisplay({
                     </div>
                 </div>
 
-                <div className="game-42-results-grid">
-                    <div id="game-points"><p>This Game</p><p>{points}</p></div>
-                    <div id="prev-points"><p>Prev Game</p><p>{prevPoints ?? "-"}</p></div>
-                    <div id="best"><p>Best Game</p><p>{todayBest ?? "-"}</p></div>
-                    {gameOver && (
-                        <div id="game-time"><p>Time</p><p>{elapsedSeconds}s</p></div>
-                    )}
+                <div className="table-wrapper">
+                    <PointsTable columns={game42Cols} tableType="brackets-table" emptyMessage={t('brackets.empty')} />
                 </div>
-                {gameOver && isNewBest && (
-                    <p className="new-best-notice">New personal best!</p>
-                )}
+
+                <div className={`score-save-indicator ${user ? 'is-saving' : 'not-saving'}`}>
+                    <span className="save-indicator-dot" aria-hidden="true"></span>
+                    <code>{user ? t('scoreIndicator.saving') : t('scoreIndicator.notSaving')}</code>
+                </div>
             </div>
         </section>
     );

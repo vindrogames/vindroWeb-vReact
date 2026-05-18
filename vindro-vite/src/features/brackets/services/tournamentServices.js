@@ -2,6 +2,10 @@ import { apiRequest } from "../../../services/api";
 
 const tournamentServices = {
 
+    getAllTournaments: async () => {
+        return await apiRequest('/tournament/', { method: 'GET' });
+    },
+
     getTournamentBySlug: async (tournamentSlug) => {
         const response = await apiRequest(`/tournament/${tournamentSlug}/`, {
             method: 'GET',

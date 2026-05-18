@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import playServices from '../services/playServices';
+import poolServices from '../services/poolServices';
 import { useAuth } from '../../../contexts/auth/AuthContext';
 import { useLoading } from '../../../contexts/LoadingContext';
 import formatDate from '../../../utils/dateFormatter';
@@ -10,6 +12,7 @@ import WorldCupGroupStage from '../tournaments/world-cup-2026/stages/WorldCupGro
 import WorldCupBracketStage from '../tournaments/world-cup-2026/stages/WorldCupBracketStage';
 import DescriptionDropdown from '../components/DescriptionDropdown';
 import JoinPoolModal from '../components/modals/PoolJoinModal';
+import { EVENT_MAP } from '../tournaments/eventMap';
 
 const STAGE_MAP = {
     'world-cup-2026': {
@@ -26,7 +29,7 @@ const toErrorCode = (err) => {
     return 'server_error';
 };
 
-const startCountdown = (targetDateString, setTime) => {
+const startCountdown = (targetDateString, setTime, closedLabel = 'Closed') => {
     const target = new Date(targetDateString);
 
     function tick() {
@@ -34,7 +37,7 @@ const startCountdown = (targetDateString, setTime) => {
         const diff = target - now;
 
         if (diff <= 0) {
-            setTime("Closed");
+            setTime(closedLabel);
             return;
         }
 
@@ -59,9 +62,12 @@ const PlayPage = () => {
 
     const { tournament, userId, playName } = useParams();
     const navigate = useNavigate();
+    const { t } = useTranslation('play');
 
     const { user } = useAuth();
     const { showLoader, hideLoader } = useLoading();
+
+    const eventConfig = EVENT_MAP[tournament];
     const [playData, setPlayData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [countdown, setCountdown] = useState('');
@@ -71,6 +77,10 @@ const PlayPage = () => {
 
     const [showJoinPoolModal, setShowJoinPoolModal] = useState(false);
     const [myPlays, setMyPlays] = useState([]);
+
+    const [activeTab, setActiveTab] = useState('play');
+    const [playPools, setPlayPools] = useState([]);
+    const [playPoolsLoading, setPlayPoolsLoading] = useState(false);
 
     // The "Master Switch": holds the ID of whatever is being edited
     const [activeEditId, setActiveEditId] = useState(null);
@@ -120,6 +130,11 @@ const PlayPage = () => {
         fetchPlay();
     }, [tournament, userId, playName]);
 
+    const isOwner =
+        playData &&
+        user &&
+        String(playData.user) === String(user.id);
+
     // Fetch the logged-in user's plays so they can submit one to a pool from this page
     useEffect(() => {
         if (!user || !playData?.tournament_id) return;
@@ -128,31 +143,43 @@ const PlayPage = () => {
             .catch(() => setMyPlays([]));
     }, [user, playData?.tournament_id]);
 
+    // Fetch pool submissions for this specific play (owner only)
+    const refreshPlayPools = () => {
+        if (!isOwner || !playData?.tournament_id) return;
+        setPlayPoolsLoading(true);
+        poolServices.getUserPools(playData.tournament_id)
+            .then(res => {
+                const all = res?.data || [];
+                setPlayPools(all.filter(p => p.play_name === playData.name));
+            })
+            .catch(() => setPlayPools([]))
+            .finally(() => setPlayPoolsLoading(false));
+    };
+
+    useEffect(() => {
+        refreshPlayPools();
+    }, [isOwner, playData?.tournament_id, playData?.name]);
+
     // Group stage countdown — always running so the "Closed" signal fires automatically
     useEffect(() => {
         if (!playData?.group_stage_close_date) return;
-        const interval = startCountdown(playData.group_stage_close_date, setCountdown);
+        const interval = startCountdown(playData.group_stage_close_date, setCountdown, t('groupStage.closedLabel'));
         return () => clearInterval(interval);
     }, [playData?.group_stage_close_date]);
 
     // Bracket scenario 1 — countdown to bracket opening
     useEffect(() => {
         if (!isBracketNotYet || !bracketOpenDate) return;
-        const interval = startCountdown(bracketOpenDate, setBracketOpenCountdown);
+        const interval = startCountdown(bracketOpenDate, setBracketOpenCountdown, t('bracketStage.closedLabel'));
         return () => clearInterval(interval);
     }, [isBracketNotYet, bracketOpenDate]);
 
     // Bracket scenario 2 — countdown to bracket closing
     useEffect(() => {
         if (!isBracketOpen || !bracketCloseDate) return;
-        const interval = startCountdown(bracketCloseDate, setBracketCloseCountdown);
+        const interval = startCountdown(bracketCloseDate, setBracketCloseCountdown, t('bracketStage.closedLabel'));
         return () => clearInterval(interval);
     }, [isBracketOpen, bracketCloseDate]);
-
-    const isOwner =
-        playData &&
-        user &&
-        String(playData.user) === String(user.id);
 
     // isEditable = owner AND the relevant stage is still open
     const isGroupEditable = isOwner && isGroupOpen;
@@ -164,24 +191,10 @@ const PlayPage = () => {
     const { GroupStage, BracketStage } = stages;
 
     if (loading) {
-        return <div className="bracket-tournament-play page-loading">Loading...</div>;
+        return <div className="bracket-tournament-play page-loading">{t('loading')}</div>;
     }
 
-    if (!playData) {
-        return (
-            <main className="bracket-tournament-play">
-                <div className="not-found-container">
-                    <h2>play<span className="inline-teal inline-bold">NotFound</span></h2>
-                    <div className="subtitle-container">
-                        <p>This play doesn't exist or has been removed.</p>
-                    </div>
-                    <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>
-                        Back to tournament
-                    </button>
-                </div>
-            </main>
-        );
-    }
+    if (!playData) return <Navigate to="/404" replace />;
 
     const avatarUrl = playData?.user_avatar || '';
 
@@ -199,7 +212,6 @@ const PlayPage = () => {
     );
 
     const borderColor = colorMap[matchedKey] || 'transparent';
-
 
     const handleUpdateGroupOrder = (groupName, newOrder) => {
         setPlayData(prevData => {
@@ -234,21 +246,26 @@ const PlayPage = () => {
     };
 
     return (
-        <main id="play-page" className={`bracket-tournament-play-pool ${activeEditId ? 'has-active-focus' : ''}${dropdownOpen ? ' dropdown-active' : ''}`}>
+        <main id="play-page" className={`play-pool ${activeEditId ? 'has-active-focus' : ''}${dropdownOpen ? ' dropdown-active' : ''}`}>
 
             <PlayPageHelmet playName={playData.name} tournamentName={playData.tournament_name || tournament} />
 
             <section className={`play-pool-intro hero-half bg-black${activeEditId ? ' is-dimmed' : ''}`}>
                 <div className="play-pool-intro-wrapper">
                     <div className="text-container">
-                        <h1 className="profile-intro">{playData.tournament_name || tournament}</h1>
+                        <h1 className="profile-intro">
+                            {eventConfig
+                                ? <>{eventConfig.title.before}<span className="inline-bold inline-teal">{eventConfig.title.highlight}</span>{eventConfig.title.after}</>
+                                : (playData.tournament_name || tournament)
+                            }
+                        </h1>
                         <div className="play-specs">
                             {!isOwner ? (
                                 <>
                                     <h2>
-                                        <span className='inline-teal'>play </span>
+                                        <span className='inline-teal'>{t('intro.playLabel')} </span>
                                         <span className="inline-bold">{playData.name}</span>
-                                        {' '}<span className="inline-teal">by</span>{' '}
+                                        {' '}<span className="inline-teal">{t('intro.byLabel')}</span>{' '}
                                         <span className="inline-bold">{playData.user_name}</span>
                                     </h2>
                                     <button
@@ -261,184 +278,255 @@ const PlayPage = () => {
                                 </>
                             ) : (
                                 <h2>
-                                    <span className="inline-teal inline-bold">play</span>{' '}
+                                    <span className="inline-teal inline-bold">{t('intro.playLabel')}</span>{' '}
                                     <span>{playData.name}</span>
                                 </h2>
                             )}
                         </div>
 
-                        {user && isOwner && (
-                            <div className="play-pool-submit-container">
-                                <button
-                                    className="btn btn-tan"
-                                    onClick={() => setShowJoinPoolModal(true)}
-                                >
-                                    Submit to Pool
-                                </button>
-                            </div>
-                        )}
                     </div>
 
                     <div className="go-back-button-container">
                         <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>Back</button>
                     </div>
                 </div>
+
+                {/* ── TAB NAV — owner only ── */}
+                {isOwner && (
+                    <nav className="play-tab-nav">
+
+                        <div className="buttons-container">
+                            <button
+                                className={activeTab === 'play' ? 'active' : ''}
+                                onClick={() => setActiveTab('play')}
+                            >
+                                {t('tabs.play')}
+                            </button>
+                            <button
+                                className={activeTab === 'inPools' ? 'active' : ''}
+                                onClick={() => setActiveTab('inPools')}
+                            >
+                                {t('tabs.inPools')} ({playPools.length})
+                            </button>
+                        </div>
+                    </nav>
+                )}
             </section>
 
-            {/* ── GROUP STAGE ── */}
-            <section id="groups-predictions" className={`play-prediction-container${isBracketEditing ? ' is-dimmed' : ''}${bracketDropdownOpen ? ' peer-dropdown-active' : ''}`}>
 
-                {GroupStage ? (
-                    <div className="prediction-display-wrapper">
+
+            {/* ── STAGES WRAPPER ── */}
+            {(!isOwner || activeTab === 'play') && (
+                <div className="play-stages-wrapper play-pool-toggle-wrapper">
+
+                    {/* ── GROUP STAGE ── */}
+
+                    {GroupStage && (
+                        <section id="groups-predictions" className={`play-prediction-container${isBracketEditing ? ' is-dimmed' : ''}${bracketDropdownOpen ? ' peer-dropdown-active' : ''}`}>
+
+                            <div className="prediction-display-intro">
+
+                                <div className={`title-container-wrapper ${isGroupEditing ? ' is-dimmed' : ''}`}>
+                                    <h3>group<span className="inline-teal inline-bold">Stage</span></h3>
+                                    <h4>pts: {playData?.group_points || '-'}</h4>
+                                </div>
+
+                                <div id="play-description" className={`description-container${isGroupEditing ? ' is-dimmed' : ''}`}>
+                                    <DescriptionDropdown summary={t('groupStage.dropdownSummary')} onOpenChange={setGroupDropdownOpen}>
+                                        <h4>{t('groupStage.hint1')}</h4>
+                                        <h4>{t('groupStage.hint2')}</h4>
+                                        <h4>{t('groupStage.hint3')}</h4>
+                                        <h4>{t('groupStage.hint4')}</h4>
+                                        <h4>{t('groupStage.hint5')}</h4>
+                                    </DescriptionDropdown>
+
+                                    <div className="right-container">
+                                        {/* Scenario 1 (not_ready): no status line */}
+                                        {isGroupOpen && (
+                                            <>
+                                                <p className="tournament-status-line"><span className="inline-teal">{t('groupStage.openLabel')}</span> {t('groupStage.forPredictions')}</p>
+                                                <p className="tournament-status-spacer"> · </p>
+                                                <p className="tournament-status-line">
+                                                    {t('groupStage.closesIn')} <span className="inline-real-yellow inline-bold">{countdown}</span>
+                                                </p>
+                                            </>
+                                        )}
+                                        {isGroupClosed && (
+                                            <p>
+                                                <span className="inline-neon-pink">{t('groupStage.closedLabel')}</span> {t('groupStage.forPredictions')}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="prediction-display-content-wrapper">
+                                <GroupStage
+                                    data={playData.group_predictions}
+                                    isOwner={isOwner}
+                                    isEditable={isGroupEditable}
+                                    isStageClosed={isGroupClosed}
+                                    activeEditId={activeEditId}
+                                    onEditingChange={handleEditingChange}
+                                    groupPoints={playData.group_points}
+                                    onUpdate={handleUpdateGroupOrder}
+                                    onSave={handleSaveGroup}
+                                />
+
+                                <div className={`last-updated${isGroupEditing ? ' is-dimmed' : ''}`}>
+                                    <p className="last-updated group-stage">{t('lastUpdated')} {formatDate(playData.updated_at)}</p>
+                                </div>
+                            </div>
+
+
+                        </section>
+                    )}
+
+                    {/* ── BRACKET STAGE ── */}
+                    {BracketStage && (
+                        <section id="bracket-predictions" className={`play-prediction-container${activeEditId && !isBracketEditing ? ' is-dimmed' : ''}${groupDropdownOpen ? ' peer-dropdown-active' : ''}`}>
+
+                            <div className="prediction-display-intro ">
+                                <div className={`title-container-wrapper ${isGroupEditing ? ' is-dimmed' : ''}`}>
+                                    <h3>bracket<span className="inline-teal inline-bold">Stage</span></h3>
+                                    <h4>pts: {playData?.bracket_points || '-'}</h4>
+                                </div>
+
+                                <div id="pool-description" className={`description-container full-width${isBracketEditing ? ' is-dimmed' : ''}`}>
+                                    <DescriptionDropdown summary={t('bracketStage.dropdownSummary')} onOpenChange={setBracketDropdownOpen}>
+                                        <h4>{t('bracketStage.hint1')}</h4>
+                                        <h4>{t('bracketStage.hint2')}</h4>
+                                        <h4>{t('bracketStage.hint3')}</h4>
+                                        <h4>{t('bracketStage.hint4')}</h4>
+                                        <h4>{t('bracketStage.hint5')}</h4>
+                                        <h4>{t('bracketStage.hint6')}</h4>
+                                        <h4>{t('bracketStage.hint7')}</h4>
+                                    </DescriptionDropdown>
+
+                                    <div className="right-container">
+                                        {/* Scenario 1 — not yet open */}
+                                        {isBracketNotYet && (
+                                            <>
+                                                <p className="tournament-status-line"><span className="inline-neon-pink">{t('bracketStage.closedLabel')}</span> {t('bracketStage.forPredictions')}</p>
+                                                <p className="tournament-status-line">
+                                                    {t('bracketStage.opensIn')} <span className="inline-real-yellow">{bracketOpenCountdown}</span>
+                                                </p>
+                                            </>
+                                        )}
+                                        {/* Scenario 2 — open for predictions */}
+                                        {isBracketOpen && (
+                                            <>
+                                                <p><span className="inline-neon-pink">{t('bracketStage.openLabel')}</span> {t('bracketStage.forPredictions')}</p>
+                                                <p className="last-updated">
+                                                    {t('bracketStage.closesIn')} <span className="inline-real-yellow">{bracketCloseCountdown}</span>
+                                                </p>
+                                            </>
+                                        )}
+                                        {/* Scenario 3 — bracket under way */}
+                                        {isBracketClosed && (
+                                            <p className="last-updated">
+                                                {t('bracketStage.underwayPrefix')} <span className="inline-neon-pink inline-bold">{t('bracketStage.underwayHighlight')}</span>
+                                                {' · '}<span className="inline-teal inline-bold">{playData.bracket_points} pts</span>
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="bracket-predictions-content" className="prediction-display-content-wrapper">
+                                <BracketStage
+                                    data={playData.bracket_predictions}
+                                    isOwner={isOwner}
+                                    isEditable={isOwner && isBracketOpen}
+                                    isSwappable={isOwner && isBracketClosed}
+                                    isStageClosed={isBracketClosed}
+                                    activeEditId={activeEditId}
+                                    onEditingChange={handleEditingChange}
+                                />
+                                <div className={`last-updated${isBracketEditing ? ' is-dimmed' : ''}`}>
+                                    <p className="last-updated">{t('lastUpdated')} {formatDate(playData.updated_at)}</p>
+                                </div>
+                            </div>
+
+                        </section>
+                    )}
+                </div>
+            )} {/* end play-stages-wrapper */}
+
+            {/* ── IN POOLS TAB ── */}
+            {isOwner && activeTab === 'inPools' && (
+                <div className="plays-in-pools-wrapper play-pool-toggle-wrapper user-picks">
+                    <div className="description-container full-width">
+                            <div className="right-container">
+                                <button className="btn btn-tan" onClick={() => setShowJoinPoolModal(true)}>
+                                    Submit to Pool
+                                </button>
+                            </div>
+                        </div>
+
+                    <section className="user-picks-container">
 
                         <div className="prediction-display-intro">
-
-                            <div className={`title-container-wrapper full-width ${isGroupEditing ? ' is-dimmed' : ''}`}>
-                                <h3>group<span className="inline-teal inline-bold">Stage</span></h3>
-                                <h4>pts: {playData?.group_points || '-'}</h4>
+                            <div className="title-container-wrapper">
+                                <h3><span className="inline-teal inline-bold">play</span> {t('tabs.inPools')}</h3>
                             </div>
 
-                            <div id="play-description" className="description-container full-width">
-                                <DescriptionDropdown summary="Predict how each team will finish in their group!" onOpenChange={setGroupDropdownOpen}>
-                                    <h4>You recieve 1 point for each correct prediction.</h4>
-                                    <h4>If you correctly predict every team in every group, you will earn an extra 2 points!</h4>
-                                    <h4>You will be able to use these points to swap out wrong predictions in the Bracket Stage.</h4>
-                                    <h4>However, if you use these points to make a swap, you "spend" them, and have less remaining points.</h4>
-                                    <h4>These also decide ties. If two Brackets have 78 points, then however many points in this stage you have remaining will count for a tie break.</h4>
-                                </DescriptionDropdown>
-
-                                <div className="right-container">
-                                    {/* Scenario 1 (not_ready): no status line */}
-                                    {isGroupOpen && (
-                                        <>
-                                            <p><span className="inline-teal">Open</span> for Predictions
-                                            </p>
-                                            <p className="last-updated">
-                                                Closes in <span className="tournament-countdown">{countdown}</span>
-                                            </p>
-                                        </>
-
-                                    )}
-                                    {isGroupClosed && (
-                                        <>
-                                            <p>
-                                                <span className="inline-neon-pink">Closed</span> for Predictions
-                                            </p>
-                                            <p>
-                                                <span className="inline-neon-pink">Closed</span> for Predictions
-                                            </p>
-                                        </>
-
-                                    )}
-                                </div>
-                            </div>
                         </div>
 
-                        <GroupStage
-                            data={playData.group_predictions}
-                            isOwner={isOwner}
-                            isEditable={isGroupEditable}
-                            isStageClosed={isGroupClosed}
-                            activeEditId={activeEditId}
-                            onEditingChange={handleEditingChange}
-                            groupPoints={playData.group_points}
-                            onUpdate={handleUpdateGroupOrder}
-                            onSave={handleSaveGroup}
-                        />
-                        <div className={`last-updated${isGroupEditing ? ' is-dimmed' : ''}`}>
-                            <p className="last-updated">Updated: {formatDate(playData.updated_at)}</p>
-                        </div>
+                        
 
-                    </div>
-                ) : (
-                    <></>
-                )}
-
-
-            </section>
-
-            {/* ── BRACKET STAGE ── */}
-            <section className={`play-prediction-container${activeEditId && !isBracketEditing ? ' is-dimmed' : ''}${groupDropdownOpen ? ' peer-dropdown-active' : ''}`}>
-
-
-                {BracketStage ? (
-
-                    <div id="brackets-predictions" className="prediction-display-wrapper">
-
-                        <div className="prediction-display-intro full-width">
-                            <div className={`title-container-wrapper ${isGroupEditing ? ' is-dimmed' : ''}`}>
-                                <h3>bracket<span className="inline-teal inline-bold">Stage</span></h3>
-                                <h4>pts: {playData?.bracket_points || '-'}</h4>
-                            </div>
-
-                            <div id="pool-description" className="description-container">
-                                <DescriptionDropdown summary="Complete your bracket with predictions for the Tournament!" onOpenChange={setBracketDropdownOpen}>
-                                    <h4>This Bracket Stage opens once all 32 teams have been decided.</h4>
-                                    <h4>You will have only a short window of time to fill out your predictions.</h4>
-                                    <h4>You get a fresh Bracket, regardless of your Groups Stage predictions.</h4>
-                                    <h4>Group Stage Points and Bracket Points are seperate.</h4>
-                                    <h4>Bracket Stage points are what decide the winners of pools.</h4>
-                                    <h4>If one of your predictions loses, you can swap it out using your Group Stage Points.</h4>
-                                    <h4>But use them wisely!</h4>
-                                </DescriptionDropdown>
-
-                                <div className="right-container">
-                                    {/* Scenario 1 — not yet open */}
-                                    {isBracketNotYet && (
-                                        <>
-                                            <p><span className="inline-neon-pink">Closed</span> for Predictions
-                                            </p>
-                                            <p className="last-updated">
-                                                Opens in <span className="tournament-countdown">{bracketOpenCountdown}</span>
-                                            </p>
-                                        </>
-                                    )}
-                                    {/* Scenario 2 — open for predictions */}
-                                    {isBracketOpen && (
-                                        <>
-                                            <p><span className="inline-neon-pink">Open</span> for Predictions
-                                            </p>
-                                            <p className="last-updated">
-                                                Closes in <span className="tournament-countdown">{bracketCloseCountdown}</span>
-                                            </p>
-                                        </>
-                                    )}
-                                    {/* Scenario 3 — bracket under way */}
-                                    {isBracketClosed && (
-                                        <p className="last-updated">
-                                            Under <span className="inline-neon-pink inline-bold">Way!</span>
-                                            {' · '}<span className="inline-teal inline-bold">{playData.bracket_points} pts</span>
-                                        </p>
-                                    )}
-                                </div>
+                        <div className="user-stats-container">
+                            <div className="table-container bg-black backdrop-gray">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th className="centered-text">{t('poolsTab.colPool')}</th>
+                                            <th className="centered-text">{t('poolsTab.colOwner')}</th>
+                                            <th className="centered-text">{t('poolsTab.colMembers')}</th>
+                                            <th className="centered-text">{t('poolsTab.colPos')}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {playPoolsLoading ? (
+                                            <tr><td colSpan="4">{t('poolsTab.loading')}</td></tr>
+                                        ) : playPools.length > 0 ? (
+                                            playPools.map((pool, idx) => (
+                                                <tr
+                                                    key={pool.id ?? idx}
+                                                    className="clickable-row"
+                                                    onClick={() => pool.is_public
+                                                        ? navigate(`/brackets/${tournament}`)
+                                                        : navigate(`/brackets/${tournament}/pool/${pool.pool_name}`)
+                                                    }
+                                                >
+                                                    <td className="table-link pool-link">{pool.pool_name}</td>
+                                                    <td>{pool.manager}</td>
+                                                    <td className="centered-text">-</td>
+                                                    <td className="centered-text">{pool.rank || '-'}</td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr><td colSpan="4">{t('poolsTab.empty')}</td></tr>
+                                        )}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
-                        <BracketStage
-                            data={playData.bracket_predictions}
-                            isOwner={isOwner}
-                            isEditable={isOwner && isBracketOpen}
-                            isSwappable={isOwner && isBracketClosed}
-                            isStageClosed={isBracketClosed}
-                            activeEditId={activeEditId}
-                            onEditingChange={handleEditingChange}
-                        />
-                        <div className={`last-updated${isBracketEditing ? ' is-dimmed' : ''}`}>
-                            <p className="last-updated">Updated: {formatDate(playData.updated_at)}</p>
-                        </div>
-                    </div>
-                ) : (
-                    <></>
-                )}
-
-            </section>
+                    </section>
+                </div>
+            )}
 
             <JoinPoolModal
                 isOpen={showJoinPoolModal}
                 tournamentId={playData?.tournament_id}
                 plays={myPlays}
                 onCancel={() => setShowJoinPoolModal(false)}
-                onSuccess={() => setShowJoinPoolModal(false)}
+                onSuccess={() => {
+                    setShowJoinPoolModal(false);
+                    refreshPlayPools();
+                    setActiveTab('inPools');
+                }}
             />
             <ErrorDisplayModal
                 isOpen={!!errorCode}

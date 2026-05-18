@@ -1,10 +1,11 @@
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import HomeHelmet from "../page-helmets/HomeHelmet";
 import ShowcaseSection from "../components/ui/ShowcaseSection";
 import HomeAbout from '../components/pages/home/HomeAbout';
 
 const Home = () => {
-
+    const { t } = useTranslation('home');
     const scrollRef = useRef();
 
     return (
@@ -16,7 +17,7 @@ const Home = () => {
                 <ShowcaseSection
                     classes="hero-full bg-black"
                     showButton="true"
-                    buttonText="Let's Play"
+                    buttonText={t('hero.cta')}
                     buttonOnClick={() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' })}
                     buttonClasses="btn btn-tan"
                     buttonId="home-scroll-smooth"
@@ -24,21 +25,20 @@ const Home = () => {
                     <h1 translate="no">
                         <span className="inline-bold inline-teal">Vindro</span>Games
                     </h1>
-                    <h2>An independant gaming project based in Madrid</h2>
+                    <h2>{t('hero.tagline')}</h2>
                 </ShowcaseSection>
 
                 <ShowcaseSection
                     id="what-we-do"
                     classes="hero-half bg-gray"
                     showButton="true"
-                    buttonText="Start"
+                    buttonText={t('whatWeDo.cta')}
                     buttonTo="/games"
                     buttonOnClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
                     buttonClasses="btn btn-tan"
-
                 >
-                    <h3 ref={scrollRef}>We learn to code by developing Games and Apps.</h3>
-                    <h4>They are designed to boost thinking, promote learning and enhance mental growth.</h4>
+                    <h3 ref={scrollRef}>{t('whatWeDo.heading')}</h3>
+                    <h4>{t('whatWeDo.subheading')}</h4>
                 </ShowcaseSection>
 
                 <HomeAbout />

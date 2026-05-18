@@ -1,0 +1,58 @@
+{
+    "title": "el juego",
+    "howToPlay": "Cómo Jugar",
+    "start": "Empezar",
+    "playAgain": "Jugar de nuevo",
+    "game": {
+        "perfectScore": "🎉 42! ¡Puntuación perfecta!",
+        "badOrder": "Fatal: Orden incorrecto",
+        "cantPlace": "Err: No se puede colocar"
+    },
+    "results": {
+        "thisGame": "Este juego",
+        "prevGame": "Juego anterior",
+        "bestGame": "Mejor juego",
+        "time": "Tiempo",
+        "newBest": "¡Nuevo récord personal!"
+    },
+    "instructions": {
+        "title": "Cómo Jugar",
+        "placeNumbersPre": "Intenta colocar",
+        "placeNumbersMid": "en orden ascendente.",
+        "rules": [
+            "Los números se sacan uno a uno.",
+            "Puedes colocar un número en cualquier posición libre.",
+            "Una vez colocado, no se puede mover.",
+            "La posición 1 es para el más bajo, la 14 para el más alto.",
+            "Cada número colocado correctamente += 3 puntos."
+        ],
+        "gameOver": "Si un número rompe el orden ascendente, o no quedan posiciones válidas:",
+        "secret": "Coloca los 14 números y puede que descubras el significado de la vida, el universo y todo lo demás.",
+        "videoLabel": "Video",
+        "videoLinkText": "Cómo jugar",
+        "inspiredBy": "Inspirado en",
+        "close": "Entendido"
+    },
+    "table": {
+        "gameScoresHeader": "Partida",
+        "gamePointsHeader": "Puntos",
+        "gameTimeHeader": "Tiempo",
+        "currentRowHeader": "Actual",
+        "prevRowHeader": "Previo",
+        "bestRowHeader": "Mejor"
+
+    },
+    "winModal": {
+        "playAgain": "Jugar de Nuevo"
+    },
+    "scoreIndicator": {
+        "saving": "Puntuaciones guardadas en tu cuenta",
+        "notSaving": "Inicia sesión para guardar tus puntuaciones"
+    },
+    "meta": {
+        "title": "42 The Game | Vindrogames",
+        "description": "42 el juego. Un juego de Probabilidad, Suerte e Intuición. Alcanza el significado de la vida, el universo y todo.",
+        "ogTitle": "42 el Juego",
+        "ogDescription": "Un juego de Probabilidad y Suerte"
+    }
+}

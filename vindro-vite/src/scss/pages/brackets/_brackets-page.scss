@@ -9,15 +9,16 @@ main#brackets-page {
         justify-content: center;
         position: relative;
         padding: 14px 42px;
-        background: $vindro-tan;
+        background: $vindro-gray;
 
         #brackets-events-gallery {
-            max-width: 1600px;
+            max-width: 960px;
             width: 100%;
             position: relative;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 21px;
+            grid-template-columns: repeat(2, minmax(0, 450px));
+            justify-content: center;
+            gap: 14px;
 
             .bracket-event-card-container {
                 position: relative;
@@ -36,10 +37,9 @@ main#brackets-page {
                     flex-direction: column;
                     align-items: center;
                     justify-content: flex-start;
-                    padding: 21px;
+                    padding: 14px;
                     border-radius: 3px;
-                    background-color: $vindro-gray;
-                    border: 3px solid $vindro-black;
+                    background-color: $vindro-black;
                     box-shadow: 1px 1px 14px $vindro-black;
 
                     .rolling-football {
@@ -66,73 +66,147 @@ main#brackets-page {
                         }
                     }
 
-                    h4 {
-                        font-size: 2.4rem;
-                        color: white;
-                        margin-bottom: 14px;
-                        font-family: $vindro-Montserrat;
-                    }
+                    // Live (dynamic) card variant
+                    &.bracket-event-card-live {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 14px;
 
-                    .phase-section {
+                        // Container 1: badge + title
+                        .live-card-header {
+                            width: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 7px;
+                            padding-bottom: 14px;
+                            border-bottom: 1px solid $vindro-teal;
 
-                        h5 {
-                            font-size: 1.8rem;
-                            font-weight: 400;
-                            margin-bottom: 3px;
+                            .live-card-badge {
+                                display: inline-block;
+                                align-self: flex-start;
+                                font-size: 1.1rem;
+                                font-family: $vindro-Montserrat;
+                                font-weight: 700;
+                                letter-spacing: 0.08em;
+                                text-transform: uppercase;
+                                padding: 4px 7px;
+                                border-radius: 3px;
+                                margin-bottom: 7px;
+
+                                &.badge-upcoming { background-color: $real-yellow;       color: $vindro-black; }
+                                &.badge-open     { background-color: $vindro-green;      color: white; }
+                                &.badge-in-play  { background-color: $vindro-teal;       color: $vindro-black; }
+                                &.badge-closed   { background-color: $vindro-neon-pink;  color: $vindro-black; }
+                            }
+
+                            h4.live-card-title {
+                                text-align: center;
+                                font-size: 2.4rem;
+                                color: white;
+                                font-family: $vindro-Montserrat;
+                            }
                         }
 
-                        ul.event-stages {
-                            list-style: none;
-                            margin-left: 14px;
-                            margin-bottom: 14px;
+                        // Container 2: stages
+                        .live-card-stages {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 14px;
 
-                            li {
-                                font-size: 1.6rem;
-                                color: white;
-                                position: relative;
-                                padding-left: 21px;
+                            .stage-section {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: flex-start;
+                                gap: 7px;
+                                width: 100%;
+                                background-color: rgba($vindro-gray, 0.63);
+                                border-radius: 3px;
+                                padding: 7px 14px;
 
-                                &::before {
-                                    content: "";
-                                    position: absolute;
-                                    left: 0;
-                                    top: 50%;
-                                    transform: translateY(-50%);
+                                .stage-header {
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    width: 100%;
 
-                                    // The Dot Styling
-                                    height: 7px;
-                                    width: 7px;
-                                    background-color: $vindro-teal;
-                                    border-radius: 50%;
-                                    display: inline-block;
+                                    .stage-label {
+                                        font-size: 1.6rem;
+                                        font-weight: 600;
+                                        color: white;
+                                    }
+
+                                    .stage-badge {
+                                        font-size: 1rem;
+                                        font-family: $vindro-Montserrat;
+                                        font-weight: 700;
+                                        letter-spacing: 0.07em;
+                                        text-transform: uppercase;
+                                        padding: 4px 7px;
+                                        border-radius: 3px;
+
+                                        &.badge-upcoming { background-color: $real-yellow;      color: $vindro-black; }
+                                        &.badge-open     { background-color: $vindro-green;      color: white; }
+                                        &.badge-in-play  { background-color: $vindro-teal;       color: $vindro-black; }
+                                        &.badge-closed   { background-color: $vindro-neon-pink;  color: $vindro-black; }
+                                    }
+                                }
+
+                                .stage-meta {
+                                    font-size: 1.4rem;
+                                    color: white;
+                                }
+
+                                .stage-desc {
+                                    font-size: 1.4rem;
+                                    color: white;
+                                    line-height: 1.5;
                                 }
                             }
                         }
-                    }
 
-                    .start-join {
+                        // Container 3: footer
+                        .live-card-footer {
+                            width: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 14px;
+                            padding-top: 14px;
+                            margin-top: auto;
 
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
+                            .footer-starts {
+                                text-align: center;
+                                font-size: 1.4rem;
+                                color: $vindro-tan;
+                                padding-bottom: 14px;
+                                border-bottom: 1px solid $vindro-teal;
 
-                        h5 {
-                            font-size: 1.6rem;
-                            color: white;
-                            font-weight: 400;
-                        }
+                                .info-label { color: $vindro-teal; }
+                            }
 
-                        .bracket-event-join-btn {
-                            font-size: 1.8rem;
-                            color: $vindro-black;
-                            background-color: $vindro-tan;
-                            padding: 7px 21px;
-                            border-radius: 3px;
-                            transition: all 0.3s ease;
+                            .footer-bottom {
+                                display: grid;
+                                grid-template-columns: 1fr 1fr;
+                                align-items: center;
 
-                            &:hover {
-                                color: white;
-                                background-color: $vindro-green;
+                                .footer-players {
+                                    font-size: 1.4rem;
+                                    color: $vindro-tan;
+                                }
+
+                                .bracket-event-join-btn {
+                                    justify-self: end;
+                                    font-size: 1.6rem;
+                                    color: $vindro-black;
+                                    background-color: $vindro-tan;
+                                    padding: 7px 21px;
+                                    border-radius: 3px;
+                                    transition: all 0.3s ease;
+
+                                    &:hover {
+                                        color: white;
+                                        background-color: $vindro-green;
+                                    }
+                                }
                             }
                         }
                     }

@@ -112,15 +112,17 @@ const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable,
         <div className="bk-stage">
             <div className="bk-stage-container">
                 <div className="bk-half-toggle">
-                    <button className={`bk-tab${activeSection === 'left' ? ' bk-tab--active' : ''}`} onClick={() => setActiveSection('left')}>Left</button>
-                    <button className={`bk-tab${activeSection === 'center' ? ' bk-tab--active' : ''}`} onClick={() => setActiveSection('center')}>Finals</button>
-                    <button className={`bk-tab${activeSection === 'right' ? ' bk-tab--active' : ''}`} onClick={() => setActiveSection('right')}>Right</button>
+                    <button className={`bk-tab ${activeSection === 'left' ? ' bk-tab--active' : ''}`} onClick={() => setActiveSection('left')}>Left</button>
+                    <button className={`bk-tab ${activeSection === 'center' ? ' bk-tab--active' : ''}`} onClick={() => setActiveSection('center')}>Finals</button>
+                    <button className={`bk-tab ${activeSection === 'right' ? ' bk-tab--active' : ''}`} onClick={() => setActiveSection('right')}>Right</button>
                 </div>
+                {/* const MEDIUM_ROUNDS = ['R32', 'R16', 'QF', 'SF']; */}
 
-                <div className={`bk-medium-tabs${activeSection === 'center' ? ' is-dimmed' : ''}`}>
-                    {MEDIUM_ROUNDS.map(r => (
-                        <button key={r} className={`bk-tab${activeRound === r ? ' bk-tab--active' : ''}`} onClick={() => setActiveRound(r)}>{r}</button>
-                    ))}
+                <div className={`bk-medium-tabs ${activeSection == 'center' ? `is-dimmed` : ''} ${activeSection !== 'center' ? `is-${activeSection}` : ''}`}>
+                    <button className={`bk-tab ${activeRound === 'R32' ? 'bk-tab--active' : ''}`} onClick={() => setActiveRound('R32')}>R32</button>
+                    <button className={`bk-tab ${activeRound === 'R16' ? 'bk-tab--active' : ''}`} onClick={() => setActiveRound('R16')}>R16</button>
+                    <button className={`bk-tab ${activeRound === 'QF' ? 'bk-tab--active' : ''}`} onClick={() => setActiveRound('QF')}>QF</button>
+                    <button className={`bk-tab ${activeRound === 'SF' ? 'bk-tab--active' : ''}`} onClick={() => setActiveRound('SF')}>SF</button>
                 </div>
 
                 <div className="bk-tree" data-section={activeSection}>

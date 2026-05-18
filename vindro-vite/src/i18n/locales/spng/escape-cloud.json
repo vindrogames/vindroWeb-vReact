@@ -1,0 +1,17 @@
+{
+    "hero": {
+        "tagline": "Una experiencia de aprendizaje inspirada en los Escape Rooms"
+    },
+    "info": {
+        "p1": "Pon a prueba tus conocimientos de Google Workspace con los distintos puzzles de nuestro juego.",
+        "p2Bold": "Para jugar debes estar logueado con tu cuenta de Google",
+        "p2Rest": ". El juego dura unos 30 minutos y cubre funcionalidades básicas y avanzadas de las apps de Google Workspace.",
+        "videoUnsupported": "Tu navegador no soporta la etiqueta de video."
+    },
+    "meta": {
+        "title": "Escape the Cloud | Escape Room Digital de Google Workspace",
+        "description": "Un Escape Room digital para aprender a usar Google Workspace y desarrollar la competencia digital.",
+        "ogTitle": "Escape the Cloud",
+        "ogDescription": "Experiencia de aprendizaje inspirada en Escape Rooms para desarrollar la Competencia Digital con Google"
+    }
+}
