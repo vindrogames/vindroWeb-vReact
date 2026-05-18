@@ -4,19 +4,27 @@
     },
     "liveCard": {
         "status": {
-            "upcoming": "Próximamente",
+            "upcoming": "Prox.",
             "open": "Abierto",
             "in_play": "En Juego",
             "closed": "Cerrado"
         },
         "subtitle": "Evento de Dos Fases",
-        "groupStageLabel": "Fase de Grupos",
-        "bracketStageLabel": "Fase de Eliminación",
+        "groupStageLabel": "Group Stage",
+        "bracketStageLabel": "Bracket Stage",
         "teams": "equipos",
         "ptsMax": "pts máx",
         "startsLabel": "Empieza:",
         "playersActive": "{{count}} jugadores activos",
         "checkItOut": "Apúntate"
+    },
+    "world-cup-2026": {
+        "groupStage": {
+            "description": "48 partidos en 12 estadios de USA, Canadá y México"
+        },
+        "bracketStage": {
+            "description": "Desde los dieciseisavos hasta la Final en el MetLife Stadium, New Jersey"
+        }
     },
     "meta": {
         "title": "Vindrogames | Brackets",

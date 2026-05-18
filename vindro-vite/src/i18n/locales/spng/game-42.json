@@ -33,8 +33,21 @@
         "inspiredBy": "Inspirado en",
         "close": "Entendido"
     },
+    "table": {
+        "gameScoresHeader": "Partida",
+        "gamePointsHeader": "Puntos",
+        "gameTimeHeader": "Tiempo",
+        "currentRowHeader": "Actual",
+        "prevRowHeader": "Previo",
+        "bestRowHeader": "Mejor"
+
+    },
     "winModal": {
         "playAgain": "Jugar de Nuevo"
+    },
+    "scoreIndicator": {
+        "saving": "Puntuaciones guardadas en tu cuenta",
+        "notSaving": "Inicia sesión para guardar tus puntuaciones"
     },
     "meta": {
         "title": "42 The Game | Vindrogames",

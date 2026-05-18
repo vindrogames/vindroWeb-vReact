@@ -1,0 +1,57 @@
+{
+    "helmet": {
+        "title": "{{playName}} | {{tournamentName}} — Vindro Brackets",
+        "description": "See {{playName}}'s bracket predictions for {{tournamentName}} on Vindrogames.",
+        "keywords": "brackets, predictions, vindrogames"
+    },
+    "loading": "Loading...",
+    "notFound": {
+        "message": "This play doesn't exist or has been removed."
+    },
+    "intro": {
+        "playLabel": "play",
+        "byLabel": "by"
+    },
+    "groupStage": {
+        "dropdownSummary": "Predict how each team will finish in their group!",
+        "hint1": "You receive 1 point for each correct prediction.",
+        "hint2": "If you correctly predict every team in every group, you will earn an extra 2 points!",
+        "hint3": "You will be able to use these points to swap out wrong predictions in the Bracket Stage.",
+        "hint4": "However, if you use these points to make a swap, you \"spend\" them, and have less remaining points.",
+        "hint5": "These also decide ties. If two Brackets have the same points, your remaining Group Stage points act as the tiebreaker.",
+        "openLabel": "Open",
+        "closedLabel": "Closed",
+        "forPredictions": "for Predictions",
+        "closesIn": "Closes in"
+    },
+    "bracketStage": {
+        "dropdownSummary": "Complete your bracket predictions for the Tournament!",
+        "hint1": "This Bracket Stage opens once all 32 teams have been decided.",
+        "hint2": "You will have only a short window of time to fill out your predictions.",
+        "hint3": "You get a fresh Bracket, regardless of your Group Stage predictions.",
+        "hint4": "Group Stage Points and Bracket Points are separate.",
+        "hint5": "Bracket Stage points are what decide the winners of pools.",
+        "hint6": "If one of your predictions loses, you can swap it out using your Group Stage Points.",
+        "hint7": "But use them wisely!",
+        "closedLabel": "Closed",
+        "openLabel": "Open",
+        "forPredictions": "for Predictions",
+        "closesIn": "Closes in",
+        "opensIn": "Opens in",
+        "underwayPrefix": "In",
+        "underwayHighlight": "Play!"
+    },
+    "lastUpdated": "Updated:",
+    "tabs": {
+        "play": "Play",
+        "inPools": "In Pools"
+    },
+    "poolsTab": {
+        "colPool": "Pool",
+        "colOwner": "Owner",
+        "colMembers": "Members",
+        "colPos": "Pos.",
+        "loading": "Loading pools...",
+        "empty": "This play hasn't been submitted to any pools yet."
+    }
+}

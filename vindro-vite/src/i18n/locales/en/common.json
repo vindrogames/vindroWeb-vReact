@@ -15,5 +15,12 @@
         "allRightsReserved": "All Rights Reserved",
         "inCollabWith": "in collaboration with",
         "privacyPolicy": "Cookies & Privacy Policy"
+    },
+    "newBest": {
+        "title": "New Personal Best!",
+        "score": "Score",
+        "time": "Time",
+        "keepPlaying": "Keep Playing",
+        "startNew": "Start New Game"
     }
 }

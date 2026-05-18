@@ -4,7 +4,7 @@
     },
     "liveCard": {
         "status": {
-            "upcoming": "Coming Soon",
+            "upcoming": "Soon",
             "open": "Open",
             "in_play": "In Play",
             "closed": "Closed"
@@ -17,6 +17,14 @@
         "startsLabel": "Starts:",
         "playersActive": "{{count}} players active",
         "checkItOut": "Check it Out"
+    },
+    "world-cup-2026": {
+        "groupStage": {
+            "description": "48 matches across 12 stadiums in the USA, Canada and Mexico"
+        },
+        "bracketStage": {
+            "description": "Round of 32 through to the Final at MetLife Stadium, New Jersey"
+        }
     },
     "meta": {
         "title": "Vindrogames | Brackets",

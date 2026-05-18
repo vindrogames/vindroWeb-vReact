@@ -6,7 +6,12 @@ import SmartLink from '../components/ui/SmartLink';
 import { useAuth } from '../contexts/auth/AuthContext';
 import { useLoading } from '../contexts/LoadingContext';
 import { authAPI } from '../contexts/auth/services/authService';
+import { gamescoreService } from '../services/gamescoreService';
 import { setLanguagePermanent } from '../i18n';
+
+const KNOWN_GAMES = [
+    { game_name: 'game-42', display: '42 the Game', slug: 'game-42' },
+];
 import UserProfileHelmet from '../page-helmets/UserProfileHelmet';
 
 function getIconName(avatarUrl) {
@@ -27,6 +32,7 @@ const UserProfile = () => {
     const [profileLoading, setProfileLoading] = useState(true);
     const [profileNotFound, setProfileNotFound] = useState(false);
     const [bracketSummary, setBracketSummary] = useState([]);
+    const [bestScores, setBestScores] = useState([]);
 
     const isOwner = user && String(user.id) === userId;
 
@@ -57,15 +63,17 @@ const UserProfile = () => {
             setProfileLoading(true);
             setProfileNotFound(false);
             try {
-                const [profileData, bracketsData] = await Promise.all([
+                const [profileData, bracketsData, scoresData] = await Promise.all([
                     authAPI.getPublicProfile(userId),
                     authAPI.getUserBracketSummary(userId),
+                    gamescoreService.getUserBestScores(userId).catch(() => null),
                 ]);
                 if (cancelled) return;
                 setProfileUser(profileData.user);
                 setEditValue(profileData.user.username || '');
                 setSelectedIcon(getIconName(profileData.user.avatar));
                 setBracketSummary(bracketsData.data || []);
+                setBestScores(scoresData?.data?.best_scores || []);
             } catch {
                 if (!cancelled) setProfileNotFound(true);
             } finally {
@@ -211,20 +219,28 @@ const UserProfile = () => {
 
     const locale = i18n.language === 'spng' ? 'es-ES' : 'en-GB';
 
+    const bestByGame = Object.fromEntries(bestScores.map(s => [s.game_name, s]));
+
+    const scoreData = KNOWN_GAMES.map(game => ({
+        game_name: game.game_name,
+        display: game.display,
+        slug: game.slug,
+        best_score: bestByGame[game.game_name]?.best_score ?? null,
+        best_time: bestByGame[game.game_name]?.best_time ?? null,
+    }));
+
     const scoreCols = [
         {
             header: t('table.game'),
             render: (row) => (
                 <SmartLink to={`/games/${row.slug}`} className="table-link">
-                    {row.game}
+                    {row.display}
                 </SmartLink>
             )
         },
-        { header: t('table.score'), render: (row) => row.score.toLocaleString() },
-        { header: t('table.rank'), key: 'rank' },
+        { header: t('table.score'), render: (row) => row.best_score !== null ? row.best_score : '-' },
+        { header: t('table.time'), render: (row) => row.best_time !== null ? `${row.best_time}s` : '-' },
     ];
-
-    const scoreData = [];
 
     const bracketCols = [
         {
@@ -439,8 +455,6 @@ const UserProfile = () => {
                             </div>
                         </section>
                     )}
-
-                    <div className="section-seperator"></div>
 
                     <section id="user-top-scores" className="user-container">
 

@@ -2,16 +2,40 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from '../../../contexts/auth/AuthContext';
+import PointsTable from "./PointsTable";
 
 export default function GameDisplay({
     gameStarted, numToPlace, points, startGame, playAgain,
-    gameOver, endCause, prevPoints, todayBest,
-    elapsedSeconds, isNewBest,
+    gameOver, endCause, prevPoints, prevTime,
+    bestPoints, bestTime,
+    elapsedSeconds,
     onOpenInstructions, isInstructionsOpen
 }) {
     const { t } = useTranslation('game-42');
-    const { isAuthenticated } = useAuth();
+    const { user } = useAuth();
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 678);
+
+    
+    const game42Cols = [
+        {
+            header: t('table.gameScoresHeader'),
+            currentRow: t('table.currentRowHeader'),
+            prevRow: t('table.prevRowHeader'),
+            bestRow: t('table.bestRowHeader')
+        },
+        {
+            header: t('table.gamePointsHeader'),
+            currentRow: points,
+            prevRow: prevPoints !== null ? prevPoints : '-',
+            bestRow: bestPoints !== null ? bestPoints : '-',
+        },
+        {
+            header: t('table.gameTimeHeader'),
+            currentRow: gameStarted ? `${elapsedSeconds}s` : '-',
+            prevRow: prevTime !== null ? `${prevTime}s` : '-',
+            bestRow: bestTime !== null ? `${bestTime}s` : '-',
+        }
+    ];
 
     useEffect(() => {
         const handleResize = () => setIsSmallScreen(window.innerWidth < 678);
@@ -39,7 +63,7 @@ export default function GameDisplay({
                 <h1 className="title-42">
                     <span className="inline-teal inline-bold">42</span> {t('title')}
                 </h1>
-                <button type="button" className="how-to-play-toggle" onClick={onOpenInstructions}>
+                <button type="button" className="how-to-play-toggle btn btn-tan" onClick={onOpenInstructions}>
                     <span className="toggle-label">{t('howToPlay')}</span>
                 </button>
             </div>
@@ -67,17 +91,14 @@ export default function GameDisplay({
                     </div>
                 </div>
 
-                <div className="game-42-results-grid">
-                    <div id="game-points"><p>{t('results.thisGame')}</p><p>{points}</p></div>
-                    <div id="prev-points"><p>{t('results.prevGame')}</p><p>{prevPoints ?? "-"}</p></div>
-                    <div id="best"><p>{t('results.bestGame')}</p><p>{todayBest ?? "-"}</p></div>
-                    {gameOver && (
-                        <div id="game-time"><p>{t('results.time')}</p><p>{elapsedSeconds}s</p></div>
-                    )}
+                <div className="table-wrapper">
+                    <PointsTable columns={game42Cols} tableType="brackets-table" emptyMessage={t('brackets.empty')} />
                 </div>
-                {gameOver && isNewBest && (
-                    <p className="new-best-notice">{t('results.newBest')}</p>
-                )}
+
+                <div className={`score-save-indicator ${user ? 'is-saving' : 'not-saving'}`}>
+                    <span className="save-indicator-dot" aria-hidden="true"></span>
+                    <code>{user ? t('scoreIndicator.saving') : t('scoreIndicator.notSaving')}</code>
+                </div>
             </div>
         </section>
     );

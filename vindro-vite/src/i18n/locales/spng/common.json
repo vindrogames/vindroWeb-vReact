@@ -15,5 +15,12 @@
         "allRightsReserved": "Derechos Reservados",
         "inCollabWith": "en colaboración con",
         "privacyPolicy": "Cookies & Política de Privacidad"
+    },
+    "newBest": {
+        "title": "¡Nuevo Récord Personal!",
+        "score": "Puntos",
+        "time": "Tiempo",
+        "keepPlaying": "Seguir Jugando",
+        "startNew": "Nueva Partida"
     }
 }

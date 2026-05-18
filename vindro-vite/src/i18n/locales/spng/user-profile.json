@@ -26,7 +26,7 @@
     "avatarAlt": "Avatar de Usuario",
     "scores": {
         "titleHighlight": "Scores",
-        "empty": "Próximamente"
+        "empty": "Aún no has jugado."
     },
     "brackets": {
         "empty": "Sin datos de brackets."
@@ -34,10 +34,10 @@
     "table": {
         "game": "Juego",
         "score": "Puntos",
-        "rank": "Rank",
-        "tournament": "Torneo",
-        "pools": "Pools",
-        "plays": "Jugadas",
+        "time": "Tiempo",
+        "tournament": "Tournament",
+        "pools": "Porras",
+        "plays": "Plays",
         "topPos": "Mejor Pos."
     },
     "meta": {

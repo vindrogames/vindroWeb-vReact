@@ -14,6 +14,8 @@ import enNotFound from './locales/en/not-found.json';
 import enLogout from './locales/en/logout.json';
 import enUserProfile from './locales/en/user-profile.json';
 import enAutominer from './locales/en/autominer.json';
+import enTournament from './locales/en/tournament.json';
+import enPlay from './locales/en/play.json';
 
 import spngCommon from './locales/spng/common.json';
 import spngHome from './locales/spng/home.json';
@@ -28,6 +30,8 @@ import spngNotFound from './locales/spng/not-found.json';
 import spngLogout from './locales/spng/logout.json';
 import spngUserProfile from './locales/spng/user-profile.json';
 import spngAutominer from './locales/spng/autominer.json';
+import spngTournament from './locales/spng/tournament.json';
+import spngPlay from './locales/spng/play.json';
 
 const savedTemp = sessionStorage.getItem('vindro_lang_temp');
 const savedPerm = localStorage.getItem('vindro_lang');
@@ -51,6 +55,8 @@ i18n
                 logout: enLogout,
                 'user-profile': enUserProfile,
                 autominer: enAutominer,
+                tournament: enTournament,
+                play: enPlay,
             },
             spng: {
                 common: spngCommon,
@@ -66,6 +72,8 @@ i18n
                 logout: spngLogout,
                 'user-profile': spngUserProfile,
                 autominer: spngAutominer,
+                tournament: spngTournament,
+                play: spngPlay,
             },
         },
         lng: savedTemp || savedPerm || browser,

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useLoading } from '../../contexts/LoadingContext';
 import { setLanguageTemporary } from '../../i18n';
 
-const LangToggle = () => {
+const LangToggle = ({ onAfterChange } = {}) => {
     const { i18n } = useTranslation();
     const { showLoader, hideLoader } = useLoading();
     const current = i18n.language;
@@ -12,6 +12,7 @@ const LangToggle = () => {
         showLoader();
         await setLanguageTemporary(lang);
         hideLoader();
+        onAfterChange?.();
     };
 
     return (

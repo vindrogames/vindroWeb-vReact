@@ -11,4 +11,9 @@ export const gamescoreService = {
             method: 'POST',
             body: JSON.stringify(data),
         }),
+
+    getUserBestScores: (userId) =>
+        apiRequest(`/highscores/user/${userId}/best/`, {
+            method: 'GET',
+        }),
 };

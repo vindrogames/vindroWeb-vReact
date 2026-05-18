@@ -34,53 +34,23 @@ main.bracket-tournament-page {
         position: relative;
         padding: 21px 42px 42px;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 42px;
 
-        .user-picks-container {
-            width: 84%;
+        .user-picks-sections-wrapper {
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 42px;
 
-            .user-stats-container {
-
-                .table-container {
-                    overflow-x: auto;
-
-                    table {
-                        width: 100%;
-                        table-layout: fixed;
-
-                        th {
-                            width: 25%;
-                        }
-
-                        td.table-link {
-
-                            &.play-link,
-                            &.pool-link {
-                                color: $vindro-teal;
-                                font-weight: 400;
-                                text-decoration: underline;
-                                cursor: pointer;
-                                transition: all 0.2s ease;
-
-                                &:hover {
-                                    color: lighten($vindro-teal, 14);
-
-                                }
-                            }
-                        }
-                    }
-                }
-
-                &#pools-stats {
-                    margin-bottom: 21px;
-                }
+            .description-container {
+                margin-top: 14px;
             }
+        }
+
+        .user-stats-container#pools-stats {
+            margin-bottom: 21px;
         }
     }
 
@@ -141,45 +111,8 @@ main.bracket-tournament-page {
                     }
                 }
 
-                .feature-table {
-
-                    .table-container {
-
-                        table {
-                            width: 100%;
-
-                            tr {
-                                td:first-child {
-                                    text-align: left;
-                                    padding-left: 7px;
-                                }
-
-                                &:last-child {
-                                    td {
-                                        font-weight: 600;
-                                    }
-                                }
-                            }
-
-                            &#swap-table {
-
-                                tr:last-child {
-
-                                    td {
-                                        font-weight: 300;
-                                    }
-                                }
-                            }
-
-                            td {
-                                font-size: 1.2rem;
-                                font-weight: 300;
-                                text-align: center;
-                                padding: 7px 0;
-                            }
-                        }
-                    }
-                }
+                // Table styling in _tables.scss
+                
             }
         }
     }

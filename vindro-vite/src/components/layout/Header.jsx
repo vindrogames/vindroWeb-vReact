@@ -125,7 +125,7 @@ const NavBar = ({ isMadrid }) => {
                                         </SmartLink>
 
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>{t('header.logout')}</button>
-                                        <LangToggle />
+                                        <LangToggle onAfterChange={() => setUserDropdownOpen(false)} />
                                     </div>
                                 )}
                             </div>
@@ -180,7 +180,7 @@ const NavBar = ({ isMadrid }) => {
                                         </SmartLink>
 
                                         <button className="dropdown-item logout-btn" onClick={handleLogout}>{t('header.logout')}</button>
-                                        <LangToggle />
+                                        <LangToggle onAfterChange={() => setUserDropdownOpen(false)} />
                                     </div>
                                 )}
                             </div>

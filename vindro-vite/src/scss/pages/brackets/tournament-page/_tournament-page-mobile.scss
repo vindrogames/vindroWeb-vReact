@@ -32,16 +32,6 @@
                     grid-template-columns: 1fr;
                     gap: 14px;
 
-                    .table-container {
-
-                        table {
-
-                            th {
-                                font-size: 1.6rem;
-                            }
-                        }
-                    }
-
                     .buttons-container {
                         flex-direction: row;
                         justify-content: center;
@@ -59,21 +49,6 @@
                 .feature {
                     grid-template-columns: 1fr;
                     gap: 21px;
-
-                    .feature-table {
-                        width: 63%;
-                        align-self: center;
-                        justify-self: center;
-
-                        .table-container {
-                            table {
-
-                                th {
-                                    font-size: 1.6rem;
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -88,11 +63,6 @@
             padding: 21px;
 
             .user-picks-container {
-
-                .title-container-wrapper {
-
-                    .title-container-wrapper {}
-                }
 
                 .user-picks-description-wrapper {
                     flex-direction: column;
@@ -111,47 +81,11 @@
                         padding-left: 14px;
                     }
                 }
-
-                .user-stats-container {
-
-                    .table-container {
-
-                        table {
-
-                            th {
-                                font-size: 1.4rem;
-                                white-space: normal;
-                            }
-
-                            td {
-                                font-size: 1.2rem;
-                            }
-                        }
-                    }
-                }
             }
         }
 
         .about-tournament {
             padding: 21px;
-
-            .about-tournament-container {
-
-                .feature {
-
-                    .feature-table {
-                        width: auto;
-
-                        .table-container {
-                            width: auto;
-
-                            table {
-                                width: auto;
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         section.leaderboard-display-container {
@@ -213,27 +147,6 @@
                         padding: 7px;
                     }
                 }
-
-
-                .user-stats-container {
-
-                    .table-container {
-
-                        table {
-
-                            th {
-                                font-size: 1.4rem;
-                                padding: 7px;
-                            }
-
-                            td {
-                                padding: 7px;
-                            }
-                        }
-
-
-                    }
-                }
             }
         }
 
@@ -248,19 +161,6 @@
                         .feature-explanation {
                             p {
                                 font-size: 1.6rem;
-                            }
-                        }
-                    }
-
-                    .feature-table {
-
-                        .table-container {
-
-                            table {
-
-                                th {
-                                    font-size: 1.4rem;
-                                }
                             }
                         }
                     }
@@ -296,27 +196,6 @@
                 }
 
                 .user-stats-container {
-
-                    .table-container {
-
-                        table {
-                            table-layout: fixed;
-                            width: 100%;
-
-                            th {
-                                font-size: 1.2rem;
-                                padding: 4px;
-                                white-space: normal;
-                            }
-
-                            td {
-                                padding: 7px 4px;
-                                overflow: hidden;
-                                white-space: nowrap;
-                                text-overflow: ellipsis;
-                            }
-                        }
-                    }
 
                     .buttons-container {
                         flex-direction: column;
@@ -394,26 +273,7 @@
                         .feature-explanation {
 
                             p {
-                                font-size: 1.6rem;
-                            }
-                        }
-                    }
-
-                    .feature-table {
-
-                        .table-container {
-
-                            table {
-
-                                th {
-                                    padding: 7px;
-                                    font-size: 1.6rem;
-
-                                }
-
-                                td {
-                                    font-size: 1.1rem;
-                                }
+                                font-size: 1.4rem;
                             }
                         }
                     }

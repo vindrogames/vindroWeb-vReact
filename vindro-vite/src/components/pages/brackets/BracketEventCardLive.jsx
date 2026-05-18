@@ -37,6 +37,9 @@ export default function BracketEventCardLive({ tournament }) {
         return () => clearTimeout(timeout);
     }, []);
 
+    const groupDesc = t(`${slug}.groupStage.description`, { defaultValue: '' });
+    const bracketDesc = t(`${slug}.bracketStage.description`, { defaultValue: '' });
+
     const locale = i18n.language === 'spng' ? 'es-ES' : 'en-US';
     const formatDate = (iso) => new Date(iso).toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -63,32 +66,28 @@ export default function BracketEventCardLive({ tournament }) {
                     {group_stage && (
                         <div className="stage-section">
                             <div className="stage-header">
-                                <h5 className="stage-label">Group Stage</h5>
+                                <h5 className="stage-label">{t('liveCard.groupStageLabel')}</h5>
                                 {group_stage_status && stageBadge(group_stage_status)}
                             </div>
                             <p className="stage-meta">
                                 {group_stage.teams} {t('liveCard.teams')}
                                 {group_stage.max_points != null && <> · {group_stage.max_points} {t('liveCard.ptsMax')}</>}
                             </p>
-                            {group_stage.description && (
-                                <p className="stage-desc">{group_stage.description}</p>
-                            )}
+                            {groupDesc && <p className="stage-desc">{groupDesc}</p>}
                         </div>
                     )}
 
                     {bracket_stage && (
                         <div className="stage-section">
                             <div className="stage-header">
-                                <h5 className="stage-label">Bracket Stage</h5>
+                                <h5 className="stage-label">{t('liveCard.bracketStageLabel')}</h5>
                                 {bracket_stage_status && stageBadge(bracket_stage_status)}
                             </div>
                             <p className="stage-meta">
                                 {bracket_stage.teams} {t('liveCard.teams')}
                                 {bracket_stage.opening_round && <> · {bracket_stage.opening_round}</>}
                             </p>
-                            {bracket_stage.description && (
-                                <p className="stage-desc">{bracket_stage.description}</p>
-                            )}
+                            {bracketDesc && <p className="stage-desc">{bracketDesc}</p>}
                         </div>
                     )}
                 </div>

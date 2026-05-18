@@ -1,0 +1,158 @@
+@use '../config' as *;
+
+@media(max-width: 960px) {
+
+    .user-stats-container {
+
+        .table-container {
+
+            table {
+
+                th {
+                    font-size: 1.6rem;
+                }
+            }
+        }
+    }
+
+    .tournament-feature-table {
+
+        width: 63%;
+        align-self: center;
+        justify-self: center;
+
+        .table-container {
+
+            table {
+
+                th {
+                    font-size: 1.6rem;
+                }
+            }
+        }
+    }
+
+}
+
+@media(max-width: 678px) {
+
+    .table-container {
+
+        table {
+
+            td.left-text {
+                text-align: left;
+            }
+        }
+    }
+
+    .user-stats-container {
+
+        .table-container {
+
+            table {
+
+                th {
+                    font-size: 1.4rem;
+                    white-space: normal;
+                }
+
+                td {
+                    font-size: 1.2rem;
+                }
+            }
+        }
+    }
+
+    .tournament-feature-table {
+        width: auto;
+
+        .table-container {
+            width: auto;
+
+            table {
+                width: auto;
+            }
+        }
+    }
+}
+
+@media(max-width: 450px) {
+
+    .user-stats-container {
+
+        .table-container {
+
+            table {
+
+                th {
+                    font-size: 1.4rem;
+                    padding: 7px;
+                }
+
+                td {
+                    padding: 7px;
+                }
+            }
+        }
+    }
+
+    .tournament-feature-table {
+
+        .table-container {
+
+            table {
+
+                th {
+                    font-size: 1.4rem;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 376px) {
+
+    .user-stats-container {
+
+        .table-container {
+
+            table {
+                table-layout: fixed;
+                width: 100%;
+
+                th {
+                    font-size: 1.2rem;
+                    padding: 4px;
+                    white-space: normal;
+                }
+
+                td {
+                    padding: 7px 4px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    }
+
+    .tournament-feature-table {
+
+        .table-container {
+
+            table {
+
+                th {
+                    padding: 7px;
+                    font-size: 1.6rem;
+
+                }
+
+                td {
+                    font-size: 1.1rem;
+                }
+            }
+        }
+    }
+}

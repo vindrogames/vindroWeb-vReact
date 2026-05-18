@@ -1,0 +1,673 @@
+@use '../../../config' as *;
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PLAY / POOL PAGE LAYOUT
+// ═══════════════════════════════════════════════════════════════════════════════
+
+main.play-pool {
+
+    section.play-pool-intro {
+        position: relative;
+        min-height: 42vh;
+
+        .play-pool-intro-wrapper {
+            width: 100%;
+
+            .text-container {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 7px;
+
+                h1 {
+                    margin: 0;
+                    margin-top: 42px;
+                }
+
+                .play-specs {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 14px;
+
+                    h2 {
+                        width: auto;
+                        font-size: 2.1rem;
+                    }
+
+                    button {
+                        padding: 3px;
+                        background-color: transparent;
+                        cursor: pointer;
+
+                        &:hover {
+                            transform: scale(1.1);
+                        }
+
+                        img {
+                            height: 28px;
+                            width: 28px;
+                        }
+                    }
+                }
+            }
+
+            .play-pool-submit-container {
+                margin-top: 14px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            .go-back-button-container {
+                margin-top: 14px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+
+    // ── TAB NAV ───────────────────────────────────────────────────────────────
+    // Sits flush after the hero (no separator border).
+    // Background matches the stage sections so the nav visually extends them.
+    // Tabs align their left edge with the 84% centered content below:
+
+    .play-tab-nav {
+        position: absolute;
+        bottom: -1px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        z-index: 14;
+
+        .buttons-container {
+            width: 84%;
+
+            button {
+                background-color: $vindro-gray;
+                border-bottom: 1px solid $vindro-tan;
+                border-radius: 3px 3px 0 0;
+                padding: 14px 21px;
+                color: rgba($vindro-tan, 0.5);
+                font-family: $vindro-Montserrat;
+                font-size: 1.6rem;
+                font-weight: 600;
+                letter-spacing: 0.04em;
+                cursor: pointer;
+                transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+
+                &.active {
+                    color: white;
+                    border-left: 1px solid $vindro-tan;
+                    border-top: 1px solid $vindro-tan;
+                    border-right: 1px solid $vindro-tan;
+                    border-bottom: 1px solid $vindro-gray;
+                    background: $vindro-gray;
+                }
+
+                &:hover:not(.active) {
+                    color: rgba($vindro-teal, 0.6);
+                    border-color: rgba($vindro-teal, 0.4);
+
+                }
+            }
+        }
+
+    }
+
+    .play-pool-toggle-wrapper {
+        height: 100%;
+        background-color: $vindro-gray;
+        border-top: 1px solid $vindro-tan;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 21px;
+    }
+
+    .play-stages-wrapper, .plays-in-pools-wrapper {
+        padding-bottom: 42px;
+
+        section.play-prediction-container, section.user-picks-container {
+            background-color: $vindro-gray;
+            width: 100%;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 21px;
+
+            &#groups-predictions {
+                padding-top: 21px;
+            }
+
+            .prediction-display-intro {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+
+                .title-container-wrapper {
+                    width: 84%;
+                    padding: 14px 28px;
+                    border-bottom: 1px solid $vindro-teal;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: space-between;
+                    gap: 7px;
+
+                    h3 {
+                        font-size: 4.2rem;
+                        font-weight: 400;
+                        color: white;
+                        font-family: $vindro-Montserrat;
+                    }
+
+                    h4 {
+                        font-size: 2.4rem;
+                        font-weight: 400;
+                    }
+                }
+            }
+
+            .prediction-display-content-wrapper {
+                width: 84%;
+
+                &#bracket-predictions-content {
+                    width: 100%;
+                    padding: 0 4%;
+                }
+
+                .edit-toggle-btn {
+                    position: absolute;
+                    top: 7px;
+                    right: 0;
+                    font-size: 1.2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 42px;
+                    padding: 3px 14px;
+                    transition: all 0.2s ease;
+
+                    &#bk-left {
+                        right: 7px;
+                    }
+
+                    &#bk-right {
+                        left: 7px;
+                    }
+
+                    &#bk-finals {
+                        left: calc(50% - 21px);
+                    }
+
+                    @media (hover: hover) {
+                        &:hover:not(:disabled) {
+                            background-color: $vindro-neon-pink;
+                            color: white;
+                        }
+
+                        &.active {
+                            background-color: $vindro-neon-pink;
+                            color: white;
+                        }
+                    }
+
+                    @media (hover: none) {
+                        &.active {
+                            background-color: $vindro-neon-pink;
+                            color: white;
+                        }
+
+                        &:not(.active) {
+                            background-color: $vindro-tan;
+                            color: $vindro-black;
+                        }
+                    }
+
+                    &:active:not(:disabled) {
+                        background-color: darken($vindro-neon-pink, 10%);
+                        transform: scale(0.95);
+                    }
+                }
+            }
+
+            .last-updated p {
+                width: 100%;
+                padding: 7px 21px;
+                font-size: 1.4rem;
+                font-weight: 200;
+                text-align: center;
+                font-style: italic;
+
+                &.group-stage {
+                    padding-top: 0;
+                }
+            }
+
+        }
+    }
+
+    .plays-in-pools-wrapper {
+        padding: 21px 42px 42px;
+        min-height: 50vh;
+        align-items: center;
+
+        .user-picks-container {
+            height: 100%;
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DISABLED BUTTON WRAPPER  —  universal across all bracket pages
+// Wrap any disabled button in .disabled-btn-wrapper to get opacity + tooltip.
+// Form/modal disabled states live in _tournament-page-modals.scss (different UX).
+// Card-internal controls (e.g. move-btn) define their own opacity inline.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+.disabled-btn-wrapper {
+    position: relative;
+    display: inline-block;
+
+    button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .disabled-tooltip {
+        display: none;
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        background: $vindro-black;
+        color: $vindro-tan;
+        font-size: 1.2rem;
+        font-family: $vindro-openSans;
+        padding: 4px 10px;
+        border-radius: 3px;
+        border: 1px solid $vindro-tan;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    &:hover .disabled-tooltip {
+        display: block;
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// USER PICKS CONTAINER  —  shared by TournamentPage sections + PlayPage In Pools
+// ═══════════════════════════════════════════════════════════════════════════════
+
+.user-picks-container {
+    width: 84%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+
+    .user-picks-intro {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .title-container-wrapper {
+            width: 100%;
+            padding: 14px 28px;
+            border-bottom: 1px solid $vindro-teal;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 7px;
+
+            h3 {
+                font-size: 4.2rem;
+                font-weight: 400;
+                color: white;
+                font-family: $vindro-Montserrat;
+            }
+        }
+
+        .description-container {
+            width: 100%;
+        }
+    }
+
+    // table styling in _tables.scss
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DIM / BLUR / DEACTIVATE
+//
+// All interaction-driven visibility changes in one place, ordered weakest →
+// strongest. Same specificity + later declaration = stronger wins, so each
+// layer below naturally overrides the one above — no !important needed except
+// where a focused card must escape a filter inherited from a parent.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+
+// ── 1. Description dropdown open — soft blur ──────────────────────────────────
+// TournamentPage: CSS :has() detects the open panel. A fixed pseudo-overlay
+// covers the page and the open dropdown lifts above it via z-index (no JS).
+// PlayPage: JS adds .dropdown-active to main. Hero blurs; the peer section
+// (the one whose dropdown is NOT open) receives .peer-dropdown-active from JS
+// and blurs entirely. The active section stays clear — the user is reading it.
+
+main.bracket-tournament-page.dropdown-active {
+
+    // Hero always blurs
+    section#tournament-intro {
+        filter: blur(3px);
+        opacity: 0.5;
+        pointer-events: none;
+        transition: filter 0.2s, opacity 0.2s;
+    }
+
+    // Active section (NOT the peer): title bar and card area blur so the
+    // open dropdown panel stands out. description-container is excluded because
+    // it hosts the panel — blurring it would blur the dropdown itself.
+    .user-picks-container:not(.peer-dropdown-active) {
+
+        .title-container-wrapper,
+        .user-stats-container {
+            filter: blur(3px);
+            opacity: 0.5;
+            pointer-events: none;
+            transition: filter 0.2s, opacity 0.2s;
+        }
+    }
+
+    section.user-picks-container.peer-dropdown-active {
+        filter: blur(3px);
+        opacity: 0.5;
+        pointer-events: none;
+        transition: filter 0.2s, opacity 0.2s;
+    }
+}
+
+main#play-page.dropdown-active {
+
+    // Hero always blurs
+    section.play-pool-intro {
+        filter: blur(3px);
+        opacity: 0.5;
+        pointer-events: none;
+        transition: filter 0.2s, opacity 0.2s;
+    }
+
+    // Active section (NOT the peer): title bar and card area blur so the
+    // open dropdown panel stands out. description-container is excluded because
+    // it hosts the panel — blurring it would blur the dropdown itself.
+    .play-prediction-container:not(.peer-dropdown-active) {
+
+        .title-container-wrapper,
+        .prediction-display-content-wrapper {
+            filter: blur(3px);
+            opacity: 0.5;
+            pointer-events: none;
+            transition: filter 0.2s, opacity 0.2s;
+        }
+    }
+
+    // Peer section blurs entirely (its dropdown is closed, so full blur is safe)
+    section.play-prediction-container.peer-dropdown-active {
+        filter: blur(3px);
+        opacity: 0.5;
+        pointer-events: none;
+        transition: filter 0.2s, opacity 0.2s;
+    }
+}
+
+
+
+
+// ── 2. Card editing — within-section element dims ─────────────────────────────
+// When a card enters edit mode, JS adds .is-dimmed to: sibling cards, the
+// section title bar, last-updated line, and bracket nav tabs.
+// The focused card itself breaks out via filter: none !important.
+
+.group-card,
+.bk-quarter-card,
+.round-col-finals,
+.bk-center {
+    transition: filter 0.22s, opacity 0.22s;
+
+    &.is-dimmed {
+        filter: blur(4px);
+        opacity: 0.4;
+        pointer-events: none;
+    }
+}
+
+.group-card,
+.bk-quarter-card,
+.round-col-finals {
+    &.focused-edit {
+        z-index: 100;
+        border: 1px solid $vindro-neon-pink !important;
+        filter: none !important;
+        opacity: 1 !important;
+        pointer-events: all;
+        transition: filter 0.22s, opacity 0.22s, border-color 0.22s;
+    }
+}
+
+.group-card.focused-edit {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+.bk-quarter-card.focused-edit,
+.round-col-finals.focused-edit {
+    box-shadow: 0 0 28px rgba(0, 0, 0, 0.7);
+}
+
+.title-container-wrapper,
+.description-container,
+.last-updated,
+.stage-header,
+.bk-medium-tabs {
+    &.is-dimmed {
+        filter: blur(4px);
+        opacity: 0.4;
+        pointer-events: none;
+        transition: filter 0.22s, opacity 0.22s;
+    }
+}
+
+
+// ── 3. Card editing — cross-section and hero blur ─────────────────────────────
+// JS adds .is-dimmed to the entire sibling section and the hero when any card
+// enters edit mode. Stronger blur (6px) than within-section (4px) pushes them
+// further back. Comes after Layer 2 in the file → always wins by cascade.
+
+main#play-page section.is-dimmed {
+    filter: blur(6px);
+    opacity: 0.4;
+    pointer-events: none;
+    transition: filter 0.22s, opacity 0.22s;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SHARED BRACKET PAGE COMPONENTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+p.tournament-status-line {
+    font-size: 1.8rem;
+    font-family: $vindro-openSans;
+    font-weight: 400;
+    color: white;
+}
+
+.description-container {
+    width: 84%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 21px;
+    padding: 7px 0 14px 21px;
+
+    .description-dropdown {
+        flex: 1;
+        position: relative;
+
+        .description-toggle {
+            width: 84%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px;
+            background-color: #313a45;
+            color: white;
+            border-left: 2px solid transparent;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: $vindro-openSans;
+            font-size: 1.8rem;
+            font-weight: 500;
+            text-align: left;
+
+            .toggle-arrow {
+                flex-shrink: 0;
+                font-size: 1.14rem;
+                transition: transform 0.2s ease;
+
+                &.open {
+                    transform: rotate(180deg);
+                    color: $vindro-neon-pink;
+                }
+            }
+
+            &.open {
+                border-left: 2px solid $vindro-neon-pink;
+            }
+        }
+
+        .description-panel {
+            position: absolute;
+            top: calc(100% + 2px);
+            left: 0;
+            right: 0;
+            z-index: 20;
+            background-color: #313a45;
+            color: white;
+            padding: 14px;
+            border-radius: 3px;
+            border-left: 2px solid $vindro-neon-pink;
+
+            h4 {
+                color: white;
+                font-size: 1.8rem;
+                font-family: $vindro-openSans;
+                font-weight: 400;
+                margin: 7px 0;
+            }
+        }
+    }
+
+    .right-container {
+        flex-shrink: 0;
+        margin: auto 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+
+        button {
+            width: auto;
+            font-family: $vindro-Montserrat;
+            font-size: 1.6rem;
+            font-weight: 500;
+            padding: 7px 14px;
+        }
+
+        .tournament-status-spacer {
+            display: none;
+        }
+    }
+}
+
+.auth-prompt-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba($vindro-gray, 0.92);
+    padding: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+
+    .auth-prompt-message {
+        min-height: 63%;
+        width: 84%;
+        padding: 42px;
+        background-color: rgba($vindro-black, 0.63);
+        border: 1px solid $vindro-neon-pink;
+        border: 1px solid $real-yellow;
+        border-radius: 3px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: 14px;
+
+        h5 {
+            font-family: $vindro-Montserrat;
+            font-size: 2.8rem;
+            font-weight: 500;
+        }
+
+        p {
+            margin-top: 7px;
+            font-size: 1.4rem;
+            font-style: italic;
+        }
+
+        .auth-prompt-half {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+
+            .double-text p {
+                font-size: 1.8rem;
+                font-family: $vindro-openSans;
+            }
+
+            .prompt-links {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 21px;
+
+                button {
+                    font-size: 1.4rem;
+                }
+
+                p {
+                    font-size: 2.1rem;
+                }
+            }
+        }
+    }
+}

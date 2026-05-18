@@ -1,7 +1,7 @@
 {
-    "tagline": "An idle game",
+    "tagline": "An Idle Game",
     "shared": {
-        "minerCosts": "1 Miner costs",
+        "minerCosts": "🤖 1 Miner costs",
         "autoBuyQty": "Nº to AutoBuy:",
         "totalCost": "Total cost:",
         "production": "Production",
@@ -10,7 +10,7 @@
     },
     "iron": {
         "miningTitle": "Iron Mining",
-        "automateTitle": "🤖 Automate Iron Mining",
+        "automateTitle": "Automate Iron Mining",
         "totalLabel": "Total Iron",
         "minersLabel": "Iron Miners",
         "resourceName": "Iron"
@@ -31,7 +31,7 @@
     },
     "silver": {
         "miningTitle": "Silver Mining",
-        "automateTitle": "🤖 Automate Silver Mining",
+        "automateTitle": "Automate Silver Mining",
         "totalLabel": "Total Silver",
         "minersLabel": "Silver Miners",
         "requires": "Requires",

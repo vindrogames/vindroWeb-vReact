@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
 import { useAuth } from '../../../contexts/auth/AuthContext';
 import { toUrlSlug } from '../../../utils/urlUtils';
@@ -128,10 +128,10 @@ const PoolPage = () => {
 
     useEffect(() => {
         if (autoModalFired.current) return;
-        if (loading || showWelcomeModal || !user || isMember || isOwner || notFound || fetchFailed || !poolData) return;
+        if (loading || showWelcomeModal || !user || isMember || isOwner || !poolData) return;
         autoModalFired.current = true;
         setShowTutorialModal(true);
-    }, [loading, showWelcomeModal, user, isMember, isOwner, notFound, fetchFailed, poolData, myPlays.length]);
+    }, [loading, showWelcomeModal, user, isMember, isOwner, poolData, myPlays.length]);
 
     // --- Data fetching ---
     const fetchPoolDetail = useCallback(async () => {
@@ -221,14 +221,15 @@ const PoolPage = () => {
         { header: "Bracket Pts", width: "20.5%", render: (item) => (item.bracket_points ?? 0).toString() },
     ];
 
+    if (!loading && (notFound || fetchFailed)) return <Navigate to="/404" replace />;
+
     // --- Overlay logic ---
-    // Only blocks for unauthenticated users and error states — members see the pool directly
-    const showOverlay = loading || notFound || fetchFailed || !user;
+    // Only blocks for unauthenticated users — members see the pool directly
+    const showOverlay = loading || !user;
 
     // Shown after both auto-fire modals are dismissed without the user joining the pool
     const showPrivatePrompt =
-        !loading && !!user && !isMember && !isOwner &&
-        !notFound && !fetchFailed && !!poolData &&
+        !loading && !!user && !isMember && !isOwner && !!poolData &&
         autoModalFired.current &&
         !showTutorialModal && !showCreatePlayModal && !showJoinPoolModal;
 
@@ -358,42 +359,29 @@ const PoolPage = () => {
                 <div>
                     {showOverlay && !loading && (
                         <div className="auth-prompt-overlay">
-                            {notFound || fetchFailed ? (
-                                <div className="auth-prompt-message">
-                                    <h5>{notFound ? 'This pool does not exist.' : 'Could not load pool.'}</h5>
+                            <div className="auth-prompt-message">
+
+                                <div className="top-half auth-prompt-half">
+                                    <h5>To see this Pool you must be logged in.</h5>
+                                    <div className="prompt-links">
+                                        <button className="btn btn-tan" onClick={() => setShowAuthModal(true)}>Log In</button>
+                                    </div>
+                                </div>
+
+                                <div className="section-seperator"></div>
+
+                                <div className="bottom-half auth-prompt-half">
+                                    <div className="double-text">
+                                        <h5>First Time?</h5>
+                                        <p>Check out how it works and come back later.</p>
+                                    </div>
                                     <div className="prompt-links">
                                         <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>
-                                            Back to Tournament
+                                            About the Tournament
                                         </button>
                                     </div>
                                 </div>
-                            ) : (
-                                <div className="auth-prompt-overlay">
-                                    <div className="auth-prompt-message">
-
-                                        <div className="top-half auth-prompt-half">
-                                            <h5>To see this Pool you must be logged in.</h5>
-                                            <div className="prompt-links">
-                                                <button className="btn btn-tan" onClick={() => setShowAuthModal(true)}>Log In</button>
-                                            </div>
-                                        </div>
-
-                                        <div className="section-seperator"></div>
-
-                                        <div className="bottom-half auth-prompt-half">
-                                            <div className="double-text">
-                                                <h5>First Time?</h5>
-                                                <p>Check out how it works and come back later.</p>
-                                            </div>
-                                            <div className="prompt-links">
-                                                <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>
-                                                    About the Tournament
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                            </div>
                         </div>
                     )}
 

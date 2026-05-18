@@ -1,0 +1,113 @@
+{
+    "helmet": {
+        "title": "{{name}} | Vindro Brackets",
+        "description": "Make your predictions for {{name}} on Vindrogames. Create plays, join pools and compete with friends.",
+        "keywords": "brackets, predictions, pools, vindrogames"
+    },
+    "hero": {
+        "tagline": "Create a Play. Make your picks. Submit to a Pool.",
+        "startsIn": "Starts in",
+        "underwayPrefix": "Under",
+        "underwayHighlight": "Way!",
+        "closed": "Closed"
+    },
+    "buttons": {
+        "createPlay": "Create a Play",
+        "submitPlay": "Submit a Play",
+        "createPool": "Create a Pool"
+    },
+    "plays": {
+        "title": "Your Plays",
+        "dropdownSummary": "A \"Play\" includes your predictions for a Tournament.",
+        "playsPrivate": "Your plays are private until you submit them to a pool.",
+        "disabledTooltip": "Tournament has started",
+        "colName": "Name",
+        "colUpdated": "Updated",
+        "colGroupsPts": "Groups Pts.",
+        "colBracketPts": "Bracket Pts.",
+        "loading": "Loading plays...",
+        "empty": "No plays found."
+    },
+    "inPools": {
+        "title": "Plays in Pools",
+        "dropdownSummary": "To compete, submit your plays to Pools.",
+        "hint1": "We have a public vindro<vindro>Public</vindro> Pool for everybody to see.",
+        "hint2": "You can submit as many plays as you like to our public pool.",
+        "hint3": "Users can create Private Pools that require a code.",
+        "hint4": "Private pools can limit plays per user and/or set money prizes.",
+        "colPlay": "Play",
+        "colPool": "Pool",
+        "colManager": "Manager",
+        "colPos": "Pos.",
+        "loading": "Loading pools...",
+        "empty": "You haven't joined any pools yet."
+    },
+    "yourPools": {
+        "title": "Your Pools",
+        "dropdownSummary": "Create a Private Pool for you and your people!",
+        "hint1": "You can decide to allow multiple plays per user or limit to 1.",
+        "hint2": "You can configure the Pool as a <money>Money Pool</money>, setting a cost per play.",
+        "hint3": "You can also set the prize payouts by standing.",
+        "hint4": "You will be able to eliminate any play from your Pool.",
+        "colPool": "Pool",
+        "colMembers": "Members",
+        "colPaid": "Paid",
+        "colPrizes": "Prizes",
+        "loading": "Loading pools...",
+        "empty": "You haven't created any pools yet."
+    },
+    "auth": {
+        "mustLogin": "To participate you must be logged in.",
+        "noAccountHint": "*If you don't have an account, signing up is easy!",
+        "checkItOut": "Or check it out before getting started."
+    },
+    "leaderboard": {
+        "title": "Leaderboard",
+        "colPos": "Pos.",
+        "colPlayer": "Player",
+        "colPlay": "Play",
+        "colGroupsPts": "Groups Pts",
+        "colBracketPts": "Bracket Pts",
+        "empty": "No entries found."
+    },
+    "world-cup-2026": {
+        "subtitle": "Make your picks. Submit to a pool. See how you do!",
+        "playsHint": "This World Cup 2026 has 2 stages: <bold>Groups</bold> & the <bold>Bracket</bold>",
+        "about": {
+            "groupsTitle": "Groups Stage",
+            "groupsP1": "Predict the precise final ranking (1st–4th) for all 48 teams in their respective groups. You gain 1 point for each position placed correctly.",
+            "groupsP2": "Achieving a perfect 48/48 record awards a crucial +2 point bonus, for a maximum possible 50-point bank.",
+            "groupsP3": "Points banked here act as a strategic currency for future swaps during the Bracket Stage.",
+            "groupsColPrediction": "Prediction",
+            "groupsRowPlacement": "Correct Placement",
+            "groupsRowTotal": "Total Placements (12 Groups x 4)",
+            "groupsRowBonus": "Perfect Groups Bonus",
+            "groupsRowMax": "Max Bankable Points",
+            "bracketTitle": "Bracket Stage",
+            "bracketP1": "A clean, fresh bracket is provided after the Group stage is complete so you can predict all winners from the Round of 32 through to the Champion.",
+            "bracketP2": "This knockout structure is standard elimination, but with a unique twist. Depending on your results from the Group phase, you will have the ability to course-correct when needed!",
+            "bracketP3": "Points increase in value each subsequent round: 2 – 4 – 8 – 16 – 32, ensuring a dramatic and competitive finish.",
+            "bracketColRound": "Round",
+            "bracketColGames": "Games",
+            "bracketRound32": "Round of 32",
+            "bracketRound16": "Round of 16",
+            "bracketQF": "Quarter-finals",
+            "bracketSF": "Semi-finals",
+            "bracketFinal": "Final",
+            "bracketTotal": "Total Bracket Potential",
+            "swapTitle": "Swapping",
+            "swapP1": "In the event that one of your predictions is eliminated, you can activate your accumulated Group points to modify the path they were projected to win.",
+            "swapP2": "How it works: You aren't fixing the past (Round of 32 or Round of 16); you are buying a replacement guess for that team's future matches (Quarter-finals and onward).",
+            "swapP3": "Swaps only correct the path moving forward. They do not award missing points retrospectively.",
+            "swapP4": "The cost to make a swap increases in a strict Fibonacci sequence, making each subsequent correction exponentially more expensive: 3, 5, 8, 13, 21.",
+            "swapColNº": "Swap nº",
+            "swapColCost": "Cost",
+            "swapColSpent": "Points Spent",
+            "swap1": "1º Swap",
+            "swap2": "2º Swap",
+            "swap3": "3º Swap",
+            "swap4": "4º Swap",
+            "swap5": "5º Swap"
+        }
+    }
+}
