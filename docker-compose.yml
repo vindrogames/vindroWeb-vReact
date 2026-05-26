@@ -31,8 +31,10 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./vindro-vite:/app
-      - /app/node_modules
+      - ./vindro-vite/src:/app/src
+      - ./vindro-vite/public:/app/public
+      - ./vindro-vite/index.html:/app/index.html
+      - ./vindro-vite/vite.config.js:/app/vite.config.js
     environment:
       - NODE_ENV=development
       - VITE_AUTH_CHEAT=false
