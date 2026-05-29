@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-const MEDIUM_ROUNDS = ['R32', 'R16', 'QF', 'SF'];
-
-const MatchSlot = ({ match }) => (
+const MatchSlot = ({ match, t }) => (
     <div className="teams-container">
-        <div className="team-card">{match?.home || ''}</div>
-        <div className="team-card">{match?.away || ''}</div>
+        <div className={`team-card${!match?.home ? ' team-card--empty' : ''}`}>
+            {match?.home && typeof match.home === 'object'
+                ? <><img src={`/img/vindro-flags/${match.home.flag}.webp`} alt="" className="bk-team-flag" /><span className="bk-team-name">{t(match.home.name)}</span></>
+                : match?.home || ''}
+        </div>
+        <div className={`team-card${!match?.away ? ' team-card--empty' : ''}`}>
+            {match?.away && typeof match.away === 'object'
+                ? <><img src={`/img/vindro-flags/${match.away.flag}.webp`} alt="" className="bk-team-flag" /><span className="bk-team-name">{t(match.away.name)}</span></>
+                : match?.away || ''}
+        </div>
     </div>
 );
 
@@ -31,7 +38,7 @@ const ConnR = () => (
     </div>
 );
 
-const LeftCard = ({ r32, r16, qf, activeRound, isEditable, isSwappable, id, activeEditId, onEditingChange }) => {
+const LeftCard = ({ r32, r16, qf, activeRound, isEditable, isSwappable, id, activeEditId, onEditingChange, t }) => {
     const isFocused = activeEditId === id;
     const isDimmed = activeEditId && !isFocused;
 
@@ -52,7 +59,7 @@ const LeftCard = ({ r32, r16, qf, activeRound, isEditable, isSwappable, id, acti
                 </button>
             )}
             <div className="round-col round-1-col">
-                {r32.map((m, i) => <MatchSlot key={m?.id ?? i} match={m} />)}
+                {r32.map((m, i) => <MatchSlot key={m?.id ?? i} match={m} t={t} />)}
             </div>
             <div className="connector-col">{r32.map((_, i) => <ConnL key={i} />)}</div>
             <div className="round-col round-2-col">{r32.map((m, i) => <TeamSlot key={i} team={m?.winner} />)}</div>
@@ -64,7 +71,7 @@ const LeftCard = ({ r32, r16, qf, activeRound, isEditable, isSwappable, id, acti
     );
 };
 
-const RightCard = ({ r32, r16, qf, activeRound, isEditable, isSwappable, id, activeEditId, onEditingChange }) => {
+const RightCard = ({ r32, r16, qf, activeRound, isEditable, isSwappable, id, activeEditId, onEditingChange, t }) => {
     const isFocused = activeEditId === id;
     const isDimmed = activeEditId && !isFocused;
 
@@ -90,12 +97,13 @@ const RightCard = ({ r32, r16, qf, activeRound, isEditable, isSwappable, id, act
             <div className="connector-col">{r16.map((_, i) => <ConnR key={i} />)}</div>
             <div className="round-col round-2-col">{r32.map((m, i) => <TeamSlot key={i} team={m?.winner} />)}</div>
             <div className="connector-col">{r32.map((_, i) => <ConnR key={i} />)}</div>
-            <div className="round-col round-1-col">{r32.map((m, i) => <MatchSlot key={m?.id ?? i} match={m} />)}</div>
+            <div className="round-col round-1-col">{r32.map((m, i) => <MatchSlot key={m?.id ?? i} match={m} t={t} />)}</div>
         </div>
     );
 };
 
 const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable, isSwappable }) => {
+    const { t } = useTranslation('tournament');
     const [activeRound, setActiveRound] = useState('R32');
     const [activeSection, setActiveSection] = useState('left');
 
@@ -116,14 +124,6 @@ const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable,
                     <button className={`bk-tab ${activeSection === 'center' ? ' bk-tab--active' : ''}`} onClick={() => setActiveSection('center')}>Finals</button>
                     <button className={`bk-tab ${activeSection === 'right' ? ' bk-tab--active' : ''}`} onClick={() => setActiveSection('right')}>Right</button>
                 </div>
-                {/* const MEDIUM_ROUNDS = ['R32', 'R16', 'QF', 'SF']; */}
-
-                <div className={`bk-medium-tabs ${activeSection == 'center' ? `is-dimmed` : ''} ${activeSection !== 'center' ? `is-${activeSection}` : ''}`}>
-                    <button className={`bk-tab ${activeRound === 'R32' ? 'bk-tab--active' : ''}`} onClick={() => setActiveRound('R32')}>R32</button>
-                    <button className={`bk-tab ${activeRound === 'R16' ? 'bk-tab--active' : ''}`} onClick={() => setActiveRound('R16')}>R16</button>
-                    <button className={`bk-tab ${activeRound === 'QF' ? 'bk-tab--active' : ''}`} onClick={() => setActiveRound('QF')}>QF</button>
-                    <button className={`bk-tab ${activeRound === 'SF' ? 'bk-tab--active' : ''}`} onClick={() => setActiveRound('SF')}>SF</button>
-                </div>
 
                 <div className="bk-tree" data-section={activeSection}>
                     <div className="bk-bracket-half bk-bracket-half--left">
@@ -133,6 +133,7 @@ const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable,
                             onEditingChange={onEditingChange}
                             r32={r32.slice(0, 4)} r16={r16.slice(0, 2)} qf={qf.slice(0, 1)}
                             activeRound={activeRound} isEditable={isEditable} isSwappable={isSwappable}
+                            t={t}
                         />
                         <LeftCard
                             id="bk-left-bottom"
@@ -140,6 +141,7 @@ const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable,
                             onEditingChange={onEditingChange}
                             r32={r32.slice(4, 8)} r16={r16.slice(2, 4)} qf={qf.slice(1, 2)}
                             activeRound={activeRound} isEditable={isEditable} isSwappable={isSwappable}
+                            t={t}
                         />
                     </div>
 
@@ -190,6 +192,7 @@ const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable,
                             onEditingChange={onEditingChange}
                             r32={r32.slice(8, 12)} r16={r16.slice(4, 6)} qf={qf.slice(2, 3)}
                             activeRound={activeRound} isEditable={isEditable} isSwappable={isSwappable}
+                            t={t}
                         />
                         <RightCard
                             id="bk-right-bottom"
@@ -197,6 +200,7 @@ const WorldCupBracketStage = ({ data, activeEditId, onEditingChange, isEditable,
                             onEditingChange={onEditingChange}
                             r32={r32.slice(12, 16)} r16={r16.slice(6, 8)} qf={qf.slice(3, 4)}
                             activeRound={activeRound} isEditable={isEditable} isSwappable={isSwappable}
+                            t={t}
                         />
                     </div>
                 </div>

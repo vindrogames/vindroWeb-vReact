@@ -71,193 +71,9 @@ main.play-pool {
         }
     }
 
-    // ── TAB NAV ───────────────────────────────────────────────────────────────
-    // Sits flush after the hero (no separator border).
-    // Background matches the stage sections so the nav visually extends them.
-    // Tabs align their left edge with the 84% centered content below:
-
-    .play-tab-nav {
-        position: absolute;
-        bottom: -1px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        z-index: 14;
-
-        .buttons-container {
-            width: 84%;
-
-            button {
-                background-color: $vindro-gray;
-                border-bottom: 1px solid $vindro-tan;
-                border-radius: 3px 3px 0 0;
-                padding: 14px 21px;
-                color: rgba($vindro-tan, 0.5);
-                font-family: $vindro-Montserrat;
-                font-size: 1.6rem;
-                font-weight: 600;
-                letter-spacing: 0.04em;
-                cursor: pointer;
-                transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-
-                &.active {
-                    color: white;
-                    border-left: 1px solid $vindro-tan;
-                    border-top: 1px solid $vindro-tan;
-                    border-right: 1px solid $vindro-tan;
-                    border-bottom: 1px solid $vindro-gray;
-                    background: $vindro-gray;
-                }
-
-                &:hover:not(.active) {
-                    color: rgba($vindro-teal, 0.6);
-                    border-color: rgba($vindro-teal, 0.4);
-
-                }
-            }
-        }
-
-    }
-
-    .play-pool-toggle-wrapper {
-        height: 100%;
-        background-color: $vindro-gray;
-        border-top: 1px solid $vindro-tan;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 21px;
-    }
-
-    .play-stages-wrapper, .plays-in-pools-wrapper {
-        padding-bottom: 42px;
-
-        section.play-prediction-container, section.user-picks-container {
-            background-color: $vindro-gray;
-            width: 100%;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 21px;
-
-            &#groups-predictions {
-                padding-top: 21px;
-            }
-
-            .prediction-display-intro {
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 14px;
-
-                .title-container-wrapper {
-                    width: 84%;
-                    padding: 14px 28px;
-                    border-bottom: 1px solid $vindro-teal;
-                    display: flex;
-                    align-items: flex-end;
-                    justify-content: space-between;
-                    gap: 7px;
-
-                    h3 {
-                        font-size: 4.2rem;
-                        font-weight: 400;
-                        color: white;
-                        font-family: $vindro-Montserrat;
-                    }
-
-                    h4 {
-                        font-size: 2.4rem;
-                        font-weight: 400;
-                    }
-                }
-            }
-
-            .prediction-display-content-wrapper {
-                width: 84%;
-
-                &#bracket-predictions-content {
-                    width: 100%;
-                    padding: 0 4%;
-                }
-
-                .edit-toggle-btn {
-                    position: absolute;
-                    top: 7px;
-                    right: 0;
-                    font-size: 1.2rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 42px;
-                    padding: 3px 14px;
-                    transition: all 0.2s ease;
-
-                    &#bk-left {
-                        right: 7px;
-                    }
-
-                    &#bk-right {
-                        left: 7px;
-                    }
-
-                    &#bk-finals {
-                        left: calc(50% - 21px);
-                    }
-
-                    @media (hover: hover) {
-                        &:hover:not(:disabled) {
-                            background-color: $vindro-neon-pink;
-                            color: white;
-                        }
-
-                        &.active {
-                            background-color: $vindro-neon-pink;
-                            color: white;
-                        }
-                    }
-
-                    @media (hover: none) {
-                        &.active {
-                            background-color: $vindro-neon-pink;
-                            color: white;
-                        }
-
-                        &:not(.active) {
-                            background-color: $vindro-tan;
-                            color: $vindro-black;
-                        }
-                    }
-
-                    &:active:not(:disabled) {
-                        background-color: darken($vindro-neon-pink, 10%);
-                        transform: scale(0.95);
-                    }
-                }
-            }
-
-            .last-updated p {
-                width: 100%;
-                padding: 7px 21px;
-                font-size: 1.4rem;
-                font-weight: 200;
-                text-align: center;
-                font-style: italic;
-
-                &.group-stage {
-                    padding-top: 0;
-                }
-            }
-
-        }
-    }
-
     .plays-in-pools-wrapper {
         padding: 21px 42px 42px;
+        padding-bottom: 42px;
         min-height: 50vh;
         align-items: center;
 
@@ -266,6 +82,214 @@ main.play-pool {
         }
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SHARED STAGE LAYOUT  —  PlayPage and TournamentPage guest play section
+// Lifted out of main.play-pool so both pages receive the same styles.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+.play-pool-toggle-wrapper {
+    height: 100%;
+    background-color: $vindro-gray;
+    border-top: 1px solid $vindro-tan;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 21px;
+}
+
+.play-stages-wrapper {
+    padding-bottom: 42px;
+
+    section.play-prediction-container, section.user-picks-container {
+        background-color: $vindro-gray;
+        width: 100%;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 21px;
+
+        &#groups-predictions, &#guest-groups {
+            padding-top: 21px;
+        }
+
+        .prediction-display-intro {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+
+            .title-container-wrapper {
+                width: 84%;
+                padding: 14px 28px;
+                border-bottom: 1px solid $vindro-teal;
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                gap: 7px;
+
+                h3 {
+                    font-size: 4.2rem;
+                    font-weight: 400;
+                    color: white;
+                    font-family: $vindro-Montserrat;
+                }
+
+                h4 {
+                    font-size: 2.4rem;
+                    font-weight: 400;
+                }
+            }
+        }
+
+        .prediction-display-content-wrapper {
+            width: 100%;
+            padding: 0 4%;
+
+            .edit-toggle-btn {
+                position: absolute;
+                top: 7px;
+                right: 0;
+                font-size: 1.2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 42px;
+                padding: 3px 14px;
+                transition: all 0.2s ease;
+
+                &#bk-left {
+                    right: 7px;
+                }
+
+                &#bk-right {
+                    left: 7px;
+                }
+
+                &#bk-finals {
+                    left: calc(50% - 21px);
+                }
+
+                @media (hover: hover) {
+                    &:hover:not(:disabled) {
+                        background-color: $vindro-neon-pink;
+                        color: white;
+                    }
+
+                    &.active {
+                        background-color: $vindro-neon-pink;
+                        color: white;
+                    }
+                }
+
+                @media (hover: none) {
+                    &.active {
+                        background-color: $vindro-neon-pink;
+                        color: white;
+                    }
+
+                    &:not(.active) {
+                        background-color: $vindro-tan;
+                        color: $vindro-black;
+                    }
+                }
+
+                &:active:not(:disabled) {
+                    background-color: darken($vindro-neon-pink, 10%);
+                    transform: scale(0.95);
+                }
+            }
+        }
+
+        .last-updated p {
+            width: 100%;
+            padding: 7px 21px;
+            font-size: 1.4rem;
+            font-weight: 200;
+            text-align: center;
+            font-style: italic;
+
+            &.group-stage {
+                padding-top: 0;
+            }
+        }
+
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TAB NAV  —  shared by PlayPage and TournamentPage
+// Sits flush at the bottom of any hero-half (which already has position:relative).
+// Tabs align their left edge with the 84% centered content below.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+.play-tab-nav {
+    position: absolute;
+    bottom: -1px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 20;
+    padding-left: 42px;
+
+    .buttons-container {
+        width: 100%;
+
+        button {
+            background-color: $vindro-gray;
+            border-bottom: 1px solid $vindro-tan;
+            border-radius: 3px 3px 0 0;
+            padding: 14px 21px;
+            color: rgba($vindro-tan, 0.5);
+            font-family: $vindro-Montserrat;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+
+            &.active {
+                color: white;
+                border-left: 1px solid $vindro-tan;
+                border-top: 1px solid $vindro-tan;
+                border-right: 1px solid $vindro-tan;
+                border-bottom: 1px solid $vindro-gray;
+                background: $vindro-gray;
+            }
+
+            // Play tab — blends into the gray play section below
+            &.tab-play.active {
+                border-bottom-color: $vindro-gray;
+            }
+
+            // About tab — blends into the tan section below
+            &.tab-about.active {
+                background-color: $vindro-tan;
+                color: $vindro-black;
+                border-bottom-color: $vindro-tan;
+            }
+
+            // Leaderboard tab — blends into the black section below
+            &.tab-leaderboard.active {
+                background-color: $vindro-black;
+                color: white;
+                border-bottom-color: $vindro-black;
+            }
+
+            @media (hover: hover) {
+                &:hover:not(.active) {
+                    color: rgba($vindro-teal, 0.6);
+                    border-color: rgba($vindro-teal, 0.4);
+                }
+            }
+        }
+    }
+}
+
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // DISABLED BUTTON WRAPPER  —  universal across all bracket pages
@@ -396,6 +420,25 @@ main.bracket-tournament-page.dropdown-active {
         pointer-events: none;
         transition: filter 0.2s, opacity 0.2s;
     }
+
+    // Guest (not logged in) sections use play-prediction-container
+    .play-prediction-container:not(.peer-dropdown-active) {
+
+        .title-container-wrapper,
+        .prediction-display-content-wrapper {
+            filter: blur(3px);
+            opacity: 0.5;
+            pointer-events: none;
+            transition: filter 0.2s, opacity 0.2s;
+        }
+    }
+
+    section.play-prediction-container.peer-dropdown-active {
+        filter: blur(3px);
+        opacity: 0.5;
+        pointer-events: none;
+        transition: filter 0.2s, opacity 0.2s;
+    }
 }
 
 main#play-page.dropdown-active {
@@ -439,7 +482,6 @@ main#play-page.dropdown-active {
 // section title bar, last-updated line, and bracket nav tabs.
 // The focused card itself breaks out via filter: none !important.
 
-.group-card,
 .bk-quarter-card,
 .round-col-finals,
 .bk-center {
@@ -452,7 +494,6 @@ main#play-page.dropdown-active {
     }
 }
 
-.group-card,
 .bk-quarter-card,
 .round-col-finals {
     &.focused-edit {
@@ -463,10 +504,6 @@ main#play-page.dropdown-active {
         pointer-events: all;
         transition: filter 0.22s, opacity 0.22s, border-color 0.22s;
     }
-}
-
-.group-card.focused-edit {
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
 }
 
 .bk-quarter-card.focused-edit,
@@ -493,7 +530,8 @@ main#play-page.dropdown-active {
 // enters edit mode. Stronger blur (6px) than within-section (4px) pushes them
 // further back. Comes after Layer 2 in the file → always wins by cascade.
 
-main#play-page section.is-dimmed {
+main#play-page section.is-dimmed,
+.play-stages-wrapper section.is-dimmed {
     filter: blur(6px);
     opacity: 0.4;
     pointer-events: none;

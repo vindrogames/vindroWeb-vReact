@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useNavigate, useParams, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import playServices from '../services/playServices';
 import poolServices from '../services/poolServices';
@@ -12,6 +12,7 @@ import WorldCupGroupStage from '../tournaments/world-cup-2026/stages/WorldCupGro
 import WorldCupBracketStage from '../tournaments/world-cup-2026/stages/WorldCupBracketStage';
 import DescriptionDropdown from '../components/DescriptionDropdown';
 import JoinPoolModal from '../components/modals/PoolJoinModal';
+import NewUserWelcomeModal from '../components/modals/NewUserWelcomeModal';
 import { EVENT_MAP } from '../tournaments/eventMap';
 
 const STAGE_MAP = {
@@ -62,7 +63,17 @@ const PlayPage = () => {
 
     const { tournament, userId, playName } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const { t } = useTranslation('play');
+
+    const [showNewUserModal, setShowNewUserModal] = useState(!!location.state?.newUser);
+
+    // Clear the route state so a manual refresh doesn't re-show the modal
+    useEffect(() => {
+        if (location.state?.newUser) {
+            window.history.replaceState({}, '');
+        }
+    }, []);
 
     const { user } = useAuth();
     const { showLoader, hideLoader } = useLoading();
@@ -313,8 +324,6 @@ const PlayPage = () => {
                 )}
             </section>
 
-
-
             {/* ── STAGES WRAPPER ── */}
             {(!isOwner || activeTab === 'play') && (
                 <div className="play-stages-wrapper play-pool-toggle-wrapper">
@@ -366,7 +375,6 @@ const PlayPage = () => {
                                     isOwner={isOwner}
                                     isEditable={isGroupEditable}
                                     isStageClosed={isGroupClosed}
-                                    activeEditId={activeEditId}
                                     onEditingChange={handleEditingChange}
                                     groupPoints={playData.group_points}
                                     onUpdate={handleUpdateGroupOrder}
@@ -435,7 +443,7 @@ const PlayPage = () => {
 
                             <div id="bracket-predictions-content" className="prediction-display-content-wrapper">
                                 <BracketStage
-                                    data={playData.bracket_predictions}
+                                    data={isBracketNotYet && eventConfig?.bracketSeed ? eventConfig.bracketSeed : playData.bracket_predictions}
                                     isOwner={isOwner}
                                     isEditable={isOwner && isBracketOpen}
                                     isSwappable={isOwner && isBracketClosed}
@@ -533,6 +541,16 @@ const PlayPage = () => {
                 code={errorCode}
                 onClose={() => setErrorCode(null)}
             />
+
+            {showNewUserModal && (
+                <NewUserWelcomeModal
+                    onDismiss={() => setShowNewUserModal(false)}
+                    onGoToProfile={() => {
+                        setShowNewUserModal(false);
+                        navigate(`/user/${user?.id}`);
+                    }}
+                />
+            )}
         </main>
     );
 };

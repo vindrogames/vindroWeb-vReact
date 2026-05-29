@@ -95,6 +95,22 @@
         &--empty {
             background: rgba(white, 0.70);
         }
+
+        .bk-team-flag {
+            width: 18px;
+            height: 12px;
+            object-fit: cover;
+            border-radius: 1px;
+            flex-shrink: 0;
+            margin-right: 4px;
+        }
+
+        .bk-team-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.9rem;
+        }
     }
 }
 

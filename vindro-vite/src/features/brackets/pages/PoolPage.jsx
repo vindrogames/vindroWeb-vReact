@@ -12,7 +12,6 @@ import PoolRemovePlayModal from '../components/modals/PoolRemovePlayModal';
 import PoolMoniesModal from '../components/modals/PoolMoniesModal';
 import PoolInviteModal from '../components/modals/PoolInviteModal';
 import PoolAdminModal from '../components/modals/PoolAdminModal';
-import NewUserTutorialModal from '../components/modals/new-user-tutorial';
 import Leaderboard from '../../../components/ui/Leaderboard';
 import poolServices from '../services/poolServices';
 import playServices from '../services/playServices';
@@ -82,7 +81,6 @@ const PoolPage = () => {
     const [showAdminModal, setShowAdminModal] = useState(false);
     const [showJoinPoolModal, setShowJoinPoolModal] = useState(false);
     const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
-    const [showTutorialModal, setShowTutorialModal] = useState(false);
     const [opErrorCode, setOpErrorCode] = useState(null); // operational errors only
 
     // --- All user plays for this tournament (fetched inline with pool data — no separate loading state) ---
@@ -130,7 +128,11 @@ const PoolPage = () => {
         if (autoModalFired.current) return;
         if (loading || showWelcomeModal || !user || isMember || isOwner || !poolData) return;
         autoModalFired.current = true;
-        setShowTutorialModal(true);
+        if (myPlays.length === 0) {
+            setShowCreatePlayModal(true);
+        } else {
+            setShowJoinPoolModal(true);
+        }
     }, [loading, showWelcomeModal, user, isMember, isOwner, poolData, myPlays.length]);
 
     // --- Data fetching ---
@@ -231,7 +233,7 @@ const PoolPage = () => {
     const showPrivatePrompt =
         !loading && !!user && !isMember && !isOwner && !!poolData &&
         autoModalFired.current &&
-        !showTutorialModal && !showCreatePlayModal && !showJoinPoolModal;
+        !showCreatePlayModal && !showJoinPoolModal;
 
     const memberCount = poolData?.current_member_count ?? leaderboard.length;
     const prizeTotal = (memberCount * parseFloat(poolData?.cost_per_play || 0)).toFixed(2);
@@ -423,18 +425,6 @@ const PoolPage = () => {
                 </div>
             </div>
 
-            <NewUserTutorialModal
-                isOpen={showTutorialModal}
-                onComplete={() => {
-                    setShowTutorialModal(false);
-                    if (myPlays.length === 0) {
-                        setShowCreatePlayModal(true);
-                    } else {
-                        setShowJoinPoolModal(true);
-                    }
-                }}
-                onSkip={() => setShowTutorialModal(false)}
-            />
             <PlayCreateNewModal
                 isOpen={showCreatePlayModal}
                 onConfirm={async (playName) => {
