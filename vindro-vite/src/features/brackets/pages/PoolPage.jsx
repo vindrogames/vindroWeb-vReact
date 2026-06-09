@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { FaEye } from 'react-icons/fa';
 import { useAuth } from '../../../contexts/auth/AuthContext';
 import { toUrlSlug } from '../../../utils/urlUtils';
@@ -12,11 +14,12 @@ import PoolRemovePlayModal from '../components/modals/PoolRemovePlayModal';
 import PoolMoniesModal from '../components/modals/PoolMoniesModal';
 import PoolInviteModal from '../components/modals/PoolInviteModal';
 import PoolAdminModal from '../components/modals/PoolAdminModal';
-import NewUserTutorialModal from '../components/modals/new-user-tutorial';
+import NotLoggedInviteModal from '../components/modals/NotLoggedInviteModal';
 import Leaderboard from '../../../components/ui/Leaderboard';
 import poolServices from '../services/poolServices';
 import playServices from '../services/playServices';
 import PoolPageHelmet from '../../../page-helmets/PoolPageHelmet';
+import { EVENT_MAP } from '../tournaments/eventMap';
 
 const getAvatarColorClass = (avatarUrl = '') => {
     const colors = ['teal', 'green', 'gray', 'yellow', 'red', 'orange', 'pink', 'purple'];
@@ -54,15 +57,14 @@ const cleanTournamentName = (t) =>
 
 const PoolPage = () => {
 
-    // --- Route (always available — used as fallback before pool data loads) ---
     const { tournament, poolName } = useParams();
     const navigate = useNavigate();
+    const { t } = useTranslation('play');
+    const eventConfig = EVENT_MAP[tournament];
 
-    // --- Auth / Loading ---
     const { user, showWelcomeModal } = useAuth();
     const { showLoader, hideLoader } = useLoading();
 
-    // --- Pool data ---
     const [poolData, setPoolData] = useState(null);
     const [leaderboard, setLeaderboard] = useState([]);
     const [isOwner, setIsOwner] = useState(false);
@@ -70,11 +72,9 @@ const PoolPage = () => {
     const [myPlaysInPool, setMyPlaysInPool] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Separate fetch-error states so the intro section always renders
     const [notFound, setNotFound] = useState(false);
     const [fetchFailed, setFetchFailed] = useState(false);
 
-    // --- UI state ---
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [showMoniesModal, setShowMoniesModal] = useState(false);
@@ -82,13 +82,44 @@ const PoolPage = () => {
     const [showAdminModal, setShowAdminModal] = useState(false);
     const [showJoinPoolModal, setShowJoinPoolModal] = useState(false);
     const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
-    const [showTutorialModal, setShowTutorialModal] = useState(false);
-    const [opErrorCode, setOpErrorCode] = useState(null); // operational errors only
+    const [showNeedPlayModal, setShowNeedPlayModal] = useState(false);
+    const [opErrorCode, setOpErrorCode] = useState(null);
 
-    // --- All user plays for this tournament (fetched inline with pool data — no separate loading state) ---
     const [myPlays, setMyPlays] = useState([]);
     const [isCreatingPlay, setIsCreatingPlay] = useState(false);
     const [createPlayError, setCreatePlayError] = useState(null);
+
+    // Code pre-filled from sessionStorage after the invite sign-in flow
+    const [prefillCode, setPrefillCode] = useState('');
+
+    // On user sign-in (return from AuthModal redirect), read any stored invite code
+    useEffect(() => {
+        if (!user) return;
+        const code = sessionStorage.getItem('pendingPoolCode');
+        if (code) {
+            setPrefillCode(code);
+            sessionStorage.removeItem('pendingPoolCode');
+        }
+    }, [user]);
+
+    // Dedicated effect for invite sign-in flow: fire join modal as soon as pool data is ready
+    useEffect(() => {
+        if (!prefillCode || !user || loading || isMember || isOwner || !poolData) return;
+        if (myPlays.length === 0) {
+            setShowNeedPlayModal(true);
+        } else {
+            setShowJoinPoolModal(true);
+        }
+    }, [prefillCode, user, loading, isMember, isOwner, poolData, myPlays.length]);
+
+    const handleNeedPlayNavigate = () => {
+        if (prefillCode) {
+            sessionStorage.setItem('pendingPoolCode', prefillCode);
+            sessionStorage.setItem('pendingInviteFlow', 'true');
+        }
+        setShowNeedPlayModal(false);
+        navigate(`/brackets/${tournament}`);
+    };
 
     const handleCreatePlayForPool = async (playName) => {
         if (!poolData?.tournament_id) return null;
@@ -119,8 +150,6 @@ const PoolPage = () => {
         }
     }, [poolData?.tournament_id, user?.id]);
 
-    // Auto-fire the appropriate modal once for logged-in non-members.
-    // Uses only `loading` — plays are fetched inline in fetchPoolDetail so no separate race condition.
     const autoModalFired = useRef(false);
     useEffect(() => {
         autoModalFired.current = false;
@@ -130,10 +159,13 @@ const PoolPage = () => {
         if (autoModalFired.current) return;
         if (loading || showWelcomeModal || !user || isMember || isOwner || !poolData) return;
         autoModalFired.current = true;
-        setShowTutorialModal(true);
+        if (myPlays.length === 0) {
+            setShowCreatePlayModal(true);
+        } else {
+            setShowJoinPoolModal(true);
+        }
     }, [loading, showWelcomeModal, user, isMember, isOwner, poolData, myPlays.length]);
 
-    // --- Data fetching ---
     const fetchPoolDetail = useCallback(async () => {
         setLoading(true);
         setNotFound(false);
@@ -148,8 +180,6 @@ const PoolPage = () => {
                 setIsMember(is_member);
                 setMyPlaysInPool(my_plays);
 
-                // Fetch all user plays for this tournament inline so `loading` covers both.
-                // This prevents the race condition where usePlays hadn't started fetching yet.
                 if (user?.id && pool.tournament_id) {
                     try {
                         const playsData = await playServices.getUserPlays(pool.tournament_id);
@@ -170,40 +200,52 @@ const PoolPage = () => {
         }
     }, [poolName]);
 
-    // Re-fetch on mount and whenever auth changes (login/logout)
     useEffect(() => {
         fetchPoolDetail();
     }, [user, fetchPoolDetail]);
 
-    // --- Handlers ---
+    // --- Invite handlers for unauthenticated users ---
+    const handleInviteSignIn = () => {
+        if (poolData?.join_code) {
+            sessionStorage.setItem('pendingPoolCode', poolData.join_code);
+        }
+        setShowAuthModal(true);
+    };
+
+    const handleInviteGuestPlay = () => {
+        if (poolData?.join_code) {
+            sessionStorage.setItem('pendingPoolCode', poolData.join_code);
+            sessionStorage.setItem('pendingInviteFlow', 'true');
+        }
+        navigate(`/brackets/${tournament}`);
+    };
+
     const handleLeaderboardClick = (item) => {
         navigate(`/brackets/${tournament}/play/${item.user.id}/${toUrlSlug(item.play_name)}`);
     };
 
-
-    // --- Leaderboard columns ---
     const leaderboardCols = [
         {
-            header: "Pos.",
+            header: t('poolPage.leaderboard.colPos'),
             width: "7%",
             narrow: true,
             render: (_, idx) => <strong>{idx + 1}</strong>
         },
         {
-            header: "Player",
+            header: t('poolPage.leaderboard.colPlayer'),
             width: "10%",
             narrow: true,
             render: (item) => {
                 const colorClass = getAvatarColorClass(item.user?.avatar || '');
                 return (
-                    <div className={`avatar-wrapper ${colorClass}`} data-tooltip={item.user?.username || 'Anonymous'}>
+                    <div className={`avatar-wrapper ${colorClass}`} data-tooltip={item.user?.username || t('poolPage.leaderboard.anonymous')}>
                         <img src={item.user?.avatar || '/img/profile_icons/gray-simple.webp'} className="player-avatar" alt="avatar" />
                     </div>
                 );
             }
         },
         {
-            header: "Play",
+            header: t('poolPage.leaderboard.colPlay'),
             width: "42%",
             truncate: true,
             className: "table-link",
@@ -217,28 +259,24 @@ const PoolPage = () => {
                 return <span className={`${colorClass} inline-bold table-link`}>{item.play_name}</span>;
             }
         },
-        { header: "Groups Pts", width: "20.5%", render: (item) => (item.group_points ?? 0).toString() },
-        { header: "Bracket Pts", width: "20.5%", render: (item) => (item.bracket_points ?? 0).toString() },
+        { header: t('poolPage.leaderboard.colGroupPts'), width: "20.5%", render: (item) => (item.group_points ?? 0).toString() },
+        { header: t('poolPage.leaderboard.colBracketPts'), width: "20.5%", render: (item) => (item.bracket_points ?? 0).toString() },
     ];
 
     if (!loading && (notFound || fetchFailed)) return <Navigate to="/404" replace />;
 
-    // --- Overlay logic ---
-    // Only blocks for unauthenticated users — members see the pool directly
-    const showOverlay = loading || !user;
+    const showNotLoggedInviteModal = !loading && !user && !!poolData && !showAuthModal;
 
-    // Shown after both auto-fire modals are dismissed without the user joining the pool
     const showPrivatePrompt =
         !loading && !!user && !isMember && !isOwner && !!poolData &&
         autoModalFired.current &&
-        !showTutorialModal && !showCreatePlayModal && !showJoinPoolModal;
+        !showCreatePlayModal && !showJoinPoolModal;
 
     const memberCount = poolData?.current_member_count ?? leaderboard.length;
     const prizeTotal = (memberCount * parseFloat(poolData?.cost_per_play || 0)).toFixed(2);
 
-    // Always render the full page — intro section uses URL params as fallback before data loads
     return (
-        <main id="pool-page" className="bracket-tournament-play-pool">
+        <main id="pool-page" className="bracket-tournament-play-pool play-pool">
 
             <PoolPageHelmet
                 poolName={poolData?.name || poolName}
@@ -250,14 +288,17 @@ const PoolPage = () => {
                 <div className="play-pool-intro-wrapper">
                     <div className="text-container">
                         <h1 className="profile-intro">
-                            {poolData?.tournament_name || cleanTournamentName(tournament)}
+                            {eventConfig
+                                ? <>{eventConfig.title.before}<span className="inline-bold inline-teal">{eventConfig.title.highlight}</span>{eventConfig.title.after}</>
+                                : (poolData?.tournament_name || cleanTournamentName(tournament))
+                            }
                         </h1>
                         <div className="play-specs">
-                            <h2><span className='inline-teal inline-bold'>pool </span>{poolData?.name || poolName}</h2>
+                            <h2><span className='inline-teal inline-bold'>{t('poolPage.poolLabel')} </span>{poolData?.name || poolName}</h2>
                         </div>
                     </div>
                     <div className="go-back-button-container">
-                        <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>Back</button>
+                        <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>{t('backToArea')}</button>
                     </div>
                 </div>
             </section>
@@ -265,16 +306,15 @@ const PoolPage = () => {
             <div className="pool-main-content-wrapper">
 
                 <section id="pool-details" className="pool-main-content">
-
                     {poolData && (
                         <div className="pool-specs-share">
 
                             <div className="pool-specs">
                                 {isOwner ? (
-                                    <h3>Created by <span className="inline-bold inline-neon-pink">YOU</span></h3>
+                                    <h3>{t('poolPage.specs.createdByYou')} <span className="inline-bold inline-neon-pink">{t('poolPage.specs.youLabel')}</span></h3>
                                 ) : (
                                     <div className="pool-creator-info">
-                                        <h3>Created <span className="inline-teal">by </span><span className="inline-bold">{poolData?.created_by}</span></h3>
+                                        <h3>{t('poolPage.specs.createdPrefix')} <span className="inline-teal">{t('poolPage.specs.createdBy')} </span><span className="inline-bold">{poolData?.created_by}</span></h3>
                                         <button
                                             className="avatar-link-btn"
                                             style={{ borderBottom: `2px solid ${getAvatarBorderColor(poolData?.created_by_avatar || '')}` }}
@@ -283,32 +323,31 @@ const PoolPage = () => {
                                         >
                                             <img src={poolData?.created_by_avatar || '/img/profile_icons/gray-simple.webp'} alt={poolData?.created_by} />
                                         </button>
-
                                     </div>
                                 )}
                                 <p className="pool-member-count">
                                     <span className="inline-teal inline-bold">{memberCount}</span>
-                                    {' '}{memberCount === 1 ? 'play' : 'plays'} submitted
+                                    {' '}{t('poolPage.specs.playsSubmittedLabel', { count: memberCount })}
                                 </p>
-                                
+
                                 {poolData?.is_money_pool && (
                                     <div className="pool-prize-row">
                                         <p className="pool-prize">
-                                            Prize Pot: <span className="inline-teal inline-bold">{poolData.currency || '€'}{prizeTotal}</span>
+                                            {t('poolPage.specs.prizePot')}: <span className="inline-teal inline-bold">{poolData.currency || '€'}{prizeTotal}</span>
                                         </p>
                                         <button className="prize-eye-btn" onClick={() => setShowMoniesModal(true)}>
                                             <FaEye />
                                         </button>
                                     </div>
                                 )}
-                                <p className="pool-join-code">Code: <span className="inline-teal inline-bold">{poolData?.join_code}</span></p>
+                                <p className="pool-join-code">{t('poolPage.specs.codeLabel')}: <span className="inline-teal inline-bold">{poolData?.join_code}</span></p>
                                 {poolData?.join_code && (
                                     <button
-                                    id="invite-friends-modal-trigger"
+                                        id="invite-friends-modal-trigger"
                                         className="btn btn-tan"
                                         onClick={() => setShowInviteModal(true)}
                                     >
-                                        Invite Friends
+                                        {t('inviteModal.triggerBtn')}
                                     </button>
                                 )}
                             </div>
@@ -319,19 +358,19 @@ const PoolPage = () => {
                                     onClick={() => myPlays.length === 0 ? setShowCreatePlayModal(true) : setShowJoinPoolModal(true)}
                                     disabled={user && !poolData.allow_multiple_plays_per_user && myPlaysInPool.length >= 1}
                                     title={user && !poolData.allow_multiple_plays_per_user && myPlaysInPool.length >= 1
-                                        ? 'This pool only allows one play per member'
+                                        ? t('poolPage.actions.onePlayLimit')
                                         : undefined}
                                 >
-                                    Submit a Play
+                                    {t('poolPage.actions.submitPlay')}
                                 </button>
                                 {isMember && !isOwner && (
                                     <button className="btn btn-tan" onClick={() => setShowRemoveModal(true)}>
-                                        Remove Play
+                                        {t('poolPage.actions.removePlay')}
                                     </button>
                                 )}
                                 {isOwner && (
                                     <button className="btn btn-tan" onClick={() => setShowAdminModal(true)}>
-                                        Edit Pool
+                                        {t('poolPage.actions.editPool')}
                                     </button>
                                 )}
                             </div>
@@ -341,100 +380,84 @@ const PoolPage = () => {
                 </section>
 
                 <section id="pool-leaderboard" className="leaderboard-display-container bg-gray hero-half">
-
                     <div className="leaderboard-header">
-                        <h3>Leaderboard</h3>
+                        <h3>{t('poolPage.leaderboard.title')}</h3>
                     </div>
-
                     <Leaderboard
                         data={leaderboard}
                         columns={leaderboardCols}
                         isLoading={loading}
                         onRowClick={handleLeaderboardClick}
-                        emptyMessage="No plays submitted yet."
+                        emptyMessage={t('poolPage.leaderboard.emptyMessage')}
                         tableContainerClasses="table-container bg-black backdrop-gray"
                     />
                 </section>
 
-                <div>
-                    {showOverlay && !loading && (
-                        <div className="auth-prompt-overlay">
-                            <div className="auth-prompt-message">
+                {showPrivatePrompt && (
+                    <div className="auth-prompt-overlay">
+                        <div className="auth-prompt-message">
 
-                                <div className="top-half auth-prompt-half">
-                                    <h5>To see this Pool you must be logged in.</h5>
-                                    <div className="prompt-links">
-                                        <button className="btn btn-tan" onClick={() => setShowAuthModal(true)}>Log In</button>
-                                    </div>
+                            <div className="top-half auth-prompt-half">
+                                <h5>{t('poolPage.privatePrompt.title')}</h5>
+                                <div className="double-text">
+                                    <p>{t('poolPage.privatePrompt.submitToView')}</p>
                                 </div>
-
-                                <div className="section-seperator"></div>
-
-                                <div className="bottom-half auth-prompt-half">
-                                    <div className="double-text">
-                                        <h5>First Time?</h5>
-                                        <p>Check out how it works and come back later.</p>
-                                    </div>
-                                    <div className="prompt-links">
-                                        <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>
-                                            About the Tournament
-                                        </button>
-                                    </div>
+                                <div className="prompt-links">
+                                    <button
+                                        className="btn btn-tan"
+                                        onClick={() => myPlays.length === 0 ? setShowCreatePlayModal(true) : setShowJoinPoolModal(true)}
+                                    >
+                                        {t('poolPage.privatePrompt.submitPlay')}
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-                    )}
 
-                    {showPrivatePrompt && (
-                        <div className="auth-prompt-overlay">
-                            <div className="auth-prompt-message">
+                            <div className="section-seperator"></div>
 
-                                <div className="top-half auth-prompt-half">
-                                    <h5>This is a private pool.</h5>
-                                    <div className="double-text">
-                                        <p>Submit a play to view the leaderboard.</p>
-                                    </div>
-                                    <div className="prompt-links">
-                                        <button
-                                            className="btn btn-tan"
-                                            onClick={() => myPlays.length === 0 ? setShowCreatePlayModal(true) : setShowJoinPoolModal(true)}
-                                        >
-                                            Submit a Play
-                                        </button>
-                                    </div>
+                            <div className="bottom-half auth-prompt-half">
+                                <div className="double-text">
+                                    <p>{t('poolPage.privatePrompt.notInterested')}</p>
                                 </div>
-
-                                <div className="section-seperator"></div>
-
-                                <div className="bottom-half auth-prompt-half">
-                                    <div className="double-text">
-                                        <p>Not interested? Go back to the tournament.</p>
-                                    </div>
-                                    <div className="prompt-links">
-                                        <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>
-                                            Back to Tournament
-                                        </button>
-                                    </div>
+                                <div className="prompt-links">
+                                    <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>
+                                        {t('poolPage.privatePrompt.backToTournament')}
+                                    </button>
                                 </div>
-
                             </div>
+
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
 
-            <NewUserTutorialModal
-                isOpen={showTutorialModal}
-                onComplete={() => {
-                    setShowTutorialModal(false);
-                    if (myPlays.length === 0) {
-                        setShowCreatePlayModal(true);
-                    } else {
-                        setShowJoinPoolModal(true);
-                    }
-                }}
-                onSkip={() => setShowTutorialModal(false)}
+            <NotLoggedInviteModal
+                isOpen={showNotLoggedInviteModal}
+                poolData={poolData}
+                poolName={poolName}
+                onSignIn={handleInviteSignIn}
+                onGuestPlay={handleInviteGuestPlay}
+                onClose={() => navigate(`/brackets/${tournament}`)}
             />
+
+            {showNeedPlayModal && ReactDOM.createPortal(
+                <div className="modal-overlay">
+                    <div className="modal-overlay-content-container pool-invite-modal" onClick={e => e.stopPropagation()}>
+                        <button className="close-button" onClick={() => setShowNeedPlayModal(false)}>&times;</button>
+                        <div className="modal-gallery">
+                            <h2>
+                                {t('poolPage.needPlayModal.titlePrefix')}{' '}
+                                <span className="inline-teal inline-bold">{t('poolPage.needPlayModal.titleHighlight')}</span>
+                            </h2>
+                            <p>{t('poolPage.needPlayModal.text')}</p>
+                            <button className="btn btn-tan confirm-btn" onClick={handleNeedPlayNavigate}>
+                                {t('poolPage.needPlayModal.cta')}
+                            </button>
+                        </div>
+                    </div>
+                </div>,
+                document.body
+            )}
+
             <PlayCreateNewModal
                 isOpen={showCreatePlayModal}
                 onConfirm={async (playName) => {
@@ -453,9 +476,10 @@ const PoolPage = () => {
                 isOpen={showJoinPoolModal}
                 tournamentId={poolData?.tournament_id}
                 plays={myPlays}
-                onCancel={() => setShowJoinPoolModal(false)}
-                onSuccess={() => fetchPoolDetail()}
+                onCancel={() => { setShowJoinPoolModal(false); setPrefillCode(''); }}
+                onSuccess={() => { setPrefillCode(''); fetchPoolDetail(); }}
                 skipToPrivate
+                prefillCode={prefillCode}
             />
             <AuthModal
                 isOpen={showAuthModal}

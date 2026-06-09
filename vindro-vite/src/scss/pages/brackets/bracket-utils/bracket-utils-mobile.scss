@@ -2,28 +2,26 @@
 
 @media(max-width: 960px) {
 
-    main.play-pool {
-        .play-stages-wrapper {
+    .play-stages-wrapper {
 
-            section.play-prediction-container {
+        section.play-prediction-container {
 
-                .prediction-display-intro {
+            .prediction-display-intro {
+                width: 100%;
+                padding: 0 42px;
+
+                .title-container-wrapper {
                     width: 100%;
-                    padding: 0 42px;
+                }
 
-                    .title-container-wrapper {
-                        width: 100%;
-                    }
+                .description-container {
+                    width: 100%;
 
-                    .description-container {
-                        width: 100%;
+                    .right-container {
+                        flex-direction: row;
 
-                        .right-container {
-                            flex-direction: row;
-
-                            .tournament-status-spacer {
-                                display: block;
-                            }
+                        .tournament-status-spacer {
+                            display: block;
                         }
                     }
                 }
@@ -34,8 +32,10 @@
     .description-container {
         padding: 7px 0 14px 14px;
         flex-direction: column;
+
         .description-dropdown {
             width: 100%;
+
             .description-toggle {
                 font-size: 1.6rem;
             }
@@ -66,53 +66,50 @@
 
 @media(max-width: 678px) {
 
-    main.play-pool {
+    .play-stages-wrapper {
 
-        .play-stages-wrapper {
+        section.play-prediction-container {
+            gap: 7px;
 
-            section.play-prediction-container {
-                gap: 7px;
+            .prediction-display-intro {
+                padding: 0 21px;
 
-                .prediction-display-intro {
-                    padding: 0 21px;
+                .title-container-wrapper {
+                    padding: 14px 21px;
+                }
 
-                    .title-container-wrapper {
-                        padding: 14px 21px;
+                .description-container {
+
+                    .description-dropdown {
+
+                        .description-toggle {
+                            width: 100%;
+                        }
                     }
 
-                    .description-container {
+                    .right-container {
+                        //flex-direction: column;
+                        //align-items: center;
 
-                        .description-dropdown {
-
-                            .description-toggle {
-                                width: 100%;
-                            }
+                        p {
+                            font-size: 1.6rem;
                         }
 
-                        .right-container {
-                            //flex-direction: column;
-                            //align-items: center;
-
-                            p {
-                                font-size: 1.6rem;
-                            }
-
-                            .tournament-status-spacer {
-                                //display: none;
-                            }
+                        .tournament-status-spacer {
+                            //display: none;
                         }
                     }
                 }
             }
         }
+    }
 
-        .play-tab-nav {
+    .play-tab-nav {
 
-            .buttons-container button {
-                padding: 14px;
-                font-size: 1.4rem;
-                font-weight: 500;
-            }
+        .buttons-container button {
+            padding: 14px;
+            font-size: 1.4rem;
+            font-weight: 500;
         }
     }
 
@@ -168,43 +165,52 @@
 
 @media(max-width: 450px) {
 
-    main.play-pool {
-        .play-stages-wrapper {
+    .play-tab-nav {
+        padding-left: 21px;
 
-            section.play-prediction-container {
+        .buttons-container {
+            button {
+                padding: 10px 14px;
+            }
 
-                .prediction-display-intro {
-                    gap: 7px;
+        }
+    }
 
-                    .title-container-wrapper {
+    .play-stages-wrapper {
 
-                        h3 {
-                            width: auto;
-                            text-align: center;
-                            font-size: 3.2rem;
-                        }
+        section.play-prediction-container {
 
-                        h4 {
-                            font-size: 2.1rem;
+            .prediction-display-intro {
+                gap: 7px;
+
+                .title-container-wrapper {
+
+                    h3 {
+                        width: auto;
+                        text-align: center;
+                        font-size: 3.2rem;
+                    }
+
+                    h4 {
+                        font-size: 2.1rem;
+                    }
+                }
+
+                .description-container {
+
+                    .description-dropdown {
+
+                        .description-toggle {
+                            width: 100%;
                         }
                     }
 
-                    .description-container {
+                    .right-container {
+                        flex-direction: column;
+                        align-items: center;
 
-                        .description-dropdown {
-
-                            .description-toggle {
-                                width: 100%;
-                            }
-                        }
-
-                        .right-container {
-                            flex-direction: column;
-                            align-items: center;
-
-                            .tournament-status-spacer {
-                                display: none;
-                            }
+                        .tournament-status-spacer {
+                            display: none;
                         }
                     }
                 }
@@ -280,32 +286,42 @@
 
 @media(max-width: 376px) {
 
-    main.play-pool {
-        .play-stages-wrapper {
+    .play-tab-nav {
+        padding-left: 14px;
 
-            section.play-prediction-container {
+        .buttons-container {
+            button {
+                font-size: 1.2rem;
+                padding: 10px 14px;
+            }
 
-                .prediction-display-intro {
-                    padding: 0 14px;
+        }
+    }
 
-                    .title-container-wrapper {
-                        padding: 7px 14px;
+    .play-stages-wrapper {
 
-                        h3 {
-                            width: auto;
-                            text-align: center;
-                            font-size: 2.4rem;
-                        }
+        section.play-prediction-container {
 
-                        h4 {
-                            font-size: 1.6rem;
-                        }
+            .prediction-display-intro {
+                padding: 0 14px;
+
+                .title-container-wrapper {
+                    padding: 7px 14px;
+
+                    h3 {
+                        width: auto;
+                        text-align: center;
+                        font-size: 2.4rem;
+                    }
+
+                    h4 {
+                        font-size: 1.6rem;
                     }
                 }
+            }
 
-                .prediction-display-content-wrapper {
-                    width: 96%;
-                }
+            .prediction-display-content-wrapper {
+                width: 96%;
             }
         }
     }

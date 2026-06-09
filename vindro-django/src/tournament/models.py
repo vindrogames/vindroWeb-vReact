@@ -144,7 +144,7 @@ class TournamentPool(models.Model):
     description = models.TextField(blank=True)
     created_by = models.ForeignKey(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='created_pools',
         null=True,
         blank=True,

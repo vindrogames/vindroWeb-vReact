@@ -1,38 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import SubmitPlayToPool from './PoolSubmitPlayModal';
 import PoolSubmitResponseModal from './PoolSubmitResponseModal';
 
-const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, onCreatePlay, skipToPrivate = false, prefillCode = '' }) => {
+const PlayNotInPoolsModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, onCreatePlay }) => {
+    const { t } = useTranslation('play');
 
     const [submissionFlow, setSubmissionFlow] = useState({ isOpen: false, type: null });
     const [responseFlow, setResponseFlow] = useState({ isOpen: false, results: [] });
     const [joinedPool, setJoinedPool] = useState(null);
 
-    // When opening, jump straight to private submission if requested
     useEffect(() => {
         if (isOpen) {
-            setSubmissionFlow(skipToPrivate
-                ? { isOpen: true, type: 'private' }
-                : { isOpen: false, type: null }
-            );
+            setSubmissionFlow({ isOpen: false, type: null });
             setResponseFlow({ isOpen: false, results: [] });
             setJoinedPool(null);
         }
-    }, [isOpen, skipToPrivate]);
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
-    // --- Join flow ---
     const handleJoinPool = (type) => setSubmissionFlow({ isOpen: true, type });
-    const closeSubmissionFlow = () => {
-        if (skipToPrivate) {
-            onCancel();
-        } else {
-            setSubmissionFlow({ isOpen: false, type: null });
-        }
-    };
+    const closeSubmissionFlow = () => setSubmissionFlow({ isOpen: false, type: null });
 
     const handleSubmissionSuccess = (selectedIds, code, responseData) => {
         const serverResults = responseData.results || {};
@@ -52,7 +43,6 @@ const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, 
         setJoinedPool(null);
         setResponseFlow({ isOpen: false, results: [] });
         if (onSuccess) onSuccess(pool);
-        onCancel();
     };
 
     return (
@@ -62,23 +52,31 @@ const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, 
                     <div className="modal-overlay-content-container" onClick={(e) => e.stopPropagation()}>
                         <button className="close-button" onClick={onCancel}>&times;</button>
 
-                        <ShowcaseSection id="join-pool-gallery" className="modal-gallery">
-                            <h2>tournament<span className="inline-teal inline-bold">Pools</span></h2>
-                            <div className="modal-gallery-text">
-                                <p>Anybody can join our Public Vindro Games Pool.</p>
-                            </div>
-                            <button className="btn btn-tan" onClick={() => handleJoinPool('public')}>
-                                Join Vindro Public Pool
-                            </button>
+                        <ShowcaseSection className="modal-gallery">
+                            <h2>
+                                {t('poolPromptModal.titlePrefix')}
+                                <span className="inline-teal inline-bold">{t('poolPromptModal.titleHighlight')}</span>
+                            </h2>
+                            <p>{t('poolPromptModal.subtitle')}</p>
                         </ShowcaseSection>
 
-                        <ShowcaseSection id="join-private-pool" className="bottom-modal-gallery">
-                            <div className="bottom-modal-header">
-                                <h3>Have a Private code?</h3>
+                        <ShowcaseSection className="bottom-modal-gallery pool-prompt-bottom">
+                            <div className="pool-prompt-half">
+                                <h3>{t('poolPromptModal.publicTitle')}</h3>
+                                <p>{t('poolPromptModal.publicText')}</p>
+                                <button className="btn btn-tan" onClick={() => handleJoinPool('public')}>
+                                    {t('poolPromptModal.publicBtn')}
+                                </button>
                             </div>
-                            <button className="btn btn-tan" onClick={() => handleJoinPool('private')}>
-                                Join Private Pool
-                            </button>
+
+                            <div className="pool-half-divider" />
+
+                            <div className="pool-prompt-half">
+                                <h3>{t('poolPromptModal.privateTitle')}</h3>
+                                <button className="btn btn-ghost-outline" onClick={() => handleJoinPool('private')}>
+                                    {t('poolPromptModal.privateBtn')}
+                                </button>
+                            </div>
                         </ShowcaseSection>
                     </div>
                 </div>,
@@ -92,7 +90,7 @@ const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, 
                 plays={plays}
                 onConfirm={handleSubmissionSuccess}
                 onCancel={closeSubmissionFlow}
-                initialCode={prefillCode}
+                initialCode=''
                 onCreatePlay={onCreatePlay}
             />
 
@@ -106,4 +104,4 @@ const JoinPoolModal = ({ isOpen, tournamentId, plays = [], onCancel, onSuccess, 
     );
 };
 
-export default JoinPoolModal;
+export default PlayNotInPoolsModal;

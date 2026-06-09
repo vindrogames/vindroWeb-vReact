@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 
 const GroupCard = ({
     groupName,
@@ -8,59 +8,18 @@ const GroupCard = ({
     isStageClosed,
     groupPoints,
     onUpdate,
-    onSave,
-    onEditingChange,
-    onCancel,
-    isDimmed,
-    isFocused,
+    isEditing,
 }) => {
-    const [saving, setSaving] = useState(false);
-    const [saveError, setSaveError] = useState(null);
-    const [lastMoved, setLastMoved] = useState(null);
-    const cardRef = useRef(null);
+    const [moveHistory, setMoveHistory] = useState({});
 
-    useEffect(() => {
-        if (!isFocused) return;
+    const showBadge = (isEditable || isStageClosed) && isOwner;
 
-        const handleKeyDown = (e) => {
-            if (e.key === 'Escape') onCancel?.();
-        };
-        const handleMouseDown = (e) => {
-            if (cardRef.current && !cardRef.current.contains(e.target)) {
-                onCancel?.();
-            }
-        };
-
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('mousedown', handleMouseDown);
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-            document.removeEventListener('mousedown', handleMouseDown);
-        };
-    }, [isFocused, onCancel]);
-
-    // Use the isFocused prop to determine if this card is the one being edited
-    const isEditing = isFocused;
-
-    const toggleEdit = async () => {
-        if (isEditing) {
-            // Logic for Saving
-            setSaving(true);
-            setSaveError(null);
-            try {
-                await onSave();
-                setLastMoved(null);
-                if (onEditingChange) onEditingChange(false);
-            } catch (err) {
-                setSaveError(err.message || 'Failed to save. Try again.');
-            } finally {
-                setSaving(false);
-            }
-        } else {
-            // Logic for entering Edit mode
-            setSaveError(null);
-            if (onEditingChange) onEditingChange(true);
-        }
+    const clearTeamMove = (key) => {
+        setMoveHistory(prev => {
+            const next = { ...prev };
+            delete next[key];
+            return next;
+        });
     };
 
     const handleMove = (index, direction) => {
@@ -73,7 +32,10 @@ const GroupCard = ({
         newOrder.splice(newIndex, 0, movedItem);
 
         const teamKey = movedItem.id || movedItem.team;
-        setLastMoved({ key: teamKey, dir: direction });
+        setMoveHistory(prev => ({
+            ...prev,
+            [teamKey]: { dir: direction, id: (prev[teamKey]?.id || 0) + 1 },
+        }));
 
         if (typeof onUpdate === 'function') {
             onUpdate(groupName, newOrder);
@@ -81,66 +43,56 @@ const GroupCard = ({
     };
 
     return (
-        <div
-            ref={cardRef}
-            className={`group-card ${isOwner ? 'is-editable' : ''} ${isFocused ? 'focused-edit' : ''} ${isDimmed ? 'is-dimmed' : ''}`}
-        >
-            {/* Scenario 1 (not_ready): stage-not-ready centers the name; no badge */}
-            {/* Scenario 2 (open):      edit button shown for owner              */}
-            {/* Scenario 3 (closed):    pts badge shown for owner                */}
-            <div className={`group-header${!isEditable && !isStageClosed ? ' stage-not-ready' : ''}`}>
+        <div className={`group-card ${isOwner ? 'is-editable' : ''}`}>
+            <div className={`group-header${!showBadge ? ' stage-not-ready' : ''}`}>
                 <p>{groupName}</p>
-                {isEditable ? (
-                    <button
-                        className={`btn btn-tan edit-toggle-btn ${isEditing ? 'active' : ''}`}
-                        onClick={toggleEdit}
-                        disabled={saving}
-                    >
-                        {saving ? '...' : isEditing ? 'save' : 'edit'}
-                    </button>
-                ) : isStageClosed && isOwner && typeof groupPoints === 'number' ? (
-                    <span className="group-pts">{groupPoints} pts</span>
-                ) : null}
+                {showBadge && (
+                    <span className="group-pts">
+                        {typeof groupPoints === 'number' ? `${groupPoints} pts` : '— pts'}
+                    </span>
+                )}
             </div>
-
-            {saveError && (
-                <p className="group-card-error">{saveError}</p>
-            )}
 
             <div className="team-list">
                 {teams.map((team, i) => {
-                        const teamKey = team.id || team.team;
-                        const wasMovedDir = lastMoved?.key === teamKey ? lastMoved.dir : null;
-                        return (
-                            <div
-                                key={teamKey || i}
-                                className={`team-row rank-${i + 1} ${isEditing ? 'is-editing' : ''} ${wasMovedDir ? `just-moved-${wasMovedDir}` : ''}`}
-                            >
-                                <span className="rank-num">{i + 1}</span>
-                                <span className={`fi fi-${team.flag?.toLowerCase()} team-flag`}></span>
-                                <span className="team-name">{team.team}</span>
+                    const teamKey = team.id || team.team;
+                    const teamMove = moveHistory[teamKey] || null;
+                    const lastMoveDir = teamMove?.dir || null;
+                    const moveBtnId = teamMove?.id || 0;
+                    return (
+                        <div
+                            key={teamKey || i}
+                            className={`team-row rank-${i + 1} ${isEditing ? 'is-editing' : ''} ${lastMoveDir ? `just-moved-${lastMoveDir}` : ''}`}
+                        >
+                            <span className="rank-num">{i + 1}</span>
+                            <span className={`fi fi-${team.flag?.toLowerCase()} team-flag`}></span>
+                            <span className="team-name">{team.team}</span>
 
-                                {isEditable && isEditing && (
-                                    <div className="reorder-controls">
-                                        <button
-                                            className={`move-btn up${wasMovedDir === 'up' ? ' active' : ''}`}
-                                            disabled={i === 0 || saving}
-                                            onClick={() => handleMove(i, 'up')}
-                                        >
-                                            ▲
-                                        </button>
-                                        <button
-                                            className={`move-btn down${wasMovedDir === 'down' ? ' active' : ''}`}
-                                            disabled={i === teams.length - 1 || saving}
-                                            onClick={() => handleMove(i, 'down')}
-                                        >
-                                            ▼
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
+                            {isEditable && isEditing && (
+                                <div className="reorder-controls">
+                                    <button
+                                        key={lastMoveDir === 'up' ? `up-${moveBtnId}` : 'up'}
+                                        className={`move-btn up${lastMoveDir === 'up' ? ' active' : ''}`}
+                                        disabled={i === 0}
+                                        onClick={() => handleMove(i, 'up')}
+                                        onAnimationEnd={lastMoveDir === 'up' ? () => clearTeamMove(teamKey) : undefined}
+                                    >
+                                        ▲
+                                    </button>
+                                    <button
+                                        key={lastMoveDir === 'down' ? `down-${moveBtnId}` : 'down'}
+                                        className={`move-btn down${lastMoveDir === 'down' ? ' active' : ''}`}
+                                        disabled={i === teams.length - 1}
+                                        onClick={() => handleMove(i, 'down')}
+                                        onAnimationEnd={lastMoveDir === 'down' ? () => clearTeamMove(teamKey) : undefined}
+                                    >
+                                        ▼
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

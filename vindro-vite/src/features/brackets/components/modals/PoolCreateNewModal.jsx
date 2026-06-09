@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation, Trans } from 'react-i18next';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import usePools from '../../hooks/usePools';
 import { useLoading } from '../../../../contexts/LoadingContext';
-import { toUrlSlug, NAME_PATTERN, NAME_ERROR } from '../../../../utils/urlUtils';
+import { toUrlSlug, NAME_PATTERN } from '../../../../utils/urlUtils';
 
 const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, onCancel }) => {
+    const { t } = useTranslation('play');
     const { handleCreatePool, isSubmitting } = usePools(tournamentId);
     const { showLoader, hideLoader } = useLoading();
     const navigate = useNavigate();
@@ -33,15 +35,15 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
 
     const handleSubmit = async () => {
         if (!poolName.trim()) {
-            setError('Pool name is required.');
+            setError(t('createPoolModal.errorRequired'));
             return;
         }
         if (!NAME_PATTERN.test(poolName.trim())) {
-            setError(NAME_ERROR);
+            setError(t('createPoolModal.errorPattern'));
             return;
         }
         if (isMoneyPool && (!costPerPlay || parseFloat(costPerPlay) <= 0)) {
-            setError('Enter a valid cost per play greater than 0.');
+            setError(t('createPoolModal.errorCost'));
             return;
         }
         setError('');
@@ -62,11 +64,11 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                 navigate(`/brackets/${tournamentSlug}/pool/${toUrlSlug(result.data.name)}`);
             } else {
                 await hideLoader();
-                setError(result.error || 'Failed to create pool.');
+                setError(result.error || t('createPoolModal.errorFailed'));
             }
         } catch (err) {
             await hideLoader();
-            setError(err.message || 'A network error occurred.');
+            setError(err.message || t('createPoolModal.errorNetwork'));
         }
     };
 
@@ -81,12 +83,12 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                 <button className="close-button" onClick={onCancel}>&times;</button>
 
                 <ShowcaseSection id="create-pool-gallery" className="modal-gallery">
-                    <h2>create<span className="inline-teal inline-bold">Pool</span></h2>
+                    <h2>{t('createPoolModal.titlePrefix')}<span className="inline-teal inline-bold">{t('createPoolModal.titleHighlight')}</span></h2>
 
                     <input
                         type="text"
                         className={`play-name-input ${error && !poolName.trim() ? 'error' : ''}`}
-                        placeholder="Pool name"
+                        placeholder={t('createPoolModal.namePlaceholder')}
                         maxLength={28}
                         value={poolName}
                         onChange={(e) => {
@@ -110,7 +112,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                             >
                                 {allowMultiplePlays && <span>✓</span>}
                             </div>
-                            <span>Allow multiple plays per player</span>
+                            <span>{t('createPoolModal.allowMultiple')}</span>
                         </label>
                     </div>
 
@@ -126,7 +128,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                             >
                                 {isMoneyPool && <span>✓</span>}
                             </div>
-                            <span>Money pool</span>
+                            <span>{t('createPoolModal.moneyPool')}</span>
                         </label>
 
                         <div className={`cost-per-play-wrapper ${!isMoneyPool ? 'inactive' : ''}`}>
@@ -155,7 +157,7 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                                 }}
                                 disabled={!isMoneyPool || isSubmitting}
                             />
-                            <span className="cost-label">per play</span>
+                            <span className="cost-label">{t('createPoolModal.costLabel')}</span>
                         </div>
                     </div>
 
@@ -169,21 +171,27 @@ const PoolCreateNewModal = ({ isOpen, tournamentId, tournamentSlug, onCreated, o
                             onClick={handleSubmit}
                             disabled={isSubmitting || !poolName.trim()}
                         >
-                            {isSubmitting ? 'Creating...' : 'Create Pool'}
+                            {isSubmitting ? t('createPoolModal.creating') : t('createPoolModal.createBtn')}
                         </button>
                     </div>
                 </ShowcaseSection>
 
                 <ShowcaseSection id="create-pool-info" className="bottom-modal-gallery">
                     <div className="bottom-modal-header">
-                        <h3>Private Pool</h3>
+                        <h3>{t('createPoolModal.infoTitle')}</h3>
                     </div>
                     <div className="bottom-modal-text">
-                        <p>We will generate a pool<span className='inline-teal inline-bold'>Code</span></p>
-                        <p>It will be required to join.</p>
+                        <p>
+                            <Trans
+                                i18nKey="createPoolModal.infoText1"
+                                ns="play"
+                                components={{ code: <span className="inline-teal inline-bold" /> }}
+                            />
+                        </p>
+                        <p>{t('createPoolModal.infoText2')}</p>
                     </div>
                     <button className="btn btn-tan cancel-btn" onClick={onCancel} disabled={isSubmitting}>
-                        Cancel
+                        {t('createPoolModal.cancel')}
                     </button>
                 </ShowcaseSection>
             </div>

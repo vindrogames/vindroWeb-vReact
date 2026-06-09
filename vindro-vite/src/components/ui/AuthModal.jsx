@@ -30,12 +30,12 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
 
     const handleLogin = (provider) => {
         const backendUrl = getBackendUrl();
-        // Ensure the redirect URL is always absolute so Django's ?next= points to
-        // the React frontend, not back to Django itself
-        const rawRedirect = redirectTo || window.location.href;
-        const finalRedirect = rawRedirect.startsWith('http')
-            ? rawRedirect
-            : `${window.location.origin}${rawRedirect}`;
+        // Avoid sending the user back to /logout after OAuth completes
+        const currentPath = window.location.pathname;
+        const safePath = currentPath === '/logout' ? '/' : currentPath;
+        const finalRedirect = redirectTo
+            ? (redirectTo.startsWith('http') ? redirectTo : `${window.location.origin}${redirectTo}`)
+            : `${window.location.origin}${safePath}`;
 
         let oauthUrl = `${backendUrl}/accounts/${provider}/login/`;
         const encodedRedirect = encodeURIComponent(finalRedirect);
@@ -44,7 +44,7 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null, defaultMode = 'login' }
         // Flag for checkAuth to show the loader when the user returns from OAuth
         sessionStorage.setItem('oauth_pending', '1');
         // Record where the user was so the profile page welcome-back button can return them here
-        sessionStorage.setItem('login_origin', window.location.pathname);
+        sessionStorage.setItem('login_origin', safePath);
         window.location.href = oauthUrl;
     };
 

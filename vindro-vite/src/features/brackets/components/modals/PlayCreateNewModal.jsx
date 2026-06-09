@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { useTranslation, Trans } from 'react-i18next';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
-import { NAME_PATTERN, NAME_ERROR } from '../../../../utils/urlUtils';
+import { NAME_PATTERN } from '../../../../utils/urlUtils';
 
 const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }) => {
+    const { t } = useTranslation('play');
     const [playName, setPlayName] = useState('');
     const [localError, setLocalError] = useState('');
 
@@ -19,15 +21,15 @@ const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
     const handleConfirm = () => {
         const trimmedName = playName.trim();
         if (!trimmedName) {
-            setLocalError('Please enter a name for your play');
+            setLocalError(t('createModal.errorEmpty'));
             return;
         }
         if (trimmedName.length < 3) {
-            setLocalError('Play name must be at least 3 characters');
+            setLocalError(t('createModal.errorTooShort'));
             return;
         }
         if (!NAME_PATTERN.test(trimmedName)) {
-            setLocalError(NAME_ERROR);
+            setLocalError(t('createModal.errorPattern'));
             return;
         }
         onConfirm(trimmedName);
@@ -54,12 +56,12 @@ const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
                 </button>
 
                 <ShowcaseSection id="prediction-play-gallery" className="modal-gallery">
-                    <h2>prediction<span className='inline-teal inline-bold'>Play</span></h2>
+                    <h2>{t('createModal.titlePrefix')}<span className='inline-teal inline-bold'>{t('createModal.titleHighlight')}</span></h2>
 
                     <input
                         type="text"
                         className={`play-name-input ${activeError ? 'error' : ''}`}
-                        placeholder="Name your Play..."
+                        placeholder={t('createModal.namePlaceholder')}
                         value={playName}
                         onChange={(e) => {
                             setPlayName(e.target.value);
@@ -80,7 +82,7 @@ const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
                             onClick={handleConfirm}
                             disabled={!playName.trim() || isLoading}
                         >
-                            {isLoading ? 'Creating...' : 'Create Play'}
+                            {isLoading ? t('createModal.creating') : t('createModal.createBtn')}
                         </button>
                     </div>
 
@@ -91,18 +93,24 @@ const PlayCreateNewModal = ({ isOpen, onConfirm, onCancel, isLoading, apiError }
 
                 <ShowcaseSection className="bottom-modal-gallery">
                     <div className="bottom-modal-header">
-                        <h3>What is a Play?</h3>
+                        <h3>{t('createModal.sectionTitle')}</h3>
                     </div>
                     <div className="bottom-modal-text">
-                        <p>A <em><span className='inline-green inline-bold'>Play</span></em> is your set of predictions for both Group and Bracket stages.</p>
-                        <p>You can create multiple plays and enter different pools!</p>
+                        <p>
+                            <Trans
+                                i18nKey="createModal.hint1"
+                                ns="play"
+                                components={{ bold: <em><span className='inline-green inline-bold' /></em> }}
+                            />
+                        </p>
+                        <p>{t('createModal.hint2')}</p>
                     </div>
                     <button
                         className="btn btn-tan cancel-btn"
                         onClick={onCancel}
                         disabled={isLoading}
                     >
-                        Maybe Later
+                        {t('createModal.cancel')}
                     </button>
                 </ShowcaseSection>
             </div>

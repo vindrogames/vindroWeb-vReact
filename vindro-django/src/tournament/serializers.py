@@ -21,13 +21,13 @@ def serialize_tournament(tournament):
 
 
 def serialize_tournament_with_format(tournament):
-    
+
     data = serialize_tournament(tournament)
     try:
         fmt = tournament.format
         data['format'] = {
-            'groups': fmt.groups,
-            'bracket': fmt.bracket,
+            'groups': fmt.groups_stage,
+            'bracket': fmt.bracket_stage,
         }
     except Exception:
         data['format'] = None
