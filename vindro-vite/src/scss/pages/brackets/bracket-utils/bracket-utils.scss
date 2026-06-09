@@ -91,7 +91,6 @@ main.play-pool {
 .play-pool-toggle-wrapper {
     height: 100%;
     background-color: $vindro-gray;
-    border-top: 1px solid $vindro-tan;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -236,7 +235,20 @@ main.play-pool {
     z-index: 20;
     padding-left: 42px;
 
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: $vindro-tan;
+        z-index: 0;
+    }
+
     .buttons-container {
+        position: relative;
+        z-index: 1;
         width: 100%;
 
         button {
@@ -250,7 +262,7 @@ main.play-pool {
             font-weight: 600;
             letter-spacing: 0.04em;
             cursor: pointer;
-            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            transition: color 0.2s ease, background 0.2s ease;
 
             &.active {
                 color: white;
@@ -283,7 +295,6 @@ main.play-pool {
             @media (hover: hover) {
                 &:hover:not(.active) {
                     color: rgba($vindro-teal, 0.6);
-                    border-color: rgba($vindro-teal, 0.4);
                 }
             }
         }

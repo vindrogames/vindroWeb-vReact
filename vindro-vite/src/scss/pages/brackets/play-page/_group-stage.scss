@@ -336,7 +336,6 @@
 
         .banner-auth-buttons {
             display: flex;
-            gap: 14px;
             justify-content: center;
 
             .btn {
@@ -344,20 +343,17 @@
                 font-size: 1.5rem;
                 padding: 10px 21px;
             }
+        }
 
-            .btn-ghost-outline {
-                background: transparent;
-                border: 1px solid rgba(white, 0.3);
-                color: rgba(white, 0.7);
-                transition: all 0.2s ease;
-
-                @media (hover: hover) {
-                    &:hover {
-                        border-color: $vindro-teal;
-                        color: $vindro-teal;
-                    }
-                }
-            }
+        .banner-not-yet {
+            background: none;
+            border: none;
+            padding: 0;
+            color: $vindro-teal;
+            text-decoration: underline;
+            font-size: 1.4rem;
+            font-family: $vindro-openSans;
+            cursor: pointer;
         }
     }
 
@@ -368,59 +364,38 @@
         padding: 21px 28px;
 
         .banner-steps {
-            list-style: none;
-            padding: 0;
-            margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            counter-reset: step-counter;
+            gap: 21px;
 
-            li {
+            .banner-step {
                 display: flex;
                 align-items: flex-start;
-                gap: 12px;
-                font-size: 1.5rem;
-                color: rgba(white, 0.85);
-                font-family: $vindro-openSans;
-                line-height: 1.5;
-                counter-increment: step-counter;
+                gap: 14px;
 
-                &::before {
-                    content: counter(step-counter);
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
+                .step-num {
                     flex-shrink: 0;
-                    width: 22px;
-                    height: 22px;
+                    width: 24px;
+                    height: 24px;
                     border-radius: 50%;
                     background-color: $vindro-teal;
                     color: $vindro-black;
                     font-weight: 700;
                     font-size: 1.1rem;
                     font-family: $vindro-Montserrat;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     margin-top: 2px;
                 }
+
+                p {
+                    font-size: 1.5rem;
+                    color: rgba(white, 0.85);
+                    font-family: $vindro-openSans;
+                    line-height: 1.5;
+                }
             }
-        }
-    }
-
-    .banner-dismiss {
-        align-self: center;
-        flex-shrink: 0;
-        padding: 10px 28px;
-        margin: 7px auto 14px;
-        background: none;
-        border: none;
-        color: rgba(white, 0.3);
-        font-size: 1.3rem;
-        font-family: $vindro-openSans;
-        cursor: pointer;
-        transition: color 0.2s ease;
-
-        @media (hover: hover) {
-            &:hover { color: rgba(white, 0.65); }
         }
     }
 }

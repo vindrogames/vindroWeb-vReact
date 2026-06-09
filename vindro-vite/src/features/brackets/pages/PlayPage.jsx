@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import playServices from '../services/playServices';
@@ -12,8 +12,11 @@ import WorldCupGroupStage from '../tournaments/world-cup-2026/stages/WorldCupGro
 import WorldCupBracketStage from '../tournaments/world-cup-2026/stages/WorldCupBracketStage';
 import DescriptionDropdown from '../components/DescriptionDropdown';
 import JoinPoolModal from '../components/modals/PoolJoinModal';
+import PlayNotInPoolsModal from '../components/modals/PlayNotInPoolsModal';
 import NewUserWelcomeModal from '../components/modals/NewUserWelcomeModal';
 import { EVENT_MAP } from '../tournaments/eventMap';
+import InviteSuccessModal from '../components/modals/InviteSuccessModal';
+import { toUrlSlug } from '../../../utils/urlUtils';
 
 const STAGE_MAP = {
     'world-cup-2026': {
@@ -67,10 +70,13 @@ const PlayPage = () => {
     const { t } = useTranslation('play');
 
     const [showNewUserModal, setShowNewUserModal] = useState(!!location.state?.newUser);
+    const invitePoolCodeRef = useRef(location.state?.invitePoolCode || null);
+    const [showInviteSuccessModal, setShowInviteSuccessModal] = useState(false);
+    const [inviteSuccessData, setInviteSuccessData] = useState(null);
 
-    // Clear the route state so a manual refresh doesn't re-show the modal
+    // Clear the route state so a manual refresh doesn't re-show the modal or re-trigger invite join
     useEffect(() => {
-        if (location.state?.newUser) {
+        if (location.state?.newUser || location.state?.invitePoolCode) {
             window.history.replaceState({}, '');
         }
     }, []);
@@ -87,6 +93,7 @@ const PlayPage = () => {
     const [errorCode, setErrorCode] = useState(null);
 
     const [showJoinPoolModal, setShowJoinPoolModal] = useState(false);
+    const [showPoolPromptModal, setShowPoolPromptModal] = useState(false);
     const [myPlays, setMyPlays] = useState([]);
 
     const [activeTab, setActiveTab] = useState('play');
@@ -243,6 +250,20 @@ const PlayPage = () => {
             const result = await playServices.updateGroupPredictions(playData.id, playData.group_predictions);
             if (result?.success) {
                 setPlayData(prev => ({ ...prev, updated_at: result.data.updated_at }));
+
+                if (invitePoolCodeRef.current) {
+                    const code = invitePoolCodeRef.current;
+                    invitePoolCodeRef.current = null;
+                    try {
+                        const joinResult = await poolServices.joinPool(playData.tournament_id, [playData.id], 'private', code);
+                        setInviteSuccessData({ playName: playData.name, poolName: joinResult?.pool_name || 'the pool' });
+                        setShowInviteSuccessModal(true);
+                    } catch {
+                        if (playPools.length === 0) setShowPoolPromptModal(true);
+                    }
+                } else if (playPools.length === 0) {
+                    setShowPoolPromptModal(true);
+                }
             }
         } catch (err) {
             setErrorCode(toErrorCode(err));
@@ -298,7 +319,7 @@ const PlayPage = () => {
                     </div>
 
                     <div className="go-back-button-container">
-                        <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>Back</button>
+                        <button className="btn btn-tan" onClick={() => navigate(`/brackets/${tournament}`)}>{t('backToArea')}</button>
                     </div>
                 </div>
 
@@ -444,11 +465,7 @@ const PlayPage = () => {
                             <div id="bracket-predictions-content" className="prediction-display-content-wrapper">
                                 <BracketStage
                                     data={isBracketNotYet && eventConfig?.bracketSeed ? eventConfig.bracketSeed : playData.bracket_predictions}
-                                    isOwner={isOwner}
                                     isEditable={isOwner && isBracketOpen}
-                                    isSwappable={isOwner && isBracketClosed}
-                                    isStageClosed={isBracketClosed}
-                                    activeEditId={activeEditId}
                                     onEditingChange={handleEditingChange}
                                 />
                                 <div className={`last-updated${isBracketEditing ? ' is-dimmed' : ''}`}>
@@ -536,10 +553,32 @@ const PlayPage = () => {
                     setActiveTab('inPools');
                 }}
             />
+
+            <PlayNotInPoolsModal
+                isOpen={showPoolPromptModal}
+                tournamentId={playData?.tournament_id}
+                plays={myPlays}
+                onCancel={() => setShowPoolPromptModal(false)}
+                onSuccess={() => {
+                    setShowPoolPromptModal(false);
+                    refreshPlayPools();
+                    setActiveTab('inPools');
+                }}
+            />
             <ErrorDisplayModal
                 isOpen={!!errorCode}
                 code={errorCode}
                 onClose={() => setErrorCode(null)}
+            />
+
+            <InviteSuccessModal
+                isOpen={showInviteSuccessModal && !!inviteSuccessData}
+                data={inviteSuccessData}
+                onViewPool={() => {
+                    setShowInviteSuccessModal(false);
+                    navigate(`/brackets/${tournament}/pool/${toUrlSlug(inviteSuccessData.poolName)}`);
+                }}
+                onLater={() => setShowInviteSuccessModal(false)}
             />
 
             {showNewUserModal && (

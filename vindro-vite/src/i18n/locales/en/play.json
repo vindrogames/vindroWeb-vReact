@@ -5,6 +5,7 @@
         "keywords": "brackets, predictions, vindrogames"
     },
     "loading": "Loading...",
+    "backToArea": "back to my area",
     "notFound": {
         "message": "This play doesn't exist or has been removed."
     },
@@ -53,5 +54,174 @@
         "colPos": "Pos.",
         "loading": "Loading pools...",
         "empty": "This play hasn't been submitted to any pools yet."
+    },
+    "createModal": {
+        "titlePrefix": "save",
+        "titleHighlight": "Play",
+        "namePlaceholder": "Name your Play...",
+        "creating": "Creating...",
+        "createBtn": "Create Play",
+        "sectionTitle": "What is a Play?",
+        "hint1": "A <bold>Play</bold> is your set of predictions for both Group and Bracket stages.",
+        "hint2": "You can create multiple plays and enter different pools!",
+        "cancel": "Maybe Later",
+        "errorEmpty": "Please enter a name for your play",
+        "errorTooShort": "Play name must be at least 3 characters",
+        "errorPattern": "Only letters, numbers, spaces, and hyphens allowed."
+    },
+    "saveGuestModal": {
+        "titlePrefix": "save your",
+        "titleHighlight": "Play",
+        "saving": "Saving...",
+        "saveBtn": "Save Play",
+        "joining": "Joining...",
+        "joinBtn": "Join Pool",
+        "cancel": "Maybe Later",
+        "sectionTitle": "You made predictions!",
+        "hint1": "You edited as a guest. Name your <bold>Play</bold> above to save your picks.",
+        "hint1Pool": "You edited as a guest. Name your <bold>Play</bold> above to save your picks and join <pool>{{poolName}}</pool>.",
+        "hint2": "You can then submit to pools and track your results!",
+        "discardBtn": "Discard for now"
+    },
+    "createPoolModal": {
+        "titlePrefix": "create",
+        "titleHighlight": "Pool",
+        "namePlaceholder": "Pool name",
+        "allowMultiple": "Allow multiple plays per player",
+        "moneyPool": "Money pool",
+        "costLabel": "per play",
+        "creating": "Creating...",
+        "createBtn": "Create Pool",
+        "infoTitle": "Private Pool",
+        "infoText1": "We will generate a pool <code>Code</code>",
+        "infoText2": "It will be required to join.",
+        "cancel": "Cancel",
+        "errorRequired": "Pool name is required.",
+        "errorPattern": "Only letters, numbers, spaces, and hyphens allowed.",
+        "errorCost": "Enter a valid cost per play greater than 0.",
+        "errorFailed": "Failed to create pool.",
+        "errorNetwork": "A network error occurred."
+    },
+    "submitPlayModal": {
+        "titlePrefix": "select",
+        "titleHighlight": "Plays",
+        "noPlays": "No plays to submit yet.",
+        "hasPlays": "Select plays to submit to this pool.",
+        "createFirst": "Create a Play first",
+        "colName": "Play Name",
+        "colSelect": "Select",
+        "privateCodeTitle": "Enter Private Code",
+        "privateCodePlaceholder": "ENTER CODE HERE",
+        "errorNoCode": "Please enter a private pool code.",
+        "errorFailed": "Failed to join pool.",
+        "errorNetwork": "A network error occurred.",
+        "goBack": "Go back",
+        "submitting": "Submitting...",
+        "submitBtn_one": "Submit {{count}} Play",
+        "submitBtn_other": "Submit {{count}} Plays"
+    },
+    "poolPromptModal": {
+        "titlePrefix": "join a ",
+        "titleHighlight": "Pool",
+        "subtitle": "Your play isn't in any pool yet.",
+        "publicTitle": "Vindro Public Pool",
+        "publicText": "Free to enter. Anyone can join.",
+        "publicBtn": "Join Public Pool",
+        "privateTitle": "Have a code?",
+        "privateBtn": "Join Private Pool"
+    },
+    "notLoggedInviteModal": {
+        "titlePrefix": "join",
+        "titleHighlight": "Pool",
+        "subtitle": "You have been invited to join <pool>{{poolName}}</pool> for our {{tournamentName}}",
+        "ownerLabel": "Created by",
+        "codeLabel": "Code",
+        "signInTitle": "Already registered?",
+        "signInText": "Sign in and submit your plays directly.",
+        "signInBtn": "Sign In & Submit",
+        "newUserTitle": "New to VindroGames?",
+        "newUserText": "Make your picks first, then join the pool.",
+        "newUserBtn": "Make My Picks"
+    },
+    "poolPage": {
+        "poolLabel": "pool",
+        "leaderboard": {
+            "title": "Leaderboard",
+            "colPos": "Pos.",
+            "colPlayer": "Player",
+            "colPlay": "Play",
+            "colGroupPts": "Groups Pts",
+            "colBracketPts": "Bracket Pts",
+            "emptyMessage": "No plays submitted yet.",
+            "anonymous": "Anonymous"
+        },
+        "specs": {
+            "createdByYou": "Created by",
+            "youLabel": "YOU",
+            "createdPrefix": "Created",
+            "createdBy": "by",
+            "playsSubmittedLabel_one": "play submitted",
+            "playsSubmittedLabel_other": "plays submitted",
+            "prizePot": "Prize Pot",
+            "codeLabel": "Code"
+        },
+        "actions": {
+            "submitPlay": "Submit a Play",
+            "onePlayLimit": "This pool only allows one play per member",
+            "removePlay": "Remove Play",
+            "editPool": "Edit Pool"
+        },
+        "authOverlay": {
+            "loginRequired": "To see this Pool you must be logged in.",
+            "logIn": "Log In",
+            "firstTime": "First Time?",
+            "firstTimeText": "Check out how it works and come back later.",
+            "aboutTournament": "About the Tournament"
+        },
+        "privatePrompt": {
+            "title": "This is a private pool.",
+            "submitToView": "Submit a play to view the leaderboard.",
+            "submitPlay": "Submit a Play",
+            "notInterested": "Not interested? Go back to the tournament.",
+            "backToTournament": "Back to Tournament"
+        },
+        "needPlayModal": {
+            "titlePrefix": "create a",
+            "titleHighlight": "Play",
+            "text": "You need to make your picks before joining this pool. Head to the tournament page to create your play.",
+            "cta": "Make My Picks"
+        }
+    },
+    "inviteModal": {
+        "triggerBtn": "Invite Friends",
+        "titlePrefix": "invite",
+        "titleHighlight": "Friends",
+        "multipleAllowed": "Users can submit as many plays as they like.",
+        "singleOnly": "Users can only submit 1 play each.",
+        "isMoneyPool": "This is a Money Pool.",
+        "costPerPlay": "Each play costs {{currency}}{{cost}} to submit.",
+        "ownerUpdates": "The owner will update payments during the Tournament.",
+        "freePool": "Free to play — not a money pool.",
+        "codeWarning": "Share this code to join.",
+        "copyBtn": "Copy Invite",
+        "copiedBtn": "Copied!",
+        "shareBtn": "Share",
+        "shareMessage": "Join my pool \"{{poolName}}\" on Vindro Games! Use code: {{code}} or click here: {{url}}"
+    },
+    "inviteSuccess": {
+        "titlePrefix": "You're",
+        "titleHighlight": "in!",
+        "message": "Your play <play>{{playName}}</play> has been added to <pool>{{poolName}}</pool>.",
+        "later": "Maybe later",
+        "viewPool": "View Pool"
+    },
+    "loginBanner": {
+        "title": "register to <teal>Save</teal>",
+        "subtitle": "Create a free account to lock in your predictions and compete in pools.",
+        "signUp": "Sign Up",
+        "notYet": "Not yet",
+        "step1": "Create your <teal>Plays</teal> — make multiple sets of picks, and let your kids join in under your account",
+        "step2": "Submit plays to <teal>Pools</teal> to compete against friends and the public",
+        "step3": "Create your <teal>own pool</teal> and invite family, friends, or your office"
     }
 }

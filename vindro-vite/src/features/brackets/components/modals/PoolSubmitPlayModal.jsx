@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import ShowcaseSection from '../../../../components/ui/ShowcaseSection';
 import usePools from '../../hooks/usePools';
 import { useLoading } from '../../../../contexts/LoadingContext';
 
 const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, onCancel, initialCode = '', onCreatePlay }) => {
+    const { t } = useTranslation('play');
     const { handleJoinPool, isSubmitting, error: apiError } = usePools(tournamentId);
     const { showLoader, hideLoader } = useLoading();
 
@@ -37,7 +39,7 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
 
     const handleConfirmSubmission = async () => {
         if (type === 'private' && !poolCode.trim()) {
-            setLocalError('Please enter a private pool code.');
+            setLocalError(t('submitPlayModal.errorNoCode'));
             return;
         }
 
@@ -52,11 +54,11 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                 onConfirm(selectedPlayIds, poolCode, response);
             } else {
                 await hideLoader();
-                setLocalError(response.error || 'Failed to join pool.');
+                setLocalError(response.error || t('submitPlayModal.errorFailed'));
             }
         } catch (err) {
             await hideLoader();
-            setLocalError(err.message || 'A network error occurred.');
+            setLocalError(err.message || t('submitPlayModal.errorNetwork'));
         }
     };
 
@@ -69,12 +71,12 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                 <button className="close-button" onClick={onCancel}>&times;</button>
 
                 <ShowcaseSection id="select-plays-gallery" className="modal-gallery">
-                    <h2>select<span className="inline-teal inline-bold">Plays</span></h2>
+                    <h2>{t('submitPlayModal.titlePrefix')}<span className="inline-teal inline-bold">{t('submitPlayModal.titleHighlight')}</span></h2>
                     <div className="">
-                        <p>{hasNoPlays ? "No plays to submit yet." : "Select plays to submit to this pool."}</p>
+                        <p>{hasNoPlays ? t('submitPlayModal.noPlays') : t('submitPlayModal.hasPlays')}</p>
                         {hasNoPlays && onCreatePlay && (
                             <button className="btn btn-tan" onClick={onCreatePlay}>
-                                Create a Play first
+                                {t('submitPlayModal.createFirst')}
                             </button>
                         )}
                     </div>
@@ -84,8 +86,8 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Play Name</th>
-                                        <th style={{ width: '84px' }}>Select</th>
+                                        <th>{t('submitPlayModal.colName')}</th>
+                                        <th style={{ width: '84px' }}>{t('submitPlayModal.colSelect')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -116,11 +118,11 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
                     {/* PRIVATE CODE UI: Only visible if 'private' was selected in Step 1 */}
                     {type === 'private' && (
                         <div className="private-code-wrapper">
-                            <h3>Enter Private Code</h3>
+                            <h3>{t('submitPlayModal.privateCodeTitle')}</h3>
                             <input
                                 type="text"
                                 className={`play-name-input ${activeError && !poolCode ? 'error' : ''}`}
-                                placeholder="ENTER CODE HERE"
+                                placeholder={t('submitPlayModal.privateCodePlaceholder')}
                                 value={poolCode}
                                 onChange={(e) => setPoolCode(e.target.value.toUpperCase())}
                             />
@@ -131,14 +133,14 @@ const SubmitPlayToPool = ({ isOpen, type, tournamentId, plays = [], onConfirm, o
 
                     <div className="submit-plays-buttons">
                         <button className="btn btn-tan cancel-btn" onClick={onCancel} disabled={isSubmitting}>
-                            Go back
+                            {t('submitPlayModal.goBack')}
                         </button>
                         <button
                             className="btn btn-tan confirm-btn"
                             onClick={handleConfirmSubmission}
                             disabled={isSubmitting || selectedPlayIds.length === 0}
                         >
-                            {isSubmitting ? 'Submitting...' : `Submit ${selectedPlayIds.length} Play${selectedPlayIds.length !== 1 ? 's' : ''}`}
+                            {isSubmitting ? t('submitPlayModal.submitting') : t('submitPlayModal.submitBtn', { count: selectedPlayIds.length })}
                         </button>
                     </div>
                 </ShowcaseSection>

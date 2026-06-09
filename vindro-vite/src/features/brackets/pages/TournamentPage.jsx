@@ -9,8 +9,12 @@ import PlayCreateNewModal from '../components/modals/PlayCreateNewModal';
 import JoinPoolModal from '../components/modals/PoolJoinModal';
 import PoolCreateNewModal from '../components/modals/PoolCreateNewModal';
 import TournamentLoginPromptBanner from '../components/TournamentLoginPromptBanner';
+import InviteSuccessModal from '../components/modals/InviteSuccessModal';
+import ExistingUserInviteModal from '../components/modals/ExistingUserInviteModal';
+import PlayNotInPoolsModal from '../components/modals/PlayNotInPoolsModal';
 import { useAuth } from '../../../contexts/auth/AuthContext';
 import playServices from '../services/playServices';
+import poolServices from '../services/poolServices';
 import { toUrlSlug } from '../../../utils/urlUtils';
 import { useTournament } from '../hooks/useTournament';
 import { useLeaderboards } from '../hooks/useLeaderboard';
@@ -78,17 +82,17 @@ const TournamentPage = () => {
 
     // ── TOURNAMENT START GATE ─────────────────────────────────────────────────
     const tournamentStarted = !!(tournamentData?.start_date && new Date() > new Date(tournamentData.start_date));
-    const [heroCountdown, setHeroCountdown] = useState('');
-
-    useEffect(() => {
-        if (!tournamentData?.start_date || tournamentStarted) return;
-        const interval = startCountdown(tournamentData.start_date, setHeroCountdown, t('hero.closed'));
-        return () => clearInterval(interval);
-    }, [tournamentData?.start_date, tournamentStarted]);
 
     // ── PLAY MODALS ───────────────────────────────────────────────────────────
     const [showCreatePlayModal, setShowCreatePlayModal] = useState(false);
     const [returnToPool, setReturnToPool] = useState(false);
+    const [invitePoolCode, setInvitePoolCode] = useState(null);
+    const [showInviteSuccessModal, setShowInviteSuccessModal] = useState(false);
+    const [inviteSuccessData, setInviteSuccessData] = useState(null);
+    const [showExistingUserInviteModal, setShowExistingUserInviteModal] = useState(false);
+    const [isExistingUserInviteLoading, setIsExistingUserInviteLoading] = useState(false);
+    const [showPoolPromptModal, setShowPoolPromptModal] = useState(false);
+    const [poolPromptPlay, setPoolPromptPlay] = useState(null);
 
     const handleNewPlay = () => {
         if (!user) { handleLoginClick(); return; }
@@ -97,35 +101,94 @@ const TournamentPage = () => {
 
     const handleCreatePlayConfirm = async (playName) => {
         const newPlay = await handleCreatePlay(playName);
-        if (newPlay?.id) {
-            setShowCreatePlayModal(false);
+        if (!newPlay?.id) return;
+        setShowCreatePlayModal(false);
 
-            if (isNewUser && guestGroupPredictions) {
-                try {
-                    await playServices.updateGroupPredictions(newPlay.id, guestGroupPredictions);
-                } catch { /* best-effort — user can edit on play page */ }
-            }
+        if (isNewUser && guestGroupPredictions) {
+            try { await playServices.updateGroupPredictions(newPlay.id, guestGroupPredictions); } catch {}
+        }
 
-            if (returnToPool) {
-                setReturnToPool(false);
+        // Auto-join invited pool
+        if (invitePoolCode) {
+            // New user with no guest picks — route to PlayPage to make picks first, then auto-join from there
+            if (isNewUser && !guestGroupPredictions) {
+                navigate(
+                    `/brackets/${tournamentSlug}/play/${user.id}/${toUrlSlug(newPlay.name)}`,
+                    { state: { invitePoolCode } }
+                );
+                setInvitePoolCode(null);
                 setIsNewUser(false);
-                await refreshPlays();
-                setShowJoinModal(true);
                 return;
             }
-
-            navigate(
-                `/brackets/${tournamentSlug}/play/${user.id}/${toUrlSlug(newPlay.name)}`,
-                isNewUser ? { state: { newUser: true } } : undefined
-            );
+            try {
+                const result = await poolServices.joinPool(tournamentData?.id, [newPlay.id], 'private', invitePoolCode);
+                setInviteSuccessData({ playName: newPlay.name, poolName: result?.pool_name || 'the pool' });
+                setShowInviteSuccessModal(true);
+            } catch {
+                navigate(`/brackets/${tournamentSlug}/play/${user.id}/${toUrlSlug(newPlay.name)}`);
+            }
+            setInvitePoolCode(null);
             setIsNewUser(false);
+            return;
         }
+
+        if (returnToPool) {
+            setReturnToPool(false);
+            setIsNewUser(false);
+            await refreshPlays();
+            setShowJoinModal(true);
+            return;
+        }
+
+        setPoolPromptPlay(newPlay);
+        setShowPoolPromptModal(true);
     };
 
     const handleCreatePlayFromPool = () => {
         setShowJoinModal(false);
         setReturnToPool(true);
         setShowCreatePlayModal(true);
+    };
+
+    const handleExistingUserInviteSubmit = async (type, value) => {
+        setIsExistingUserInviteLoading(true);
+        try {
+            let playId, playName;
+            if (type === 'new') {
+                const newPlay = await handleCreatePlay(value);
+                if (!newPlay?.id) return;
+                playId = newPlay.id;
+                playName = newPlay.name;
+                if (guestGroupPredictions) {
+                    try { await playServices.updateGroupPredictions(playId, guestGroupPredictions); } catch {}
+                }
+            } else {
+                playId = value;
+                playName = userPlays.find(p => p.id === value)?.name || 'Your play';
+            }
+
+            setShowExistingUserInviteModal(false);
+
+            if (invitePoolCode) {
+                const result = await poolServices.joinPool(tournamentData?.id, [playId], 'private', invitePoolCode);
+                setInviteSuccessData({ playName, poolName: result?.pool_name || 'the pool' });
+                setShowInviteSuccessModal(true);
+                setInvitePoolCode(null);
+            } else {
+                setPoolPromptPlay({ id: playId, name: playName });
+                setShowPoolPromptModal(true);
+            }
+        } catch { /* silently fail */ } finally {
+            setIsExistingUserInviteLoading(false);
+        }
+    };
+
+    const handleInviteSuccessAction = (goToPool) => {
+        const { poolName } = inviteSuccessData || {};
+        setShowInviteSuccessModal(false);
+        if (goToPool && poolName) {
+            navigate(`/brackets/${tournamentSlug}/pool/${toUrlSlug(poolName)}`);
+        }
     };
 
     const handleNavigateToPlay = (play) => {
@@ -221,11 +284,11 @@ const TournamentPage = () => {
     useEffect(() => {
         if (user) return;
         const code = sessionStorage.getItem('pendingPoolCode');
-        if (code) { setAuthModalMode('login'); setIsAuthModalOpen(true); }
+        const inviteFlow = sessionStorage.getItem('pendingInviteFlow');
+        if (code && !inviteFlow) { setAuthModalMode('login'); setIsAuthModalOpen(true); }
     }, [user]);
 
     const handleLoginClick = () => { setAuthModalMode('login'); setIsAuthModalOpen(true); };
-    const handleSignUpClick = () => { setAuthModalMode('signup'); setIsAuthModalOpen(true); };
 
     // ── GUEST INTERACTIVE PLAY ────────────────────────────────────────────────
     const { GroupStage, BracketStage } = config || {};
@@ -234,21 +297,50 @@ const TournamentPage = () => {
     const [activeEditId, setActiveEditId] = useState(null);
     const [showGroupLoginBanner, setShowGroupLoginBanner] = useState(false);
     const groupCancelEditRef = useRef(null);
+    const [showBracketLoginBanner, setShowBracketLoginBanner] = useState(false);
+    const bracketCancelEditRef = useRef(null);
     const [isNewUser, setIsNewUser] = useState(false);
 
-    // Detect new user returning from OAuth — restore any saved guest predictions
-    // and immediately prompt them to name their first play.
+    // Detect new user returning from OAuth — restore predictions, capture invite code.
+    // If they came from guest editing, show the save modal. Otherwise show create modal.
     useEffect(() => {
         if (!showWelcomeModal || !user) return;
         dismissWelcomeModal();
         setIsNewUser(true);
         const saved = sessionStorage.getItem('pendingGroupPredictions');
+        const hadGuestEdits = !!saved;
         if (saved) {
             try { setGuestGroupPredictions(JSON.parse(saved)); } catch {}
             sessionStorage.removeItem('pendingGroupPredictions');
         }
-        setShowCreatePlayModal(true);
+        const poolCode = sessionStorage.getItem('pendingPoolCode');
+        if (poolCode) {
+            setInvitePoolCode(poolCode);
+            sessionStorage.removeItem('pendingPoolCode');
+        }
+        sessionStorage.removeItem('pendingInviteFlow');
+        if (hadGuestEdits) {
+            setShowExistingUserInviteModal(true);
+        } else {
+            setShowCreatePlayModal(true);
+        }
     }, [showWelcomeModal, user]);
+
+    // Detect EXISTING user returning from OAuth with a pending invite — show the invite modal.
+    useEffect(() => {
+        if (!user || showWelcomeModal) return;
+        const pendingInvite = sessionStorage.getItem('pendingInviteFlow');
+        if (!pendingInvite) return;
+        sessionStorage.removeItem('pendingInviteFlow');
+        const poolCode = sessionStorage.getItem('pendingPoolCode');
+        const savedGroup = sessionStorage.getItem('pendingGroupPredictions');
+        if (poolCode) { setInvitePoolCode(poolCode); sessionStorage.removeItem('pendingPoolCode'); }
+        if (savedGroup) {
+            try { setGuestGroupPredictions(JSON.parse(savedGroup)); } catch {}
+            sessionStorage.removeItem('pendingGroupPredictions');
+        }
+        setShowExistingUserInviteModal(true);
+    }, [user, showWelcomeModal]);
 
     const [guestGroupCountdown, setGuestGroupCountdown] = useState('');
     const [guestBracketOpenCountdown, setGuestBracketOpenCountdown] = useState('');
@@ -306,11 +398,9 @@ const TournamentPage = () => {
             <ShowcaseSection id="tournament-intro" classes="hero-half bg-black brackets-hero">
                 <h1>{title.before}<span className="inline-bold inline-teal">{title.highlight}</span>{title.after}</h1>
                 <h2>{t('hero.tagline')}</h2>
-                {tournamentStarted ? (
+                {tournamentStarted && (
                     <p className="tournament-status-line">{t('hero.underwayPrefix')} <span className="inline-real-yellow inline-bold">{t('hero.underwayHighlight')}</span></p>
-                ) : heroCountdown ? (
-                    <p className="tournament-status-line">{t('hero.startsIn')} <span className="inline-real-yellow inline-bold">{heroCountdown}</span></p>
-                ) : null}
+                )}
 
                 {!user && (
                     <p className="tournament-status-line hero-login-nudge">
@@ -573,6 +663,7 @@ const TournamentPage = () => {
                                                     setShowGroupLoginBanner(false);
                                                     if (guestGroupPredictions) {
                                                         sessionStorage.setItem('pendingGroupPredictions', JSON.stringify(guestGroupPredictions));
+                                                        sessionStorage.setItem('pendingInviteFlow', 'true');
                                                     }
                                                     setAuthModalMode(mode);
                                                     setIsAuthModalOpen(true);
@@ -629,12 +720,31 @@ const TournamentPage = () => {
                                 <div id="guest-bracket-content" className="prediction-display-content-wrapper">
                                     <BracketStage
                                         data={guestBracketPredictions}
-                                        isOwner={true}
-                                        isEditable={false}
-                                        isSwappable={false}
-                                        isStageClosed={false}
-                                        activeEditId={activeEditId}
+                                        isEditable={guestIsBracketOpen}
                                         onEditingChange={(id, isEditing) => setActiveEditId(isEditing ? id : null)}
+                                        onSave={async () => {
+                                            setShowBracketLoginBanner(true);
+                                            throw new Error('login_required');
+                                        }}
+                                        cancelEditRef={bracketCancelEditRef}
+                                        loginBanner={
+                                            <TournamentLoginPromptBanner
+                                                isVisible={showBracketLoginBanner}
+                                                onDismiss={() => {
+                                                    setShowBracketLoginBanner(false);
+                                                    bracketCancelEditRef.current?.();
+                                                }}
+                                                onOpenAuth={(mode) => {
+                                                    setShowBracketLoginBanner(false);
+                                                    if (guestGroupPredictions) {
+                                                        sessionStorage.setItem('pendingGroupPredictions', JSON.stringify(guestGroupPredictions));
+                                                        sessionStorage.setItem('pendingInviteFlow', 'true');
+                                                    }
+                                                    setAuthModalMode(mode);
+                                                    setIsAuthModalOpen(true);
+                                                }}
+                                            />
+                                        }
                                     />
                                 </div>
                             </section>
@@ -704,6 +814,53 @@ const TournamentPage = () => {
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
                 defaultMode={authModalMode}
+            />
+
+            <InviteSuccessModal
+                isOpen={showInviteSuccessModal && !!inviteSuccessData}
+                data={inviteSuccessData}
+                onViewPool={() => handleInviteSuccessAction(true)}
+                onLater={() => handleInviteSuccessAction(false)}
+            />
+
+            {showExistingUserInviteModal && (
+                <ExistingUserInviteModal
+                    poolName={invitePoolCode ? 'the pool' : ''}
+                    onJoinWithNew={(name) => handleExistingUserInviteSubmit('new', name)}
+                    onCancel={() => { setShowExistingUserInviteModal(false); setInvitePoolCode(null); }}
+                    isLoading={isExistingUserInviteLoading}
+                />
+            )}
+
+            <PlayNotInPoolsModal
+                isOpen={showPoolPromptModal}
+                tournamentId={tournamentData?.id}
+                plays={poolPromptPlay ? [poolPromptPlay, ...userPlays.filter(p => p.id !== poolPromptPlay.id)] : userPlays}
+                onCreatePlay={handleCreatePlayFromPool}
+                onSuccess={(pool) => {
+                    setShowPoolPromptModal(false);
+                    refreshPools();
+                    refreshPublic();
+                    setPoolPromptPlay(null);
+                    if (poolPromptPlay) {
+                        navigate(
+                            `/brackets/${tournamentSlug}/play/${user.id}/${toUrlSlug(poolPromptPlay.name)}`,
+                            isNewUser ? { state: { newUser: true } } : undefined
+                        );
+                    }
+                    setIsNewUser(false);
+                }}
+                onCancel={() => {
+                    setShowPoolPromptModal(false);
+                    if (poolPromptPlay) {
+                        navigate(
+                            `/brackets/${tournamentSlug}/play/${user.id}/${toUrlSlug(poolPromptPlay.name)}`,
+                            isNewUser ? { state: { newUser: true } } : undefined
+                        );
+                    }
+                    setIsNewUser(false);
+                    setPoolPromptPlay(null);
+                }}
             />
 
 

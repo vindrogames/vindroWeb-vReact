@@ -144,6 +144,48 @@
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// PLAY-NOT-IN-POOLS MODAL  (join pool prompt after saving a play)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+.pool-prompt-bottom {
+    gap: 0;
+    padding: 0;
+    justify-content: stretch;
+
+    .pool-prompt-half {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding: 21px 14px;
+        width: 100%;
+        flex: 1;
+
+        h3 {
+            font-size: 2.1rem;
+            font-weight: 400;
+            text-align: center;
+            color: white;
+        }
+
+        p {
+            font-size: 1.6rem;
+            text-align: center;
+            color: rgba(white, 0.7);
+            margin: 0;
+        }
+    }
+
+    .pool-half-divider {
+        width: 84%;
+        height: 1px;
+        background-color: rgba($vindro-teal, 0.25);
+        align-self: center;
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // TABBED MODAL LAYOUT  (shared by Tutorial + Pool Admin)
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -240,6 +282,7 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 #prediction-play-gallery,
+#save-guest-play-gallery,
 #create-pool-gallery {
 
     .play-name-input {
