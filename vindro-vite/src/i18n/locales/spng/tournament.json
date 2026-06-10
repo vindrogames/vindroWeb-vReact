@@ -56,6 +56,22 @@
         "loading": "Cargando porras...",
         "empty": "Aún no has creado ninguna porra."
     },
+    "tabs": {
+        "play": "Play",
+        "howItWorks": "Cómo Funciona",
+        "leaderboard": "Leaderboard"
+    },
+    "guest": {
+        "alreadyRegistered": "¿Ya tienes cuenta?",
+        "loginLink": "Inicia sesión",
+        "toSeeYourPlays": "para ver tus plays."
+    },
+    "loginModal": {
+        "title": "Guarda tu Play",
+        "subtitle": "Inicia sesión para guardar tus predicciones y competir con otros.",
+        "hint1": "Sin contraseña — solo elige un proveedor.",
+        "hint2": "Tus picks se guardarán después de iniciar sesión."
+    },
     "auth": {
         "mustLogin": "Para participar debes estar logueado.",
         "noAccountHint": "*Si no tienes cuenta, ¡registrarte es fácil!",
@@ -69,6 +85,40 @@
         "colGroupsPts": "Pts. Grupos",
         "colBracketPts": "Pts. Bracket",
         "empty": "No hay entradas."
+    },
+    "mockBracket": {
+        "shoeIn":    "pan comido",
+        "who":       "¿quién?",
+        "darkHorse": "el tapado",
+        "tourist":   "turista",
+        "certified": "fijo",
+        "sus":       "sospechoso",
+        "giant":     "gigante",
+        "ankleBite": "mordisco",
+        "wow":       "vaya",
+        "meh":       "bah",
+        "noChance":  "ni de broma",
+        "slim":      "flojo",
+        "thePick":   "el favorito",
+        "upset":     "¿sorpresa?",
+        "carryMe":   "llévame",
+        "iGotThis":  "yo lo tengo",
+        "goat":      "crack",
+        "theGoat":   "¿el crack?",
+        "elite":     "élite",
+        "alsoRan":   "de relleno",
+        "standard":  "normalito",
+        "offBrand":  "marca blanca",
+        "penaltyFc": "penal fc",
+        "crossbar":  "el larguero",
+        "rentFree":  "de okupa",
+        "whoAgain":  "¿y este?",
+        "vibesOnly": "a feeling",
+        "tactics":   "¿táctica?",
+        "byeBye":    "adiós",
+        "justHere":  "por estar",
+        "where":     "¿dónde?",
+        "rightHere": "aquí mismo"
     },
     "world-cup-2026": {
         "subtitle": "Haz tus predicciones. Juégalas en una porra. ¡A ver cómo te va!",

@@ -1,5 +1,46 @@
 @use '../../../config' as *;
 
+// ── BRACKET STAGE CONTAINER ───────────────────────────────────────────────────
+.bk-stage {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    transition: border-color 0.2s, background 0.2s;
+
+    &.bk-stage--editing {
+        border-color: $vindro-neon-pink;
+        background: rgba($vindro-black, 0.42);
+    }
+
+    .gallery-edit-btn {
+        position: absolute;
+        top: 7px;
+        left: 21px;
+        z-index: 11;
+        font-size: 1.2rem;
+        padding: 7px 14px;
+        transition: all 0.2s ease;
+
+        &.active {
+            background-color: $vindro-neon-pink;
+            color: white;
+        }
+
+        @media (hover: hover) {
+            &:hover:not(:disabled) {
+                background-color: $vindro-neon-pink;
+                color: white;
+            }
+        }
+
+        &:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+    }
+}
+
 // ── BRACKET TREE ──────────────────────────────────────────────────────────────
 .bk-tree {
     display: flex;
@@ -95,6 +136,22 @@
         &--empty {
             background: rgba(white, 0.70);
         }
+
+        .bk-team-flag {
+            width: 18px;
+            height: 12px;
+            object-fit: cover;
+            border-radius: 1px;
+            flex-shrink: 0;
+            margin-right: 4px;
+        }
+
+        .bk-team-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.9rem;
+        }
     }
 }
 
@@ -171,6 +228,13 @@
     }
 }
 
+.bk-medium-tabs {
+    display: none;
+    gap: 7px;
+    padding: 7px 14px;
+    justify-content: center;
+}
+
 .bk-half-toggle {
     padding: 7px 14px;
     display: none;
@@ -178,106 +242,5 @@
     justify-content: space-between;
 }
 
-.bk-medium-tabs {
-    position: relative;
-
-    padding: 7px 14px;
-    display: flex;
-    gap: 7px;
-
-    // DEFAULT (desktop)
-    justify-content: center;
-
-    transition:
-        transform 220ms ease,
-        gap 220ms ease;
-
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-
-        width: 100%;
-        height: 1px;
-
-        opacity: 0;
-
-        transition:
-            opacity 220ms ease,
-            background 220ms ease;
-    }
-
-    > * {
-        transition:
-            transform 220ms ease,
-            opacity 220ms ease;
-    }
-
-    // MOBILE ONLY
-    @media (max-width: 450px) {
-
-        &.is-left {
-            justify-content: flex-start;
-
-            &::before {
-                opacity: 1;
-
-                background: linear-gradient(
-                    to right,
-                    $vindro-green,
-                    transparent
-                );
-            }
-
-            > * {
-                animation: popLeft 220ms ease;
-            }
-        }
-
-        &.is-right {
-            flex-direction: row-reverse;
-            justify-content: flex-start;
-
-            &::before {
-                opacity: 1;
-
-                background: linear-gradient(
-                    to left,
-                    $vindro-green,
-                    transparent
-                );
-            }
-
-            > * {
-                animation: popRight 220ms ease;
-            }
-        }
-    }
-}
-
-@keyframes popLeft {
-    0% {
-        transform: translateX(-8px) scale(.96);
-        opacity: .5;
-    }
-
-    100% {
-        transform: translateX(0) scale(1);
-        opacity: 1;
-    }
-}
-
-@keyframes popRight {
-    0% {
-        transform: translateX(8px) scale(.96);
-        opacity: .5;
-    }
-
-    100% {
-        transform: translateX(0) scale(1);
-        opacity: 1;
-    }
-}
 
 .bk-mobile { display: none; }

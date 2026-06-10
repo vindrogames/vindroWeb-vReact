@@ -1,0 +1,46 @@
+{
+    "R32": [
+        { "id": 1,  "home": { "name": "mockBracket.shoeIn",    "flag": "mock-bracket-flag-teal"   }, "away": { "name": "mockBracket.who",       "flag": "mock-bracket-flag-yellow" }, "winner": null },
+        { "id": 2,  "home": { "name": "mockBracket.darkHorse", "flag": "mock-bracket-flag-green"  }, "away": { "name": "mockBracket.tourist",   "flag": "mock-bracket-flag-purple" }, "winner": null },
+        { "id": 3,  "home": { "name": "mockBracket.certified", "flag": "mock-bracket-flag-pink"   }, "away": { "name": "mockBracket.sus",       "flag": "mock-bracket-flag-orange" }, "winner": null },
+        { "id": 4,  "home": { "name": "mockBracket.giant",     "flag": "mock-bracket-flag-teal"   }, "away": { "name": "mockBracket.ankleBite", "flag": "mock-bracket-flag-yellow" }, "winner": null },
+
+        { "id": 5,  "home": { "name": "mockBracket.wow",       "flag": "mock-bracket-flag-green"  }, "away": { "name": "mockBracket.meh",       "flag": "mock-bracket-flag-purple" }, "winner": null },
+        { "id": 6,  "home": { "name": "mockBracket.noChance",  "flag": "mock-bracket-flag-pink"   }, "away": { "name": "mockBracket.slim",      "flag": "mock-bracket-flag-orange" }, "winner": null },
+        { "id": 7,  "home": { "name": "mockBracket.thePick",   "flag": "mock-bracket-flag-teal"   }, "away": { "name": "mockBracket.upset",     "flag": "mock-bracket-flag-yellow" }, "winner": null },
+        { "id": 8,  "home": { "name": "mockBracket.carryMe",   "flag": "mock-bracket-flag-green"  }, "away": { "name": "mockBracket.iGotThis",  "flag": "mock-bracket-flag-purple" }, "winner": null },
+
+        { "id": 9,  "home": { "name": "mockBracket.goat",      "flag": "mock-bracket-flag-pink"   }, "away": { "name": "mockBracket.theGoat",   "flag": "mock-bracket-flag-orange" }, "winner": null },
+        { "id": 10, "home": { "name": "mockBracket.elite",     "flag": "mock-bracket-flag-teal"   }, "away": { "name": "mockBracket.alsoRan",   "flag": "mock-bracket-flag-yellow" }, "winner": null },
+        { "id": 11, "home": { "name": "mockBracket.standard",  "flag": "mock-bracket-flag-green"  }, "away": { "name": "mockBracket.offBrand",  "flag": "mock-bracket-flag-purple" }, "winner": null },
+        { "id": 12, "home": { "name": "mockBracket.penaltyFc", "flag": "mock-bracket-flag-pink"   }, "away": { "name": "mockBracket.crossbar",  "flag": "mock-bracket-flag-orange" }, "winner": null },
+
+        { "id": 13, "home": { "name": "mockBracket.rentFree",  "flag": "mock-bracket-flag-teal"   }, "away": { "name": "mockBracket.whoAgain",  "flag": "mock-bracket-flag-yellow" }, "winner": null },
+        { "id": 14, "home": { "name": "mockBracket.vibesOnly", "flag": "mock-bracket-flag-green"  }, "away": { "name": "mockBracket.tactics",   "flag": "mock-bracket-flag-purple" }, "winner": null },
+        { "id": 15, "home": { "name": "mockBracket.byeBye",    "flag": "mock-bracket-flag-pink"   }, "away": { "name": "mockBracket.justHere",  "flag": "mock-bracket-flag-orange" }, "winner": null },
+        { "id": 16, "home": { "name": "mockBracket.where",     "flag": "mock-bracket-flag-teal"   }, "away": { "name": "mockBracket.rightHere", "flag": "mock-bracket-flag-yellow" }, "winner": null }
+    ],
+    "R16": [
+        { "id": 17, "home": null, "away": null, "winner": null },
+        { "id": 18, "home": null, "away": null, "winner": null },
+        { "id": 19, "home": null, "away": null, "winner": null },
+        { "id": 20, "home": null, "away": null, "winner": null },
+        { "id": 21, "home": null, "away": null, "winner": null },
+        { "id": 22, "home": null, "away": null, "winner": null },
+        { "id": 23, "home": null, "away": null, "winner": null },
+        { "id": 24, "home": null, "away": null, "winner": null }
+    ],
+    "QF": [
+        { "id": 25, "home": null, "away": null, "winner": null },
+        { "id": 26, "home": null, "away": null, "winner": null },
+        { "id": 27, "home": null, "away": null, "winner": null },
+        { "id": 28, "home": null, "away": null, "winner": null }
+    ],
+    "SF": [
+        { "id": 29, "home": null, "away": null, "winner": null },
+        { "id": 30, "home": null, "away": null, "winner": null }
+    ],
+    "3rd": [
+        { "id": 31, "home": null, "away": null, "winner": null }
+    ]
+}

@@ -20,7 +20,7 @@ from .serializers import (
     serialize_leaderboard_entry,
 )
 
-from .logic import initialize_user_play;
+from .logic import initialize_user_play, validate_group_predictions
 
 
 # ---------------------------------------------------------------------------
@@ -240,18 +240,30 @@ def tournament_play_detail_by_name(request, tournament_slug, user_id, play_name)
 @require_http_methods(["PATCH"])
 def update_groups(request, play_id):
     """PATCH /api/tournament/plays/<id>/update-groups/"""
-    # Security: Query by both ID and User in one shot
     play, err = _get_or_404(TournamentPlay, id=play_id, user=request.user)
     if err: return err
 
     try:
         body = json.loads(request.body)
-        # Surgical update of the JSON field
-        play.group_predictions = body.get('group_predictions', play.group_predictions)
-        play.save()
-        return JsonResponse({'success': True, 'data': serialize_play(play)})
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+
+    incoming = body.get('group_predictions')
+    if incoming is None:
+        return JsonResponse({'success': False, 'error': 'group_predictions is required'}, status=400)
+
+    try:
+        master = play.tournament.format.groups_stage
+    except Exception:
+        return JsonResponse({'success': False, 'error': 'Tournament format not found'}, status=500)
+
+    valid, error = validate_group_predictions(incoming, master)
+    if not valid:
+        return JsonResponse({'success': False, 'error': error}, status=400)
+
+    play.group_predictions = incoming
+    play.save()
+    return JsonResponse({'success': True, 'data': serialize_play(play)})
 
 
 # 3. Choose Bracket Winners (Owner Only)

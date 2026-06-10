@@ -5,6 +5,7 @@
         "keywords": "brackets, predicciones, vindrogames"
     },
     "loading": "Cargando...",
+    "backToArea": "volver a mi área",
     "notFound": {
         "message": "Esta play no existe o ha sido eliminada."
     },
@@ -53,5 +54,174 @@
         "colPos": "Pos.",
         "loading": "Cargando porras...",
         "empty": "Esta play aún no está en ninguna porra."
+    },
+    "createModal": {
+        "titlePrefix": "guardar",
+        "titleHighlight": "Play",
+        "namePlaceholder": "Ponle nombre a tu Play...",
+        "creating": "Creando...",
+        "createBtn": "Crear Play",
+        "sectionTitle": "¿Qué es una Play?",
+        "hint1": "Una <bold>Play</bold> es tu conjunto de predicciones para las fases de grupos y bracket.",
+        "hint2": "¡Puedes crear múltiples plays y participar en distintas porras!",
+        "cancel": "Ahora no",
+        "errorEmpty": "Introduce un nombre para tu play",
+        "errorTooShort": "El nombre debe tener al menos 3 caracteres",
+        "errorPattern": "Solo se permiten letras, números, espacios y guiones."
+    },
+    "saveGuestModal": {
+        "titlePrefix": "guarda tu",
+        "titleHighlight": "Play",
+        "saving": "Guardando...",
+        "saveBtn": "Guardar Play",
+        "joining": "Uniéndose...",
+        "joinBtn": "Unirse a la Porra",
+        "cancel": "Ahora no",
+        "sectionTitle": "¡Hiciste predicciones!",
+        "hint1": "Editaste como invitado. Ponle un nombre a tu <bold>Play</bold> arriba para guardar tus picks.",
+        "hint1Pool": "Editaste como invitado. Ponle un nombre a tu <bold>Play</bold> arriba para guardar tus picks y unirte a <pool>{{poolName}}</pool>.",
+        "hint2": "¡Luego podrás jugarla en porras y seguir tus resultados!",
+        "discardBtn": "Descartar por ahora"
+    },
+    "createPoolModal": {
+        "titlePrefix": "crear",
+        "titleHighlight": "Porra",
+        "namePlaceholder": "Nombre de la porra",
+        "allowMultiple": "Permitir múltiples plays por jugador",
+        "moneyPool": "Porra de dinero",
+        "costLabel": "por play",
+        "creating": "Creando...",
+        "createBtn": "Crear Porra",
+        "infoTitle": "Porra Privada",
+        "infoText1": "Generaremos un <code>Código</code> de porra",
+        "infoText2": "Será necesario para unirse.",
+        "cancel": "Cancelar",
+        "errorRequired": "El nombre de la porra es obligatorio.",
+        "errorPattern": "Solo se permiten letras, números, espacios y guiones.",
+        "errorCost": "Introduce un coste por play válido mayor que 0.",
+        "errorFailed": "Error al crear la porra.",
+        "errorNetwork": "Error de red. Inténtalo de nuevo."
+    },
+    "submitPlayModal": {
+        "titlePrefix": "seleccionar",
+        "titleHighlight": "Plays",
+        "noPlays": "Aún no tienes plays para enviar.",
+        "hasPlays": "Selecciona las plays a enviar a esta porra.",
+        "createFirst": "Crea una Play primero",
+        "colName": "Nombre",
+        "colSelect": "Seleccionar",
+        "privateCodeTitle": "Introduce el Código Privado",
+        "privateCodePlaceholder": "INTRODUCE EL CÓDIGO",
+        "errorNoCode": "Por favor introduce el código privado.",
+        "errorFailed": "Error al unirse a la porra.",
+        "errorNetwork": "Error de red. Inténtalo de nuevo.",
+        "goBack": "Volver",
+        "submitting": "Enviando...",
+        "submitBtn_one": "Enviar {{count}} Play",
+        "submitBtn_other": "Enviar {{count}} Plays"
+    },
+    "poolPromptModal": {
+        "titlePrefix": "únete a ",
+        "titleHighlight": "una Porra",
+        "subtitle": "Tu play aún no está en ninguna porra.",
+        "publicTitle": "Porra Pública Vindro",
+        "publicText": "Gratis y abierta para todos.",
+        "publicBtn": "Unirse a Porra Pública",
+        "privateTitle": "¿Tienes un código?",
+        "privateBtn": "Unirse a Porra Privada"
+    },
+    "notLoggedInviteModal": {
+        "titlePrefix": "unir",
+        "titleHighlight": "Porra",
+        "subtitle": "Has sido invitado a unirte a <pool>{{poolName}}</pool> de {{tournamentName}}",
+        "ownerLabel": "Creado por",
+        "codeLabel": "Código",
+        "signInTitle": "¿Ya tienes cuenta?",
+        "signInText": "Inicia sesión y envía tus plays directamente.",
+        "signInBtn": "Iniciar Sesión",
+        "newUserTitle": "¿Nuevo en VindroGames?",
+        "newUserText": "Primero haz tus picks y luego únete a la porra.",
+        "newUserBtn": "Hacer mis Picks"
+    },
+    "poolPage": {
+        "poolLabel": "porra",
+        "leaderboard": {
+            "title": "Clasificación",
+            "colPos": "Pos.",
+            "colPlayer": "Jugador",
+            "colPlay": "Play",
+            "colGroupPts": "Pts Grupos",
+            "colBracketPts": "Pts Bracket",
+            "emptyMessage": "Aún no hay plays enviadas.",
+            "anonymous": "Anónimo"
+        },
+        "specs": {
+            "createdByYou": "Creado por",
+            "youLabel": "TI",
+            "createdPrefix": "Creado",
+            "createdBy": "por",
+            "playsSubmittedLabel_one": "play enviada",
+            "playsSubmittedLabel_other": "plays enviadas",
+            "prizePot": "Premio Total",
+            "codeLabel": "Código"
+        },
+        "actions": {
+            "submitPlay": "Enviar una Play",
+            "onePlayLimit": "Esta porra solo permite una play por miembro",
+            "removePlay": "Eliminar Play",
+            "editPool": "Editar Porra"
+        },
+        "authOverlay": {
+            "loginRequired": "Para ver esta Porra debes estar conectado.",
+            "logIn": "Iniciar Sesión",
+            "firstTime": "¿Primera vez?",
+            "firstTimeText": "Descubre cómo funciona y vuelve más tarde.",
+            "aboutTournament": "Sobre el Torneo"
+        },
+        "privatePrompt": {
+            "title": "Esta es una porra privada.",
+            "submitToView": "Envía una play para ver la clasificación.",
+            "submitPlay": "Enviar una Play",
+            "notInterested": "¿No te interesa? Vuelve al torneo.",
+            "backToTournament": "Volver al Torneo"
+        },
+        "needPlayModal": {
+            "titlePrefix": "crea una",
+            "titleHighlight": "Play",
+            "text": "Necesitas hacer tus picks antes de unirte a esta porra. Ve a la página del torneo para crear tu play.",
+            "cta": "Hacer mis Picks"
+        }
+    },
+    "inviteModal": {
+        "triggerBtn": "Invitar Amigos",
+        "titlePrefix": "invitar",
+        "titleHighlight": "Amigos",
+        "multipleAllowed": "Los usuarios pueden enviar tantas plays como quieran.",
+        "singleOnly": "Los usuarios solo pueden enviar 1 play cada uno.",
+        "isMoneyPool": "Esta es una Porra de Dinero.",
+        "costPerPlay": "Cada play cuesta {{currency}}{{cost}} para enviar.",
+        "ownerUpdates": "El propietario actualizará los pagos durante el Torneo.",
+        "freePool": "Gratis — no es una porra de dinero.",
+        "codeWarning": "Comparte este código para unirse.",
+        "copyBtn": "Copiar Invitación",
+        "copiedBtn": "¡Copiado!",
+        "shareBtn": "Compartir",
+        "shareMessage": "¡Únete a mi porra \"{{poolName}}\" en Vindro Games! Usa el código: {{code}} o haz clic aquí: {{url}}"
+    },
+    "inviteSuccess": {
+        "titlePrefix": "¡Ya estás",
+        "titleHighlight": "dentro!",
+        "message": "Tu play <play>{{playName}}</play> ha sido añadida a <pool>{{poolName}}</pool>.",
+        "later": "Quizás luego",
+        "viewPool": "Ver Porra"
+    },
+    "loginBanner": {
+        "title": "regístrate para <teal>Guardar</teal>",
+        "subtitle": "Crea una cuenta gratuita para guardar tus predicciones y competir en porras.",
+        "signUp": "Registrarse",
+        "notYet": "Ahora no",
+        "step1": "Crea tus <teal>Plays</teal> — haz múltiples sets de picks y permite que tus hijos participen bajo tu cuenta",
+        "step2": "Juega tus plays en <teal>Porras</teal> para competir contra amigos y el público",
+        "step3": "Crea tu <teal>propia porra</teal> e invita a familia, amigos o compañeros"
     }
 }

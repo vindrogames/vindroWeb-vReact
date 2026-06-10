@@ -112,7 +112,7 @@ const NavBar = ({ isMadrid }) => {
                                     className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
                                     onClick={() => setUserDropdownOpen(prev => !prev)}
                                 >
-                                    <img src={(user.avatar).replace(/\.(\w+)$/, `-${96}.$1`)} alt="User Avatar" />
+                                    <img src={(user.avatar || '/img/profile_icons/teal-simple.webp').replace(/\.(\w+)$/, `-${96}.$1`)} alt="User Avatar" />
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">
@@ -167,7 +167,7 @@ const NavBar = ({ isMadrid }) => {
                                     className={`user-avatar-btn ${userDropdownOpen ? 'open' : ''}`}
                                     onClick={() => setUserDropdownOpen(prev => !prev)}
                                 >
-                                    <img src={(user.avatar).replace(/\.(\w+)$/, `-${96}.$1`)} alt="User Avatar" />
+                                    <img src={(user.avatar || '/img/profile_icons/teal-simple.webp').replace(/\.(\w+)$/, `-${96}.$1`)} alt="User Avatar" />
                                 </button>
                                 {userDropdownOpen && (
                                     <div className="user-dropdown-menu">

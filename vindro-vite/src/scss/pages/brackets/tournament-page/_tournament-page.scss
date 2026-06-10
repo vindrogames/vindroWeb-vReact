@@ -2,8 +2,20 @@
 
 main.bracket-tournament-page {
 
-    .brackets-hero {
+    .btn-link {
+        background: none;
+        border: none;
+        padding: 0;
+        color: $vindro-teal;
+        text-decoration: underline;
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: inherit;
+        cursor: pointer;
+    }
 
+    .brackets-hero {
+        
         .hero-countdown {
             font-size: 1.8rem;
             font-family: $vindro-openSans;
@@ -18,15 +30,6 @@ main.bracket-tournament-page {
             }
         }
 
-        .brackets-hero-buttons-wrapper {
-            width: 450px;
-            display: flex;
-            justify-content: space-between;
-
-            button {
-                font-size: 1.6rem;
-            }
-        }
     }
 
     .user-picks {

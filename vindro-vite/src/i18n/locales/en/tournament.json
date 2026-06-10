@@ -56,6 +56,22 @@
         "loading": "Loading pools...",
         "empty": "You haven't created any pools yet."
     },
+    "tabs": {
+        "play": "Play",
+        "howItWorks": "How it Works",
+        "leaderboard": "Leaderboard"
+    },
+    "guest": {
+        "alreadyRegistered": "Already registered?",
+        "loginLink": "Log in",
+        "toSeeYourPlays": "to see your plays."
+    },
+    "loginModal": {
+        "title": "Save your Play",
+        "subtitle": "Sign in to lock in your predictions and compete with others.",
+        "hint1": "No password needed — just pick a provider.",
+        "hint2": "Your picks will be saved after you log in."
+    },
     "auth": {
         "mustLogin": "To participate you must be logged in.",
         "noAccountHint": "*If you don't have an account, signing up is easy!",
@@ -69,6 +85,40 @@
         "colGroupsPts": "Groups Pts",
         "colBracketPts": "Bracket Pts",
         "empty": "No entries found."
+    },
+    "mockBracket": {
+        "shoeIn":    "shoe in",
+        "who":       "who?",
+        "darkHorse": "dark horse",
+        "tourist":   "tourist",
+        "certified": "certified",
+        "sus":       "sus",
+        "giant":     "giant",
+        "ankleBite": "ankle bite",
+        "wow":       "wow",
+        "meh":       "meh",
+        "noChance":  "no chance",
+        "slim":      "slim",
+        "thePick":   "the pick",
+        "upset":     "upset?",
+        "carryMe":   "carry me",
+        "iGotThis":  "i got this",
+        "goat":      "goat",
+        "theGoat":   "the goat?",
+        "elite":     "elite",
+        "alsoRan":   "also ran",
+        "standard":  "standard",
+        "offBrand":  "off brand",
+        "penaltyFc": "penalty fc",
+        "crossbar":  "crossbar",
+        "rentFree":  "rent free",
+        "whoAgain":  "who again?",
+        "vibesOnly": "vibes only",
+        "tactics":   "tactics?",
+        "byeBye":    "bye bye",
+        "justHere":  "just here",
+        "where":     "where?",
+        "rightHere": "right here"
     },
     "world-cup-2026": {
         "subtitle": "Make your picks. Submit to a pool. See how you do!",

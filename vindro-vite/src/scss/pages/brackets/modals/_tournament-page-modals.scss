@@ -144,6 +144,48 @@
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// PLAY-NOT-IN-POOLS MODAL  (join pool prompt after saving a play)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+.pool-prompt-bottom {
+    gap: 0;
+    padding: 0;
+    justify-content: stretch;
+
+    .pool-prompt-half {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding: 21px 14px;
+        width: 100%;
+        flex: 1;
+
+        h3 {
+            font-size: 2.1rem;
+            font-weight: 400;
+            text-align: center;
+            color: white;
+        }
+
+        p {
+            font-size: 1.6rem;
+            text-align: center;
+            color: rgba(white, 0.7);
+            margin: 0;
+        }
+    }
+
+    .pool-half-divider {
+        width: 84%;
+        height: 1px;
+        background-color: rgba($vindro-teal, 0.25);
+        align-self: center;
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // TABBED MODAL LAYOUT  (shared by Tutorial + Pool Admin)
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -227,135 +269,6 @@
 }
 
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// TUTORIAL MODAL  specifics
-// ═══════════════════════════════════════════════════════════════════════════════
-
-#new-user-tutorial {
-    width: 90%;
-    max-width: 520px;
-
-    .modal-tab-body {
-
-        .tutorial-body-text {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-height: 205px;
-
-            p {
-                font-size: 1.7rem;
-                line-height: 1.6;
-                color: white;
-                font-weight: 400;
-                font-family: $vindro-openSans;
-            }
-
-            &.is-overview p {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-            }
-        }
-
-        .tutorial-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 14px;
-            border-top: 1px solid rgba(white, 0.1);
-
-            .tutorial-progress-dots {
-                display: flex;
-                gap: 8px;
-                align-items: center;
-
-                .tutorial-dot {
-                    display: block;
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    background-color: rgba(white, 0.2);
-                    cursor: pointer;
-                    transition: background-color 0.2s ease, transform 0.2s ease;
-
-                    &.visited { background-color: $vindro-green; }
-
-                    &.active {
-                        background-color: $vindro-teal;
-                        transform: scale(1.3);
-                    }
-
-                    @media (hover: hover) {
-                        &:hover:not(.active) { background-color: rgba(white, 0.5); }
-                    }
-                }
-            }
-
-            .tutorial-back-btn,
-            .tutorial-next-btn {
-                display: flex;
-                align-items: center;
-                gap: 7px;
-                min-width: 84px;
-                justify-content: center;
-            }
-
-            .tutorial-back-btn:disabled {
-                opacity: 0.28;
-                cursor: default;
-                pointer-events: none;
-            }
-
-            .btn-neon-pink-tutorial {
-                background-color: $vindro-neon-pink;
-                color: white;
-
-                @media (hover: hover) {
-                    &:hover { background-color: darken($vindro-neon-pink, 10%); color: white; }
-                }
-
-                &:active { background-color: darken($vindro-neon-pink, 15%); }
-            }
-        }
-
-        .tutorial-skip-link {
-            background: none;
-            border: none;
-            color: rgba(white, 0.3);
-            font-size: 1.2rem;
-            font-family: $vindro-openSans;
-            cursor: pointer;
-            text-align: center;
-            padding: 4px 0 0;
-            transition: color 0.2s ease;
-            align-self: center;
-
-            @media (hover: hover) {
-                &:hover { color: rgba(white, 0.6); }
-            }
-        }
-    }
-}
-
-// Step circles — used in tutorial overview body items
-.step-circle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background-color: $vindro-teal;
-    color: $vindro-black;
-    font-weight: 700;
-    font-size: 1.2rem;
-    font-family: $vindro-Montserrat;
-    line-height: 1;
-    vertical-align: middle;
-}
-
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // POOL ADMIN MODAL  specifics  (placeholder — add when building PoolAdminModal)
@@ -369,6 +282,7 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 #prediction-play-gallery,
+#save-guest-play-gallery,
 #create-pool-gallery {
 
     .play-name-input {
