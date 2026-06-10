@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from datetime import datetime, timezone as dt_timezone
-from tournament.models import Tournament, TournamentFormat
+from tournament.models import Tournament, TournamentFormat, TournamentPool
 from tournament.logic import seed_master_format
 
 
@@ -61,5 +61,20 @@ class Command(BaseCommand):
         TournamentFormat.objects.get_or_create(tournament=tournament)
         seed_master_format(tournament)
         TournamentFormat.objects.filter(tournament=tournament).update(is_seeded=True)
+
+        public_pool, pool_created = TournamentPool.objects.get_or_create(
+            tournament=tournament,
+            is_public=True,
+            defaults={
+                'name': 'vindroPublic',
+                'description': 'The official vindroGames public pool. Everyone can join!',
+                'created_by': None,
+                'allow_multiple_plays_per_user': True,
+            }
+        )
+        if pool_created:
+            self.stdout.write(self.style.SUCCESS(f'Public pool "{public_pool.name}" created.'))
+        else:
+            self.stdout.write(f'Public pool "{public_pool.name}" already exists.')
 
         self.stdout.write(self.style.SUCCESS(f'Seeded: {tournament.name} [{slug}]'))
