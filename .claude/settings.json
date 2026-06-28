@@ -7,7 +7,13 @@
       "Bash(uv run *)",
       "WebFetch(domain:sports.yahoo.com)",
       "Bash(npx eslint *)",
-      "Bash(echo \"=== exit: $? ===\")"
+      "Bash(echo \"=== exit: $? ===\")",
+      "Bash(git add *)",
+      "Bash(git check-ignore *)",
+      "Bash(echo \"exit $?\")",
+      "Bash(git restore *)",
+      "Bash(git commit -m 'Add handoff note for VM deploy + bracket seeding *)",
+      "Bash(git push *)"
     ]
   }
 }
