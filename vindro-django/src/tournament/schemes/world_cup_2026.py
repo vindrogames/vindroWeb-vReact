@@ -73,6 +73,45 @@ GROUPS_SKELETON = {
     ],
 }
 
+# Final group-stage standings (1st -> 4th per group).
+# Defined as the finishing ORDER of team names; the entries (with flags) are
+# rebuilt from GROUPS_SKELETON below so spelling/flags can never drift from the
+# canonical source the predictions were built against.
+GROUPS_RESULTS_ORDER = {
+    "Group A": ["Mexico", "South Africa", "Korea Republic", "Czech Republic"],
+    "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
+    "Group C": ["Brazil", "Morocco", "Scotland", "Haiti"],
+    "Group D": ["United States", "Australia", "Paraguay", "Türkiye"],
+    "Group E": ["Germany", "Ivory Coast", "Ecuador", "Curaçao"],
+    "Group F": ["Netherlands", "Japan", "Sweden", "Tunisia"],
+    "Group G": ["Belgium", "Egypt", "Iran", "New Zealand"],
+    "Group H": ["Spain", "Cape Verde", "Uruguay", "Saudi Arabia"],
+    "Group I": ["France", "Norway", "Senegal", "Iraq"],
+    "Group J": ["Argentina", "Austria", "Algeria", "Jordan"],
+    "Group K": ["Colombia", "Portugal", "DR Congo", "Uzbekistan"],
+    "Group L": ["England", "Croatia", "Ghana", "Panama"],
+}
+
+
+def _build_groups_results():
+    """Rebuild the full {team, flag} result entries from the skeleton, in the
+    finishing order given by GROUPS_RESULTS_ORDER. Raises if any name doesn't
+    match the skeleton exactly, so a typo fails loudly instead of silently
+    awarding zero points."""
+    results = {}
+    for group_name, order in GROUPS_RESULTS_ORDER.items():
+        by_name = {t["team"]: t for t in GROUPS_SKELETON[group_name]}
+        if set(order) != set(by_name):
+            raise ValueError(
+                f"{group_name}: results order {sorted(order)} does not match "
+                f"skeleton teams {sorted(by_name)}"
+            )
+        results[group_name] = [by_name[name] for name in order]
+    return results
+
+
+GROUPS_RESULTS = _build_groups_results()
+
 BRACKET_SKELETON = {
     "R32": [
         # --- LEFT SIDE (Pathway 1) ---

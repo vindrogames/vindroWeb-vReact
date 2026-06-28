@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.fifa.com)",
+      "WebSearch",
+      "WebFetch(domain:www.nbcsports.com)",
+      "Bash(uv run *)"
+    ]
+  }
+}
