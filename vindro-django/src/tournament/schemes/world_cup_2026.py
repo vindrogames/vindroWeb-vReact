@@ -112,6 +112,23 @@ def _build_groups_results():
 
 GROUPS_RESULTS = _build_groups_results()
 
+# Which group's 3rd-placed team fills each R32 third-place slot, keyed by R32
+# match id. The slots in BRACKET_SKELETON read "3A/B/C/D/F" etc. — the eligible
+# pool — but the actual assignment depends on WHICH eight thirds qualified, per
+# FIFA's allocation table. These are the real assignments for this tournament
+# (8 qualifying thirds: B, D, E, F, I, J, K, L). Each must be inside its slot's
+# eligible pool; resolve_r32_fixtures validates that and fails loudly otherwise.
+THIRD_PLACE_ALLOCATION = {
+    74: "D",  # Germany vs Paraguay (3D)
+    77: "F",  # France vs Sweden (3F)
+    79: "E",  # Mexico vs Ecuador (3E)
+    80: "K",  # England vs DR Congo (3K)
+    81: "B",  # United States vs Bosnia and Herzegovina (3B)
+    82: "I",  # Belgium vs Senegal (3I)
+    85: "J",  # Switzerland vs Algeria (3J)
+    87: "L",  # Colombia vs Ghana (3L)
+}
+
 BRACKET_SKELETON = {
     "R32": [
         # --- LEFT SIDE (Pathway 1) ---

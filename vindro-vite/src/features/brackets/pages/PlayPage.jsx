@@ -71,6 +71,7 @@ const PlayPage = () => {
 
     const [showNewUserModal, setShowNewUserModal] = useState(!!location.state?.newUser);
     const invitePoolCodeRef = useRef(location.state?.invitePoolCode || null);
+    const bracketCancelEditRef = useRef(null);
     const [showInviteSuccessModal, setShowInviteSuccessModal] = useState(false);
     const [inviteSuccessData, setInviteSuccessData] = useState(null);
 
@@ -264,6 +265,24 @@ const PlayPage = () => {
                 } else if (playPools.length === 0) {
                     setShowPoolPromptModal(true);
                 }
+            }
+        } catch (err) {
+            setErrorCode(toErrorCode(err));
+        } finally {
+            hideLoader();
+        }
+    };
+
+    const handleSaveBracket = async (bracketData) => {
+        showLoader();
+        try {
+            const result = await playServices.updateBracketPredictions(playData.id, bracketData);
+            if (result?.success) {
+                setPlayData(prev => ({
+                    ...prev,
+                    bracket_predictions: bracketData,
+                    updated_at: result.data?.updated_at ?? prev.updated_at,
+                }));
             }
         } catch (err) {
             setErrorCode(toErrorCode(err));
@@ -467,6 +486,8 @@ const PlayPage = () => {
                                     data={isBracketNotYet && eventConfig?.bracketSeed ? eventConfig.bracketSeed : playData.bracket_predictions}
                                     isEditable={isOwner && isBracketOpen}
                                     onEditingChange={handleEditingChange}
+                                    onSave={handleSaveBracket}
+                                    cancelEditRef={bracketCancelEditRef}
                                 />
                                 <div className={`last-updated${isBracketEditing ? ' is-dimmed' : ''}`}>
                                     <p className="last-updated">{t('lastUpdated')} {formatDate(playData.updated_at)}</p>
