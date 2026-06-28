@@ -204,4 +204,15 @@
             .bk-center              { flex-basis: 14px; }
         }
     }
+
+    // Reduce header padding on mobile
+    .bk-stage-header {
+        padding: 10px 14px;
+        min-height: 48px;
+
+        .gallery-edit-btn {
+            font-size: 1rem;
+            padding: 6px 12px;
+        }
+    }
 }

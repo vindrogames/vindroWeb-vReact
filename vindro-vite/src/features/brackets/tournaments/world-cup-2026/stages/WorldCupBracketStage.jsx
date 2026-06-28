@@ -281,8 +281,13 @@ const WorldCupBracketStage = ({ data, isEditable, onSave, loginBanner, cancelEdi
 
     return (
         <div className={`bk-stage${isEditing ? ' bk-stage--editing' : ''}`}>
-            {editBtn}
             {loginBanner}
+
+            {isEditable && (
+                <div className="bk-stage-header">
+                    {editBtn}
+                </div>
+            )}
 
             <div className="bk-stage-container">
                 <div className="bk-half-toggle">
