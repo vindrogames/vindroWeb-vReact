@@ -124,10 +124,15 @@ const R32Match = ({ match, byId, isEditing, onPick, t, officialResults }) => {
         ? getMatchStatus(match, w, actualWinner, POINTS_R32)
         : { class: 'pending', badge: null };
 
-    const homeIsActualWinner = actualWinner && sameTeam(actualWinner, home);
-    const awayIsActualWinner = actualWinner && sameTeam(actualWinner, away);
-    const homeIsCorrect = w && actualWinner && sameTeam(w, home) && sameTeam(actualWinner, home);
-    const awayIsCorrect = w && actualWinner && sameTeam(w, away) && sameTeam(actualWinner, away);
+    // Check if each team is the actual winner
+    const homeIsActualWinner = actualWinner && home && sameTeam(actualWinner, home);
+    const awayIsActualWinner = actualWinner && away && sameTeam(actualWinner, away);
+
+    // Check if user's pick matches the actual winner
+    const userPickedHome = w && home && sameTeam(w, home);
+    const userPickedAway = w && away && sameTeam(w, away);
+    const homeIsCorrect = userPickedHome && homeIsActualWinner;
+    const awayIsCorrect = userPickedAway && awayIsActualWinner;
 
     return (
         <div className={`teams-container match-${status.class}`}>
@@ -142,25 +147,25 @@ const R32Match = ({ match, byId, isEditing, onPick, t, officialResults }) => {
             {/* Team Cards */}
             <Card
                 team={home}
-                selected={sameTeam(w, home)}
+                selected={userPickedHome}
                 clickable={isEditing}
                 onClick={() => onPick(match.id, home)}
                 t={t}
                 isCorrectPick={homeIsCorrect}
                 isActualWinner={homeIsActualWinner}
                 isPending={!actualWinner}
-                showWinnerCheck={!isEditing && actualWinner}
+                showWinnerCheck={!isEditing && homeIsActualWinner}
             />
             <Card
                 team={away}
-                selected={sameTeam(w, away)}
+                selected={userPickedAway}
                 clickable={isEditing}
                 onClick={() => onPick(match.id, away)}
                 t={t}
                 isCorrectPick={awayIsCorrect}
                 isActualWinner={awayIsActualWinner}
                 isPending={!actualWinner}
-                showWinnerCheck={!isEditing && actualWinner}
+                showWinnerCheck={!isEditing && awayIsActualWinner}
             />
 
             {/* Status Text (for incorrect picks) */}
@@ -173,26 +178,31 @@ const R32Match = ({ match, byId, isEditing, onPick, t, officialResults }) => {
     );
 };
 
-// R16 Match with status indicators (similar to R32Match but for later rounds)
-const R16Match = ({ match, byId, isEditing, onPick, t, officialResults }) => {
-    const home = resolveTeam(match.home, byId);
-    const away = resolveTeam(match.away, byId);
-    const w = resolveTeam(match.winner, byId);
+// A "winner advances" slot with status indicators: shows the winner of `source`; tapping promotes that
+// team into its parent match (the next round).
+const AdvanceSlot = ({ source, byId, parentOf, isEditing, onPick, t, officialResults, roundKey }) => {
+    const team = resolveTeam(source?.winner, byId);
+    const parentId = source ? parentOf[String(source.id)] : null;
+    const parent = parentId ? byId[parentId] : null;
+    const selected = parent ? sameTeam(team, resolveTeam(parent.winner, byId)) : false;
 
-    // Get official result for this match
-    const officialMatch = officialResults?.R16?.find(m => m.id === match.id);
-    const actualWinner = officialMatch?.winner;
+    // Get official result for this match if we have officialResults and roundKey
+    let status = { class: 'pending', badge: null };
+    let isCorrectPick = false;
+    let isActualWinner = false;
 
-    // Calculate match status
-    const POINTS_R16 = 4;
-    const status = actualWinner
-        ? getMatchStatus(match, w, actualWinner, POINTS_R16)
-        : { class: 'pending', badge: null };
+    if (officialResults && roundKey && source) {
+        const officialMatch = officialResults?.[roundKey]?.find(m => m.id === source.id);
+        const actualWinner = officialMatch?.winner;
 
-    const homeIsActualWinner = actualWinner && sameTeam(actualWinner, home);
-    const awayIsActualWinner = actualWinner && sameTeam(actualWinner, away);
-    const homeIsCorrect = w && actualWinner && sameTeam(w, home) && sameTeam(actualWinner, home);
-    const awayIsCorrect = w && actualWinner && sameTeam(w, away) && sameTeam(actualWinner, away);
+        if (actualWinner) {
+            const POINTS_BY_ROUND = { R16: 4, QF: 8, SF: 16, '3rd': 16, F: 32 };
+            const pointsPerMatch = POINTS_BY_ROUND[roundKey] || 0;
+            status = getMatchStatus(source, team, actualWinner, pointsPerMatch);
+            isCorrectPick = team && actualWinner && sameTeam(team, actualWinner);
+            isActualWinner = !!actualWinner && sameTeam(team, actualWinner);
+        }
+    }
 
     return (
         <div className={`teams-container match-${status.class}`}>
@@ -204,48 +214,16 @@ const R16Match = ({ match, byId, isEditing, onPick, t, officialResults }) => {
                 </div>
             )}
 
-            {/* Team Cards */}
-            <Card
-                team={home}
-                selected={sameTeam(w, home)}
-                clickable={isEditing}
-                onClick={() => onPick(match.id, home)}
-                t={t}
-                isCorrectPick={homeIsCorrect}
-                isActualWinner={homeIsActualWinner}
-                isPending={!actualWinner}
-                showWinnerCheck={!isEditing && actualWinner}
-            />
-            <Card
-                team={away}
-                selected={sameTeam(w, away)}
-                clickable={isEditing}
-                onClick={() => onPick(match.id, away)}
-                t={t}
-                isCorrectPick={awayIsCorrect}
-                isActualWinner={awayIsActualWinner}
-                isPending={!actualWinner}
-                showWinnerCheck={!isEditing && actualWinner}
-            />
-        </div>
-    );
-};
-
-// A "winner advances" slot: shows the winner of `source`; tapping promotes that
-// team into its parent match (the next round).
-const AdvanceSlot = ({ source, byId, parentOf, isEditing, onPick, t }) => {
-    const team = resolveTeam(source?.winner, byId);
-    const parentId = source ? parentOf[String(source.id)] : null;
-    const parent = parentId ? byId[parentId] : null;
-    const selected = parent ? sameTeam(team, resolveTeam(parent.winner, byId)) : false;
-    return (
-        <div className="teams-container">
             <Card
                 team={team}
                 selected={selected}
                 clickable={isEditing && !!parentId}
                 onClick={() => onPick(parentId, team)}
                 t={t}
+                isCorrectPick={isCorrectPick}
+                isActualWinner={isActualWinner}
+                isPending={!status.badge}
+                showWinnerCheck={!isEditing && isActualWinner}
             />
         </div>
     );
@@ -287,13 +265,13 @@ const QuarterCard = ({ qf, side, byId, parentOf, isEditing, onPick, t, activeRou
     const conn2 = <div className="connector-col" key="x2">{r16s.map((m) => <Conn key={m.id} />)}</div>;
     const col3 = (
         <div className="round-col round-3-col" key="c3">
-            {r16s.map((m) => <R16Match key={m.id} match={m} byId={byId} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} />)}
+            {r16s.map((m) => <AdvanceSlot key={m.id} source={m} byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} roundKey="R16" />)}
         </div>
     );
     const conn3 = <div className="connector-col" key="x3"><Conn /></div>;
     const col4 = (
         <div className="round-col round-4-col" key="c4">
-            <AdvanceSlot source={qf} byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} />
+            <AdvanceSlot source={qf} byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} roundKey="QF" />
         </div>
     );
 

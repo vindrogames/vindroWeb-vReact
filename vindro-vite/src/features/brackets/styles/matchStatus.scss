@@ -50,10 +50,10 @@
   // Correct prediction highlight
   &.team-card--correct-pick {
     border-left: 4px solid #45A29E;
-    background: rgba(69, 162, 158, 0.1);
+    background: rgba(69, 162, 158, 0.2);
 
     .bk-team-name {
-      color: #0B0C10;  // Dark color for better contrast
+      color: #66FCF1;  // Light teal for visibility on dark backgrounds
       font-weight: 700;
     }
   }
@@ -71,10 +71,10 @@
 
   // Actual winner (when different from user pick)
   &.team-card--actual-winner {
-    border-left: 4px solid #45A29E;
+    border-left: 4px solid #66FCF1;
 
     .bk-team-name {
-      color: #0B0C10;  // Dark color for better contrast
+      color: #66FCF1;  // Light teal for visibility on dark backgrounds
       font-weight: 700;
     }
   }
@@ -84,7 +84,7 @@
     border-left: 4px solid #FAC550;
 
     .bk-team-name {
-      color: #D97706;  // Darker orange for better contrast
+      color: #FAC550;  // Yellow for visibility
       font-weight: 700;
     }
   }
