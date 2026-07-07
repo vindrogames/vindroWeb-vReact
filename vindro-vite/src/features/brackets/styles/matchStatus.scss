@@ -1,0 +1,168 @@
+// Match Status Indicator Styles
+// To be imported into the bracket component styles
+
+// Status badge overlay for matches
+.match-status-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  &.badge-correct {
+    background: #45A29E;
+    color: #0B0C10;
+  }
+
+  &.badge-incorrect {
+    background: #E62644;
+    color: white;
+  }
+
+  &.badge-pending {
+    background: #C5C6C7;
+    color: #0B0C10;
+  }
+
+  .badge-icon {
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  .badge-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+}
+
+// Enhanced team card states
+.team-card {
+  position: relative;
+  transition: all 0.3s ease;
+
+  // Correct prediction highlight
+  &.team-card--correct-pick {
+    border-left: 4px solid #45A29E;
+    background: rgba(69, 162, 158, 0.1);
+
+    .bk-team-name {
+      color: #66FCF1;
+      font-weight: 600;
+    }
+  }
+
+  // Incorrect prediction
+  &.team-card--incorrect-pick {
+    border-left: 4px solid #E62644;
+    background: rgba(230, 38, 68, 0.08);
+
+    .bk-team-name {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+  }
+
+  // Actual winner (when different from user pick)
+  &.team-card--actual-winner {
+    border-left: 4px solid #66FCF1;
+
+    .bk-team-name {
+      color: #66FCF1;
+      font-weight: 700;
+    }
+  }
+
+  // User's pending pick
+  &.team-card--user-pick-pending {
+    border-left: 4px solid #FAC550;
+
+    .bk-team-name {
+      color: #FAC550;
+      font-weight: 600;
+    }
+  }
+
+  // Winner check mark
+  .winner-check {
+    margin-left: auto;
+    color: #45A29E;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+}
+
+// Match container status
+.teams-container {
+  position: relative;
+
+  &.match-correct {
+    .match-status-badge {
+      @extend .badge-correct;
+    }
+  }
+
+  &.match-incorrect {
+    .match-status-badge {
+      @extend .badge-incorrect;
+    }
+  }
+
+  &.match-pending {
+    .match-status-badge {
+      @extend .badge-pending;
+    }
+  }
+}
+
+// Status text below match (for incorrect picks)
+.match-status-text {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(230, 38, 68, 0.15);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #E62644;
+  font-weight: 500;
+  text-align: center;
+  border-left: 3px solid #E62644;
+
+  &.status-pending {
+    background: rgba(197, 198, 199, 0.1);
+    color: #C5C6C7;
+    border-left-color: #C5C6C7;
+  }
+}
+
+// Mobile adjustments
+@media (max-width: 678px) {
+  .match-status-badge {
+    padding: 3px 8px;
+    font-size: 0.7rem;
+
+    .badge-icon {
+      font-size: 0.8rem;
+    }
+
+    .badge-text {
+      font-size: 0.7rem;
+    }
+  }
+
+  .match-status-text {
+    font-size: 0.75rem;
+    padding: 6px;
+  }
+
+  .team-card {
+    .winner-check {
+      font-size: 1rem;
+    }
+  }
+}

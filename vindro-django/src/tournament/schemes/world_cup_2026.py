@@ -176,3 +176,37 @@ BRACKET_SKELETON = {
     "3rd": [{"id": 103, "home": "L101", "away": "L102", "start_time": "18/07/2026 21:00", "winner": None}],
     "F": [{"id": 104, "home": "W101", "away": "W102", "start_time": "19/07/2026 21:00", "winner": None}]
 }
+
+# Official bracket results - winners for completed rounds
+# Each winner is stored as {"name": "Country", "flag": "code"} matching the bracket contract
+BRACKET_RESULTS_R32_WINNERS = {
+    73: {"name": "Canada", "flag": "ca"},           # Canada 1-0 South Africa
+    74: {"name": "Paraguay", "flag": "py"},         # Paraguay 1-1 Germany (4-3 pens)
+    75: {"name": "Morocco", "flag": "ma"},          # Morocco 1-1 Netherlands (3-2 pens)
+    76: {"name": "Brazil", "flag": "br"},           # Brazil 2-1 Japan
+    77: {"name": "France", "flag": "fr"},           # France 3-0 Sweden
+    78: {"name": "Norway", "flag": "no"},           # Norway 2-1 Ivory Coast
+    79: {"name": "Mexico", "flag": "mx"},           # Mexico 2-0 Ecuador
+    80: {"name": "England", "flag": "gb-eng"},      # England 2-1 DR Congo
+    81: {"name": "United States", "flag": "us"},    # USA 2-0 Bosnia & Herzegovina
+    82: {"name": "Belgium", "flag": "be"},          # Belgium 3-2 Senegal
+    83: {"name": "Portugal", "flag": "pt"},         # Portugal 2-1 Croatia
+    84: {"name": "Spain", "flag": "es"},            # Spain 3-0 Austria
+    85: {"name": "Switzerland", "flag": "ch"},      # Switzerland 2-0 Algeria
+    86: {"name": "Argentina", "flag": "ar"},        # Argentina 3-2 Cape Verde
+    87: {"name": "Colombia", "flag": "co"},         # Colombia 1-0 Ghana
+    88: {"name": "Egypt", "flag": "eg"},            # Egypt 1-1 Australia (4-2 pens)
+}
+
+# Round of 16 winners (matches 89-96)
+# Match IDs reference R32 winners: W73=Canada, W74=Paraguay, etc.
+BRACKET_RESULTS_R16_WINNERS = {
+    89: {"name": "France", "flag": "fr"},           # France 1-0 Paraguay (W74 vs W77)
+    90: {"name": "Morocco", "flag": "ma"},          # Morocco 3-0 Canada (W73 vs W75)
+    91: {"name": "Norway", "flag": "no"},           # Norway 2-1 Brazil (W76 vs W78)
+    92: {"name": "England", "flag": "gb-eng"},      # England 3-2 Mexico (W79 vs W80)
+    93: {"name": "Spain", "flag": "es"},            # Spain 1-0 Portugal (W83 vs W84)
+    94: {"name": "Belgium", "flag": "be"},          # Belgium 4-1 USA (W81 vs W82)
+    95: {"name": "Argentina", "flag": "ar"},        # Argentina 3-2 Egypt (W86 vs W88)
+    # 96: {"name": "TBD", "flag": "xx"},           # Switzerland vs Colombia (W85 vs W87) - MATCH IN PROGRESS
+}

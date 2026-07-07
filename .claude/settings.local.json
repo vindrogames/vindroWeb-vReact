@@ -3,7 +3,10 @@
     "allow": [
       "Bash(grep -E \"\\\\.\\(jsx|js\\)$\")",
       "Bash(npm run *)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(find:*)",
+      "Bash(uv run python:*)",
+      "Bash(sqlite3:*)"
     ]
   }
 }

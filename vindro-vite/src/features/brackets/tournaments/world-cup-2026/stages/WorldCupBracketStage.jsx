@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import BracketScoreSummary from '../../../components/BracketScoreSummary';
+import { getMatchStatus } from '../../../utils/matchStatus';
+import '../../../styles/matchStatus.scss';
 
 // ── Bracket graph helpers ────────────────────────────────────────────────────
 // A bracket is { R32:[...], R16:[...], QF:[...], SF:[...], "3rd":[...], F:[...] }.
@@ -87,25 +90,85 @@ const TeamLabel = ({ team, t }) => {
     );
 };
 
-const Card = ({ team, selected, clickable, onClick, t }) => (
-    <div
-        className={`team-card${!team ? ' team-card--empty' : ''}${selected ? ' team-card--selected' : ''}${clickable && team ? ' team-card--clickable' : ''}`}
-        onClick={clickable && team ? onClick : undefined}
-        role={clickable && team ? 'button' : undefined}
-    >
-        <TeamLabel team={team} t={t} />
-    </div>
-);
+const Card = ({ team, selected, clickable, onClick, t, isCorrectPick, isActualWinner, isPending, showWinnerCheck }) => {
+    let statusClass = '';
+    if (isCorrectPick) statusClass = ' team-card--correct-pick';
+    else if (isActualWinner && !isCorrectPick) statusClass = ' team-card--actual-winner';
+    else if (isPending && selected) statusClass = ' team-card--user-pick-pending';
+
+    return (
+        <div
+            className={`team-card${!team ? ' team-card--empty' : ''}${selected ? ' team-card--selected' : ''}${clickable && team ? ' team-card--clickable' : ''}${statusClass}`}
+            onClick={clickable && team ? onClick : undefined}
+            role={clickable && team ? 'button' : undefined}
+        >
+            <TeamLabel team={team} t={t} />
+            {showWinnerCheck && isActualWinner && <span className="winner-check">✓</span>}
+        </div>
+    );
+};
 
 // An R32 match: two teams, tap one to set this match's winner.
-const R32Match = ({ match, byId, isEditing, onPick, t }) => {
+const R32Match = ({ match, byId, isEditing, onPick, t, officialResults }) => {
     const home = resolveTeam(match.home, byId);
     const away = resolveTeam(match.away, byId);
     const w = resolveTeam(match.winner, byId);
+
+    // Get official result for this match
+    const officialMatch = officialResults?.R32?.find(m => m.id === match.id);
+    const actualWinner = officialMatch?.winner;
+
+    // Calculate match status
+    const POINTS_R32 = 2;
+    const status = actualWinner
+        ? getMatchStatus(match, w, actualWinner, POINTS_R32)
+        : { class: 'pending', badge: null };
+
+    const homeIsActualWinner = actualWinner && sameTeam(actualWinner, home);
+    const awayIsActualWinner = actualWinner && sameTeam(actualWinner, away);
+    const homeIsCorrect = w && actualWinner && sameTeam(w, home) && sameTeam(actualWinner, home);
+    const awayIsCorrect = w && actualWinner && sameTeam(w, away) && sameTeam(actualWinner, away);
+
     return (
-        <div className="teams-container">
-            <Card team={home} selected={sameTeam(w, home)} clickable={isEditing} onClick={() => onPick(match.id, home)} t={t} />
-            <Card team={away} selected={sameTeam(w, away)} clickable={isEditing} onClick={() => onPick(match.id, away)} t={t} />
+        <div className={`teams-container match-${status.class}`}>
+            {/* Status Badge */}
+            {status.badge && !isEditing && (
+                <div className={`match-status-badge badge-${status.class}`}>
+                    <span className="badge-icon">{status.badge.icon}</span>
+                    <span className="badge-text">{status.badge.text}</span>
+                </div>
+            )}
+
+            {/* Team Cards */}
+            <Card
+                team={home}
+                selected={sameTeam(w, home)}
+                clickable={isEditing}
+                onClick={() => onPick(match.id, home)}
+                t={t}
+                isCorrectPick={homeIsCorrect}
+                isActualWinner={homeIsActualWinner}
+                isPending={!actualWinner}
+                showWinnerCheck={!isEditing && actualWinner}
+            />
+            <Card
+                team={away}
+                selected={sameTeam(w, away)}
+                clickable={isEditing}
+                onClick={() => onPick(match.id, away)}
+                t={t}
+                isCorrectPick={awayIsCorrect}
+                isActualWinner={awayIsActualWinner}
+                isPending={!actualWinner}
+                showWinnerCheck={!isEditing && actualWinner}
+            />
+
+            {/* Status Text (for incorrect picks) */}
+            {status.text && !isEditing && (
+                <div className={`match-status-text ${status.class === 'pending' ? 'status-pending' : ''}`}>
+                    {status.text}
+                </div>
+            )}
         </div>
     );
 };
@@ -147,14 +210,14 @@ const ConnR = () => (
 );
 
 // One quarter of the tree, derived from its QF match by walking the W-references.
-const QuarterCard = ({ qf, side, byId, parentOf, isEditing, onPick, t, activeRound }) => {
+const QuarterCard = ({ qf, side, byId, parentOf, isEditing, onPick, t, activeRound, officialResults }) => {
     const r16s = [childMatch(qf.home, byId), childMatch(qf.away, byId)].filter(Boolean);
     const r32s = r16s.flatMap((r16) => [childMatch(r16.home, byId), childMatch(r16.away, byId)].filter(Boolean));
     const Conn = side === 'left' ? ConnL : ConnR;
 
     const col1 = (
         <div className="round-col round-1-col" key="c1">
-            {r32s.map((m) => <R32Match key={m.id} match={m} byId={byId} isEditing={isEditing} onPick={onPick} t={t} />)}
+            {r32s.map((m) => <R32Match key={m.id} match={m} byId={byId} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} />)}
         </div>
     );
     const conn1 = <div className="connector-col" key="x1">{r32s.map((m) => <Conn key={m.id} />)}</div>;
@@ -184,14 +247,14 @@ const QuarterCard = ({ qf, side, byId, parentOf, isEditing, onPick, t, activeRou
 };
 
 // Read-only fallback (e.g. the pre-open teaser seed, which has no W-graph / final).
-const FlatR32 = ({ r32, byId, t }) => (
+const FlatR32 = ({ r32, byId, t, officialResults }) => (
     <div className="bk-flat-r32">
-        {(r32 || []).map((m) => <R32Match key={m.id} match={m} byId={byId} isEditing={false} onPick={() => {}} t={t} />)}
+        {(r32 || []).map((m) => <R32Match key={m.id} match={m} byId={byId} isEditing={false} onPick={() => {}} t={t} officialResults={officialResults} />)}
     </div>
 );
 
 // ── Main component ───────────────────────────────────────────────────────────
-const WorldCupBracketStage = ({ data, isEditable, onSave, loginBanner, cancelEditRef, onEditingChange }) => {
+const WorldCupBracketStage = ({ data, officialResults, totalBracketPoints, isEditable, onSave, loginBanner, cancelEditRef, onEditingChange }) => {
     const { t } = useTranslation('tournament');
     const [activeSection, setActiveSection] = useState('left');
     const [activeRound, setActiveRound] = useState('R32');
@@ -274,7 +337,15 @@ const WorldCupBracketStage = ({ data, isEditable, onSave, loginBanner, cancelEdi
             <div className="bk-stage">
                 {editBtn}
                 {loginBanner}
-                <FlatR32 r32={working.R32} byId={byId} t={t} />
+                {/* Score Summary */}
+                {officialResults && !isEditing && (
+                    <BracketScoreSummary
+                        bracketPredictions={working}
+                        bracketResults={officialResults}
+                        totalBracketPoints={totalBracketPoints || 0}
+                    />
+                )}
+                <FlatR32 r32={working.R32} byId={byId} t={t} officialResults={officialResults} />
             </div>
         );
     }
@@ -287,6 +358,15 @@ const WorldCupBracketStage = ({ data, isEditable, onSave, loginBanner, cancelEdi
                 <div className="bk-stage-header">
                     {editBtn}
                 </div>
+            )}
+
+            {/* Score Summary */}
+            {officialResults && !isEditing && (
+                <BracketScoreSummary
+                    bracketPredictions={working}
+                    bracketResults={officialResults}
+                    totalBracketPoints={totalBracketPoints || 0}
+                />
             )}
 
             <div className="bk-stage-container">
@@ -311,7 +391,7 @@ const WorldCupBracketStage = ({ data, isEditable, onSave, loginBanner, cancelEdi
                 <div className="bk-tree" data-section={activeSection}>
                     <div className="bk-bracket-half bk-bracket-half--left">
                         {qfLeft.map((qf) => (
-                            <QuarterCard key={qf.id} qf={qf} side="left" byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} activeRound={activeRound} />
+                            <QuarterCard key={qf.id} qf={qf} side="left" byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} activeRound={activeRound} officialResults={officialResults} />
                         ))}
                     </div>
 
@@ -348,7 +428,7 @@ const WorldCupBracketStage = ({ data, isEditable, onSave, loginBanner, cancelEdi
 
                     <div className="bk-bracket-half bk-bracket-half--right">
                         {qfRight.map((qf) => (
-                            <QuarterCard key={qf.id} qf={qf} side="right" byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} activeRound={activeRound} />
+                            <QuarterCard key={qf.id} qf={qf} side="right" byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} activeRound={activeRound} officialResults={officialResults} />
                         ))}
                     </div>
                 </div>

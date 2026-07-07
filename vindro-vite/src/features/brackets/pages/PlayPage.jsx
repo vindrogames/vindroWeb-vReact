@@ -5,6 +5,7 @@ import playServices from '../services/playServices';
 import poolServices from '../services/poolServices';
 import { useAuth } from '../../../contexts/auth/AuthContext';
 import { useLoading } from '../../../contexts/LoadingContext';
+import { useTournament } from '../hooks/useTournament';
 import formatDate from '../../../utils/dateFormatter';
 import ErrorDisplayModal from '../../../components/ui/ErrorDisplayModal';
 import PlayPageHelmet from '../../../page-helmets/PlayPageHelmet';
@@ -86,6 +87,7 @@ const PlayPage = () => {
     const { showLoader, hideLoader } = useLoading();
 
     const eventConfig = EVENT_MAP[tournament];
+    const { tournamentData } = useTournament(tournament, true); // Fetch tournament with results
     const [playData, setPlayData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [countdown, setCountdown] = useState('');
@@ -484,6 +486,8 @@ const PlayPage = () => {
                             <div id="bracket-predictions-content" className="prediction-display-content-wrapper">
                                 <BracketStage
                                     data={isBracketNotYet && eventConfig?.bracketSeed ? eventConfig.bracketSeed : playData.bracket_predictions}
+                                    officialResults={tournamentData?.format?.bracket_results}
+                                    totalBracketPoints={playData?.bracket_points}
                                     isEditable={isOwner && isBracketOpen}
                                     onEditingChange={handleEditingChange}
                                     onSave={handleSaveBracket}

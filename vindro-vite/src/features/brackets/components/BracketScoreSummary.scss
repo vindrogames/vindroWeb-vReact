@@ -1,0 +1,159 @@
+.bracket-score-summary {
+  background: #0B0C10;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border: 1px solid #1F2833;
+
+  .summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    h3 {
+      color: #66FCF1;
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .total-score {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+
+      .label {
+        font-size: 0.9rem;
+        color: #C5C6C7;
+      }
+
+      .value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #66FCF1;
+      }
+
+      .max {
+        font-size: 1.2rem;
+        color: #C5C6C7;
+      }
+    }
+  }
+
+  .round-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    .round-bar {
+      &.pending {
+        opacity: 0.6;
+      }
+
+      .round-label {
+        font-size: 0.9rem;
+        color: #C5C6C7;
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+
+      .progress-bar {
+        height: 10px;
+        background: #1F2833;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 6px;
+        border: 1px solid #2a3140;
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #45A29E, #66FCF1);
+          transition: width 0.5s ease;
+          border-radius: 4px 0 0 4px;
+        }
+      }
+
+      .round-score {
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .earned {
+          color: #66FCF1;
+          font-weight: 700;
+          font-size: 1.1rem;
+        }
+
+        .separator {
+          color: #C5C6C7;
+        }
+
+        .max {
+          color: #C5C6C7;
+          font-weight: 600;
+        }
+
+        .correct-count {
+          margin-left: 8px;
+          color: #C5C6C7;
+          font-weight: normal;
+          font-size: 0.85rem;
+        }
+
+        .not-played {
+          color: #C5C6C7;
+          font-style: italic;
+        }
+      }
+    }
+  }
+}
+
+// Mobile responsive
+@media (max-width: 678px) {
+  .bracket-score-summary {
+    padding: 16px;
+
+    .summary-header {
+      h3 {
+        font-size: 1.1rem;
+      }
+
+      .total-score {
+        .value {
+          font-size: 1.6rem;
+        }
+
+        .max {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .round-progress {
+      gap: 12px;
+
+      .round-bar {
+        .round-label {
+          font-size: 0.85rem;
+        }
+
+        .progress-bar {
+          height: 8px;
+        }
+
+        .round-score {
+          font-size: 0.85rem;
+
+          .earned {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+}
