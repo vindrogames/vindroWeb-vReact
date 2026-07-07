@@ -208,5 +208,5 @@ BRACKET_RESULTS_R16_WINNERS = {
     93: {"name": "Spain", "flag": "es"},            # Spain 1-0 Portugal (W83 vs W84)
     94: {"name": "Belgium", "flag": "be"},          # Belgium 4-1 USA (W81 vs W82)
     95: {"name": "Argentina", "flag": "ar"},        # Argentina 3-2 Egypt (W86 vs W88)
-    # 96: {"name": "TBD", "flag": "xx"},           # Switzerland vs Colombia (W85 vs W87) - MATCH IN PROGRESS
+    96: {"name": "Switzerland", "flag": "ch"},           # Switzerland vs Colombia (W85 vs W87) - MATCH IN PROGRESS
 }
