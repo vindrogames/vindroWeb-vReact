@@ -6,7 +6,8 @@
       "Bash(npm install *)",
       "Bash(find:*)",
       "Bash(uv run python:*)",
-      "Bash(sqlite3:*)"
+      "Bash(sqlite3:*)",
+      "Bash(docker exec:*)"
     ]
   }
 }
