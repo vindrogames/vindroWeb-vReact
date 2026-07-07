@@ -46,7 +46,7 @@ const useTournament = (slug, doGetResults = false) => {
     }, [tournamentData?.id, doGetResults]);
 
     return {
-        tournamentData,
+        tournamentData: results ? { ...tournamentData, format: { ...tournamentData?.format, bracket_results: results.bracket_results, groups_results: results.groups_results } } : tournamentData,
         results,
         isLoading,
         error
