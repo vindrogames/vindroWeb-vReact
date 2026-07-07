@@ -37,9 +37,7 @@ export function getMatchStatus(match, userPick, actualWinner, pointsPerMatch) {
         icon: '✗',
         text: '+0 pts',
       },
-      text: userPick
-        ? `You: ${userPick.name} | Won: ${actualWinner.name}`
-        : `Won: ${actualWinner.name}`,
+      text: null,  // Remove the hint text
       isCorrect: false,
     };
   }

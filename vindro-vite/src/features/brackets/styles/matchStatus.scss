@@ -53,8 +53,8 @@
     background: rgba(69, 162, 158, 0.1);
 
     .bk-team-name {
-      color: #66FCF1;
-      font-weight: 600;
+      color: #0B0C10;  // Dark color for better contrast
+      font-weight: 700;
     }
   }
 
@@ -71,10 +71,10 @@
 
   // Actual winner (when different from user pick)
   &.team-card--actual-winner {
-    border-left: 4px solid #66FCF1;
+    border-left: 4px solid #45A29E;
 
     .bk-team-name {
-      color: #66FCF1;
+      color: #0B0C10;  // Dark color for better contrast
       font-weight: 700;
     }
   }
@@ -84,8 +84,8 @@
     border-left: 4px solid #FAC550;
 
     .bk-team-name {
-      color: #FAC550;
-      font-weight: 600;
+      color: #D97706;  // Darker orange for better contrast
+      font-weight: 700;
     }
   }
 
