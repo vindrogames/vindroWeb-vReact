@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import BracketScoreSummary from '../../../components/BracketScoreSummary';
-import { getMatchStatus } from '../../../utils/matchStatus';
+import { getMatchStatus, POINTS_BY_ROUND } from '../../../utils/matchStatus';
 import '../../../styles/matchStatus.scss';
 
 // ── Bracket graph helpers ────────────────────────────────────────────────────
@@ -90,9 +90,10 @@ const TeamLabel = ({ team, t }) => {
     );
 };
 
-const Card = ({ team, selected, clickable, onClick, t, isCorrectPick, isActualWinner, isPending, showWinnerCheck }) => {
+const Card = ({ team, selected, clickable, onClick, t, isCorrectPick, isIncorrectPick, isActualWinner, isPending, showWinnerCheck, points }) => {
     let statusClass = '';
     if (isCorrectPick) statusClass = ' team-card--correct-pick';
+    else if (isIncorrectPick) statusClass = ' team-card--incorrect-pick';
     else if (isActualWinner && !isCorrectPick) statusClass = ' team-card--actual-winner';
     else if (isPending && selected) statusClass = ' team-card--user-pick-pending';
 
@@ -104,40 +105,81 @@ const Card = ({ team, selected, clickable, onClick, t, isCorrectPick, isActualWi
         >
             <TeamLabel team={team} t={t} />
             {showWinnerCheck && isActualWinner && <span className="winner-check">✓</span>}
+            {points != null && <span className="points-chip">{points}</span>}
         </div>
     );
 };
 
-// An R32 match: two teams, tap one to set this match's winner.
-const R32Match = ({ match, byId, isEditing, onPick, t, officialResults }) => {
+// Key for the card colors, shown once results exist. Must mirror the states
+// defined in matchStatus.scss.
+const BracketLegend = () => (
+    <div className="bk-legend">
+        <span className="bk-legend-item">
+            <span className="bk-legend-swatch swatch-correct" />
+            <span className="legend-text">Correct pick — points earned</span>
+        </span>
+        <span className="bk-legend-item legend-incorrect">
+            <span className="bk-legend-swatch swatch-incorrect" />
+            <span className="legend-text">Your pick, eliminated</span>
+        </span>
+        <span className="bk-legend-item">
+            <span className="bk-legend-swatch swatch-winner" />
+            <span className="legend-text">Match winner ✓</span>
+        </span>
+        <span className="bk-legend-item">
+            <span className="bk-legend-swatch swatch-pending" />
+            <span className="legend-text">Your pick, not played yet</span>
+        </span>
+    </div>
+);
+
+// A bracket match: two teams (resolved from the user's bracket), tap one to set
+// this match's winner. Works for any round — `roundKey` selects the official
+// results and the points value. For R16+ the displayed teams are the user's
+// predicted entrants, so the real winner may not be on either card; in that
+// case it is surfaced on a line below the match.
+const BracketMatch = ({ match, roundKey, byId, isEditing, onPick, t, officialResults }) => {
     const home = resolveTeam(match.home, byId);
     const away = resolveTeam(match.away, byId);
     const w = resolveTeam(match.winner, byId);
 
     // Get official result for this match
-    const officialMatch = officialResults?.R32?.find(m => m.id === match.id);
+    const officialMatch = officialResults?.[roundKey]?.find(m => m.id === match.id);
     const actualWinner = officialMatch?.winner;
 
     // Calculate match status
-    const POINTS_R32 = 2;
-    const status = actualWinner
-        ? getMatchStatus(match, w, actualWinner, POINTS_R32)
-        : { class: 'pending', badge: null };
+    const status = getMatchStatus(match, w, actualWinner, POINTS_BY_ROUND[roundKey] || 0);
 
-    // Check if each team is the actual winner
-    const homeIsActualWinner = actualWinner && home && sameTeam(actualWinner, home);
-    const awayIsActualWinner = actualWinner && away && sameTeam(actualWinner, away);
+    // Check if each team is the actual winner (name-based, matching backend scoring)
+    const homeIsActualWinner = !!actualWinner && !!home && actualWinner.name === home.name;
+    const awayIsActualWinner = !!actualWinner && !!away && actualWinner.name === away.name;
 
     // Check if user's pick matches the actual winner
     const userPickedHome = w && home && sameTeam(w, home);
     const userPickedAway = w && away && sameTeam(w, away);
     const homeIsCorrect = userPickedHome && homeIsActualWinner;
     const awayIsCorrect = userPickedAway && awayIsActualWinner;
+    const homeIsIncorrect = !!actualWinner && userPickedHome && !homeIsActualWinner;
+    const awayIsIncorrect = !!actualWinner && userPickedAway && !awayIsActualWinner;
+
+    // Real winner isn't among the user's predicted entrants — show it below
+    const winnerNotShown = !!actualWinner && !homeIsActualWinner && !awayIsActualWinner;
+
+    // Points render inside the picked card so they can't be misread as
+    // belonging to the other team of the match.
+    const pointsPerMatch = POINTS_BY_ROUND[roundKey] || 0;
+    const pointsFor = (isCorrect, isIncorrect) => {
+        if (isEditing) return null;
+        if (isCorrect) return `+${pointsPerMatch}`;
+        if (isIncorrect) return '+0';
+        return null;
+    };
 
     return (
         <div className={`teams-container match-${status.class}`}>
-            {/* Status Badge */}
-            {status.badge && !isEditing && (
+            {/* Only the "no pick" state keeps a match-level tag (in flow, never
+                overlapping a card) — earned points live on the picked card */}
+            {status.class === 'no-pick' && !isEditing && (
                 <div className={`match-status-badge badge-${status.class}`}>
                     <span className="badge-icon">{status.badge.icon}</span>
                     <span className="badge-text">{status.badge.text}</span>
@@ -152,9 +194,11 @@ const R32Match = ({ match, byId, isEditing, onPick, t, officialResults }) => {
                 onClick={() => onPick(match.id, home)}
                 t={t}
                 isCorrectPick={homeIsCorrect}
+                isIncorrectPick={homeIsIncorrect}
                 isActualWinner={homeIsActualWinner}
                 isPending={!actualWinner}
                 showWinnerCheck={!isEditing && homeIsActualWinner}
+                points={pointsFor(homeIsCorrect, homeIsIncorrect)}
             />
             <Card
                 team={away}
@@ -163,67 +207,41 @@ const R32Match = ({ match, byId, isEditing, onPick, t, officialResults }) => {
                 onClick={() => onPick(match.id, away)}
                 t={t}
                 isCorrectPick={awayIsCorrect}
+                isIncorrectPick={awayIsIncorrect}
                 isActualWinner={awayIsActualWinner}
                 isPending={!actualWinner}
                 showWinnerCheck={!isEditing && awayIsActualWinner}
+                points={pointsFor(awayIsCorrect, awayIsIncorrect)}
             />
 
-            {/* Status Text (for incorrect picks) */}
-            {status.text && !isEditing && (
-                <div className={`match-status-text ${status.class === 'pending' ? 'status-pending' : ''}`}>
-                    {status.text}
+            {winnerNotShown && !isEditing && (
+                <div className="match-actual-winner">
+                    <span className="awl-check">✓</span>
+                    <TeamLabel team={actualWinner} t={t} />
                 </div>
             )}
         </div>
     );
 };
 
-// A "winner advances" slot with status indicators: shows the winner of `source`; tapping promotes that
-// team into its parent match (the next round).
-const AdvanceSlot = ({ source, byId, parentOf, isEditing, onPick, t, officialResults, roundKey }) => {
+// A "winner advances" slot: shows the winner of `source`; tapping promotes that
+// team into its parent match (the next round). Result badges live on the
+// BracketMatch containers, not here.
+const AdvanceSlot = ({ source, byId, parentOf, isEditing, onPick, t }) => {
     const team = resolveTeam(source?.winner, byId);
     const parentId = source ? parentOf[String(source.id)] : null;
     const parent = parentId ? byId[parentId] : null;
     const selected = parent ? sameTeam(team, resolveTeam(parent.winner, byId)) : false;
 
-    // Get official result for this match if we have officialResults and roundKey
-    let status = { class: 'pending', badge: null };
-    let isCorrectPick = false;
-    let isActualWinner = false;
-
-    if (officialResults && roundKey && source) {
-        const officialMatch = officialResults?.[roundKey]?.find(m => m.id === source.id);
-        const actualWinner = officialMatch?.winner;
-
-        if (actualWinner) {
-            const POINTS_BY_ROUND = { R16: 4, QF: 8, SF: 16, '3rd': 16, F: 32 };
-            const pointsPerMatch = POINTS_BY_ROUND[roundKey] || 0;
-            status = getMatchStatus(source, team, actualWinner, pointsPerMatch);
-            isCorrectPick = team && actualWinner && sameTeam(team, actualWinner);
-            isActualWinner = !!actualWinner && sameTeam(team, actualWinner);
-        }
-    }
-
     return (
-        <div className={`teams-container match-${status.class}`}>
-            {/* Status Badge */}
-            {status.badge && !isEditing && (
-                <div className={`match-status-badge badge-${status.class}`}>
-                    <span className="badge-icon">{status.badge.icon}</span>
-                    <span className="badge-text">{status.badge.text}</span>
-                </div>
-            )}
-
+        <div className="teams-container match-pending">
             <Card
                 team={team}
                 selected={selected}
                 clickable={isEditing && !!parentId}
                 onClick={() => onPick(parentId, team)}
                 t={t}
-                isCorrectPick={isCorrectPick}
-                isActualWinner={isActualWinner}
-                isPending={!status.badge}
-                showWinnerCheck={!isEditing && isActualWinner}
+                isPending
             />
         </div>
     );
@@ -246,6 +264,8 @@ const ConnR = () => (
 );
 
 // One quarter of the tree, derived from its QF match by walking the W-references.
+// Column semantics (must match the data-round mobile CSS): col1 = R32 matches,
+// col2 = R16 matches, col3 = QF match, col4 = the team advancing to the SF.
 const QuarterCard = ({ qf, side, byId, parentOf, isEditing, onPick, t, activeRound, officialResults }) => {
     const r16s = [childMatch(qf.home, byId), childMatch(qf.away, byId)].filter(Boolean);
     const r32s = r16s.flatMap((r16) => [childMatch(r16.home, byId), childMatch(r16.away, byId)].filter(Boolean));
@@ -253,25 +273,25 @@ const QuarterCard = ({ qf, side, byId, parentOf, isEditing, onPick, t, activeRou
 
     const col1 = (
         <div className="round-col round-1-col" key="c1">
-            {r32s.map((m) => <R32Match key={m.id} match={m} byId={byId} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} />)}
+            {r32s.map((m) => <BracketMatch key={m.id} match={m} roundKey="R32" byId={byId} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} />)}
         </div>
     );
-    const conn1 = <div className="connector-col" key="x1">{r32s.map((m) => <Conn key={m.id} />)}</div>;
+    const conn1 = <div className="connector-col" key="x1">{r16s.map((m) => <Conn key={m.id} />)}</div>;
     const col2 = (
         <div className="round-col round-2-col" key="c2">
-            {r32s.map((m) => <AdvanceSlot key={m.id} source={m} byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} />)}
+            {r16s.map((m) => <BracketMatch key={m.id} match={m} roundKey="R16" byId={byId} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} />)}
         </div>
     );
-    const conn2 = <div className="connector-col" key="x2">{r16s.map((m) => <Conn key={m.id} />)}</div>;
+    const conn2 = <div className="connector-col" key="x2"><Conn /></div>;
     const col3 = (
         <div className="round-col round-3-col" key="c3">
-            {r16s.map((m) => <AdvanceSlot key={m.id} source={m} byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} roundKey="R16" />)}
+            <BracketMatch match={qf} roundKey="QF" byId={byId} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} />
         </div>
     );
     const conn3 = <div className="connector-col" key="x3"><Conn /></div>;
     const col4 = (
         <div className="round-col round-4-col" key="c4">
-            <AdvanceSlot source={qf} byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} officialResults={officialResults} roundKey="QF" />
+            <AdvanceSlot source={qf} byId={byId} parentOf={parentOf} isEditing={isEditing} onPick={onPick} t={t} />
         </div>
     );
 
@@ -285,7 +305,7 @@ const QuarterCard = ({ qf, side, byId, parentOf, isEditing, onPick, t, activeRou
 // Read-only fallback (e.g. the pre-open teaser seed, which has no W-graph / final).
 const FlatR32 = ({ r32, byId, t, officialResults }) => (
     <div className="bk-flat-r32">
-        {(r32 || []).map((m) => <R32Match key={m.id} match={m} byId={byId} isEditing={false} onPick={() => {}} t={t} officialResults={officialResults} />)}
+        {(r32 || []).map((m) => <BracketMatch key={m.id} match={m} roundKey="R32" byId={byId} isEditing={false} onPick={() => {}} t={t} officialResults={officialResults} />)}
     </div>
 );
 
@@ -375,11 +395,14 @@ const WorldCupBracketStage = ({ data, officialResults, totalBracketPoints, isEdi
                 {loginBanner}
                 {/* Score Summary */}
                 {officialResults && !isEditing && (
-                    <BracketScoreSummary
-                        bracketPredictions={working}
-                        bracketResults={officialResults}
-                        totalBracketPoints={totalBracketPoints || 0}
-                    />
+                    <>
+                        <BracketScoreSummary
+                            bracketPredictions={working}
+                            bracketResults={officialResults}
+                            totalBracketPoints={totalBracketPoints || 0}
+                        />
+                        <BracketLegend />
+                    </>
                 )}
                 <FlatR32 r32={working.R32} byId={byId} t={t} officialResults={officialResults} />
             </div>
@@ -398,11 +421,14 @@ const WorldCupBracketStage = ({ data, officialResults, totalBracketPoints, isEdi
 
             {/* Score Summary */}
             {officialResults && !isEditing && (
-                <BracketScoreSummary
-                    bracketPredictions={working}
-                    bracketResults={officialResults}
-                    totalBracketPoints={totalBracketPoints || 0}
-                />
+                <>
+                    <BracketScoreSummary
+                        bracketPredictions={working}
+                        bracketResults={officialResults}
+                        totalBracketPoints={totalBracketPoints || 0}
+                    />
+                    <BracketLegend />
+                </>
             )}
 
             <div className="bk-stage-container">

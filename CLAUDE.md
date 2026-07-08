@@ -171,8 +171,8 @@ Backend deployment is handled separately (not in this CI file). Production backe
 
 **tournament**
 - `Tournament` — `name`, `slug`, `status`, date fields (`start_date`, `end_date`, `groups_end_date`, `bracket_start_date`)
-- `TournamentFormat` — `groups_stage` (JSON), `bracket_stage` (JSON), `results` (JSON) — FK to Tournament
-- `TournamentPlay` — a user's prediction entry for a tournament. Fields: `user`, `tournament`, `name` (max 42 chars), `group_points`, `bracket_points`, `predictions` (JSON)
+- `TournamentFormat` — `groups_stage`, `bracket_stage`, `groups_results`, `bracket_results` (all JSON) — FK to Tournament. The `*_results` fields hold the official outcomes the frontend displays and plays are scored against
+- `TournamentPlay` — a user's prediction entry for a tournament. Fields: `user`, `tournament`, `name` (max 42 chars), `group_points`, `bracket_points`, `group_predictions` (JSON), `bracket_predictions` (JSON)
 - `TournamentPool` — prediction pool. Fields: `tournament`, `pool_type` (public/private/money), `code_hash` (SHA-256 for private), `name`, `money_amount`
 - `PoolMembership` — through table: `play` FK + `pool` FK
 
@@ -199,6 +199,7 @@ All API routes are prefixed with `/api/`. Base: `https://backend.vindrogames.com
 | `/auth/change-password/` | POST | Change password |
 | `/tournament/` | GET | List all tournaments |
 | `/tournament/{slug}/` | GET | Tournament detail |
+| `/tournament/{id}/results/` | GET | Official results (`groups_results` + `bracket_results`) |
 | `/tournament/{id}/user-plays/` | GET | Current user's plays for a tournament |
 | `/tournament/{id}/create/` | POST | Create a play |
 | `/tournament/plays/{playId}/` | GET | Get a single play |
@@ -213,6 +214,17 @@ All API routes are prefixed with `/api/`. Base: `https://backend.vindrogames.com
 | `/test/` | GET | Health check |
 
 Views are Django function-based views. Serialization is done with custom JSON functions (no DRF).
+
+### Tournament results & scoring
+
+Official results and scoring live in the `tournament` app:
+
+- `tournament/schemes/world_cup_2026.py` — canonical static data for the tournament: `GROUPS_SKELETON`, `GROUPS_RESULTS_ORDER`, `BRACKET_SKELETON`, `THIRD_PLACE_ALLOCATION`, and per-round winner dicts (`BRACKET_RESULTS_R32_WINNERS`, `BRACKET_RESULTS_R16_WINNERS`, …). Winners are `{"name": ..., "flag": ...}` keyed by match id.
+- `tournament/scoring.py` — `score_group_stage()` (1 pt per correct position, +2 perfect-card bonus, max 50) and `score_bracket_stage()` (per correct winner pick: R32 2, R16 4, QF 8, SF 16, 3rd 16, F 32 — max 176). Bracket scoring is **lenient**: a correct winner earns points even if the predicted matchup path was wrong. Comparison is by team **name** only.
+- `tournament/brackets.py` — resolves R32 fixtures from finalized group standings (`resolve_r32_fixtures`).
+- Management commands (`tournament/management/commands/`): `seed_tournament`, `seed_group_results`, `finalize_group_stage`, `seed_bracket_r32`, `finalize_bracket` (takes `--rounds R32,R16,...` and `--dry-run`; seeds `bracket_results` and rescores every play's `bracket_points`).
+
+**Results update workflow:** enter new winners in the scheme file → run `finalize_bracket <slug> --rounds ...` → the DB (`TournamentFormat.bracket_results`, `TournamentPlay.bracket_points`) is what the API serves. The frontend never reads the scheme file, so forgetting the command leaves the UI stale.
 
 ---
 
@@ -305,9 +317,17 @@ Services in `features/brackets/services/`:
 - `tournamentServices.js` — getTournamentBySlug, getTournamentResults
 - `playServices.js` — getUserPlays, createPlay, getPlayById, updateGroupPredictions, updateBracketPredictions
 - `poolServices.js` — getUserPools, joinPool, createPool
-- `leaderboardServices.js` — getPublicLeaderboard, getPrivatePoolLeaderboard
+- `leaderboardService.js` — getPublicLeaderboard, getPrivatePoolLeaderboard
 
 Tournament static data (team lists, bracket templates) lives in `features/brackets/tournaments/`.
+
+**Results display (prediction correctness + points):**
+
+- `useTournament(slug, true)` fetches `/tournament/{id}/results/` and merges `bracket_results` / `groups_results` into `tournamentData.format`; `PlayPage` passes them to the stage components as `officialResults`.
+- `features/brackets/utils/matchStatus.js` — single source of truth for `POINTS_BY_ROUND`, `MATCHES_BY_ROUND`, `ROUND_LABELS`, `MAX_BRACKET_POINTS`, `getMatchStatus()` and `calculateRoundBreakdown()`. **Must stay in sync with backend `tournament/scoring.py`** (points values and name-only team comparison).
+- `features/brackets/components/BracketScoreSummary.jsx` — per-round earned/available points bar; only *decided* matches (results with a winner) count toward "so far" totals.
+- `WorldCupBracketStage.jsx` renders the tree from `BracketMatch` (a two-team matchup for any round via `roundKey`) and `AdvanceSlot` (winner-advances slot, no result logic). Column semantics must match the `data-round` mobile CSS: col1 = R32 matches, col2 = R16 matches, col3 = QF match, col4 = team advancing to SF. The center Finals column has no result wiring yet (SF/3rd/F).
+- Card status visuals (`features/brackets/styles/matchStatus.scss`, explained to users by `BracketLegend`): solid green fill = correct pick (points chip inside the card), green left border + ✓ = actual winner not picked, red left border + strikethrough = eliminated pick, yellow left border = pick on an unplayed match. All states keep the white card background for readability; points render inside the picked card (never as a floating badge). If the user's predicted entrants don't include the real winner, it's shown on a `match-actual-winner` line under the match.
 
 #### autominer (Idle Clicker Game)
 
@@ -360,6 +380,7 @@ Fonts: Montserrat (headings), Open Sans (body).
 | `react-icons@^5.3` | Icon library |
 | `flag-icons@^7.5` | Country flag CSS |
 | `react-helmet-async@^2.0` | Per-page SEO meta tags |
+| `i18next@^23` + `react-i18next@^15` | Translations (setup in `src/i18n/`, e.g. team names use the `tournament` namespace) |
 | `sass@^1.78` | SCSS compilation |
 | `vite@^5.4` | Build tool + dev server |
 

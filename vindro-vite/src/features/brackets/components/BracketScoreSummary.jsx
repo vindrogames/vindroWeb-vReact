@@ -1,5 +1,5 @@
 import React from 'react';
-import { calculateRoundBreakdown } from '../utils/matchStatus';
+import { calculateRoundBreakdown, MAX_BRACKET_POINTS } from '../utils/matchStatus';
 import './BracketScoreSummary.scss';
 
 /**
@@ -11,8 +11,8 @@ import './BracketScoreSummary.scss';
 export default function BracketScoreSummary({ bracketPredictions, bracketResults, totalBracketPoints }) {
   const breakdown = calculateRoundBreakdown(bracketPredictions, bracketResults);
 
-  // Calculate total max possible points
-  const totalMaxPoints = breakdown.reduce((sum, round) => sum + round.max, 0);
+  // Points available so far = only matches already decided
+  const availableSoFar = breakdown.reduce((sum, round) => sum + round.max, 0);
 
   return (
     <div className="bracket-score-summary">
@@ -21,36 +21,43 @@ export default function BracketScoreSummary({ bracketPredictions, bracketResults
         <div className="total-score">
           <span className="label">Total Points:</span>
           <span className="value">{totalBracketPoints}</span>
-          <span className="max">/ {totalMaxPoints}</span>
+          <span className="max">/ {availableSoFar} so far</span>
+          <span className="grand-max">(max {MAX_BRACKET_POINTS})</span>
         </div>
       </div>
 
       <div className="round-progress">
-        {breakdown.map(round => (
-          <div key={round.key} className={`round-bar ${round.played ? 'played' : 'pending'}`}>
-            <div className="round-label">{round.label}</div>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{ width: `${round.played ? (round.earned / round.max) * 100 : 0}%` }}
-              />
+        {breakdown.map(round => {
+          const partial = round.played && round.decided < round.totalMatches;
+          return (
+            <div key={round.key} className={`round-bar ${round.played ? 'played' : 'pending'}`}>
+              <div className="round-label">
+                {round.label}
+                {partial && <span className="partial-note"> · {round.decided}/{round.totalMatches} matches played</span>}
+              </div>
+              <div className="progress-bar">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${round.played && round.max > 0 ? (round.earned / round.max) * 100 : 0}%` }}
+                />
+              </div>
+              <div className="round-score">
+                {round.played ? (
+                  <>
+                    <span className="earned">{round.earned}</span>
+                    <span className="separator"> / </span>
+                    <span className="max">{round.max} pts</span>
+                    <span className="correct-count">
+                      ({round.correct}/{round.decided} correct)
+                    </span>
+                  </>
+                ) : (
+                  <span className="not-played">Not played yet</span>
+                )}
+              </div>
             </div>
-            <div className="round-score">
-              {round.played ? (
-                <>
-                  <span className="earned">{round.earned}</span>
-                  <span className="separator"> / </span>
-                  <span className="max">{round.max} pts</span>
-                  <span className="correct-count">
-                    ({round.correct}/{round.total} correct)
-                  </span>
-                </>
-              ) : (
-                <span className="not-played">Not played yet</span>
-              )}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

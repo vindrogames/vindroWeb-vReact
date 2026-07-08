@@ -13,7 +13,14 @@
       "Bash(echo \"exit $?\")",
       "Bash(git restore *)",
       "Bash(git commit -m 'Add handoff note for VM deploy + bracket seeding *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(npx --yes sass@1.78.0 --no-source-map src/features/brackets/styles/matchStatus.scss /tmp/claude-1000/-home-fgimenez-data-code-vindrogames-github-vindroWeb-vReact/f49cd4c9-3028-4cb7-a54b-2051e97efaf5/scratchpad/matchStatus.css)",
+      "Bash(npx --yes sass@1.78.0 --no-source-map src/features/brackets/components/BracketScoreSummary.scss /tmp/claude-1000/-home-fgimenez-data-code-vindrogames-github-vindroWeb-vReact/f49cd4c9-3028-4cb7-a54b-2051e97efaf5/scratchpad/summary.css)",
+      "Bash(npx --yes esbuild src/features/brackets/tournaments/world-cup-2026/stages/WorldCupBracketStage.jsx --loader:.jsx=jsx --outfile=/tmp/claude-1000/-home-fgimenez-data-code-vindrogames-github-vindroWeb-vReact/f49cd4c9-3028-4cb7-a54b-2051e97efaf5/scratchpad/bkstage-check.js)",
+      "Bash(npx --yes esbuild src/features/brackets/tournaments/world-cup-2026/stages/WorldCupBracketStage.jsx --loader:.jsx=jsx --outfile=/tmp/claude-1000/-home-fgimenez-data-code-vindrogames-github-vindroWeb-vReact/f49cd4c9-3028-4cb7-a54b-2051e97efaf5/scratchpad/bkstage-check2.js)",
+      "Bash(npx --yes sass@1.78.0 --no-source-map src/features/brackets/styles/matchStatus.scss /tmp/claude-1000/-home-fgimenez-data-code-vindrogames-github-vindroWeb-vReact/f49cd4c9-3028-4cb7-a54b-2051e97efaf5/scratchpad/matchStatus2.css)",
+      "Bash(npx --yes esbuild src/features/brackets/tournaments/world-cup-2026/stages/WorldCupBracketStage.jsx --loader:.jsx=jsx --outfile=/tmp/claude-1000/-home-fgimenez-data-code-vindrogames-github-vindroWeb-vReact/f49cd4c9-3028-4cb7-a54b-2051e97efaf5/scratchpad/bkstage-check3.js)",
+      "Bash(npx --yes sass@1.78.0 --no-source-map src/features/brackets/styles/matchStatus.scss /tmp/claude-1000/-home-fgimenez-data-code-vindrogames-github-vindroWeb-vReact/f49cd4c9-3028-4cb7-a54b-2051e97efaf5/scratchpad/matchStatus3.css)"
     ]
   }
 }

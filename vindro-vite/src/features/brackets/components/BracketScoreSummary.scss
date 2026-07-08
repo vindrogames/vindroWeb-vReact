@@ -40,6 +40,12 @@
         font-size: 1.2rem;
         color: #C5C6C7;
       }
+
+      .grand-max {
+        font-size: 0.85rem;
+        color: #C5C6C7;
+        opacity: 0.7;
+      }
     }
   }
 
@@ -58,6 +64,12 @@
         color: #C5C6C7;
         margin-bottom: 6px;
         font-weight: 500;
+
+        .partial-note {
+          font-size: 0.8rem;
+          color: #FAC550;
+          font-weight: normal;
+        }
       }
 
       .progress-bar {

@@ -1,20 +1,20 @@
 // Match Status Indicator Styles
 // To be imported into the bracket component styles
 
-// Status badge overlay for matches
+// Match-level status tag. Rendered in flow ABOVE the team cards (never
+// absolutely positioned — a floating tag overlaps the top card and reads as
+// belonging to that team). Currently only used for the "no pick" state;
+// earned points render inside the picked card (.points-chip).
 .match-status-badge {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  padding: 4px 10px;
+  align-self: flex-end;
+  margin-bottom: 2px;
+  padding: 2px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 4px;
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
   &.badge-correct {
     background: #45A29E;
@@ -31,6 +31,13 @@
     color: #0B0C10;
   }
 
+  // Match decided but the user never made a pick — neutral, not "wrong"
+  &.badge-no-pick {
+    background: #1F2833;
+    color: #C5C6C7;
+    border: 1px dashed #C5C6C7;
+  }
+
   .badge-icon {
     font-size: 0.9rem;
     line-height: 1;
@@ -42,51 +49,68 @@
   }
 }
 
-// Enhanced team card states
+// Enhanced team card states.
+//
+// Visual system (all states keep the card's white background so the dark
+// team name is always readable — never dark-on-dark):
+//   solid green fill          = the winner AND you picked it (points earned)
+//   green left border + ✓     = the winner (you picked someone else)
+//   red left border + strike  = your pick, eliminated
+//   yellow left border        = your pick, match not played yet
 .team-card {
   position: relative;
   transition: all 0.3s ease;
 
-  // Correct prediction highlight
+  // Correct prediction — winner and you picked it
   &.team-card--correct-pick {
-    border-left: 4px solid #45A29E;
-    background: #1F2833;  // Dark background for contrast
+    background: #45A29E;
+    border-left: 4px solid #2C6E6A;
 
     .bk-team-name {
-      color: #66FCF1;  // Light teal for visibility on dark background
+      color: #0B0C10;
       font-weight: 700;
+    }
+
+    .winner-check {
+      color: #0B0C10;
     }
   }
 
-  // Incorrect prediction
+  // Your pick, eliminated — readable red strikethrough on white
   &.team-card--incorrect-pick {
+    background: white;
     border-left: 4px solid #E62644;
-    background: rgba(230, 38, 68, 0.08);
 
     .bk-team-name {
-      opacity: 0.6;
+      color: #E62644;
+      font-weight: 600;
       text-decoration: line-through;
+      text-decoration-thickness: 2px;
     }
   }
 
-  // Actual winner (when different from user pick)
+  // Actual winner when it wasn't your pick — informational, not "points"
   &.team-card--actual-winner {
-    border-left: 4px solid #66FCF1;
-    background: #1F2833;  // Dark background for contrast
+    background: white;
+    border-left: 4px solid #45A29E;
 
     .bk-team-name {
-      color: #66FCF1;  // Light teal for visibility on dark background
+      color: #0B0C10;
       font-weight: 700;
     }
+
+    .winner-check {
+      color: #45A29E;
+    }
   }
 
-  // User's pending pick
+  // Your pick on a match that hasn't been played yet
   &.team-card--user-pick-pending {
+    background: white;
     border-left: 4px solid #FAC550;
-    background: #1F2833;  // Dark background for contrast
 
     .bk-team-name {
-      color: #FAC550;  // Yellow for visibility on dark background
+      color: #0B0C10;
       font-weight: 700;
     }
   }
@@ -94,9 +118,81 @@
   // Winner check mark
   .winner-check {
     margin-left: auto;
-    color: #45A29E;
     font-size: 1.2rem;
     font-weight: bold;
+  }
+
+  // Points earned by THIS pick, shown inside the card so they can't be
+  // misattributed to the other team
+  .points-chip {
+    margin-left: 4px;
+    padding: 0 5px;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+
+  &.team-card--correct-pick .points-chip {
+    background: #0B0C10;
+    color: #66FCF1;
+  }
+
+  &.team-card--incorrect-pick .points-chip {
+    background: #E62644;
+    color: white;
+    text-decoration: none; // don't inherit the strikethrough
+  }
+}
+
+// Legend explaining the card states, shown above the bracket once results exist
+.bk-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: center;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: #0B0C10;
+  border: 1px solid #1F2833;
+  border-radius: 6px;
+
+  .bk-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.8rem;
+    color: #C5C6C7;
+    white-space: nowrap;
+
+    &.legend-incorrect .legend-text {
+      text-decoration: line-through;
+    }
+  }
+
+  .bk-legend-swatch {
+    width: 16px;
+    height: 14px;
+    border-radius: 2px;
+    background: white;
+    flex-shrink: 0;
+
+    &.swatch-correct {
+      background: #45A29E;
+    }
+
+    &.swatch-incorrect {
+      border-left: 4px solid #E62644;
+    }
+
+    &.swatch-winner {
+      border-left: 4px solid #45A29E;
+    }
+
+    &.swatch-pending {
+      border-left: 4px solid #FAC550;
+    }
   }
 }
 
@@ -123,22 +219,27 @@
   }
 }
 
-// Status text below match (for incorrect picks)
-.match-status-text {
-  margin-top: 8px;
-  padding: 8px;
-  background: rgba(230, 38, 68, 0.15);
+// Actual winner shown under an advance slot when the user's pick missed
+// (the slot itself only displays the user's predicted team)
+.match-actual-winner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 0.85rem;
-  color: #E62644;
-  font-weight: 500;
-  text-align: center;
-  border-left: 3px solid #E62644;
+  background: #1F2833;
+  border-left: 3px solid #66FCF1;
+  font-size: 0.8rem;
 
-  &.status-pending {
-    background: rgba(197, 198, 199, 0.1);
-    color: #C5C6C7;
-    border-left-color: #C5C6C7;
+  .awl-check {
+    color: #45A29E;
+    font-weight: bold;
+  }
+
+  .bk-team-name {
+    color: #66FCF1;
+    font-weight: 700;
   }
 }
 
@@ -157,9 +258,18 @@
     }
   }
 
-  .match-status-text {
+  .match-actual-winner {
     font-size: 0.75rem;
-    padding: 6px;
+    padding: 3px 6px;
+  }
+
+  .bk-legend {
+    gap: 6px 12px;
+    padding: 8px 10px;
+
+    .bk-legend-item {
+      font-size: 0.72rem;
+    }
   }
 
   .team-card {
